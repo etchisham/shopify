@@ -9,6 +9,9 @@
  */
 {
   "current": {
+    "type_body_font": "sans_serif_n4",
+    "type_heading_font": "sans_serif_n4",
+    "max_page_width": "80rem",
     "content_for_index": [],
     "blocks": {
       "14060646107696862457": {

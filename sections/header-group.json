@@ -14,17 +14,33 @@
     "announcement": {
       "type": "announcement-bar",
       "settings": {
-        "text": "",
-        "background_color": "#F6A429",
+        "text": "Buy one get one free",
+        "background_color": "#f6a429",
         "text_color": "#000000",
-        "height": 48,
+        "height": 40,
         "font_size": 14,
         "uppercase": true
       }
     },
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "logo_width": 140,
+        "mobile_logo_width": 112,
+        "desktop_menu": "main-menu",
+        "mobile_menu": "main-menu",
+        "customer_account_menu": "customer-account-main-menu",
+        "show_search": true,
+        "show_account": true,
+        "sticky_header": true,
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "border_color": "#efefef",
+        "desktop_height": 84,
+        "mobile_height": 72,
+        "desktop_padding": 32,
+        "mobile_menu_font_size": 32
+      }
     }
   },
   "order": [
