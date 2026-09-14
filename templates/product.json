@@ -1,0 +1,89 @@
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "settings": {
+        "support_line": "A distinctive object selected for material integrity, useful proportion, and lasting presence.",
+        "require_variant_selection": true,
+        "delivery_text": "",
+        "return_text": "",
+        "low_stock_threshold": 5,
+        "show_dynamic_checkout": true,
+        "show_payment_icons": true,
+        "enable_sticky_buy": true
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "facts": { "type": "fact", "settings": { "label": "Verified details", "detail": "Materials and origin", "link": "/pages/materials-and-care" } },
+        "delivery": { "type": "fact", "settings": { "label": "Clear delivery", "detail": "Timing before checkout", "link": "/pages/shipping" } },
+        "returns": { "type": "fact", "settings": { "label": "Returns explained", "detail": "Eligibility and fees", "link": "/pages/returns" } },
+        "support": { "type": "fact", "settings": { "label": "Human support", "detail": "One accountable team", "link": "/pages/contact" } }
+      },
+      "block_order": ["facts", "delivery", "returns", "support"],
+      "settings": {}
+    },
+    "benefits": {
+      "type": "product-benefits",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "Why it earns a place",
+        "heading": "Made to live well",
+        "text": "Add outcome-led benefits only when each can be paired with product evidence."
+      }
+    },
+    "specifications": {
+      "type": "product-specifications",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "Know before it arrives",
+        "heading": "Every useful detail",
+        "text": "Dimensions, materials, origin, care, and limitations come from product metafields."
+      }
+    },
+    "maker": {
+      "type": "maker-story",
+      "settings": {
+        "reverse": false,
+        "name": "",
+        "location": "",
+        "story": "<p>Connect this section to a maker metaobject for verified place, process, and material context.</p>",
+        "link_label": "Meet the maker"
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "blocks": {},
+      "block_order": [],
+      "settings": { "heading": "How it lives at home" }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "scale": { "type": "question", "settings": { "question": "How can I judge the scale?", "answer": "<p>Use the published dimensions and in-room gallery image. Contact our team if you want a second opinion before ordering.</p>" } },
+        "variation": { "type": "question", "settings": { "question": "Will every piece look exactly the same?", "answer": "<p>Any natural variation should be stated in the product details. Product photography is color-accurate, but screens and handmade finishes can vary.</p>" } },
+        "delivery": { "type": "question", "settings": { "question": "When will it arrive?", "answer": "<p>The current estimate appears beside Add to Cart. Final timing depends on destination and any stated maker lead time.</p>" } },
+        "damage": { "type": "question", "settings": { "question": "What if it arrives damaged?", "answer": "<p>Contact our team with clear photos of the item and packaging. We will explain the fastest replacement or refund route.</p>" } }
+      },
+      "block_order": ["scale", "variation", "delivery", "damage"],
+      "settings": {
+        "eyebrow": "Product Q&A",
+        "heading": "Before you decide",
+        "text": "Search the questions most likely to block purchase.",
+        "enable_search": true
+      }
+    },
+    "related": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Complete the room",
+        "heading": "Objects that belong together",
+        "products_to_show": 4
+      }
+    }
+  },
+  "order": ["main", "trust", "benefits", "specifications", "maker", "reviews", "faq", "related"]
+}

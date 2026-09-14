@@ -1,0 +1,112 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-editorial",
+      "settings": {
+        "eyebrow": "The autumn edit",
+        "heading": "Objects worth living with.",
+        "text": "<p>Distinctive modern décor, selected from independent makers and shown with every detail you need to choose well.</p>",
+        "primary_label": "Shop the edit",
+        "primary_link": "/collections/best-sellers",
+        "secondary_label": "Meet the makers",
+        "secondary_link": "/pages/meet-the-makers"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "makers": { "type": "fact", "settings": { "label": "Vetted makers", "detail": "Every studio reviewed", "link": "/pages/why-shop-with-us" } },
+        "delivery": { "type": "fact", "settings": { "label": "Clear delivery", "detail": "Timing before checkout", "link": "/pages/shipping" } },
+        "returns": { "type": "fact", "settings": { "label": "Returns explained", "detail": "Eligibility and fees upfront", "link": "/pages/returns" } },
+        "support": { "type": "fact", "settings": { "label": "Human support", "detail": "Real help when needed", "link": "/pages/contact" } }
+      },
+      "block_order": ["makers", "delivery", "returns", "support"],
+      "settings": {}
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "The most considered",
+        "heading": "Best-loved objects",
+        "collection": "best-sellers",
+        "products_to_show": 4
+      }
+    },
+    "rooms": {
+      "type": "collection-grid",
+      "blocks": {
+        "living": { "type": "collection", "settings": { "collection": "living-room", "eyebrow": "Gather", "title": "Living room" } },
+        "bedroom": { "type": "collection", "settings": { "collection": "bedroom", "eyebrow": "Restore", "title": "Bedroom" } },
+        "table": { "type": "collection", "settings": { "collection": "dining-and-kitchen", "eyebrow": "Share", "title": "Table & dining" } }
+      },
+      "block_order": ["living", "bedroom", "table"],
+      "settings": {
+        "eyebrow": "Find your way in",
+        "heading": "Shop by room",
+        "text": "Begin with the place you want to make feel complete."
+      }
+    },
+    "edit": {
+      "type": "editorial-split",
+      "settings": {
+        "reverse": false,
+        "eyebrow": "The current edit",
+        "heading": "Quiet forms. Lasting presence.",
+        "text": "<p>Objects chosen for proportion, material honesty, and the way they change a room without taking it over.</p>",
+        "button_label": "Explore the edit",
+        "button_link": "/collections/seasonal-edit"
+      }
+    },
+    "values": {
+      "type": "value-props",
+      "blocks": {
+        "one": { "type": "value", "settings": { "heading": "Selected, not stacked", "text": "A focused edit removes marketplace noise and makes each choice easier to understand." } },
+        "two": { "type": "value", "settings": { "heading": "Materials made clear", "text": "Origin, dimensions, care, and natural variation stay close to every buying decision." } },
+        "three": { "type": "value", "settings": { "heading": "Service without mystery", "text": "Delivery timing, return terms, and human support remain visible before checkout." } }
+      },
+      "block_order": ["one", "two", "three"],
+      "settings": {
+        "eyebrow": "Why Formelune",
+        "heading": "Fewer pieces. Better reasons.",
+        "text": "Every claim sits beside the detail that proves it."
+      }
+    },
+    "maker": {
+      "type": "maker-story",
+      "settings": {
+        "name": "Independent makers, known by name",
+        "location": "Studios worth discovering",
+        "story": "<p>Formelune gives authorship back to the person who shaped the object. Explore process, place, and material before bringing a piece home.</p>",
+        "link_label": "Meet the makers",
+        "link": "/pages/meet-the-makers",
+        "reverse": true
+      }
+    },
+    "proof": {
+      "type": "customer-proof",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "eyebrow": "Living with it",
+        "heading": "In considered homes"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "fit": { "type": "question", "settings": { "question": "How do I know an object will fit my room?", "answer": "<p>Every product page includes exact dimensions and an in-room scale image when available. Our team can help review placement before you order.</p>" } },
+        "origin": { "type": "question", "settings": { "question": "Where are pieces made?", "answer": "<p>Maker, origin, material, and process appear on each product page. We publish only details we can verify.</p>" } },
+        "damage": { "type": "question", "settings": { "question": "What happens if an item arrives damaged?", "answer": "<p>Contact us with photos of the packaging and item. We will explain the replacement or refund path without sending you between sellers.</p>" } },
+        "returns": { "type": "question", "settings": { "question": "Can I return an item?", "answer": "<p>Eligible items can be returned within the stated window. Product-specific exclusions and fees appear before purchase.</p>" } }
+      },
+      "block_order": ["fit", "origin", "damage", "returns"],
+      "settings": {
+        "eyebrow": "Good to know",
+        "heading": "Questions, answered clearly",
+        "text": "Useful facts before you choose.",
+        "enable_search": false
+      }
+    }
+  },
+  "order": ["hero", "trust", "bestsellers", "rooms", "edit", "values", "maker", "proof", "faq"]
+}

@@ -1,0 +1,101 @@
+<header class="fl-header full-width" data-site-header>
+  <div class="fl-header__inner fl-container--wide">
+    <div class="fl-header__start">
+      <button class="fl-icon-button fl-header__mobile-trigger" type="button" data-nav-open aria-controls="MobileNavigation" aria-expanded="false">
+        <span class="fl-visually-hidden">Open menu</span>
+        {% render 'fl-icon', name: 'menu' %}
+      </button>
+      <nav class="fl-header__nav" aria-label="Primary navigation">
+        <ul>
+          {%- for link in section.settings.menu.links limit: 6 -%}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+              {%- if link.links != blank -%}
+                <ul class="fl-header__submenu">
+                  {%- for child_link in link.links -%}
+                    <li><a href="{{ child_link.url }}">{{ child_link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    </div>
+
+    <a class="fl-header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      {%- if section.settings.logo != blank -%}
+        {%- assign logo_alt = section.settings.logo.alt | default: shop.name -%}
+        {{ section.settings.logo | image_url: width: 360 | image_tag: widths: '180, 240, 360', alt: logo_alt }}
+      {%- else -%}
+        <span class="fl-header__wordmark">{{ shop.name | default: 'FORMELUNE' | upcase }}</span>
+      {%- endif -%}
+    </a>
+
+    <div class="fl-header__utilities" aria-label="Store tools">
+      <button class="fl-icon-button" type="button" data-search-toggle aria-controls="HeaderSearch" aria-expanded="false">
+        <span class="fl-visually-hidden">Search</span>
+        {% render 'fl-icon', name: 'search' %}
+      </button>
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="fl-icon-button" href="{{ routes.account_url }}" aria-label="Account">
+          {% render 'fl-icon', name: 'account' %}
+        </a>
+      {%- endif -%}
+      <a class="fl-icon-button fl-header__cart" href="{{ routes.cart_url }}" aria-label="Cart with {{ cart.item_count }} items">
+        {% render 'fl-icon', name: 'cart' %}
+        <span class="fl-header__count" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div id="HeaderSearch" class="fl-search-panel" data-search-panel aria-hidden="true">
+    <form action="{{ routes.search_url }}" method="get" role="search">
+      <label class="fl-visually-hidden" for="HeaderSearchInput">Search the store</label>
+      <input id="HeaderSearchInput" class="fl-input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search objects, rooms, materials, or makers" autocomplete="off">
+      <button class="fl-button fl-button--ink" type="submit">Search</button>
+    </form>
+  </div>
+</header>
+
+<div id="MobileNavigation" class="fl-nav-drawer" data-nav-drawer aria-hidden="true">
+  <button class="fl-nav-drawer__scrim" type="button" data-nav-close aria-label="Close menu"></button>
+  <nav class="fl-nav-drawer__panel" aria-label="Mobile navigation">
+    <div class="fl-nav-drawer__head">
+      <span class="fl-header__wordmark">{{ shop.name | default: 'FORMELUNE' | upcase }}</span>
+      <button class="fl-icon-button" type="button" data-nav-close>
+        <span class="fl-visually-hidden">Close menu</span>
+        {% render 'fl-icon', name: 'close' %}
+      </button>
+    </div>
+    <ul class="fl-nav-drawer__list">
+      {%- for link in section.settings.menu.links -%}
+        <li>
+          {%- if link.links != blank -%}
+            <details>
+              <summary>{{ link.title }}</summary>
+              <ul class="fl-nav-drawer__sublist">
+                <li><a href="{{ link.url }}">View all {{ link.title }}</a></li>
+                {%- for child_link in link.links -%}
+                  <li><a href="{{ child_link.url }}">{{ child_link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "link_list", "id": "menu", "label": "Main menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}

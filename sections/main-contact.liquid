@@ -1,0 +1,168 @@
+{%- liquid
+  assign contact_heading = section.settings.heading | default: page.title
+-%}
+
+<section class="fl-support-page full-width">
+  <header class="fl-page-hero">
+    <div class="fl-container">
+      <nav class="fl-breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="{{ routes.root_url }}">{{ 'support.general.home' | t }}</a></li>
+          <li aria-current="page">{{ page.title }}</li>
+        </ol>
+      </nav>
+
+      <div class="fl-page-hero__grid">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}<span class="fl-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          <h1>{{ contact_heading }}</h1>
+        </div>
+        {%- if section.settings.intro != blank -%}
+          <div class="fl-page-hero__intro fl-richtext">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="fl-section fl-section--surface">
+      <div class="fl-container">
+        <div class="fl-support-grid" aria-label="{{ 'support.contact.routes_label' | t }}">
+          {%- for block in section.blocks -%}
+            <article class="fl-support-card" {{ block.shopify_attributes }}>
+              {%- if block.settings.eyebrow != blank -%}<span class="fl-eyebrow">{{ block.settings.eyebrow }}</span>{%- endif -%}
+              <h2>{{ block.settings.heading }}</h2>
+              {%- if block.settings.text != blank -%}<div class="fl-richtext">{{ block.settings.text }}</div>{%- endif -%}
+              {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+                <a class="fl-link" href="{{ block.settings.link }}">{{ block.settings.link_label }}</a>
+              {%- endif -%}
+            </article>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="fl-section">
+    <div class="fl-contact-layout fl-container">
+      <aside class="fl-contact-panel" aria-labelledby="ContactDetails-{{ section.id }}">
+        <span class="fl-eyebrow">{{ section.settings.form_eyebrow }}</span>
+        <h2 id="ContactDetails-{{ section.id }}">{{ section.settings.form_heading }}</h2>
+        {%- if section.settings.form_intro != blank -%}<div class="fl-richtext">{{ section.settings.form_intro }}</div>{%- endif -%}
+
+        <dl class="fl-contact-details">
+          {%- if settings.support_email != blank -%}
+            <div>
+              <dt>{{ 'support.contact.email_label' | t }}</dt>
+              <dd><a href="mailto:{{ settings.support_email | escape }}">{{ settings.support_email }}</a></dd>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.response_time != blank -%}
+            <div>
+              <dt>{{ 'support.contact.response_label' | t }}</dt>
+              <dd>{{ section.settings.response_time }}</dd>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.availability != blank -%}
+            <div>
+              <dt>{{ 'support.contact.availability_label' | t }}</dt>
+              <dd>{{ section.settings.availability }}</dd>
+            </div>
+          {%- endif -%}
+        </dl>
+
+        {%- if page.content != blank -%}
+          <div class="fl-contact-page-copy fl-richtext">{{ page.content }}</div>
+        {%- endif -%}
+      </aside>
+
+      <div class="fl-form-panel">
+        {% form 'contact', id: 'FormeluneContactForm', class: 'fl-support-form' %}
+          <input type="hidden" name="contact[tags]" value="customer-support">
+
+          {%- if form.posted_successfully? -%}
+            <div class="fl-alert fl-alert--success" role="status" tabindex="-1">
+              <strong>{{ 'support.contact.success_heading' | t }}</strong>
+              <p>{{ 'support.contact.success_text' | t }}</p>
+            </div>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="fl-alert fl-alert--error" role="alert" tabindex="-1">
+              <strong>{{ 'support.general.error_heading' | t }}</strong>
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <p class="fl-form-note">{{ 'support.general.required_note' | t }}</p>
+          <div class="fl-form-grid">
+            <div class="fl-field">
+              <label for="ContactName-{{ section.id }}">{{ 'support.form.name' | t }} <span aria-hidden="true">*</span></label>
+              <input id="ContactName-{{ section.id }}" class="fl-input" type="text" name="contact[name]" autocomplete="name" required value="{% if form.name %}{{ form.name | escape }}{% elsif customer %}{{ customer.name | escape }}{% endif %}">
+            </div>
+            <div class="fl-field">
+              <label for="ContactEmail-{{ section.id }}">{{ 'support.form.email' | t }} <span aria-hidden="true">*</span></label>
+              <input id="ContactEmail-{{ section.id }}" class="fl-input" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" spellcheck="false" required value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}">
+            </div>
+            <div class="fl-field">
+              <label for="ContactPhone-{{ section.id }}">{{ 'support.form.phone' | t }}</label>
+              <input id="ContactPhone-{{ section.id }}" class="fl-input" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone | escape }}">
+            </div>
+            <div class="fl-field">
+              <label for="ContactOrder-{{ section.id }}">{{ 'support.form.order_number_optional' | t }}</label>
+              <input id="ContactOrder-{{ section.id }}" class="fl-input" type="text" name="contact[Order number]" autocomplete="off" inputmode="text">
+            </div>
+            <div class="fl-field fl-form-field--full">
+              <label for="ContactTopic-{{ section.id }}">{{ 'support.form.topic' | t }} <span aria-hidden="true">*</span></label>
+              <select id="ContactTopic-{{ section.id }}" class="fl-input" name="contact[Topic]" required>
+                <option value="" selected disabled>{{ 'support.form.choose_topic' | t }}</option>
+                <option value="Product advice">{{ 'support.form.topic_product' | t }}</option>
+                <option value="Order status">{{ 'support.form.topic_order' | t }}</option>
+                <option value="Delivery or damage">{{ 'support.form.topic_delivery' | t }}</option>
+                <option value="Return or exchange">{{ 'support.form.topic_return' | t }}</option>
+                <option value="Trade or press">{{ 'support.form.topic_trade' | t }}</option>
+                <option value="Other">{{ 'support.form.topic_other' | t }}</option>
+              </select>
+            </div>
+            <div class="fl-field fl-form-field--full">
+              <label for="ContactMessage-{{ section.id }}">{{ 'support.form.message' | t }} <span aria-hidden="true">*</span></label>
+              <textarea id="ContactMessage-{{ section.id }}" class="fl-input fl-textarea" name="contact[body]" rows="7" required>{{ form.body }}</textarea>
+            </div>
+          </div>
+          <button class="fl-button fl-form-submit" type="submit">{{ 'support.contact.submit' | t }}</button>
+          <p class="fl-form-privacy">{{ section.settings.privacy_note }}</p>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main contact",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Here when you need us" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Let’s talk about your space." },
+    { "type": "richtext", "id": "intro", "label": "Introduction", "default": "<p>Questions before you choose, or help with an existing order? Send the detail once and our team will take it from there.</p>" },
+    { "type": "text", "id": "form_eyebrow", "label": "Form eyebrow", "default": "Send a note" },
+    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "How can we help?" },
+    { "type": "richtext", "id": "form_intro", "label": "Form introduction", "default": "<p>Include your order number when your question is about a purchase. For damage, tell us what arrived and we’ll explain how to share photos.</p>" },
+    { "type": "text", "id": "response_time", "label": "Response expectation", "default": "We reply as soon as possible during service hours." },
+    { "type": "text", "id": "availability", "label": "Service hours", "info": "Add hours and time zone only when confirmed." },
+    { "type": "textarea", "id": "privacy_note", "label": "Privacy note", "default": "We use these details only to respond to your request and support your order." }
+  ],
+  "blocks": [
+    {
+      "type": "support_route",
+      "name": "Support route",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Before you order" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Choosing a piece" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Ask about scale, finish, materials, care, or placement.</p>" },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ]
+}
+{% endschema %}

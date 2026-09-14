@@ -1,0 +1,60 @@
+{% comment %}
+  Shared navigation for Shopify-managed policy routes.
+  Policy titles and URLs come from Shopify Settings > Policies.
+{% endcomment %}
+
+<section class="policy-hub" aria-labelledby="PolicyHubTitle">
+  <div class="policy-hub__inner">
+    <div class="policy-hub__intro">
+      <p id="PolicyHubTitle" class="policy-hub__title">{{ 'legal.hub_title' | t }}</p>
+      <p class="policy-hub__description">{{ 'legal.hub_description' | t }}</p>
+    </div>
+
+    {% if settings.show_policy_navigation %}
+      <nav class="policy-hub__nav" aria-label="{{ 'legal.navigation_label' | t }}">
+        <ul class="policy-hub__links" role="list">
+          {% if shop.privacy_policy.url != blank %}
+            <li>
+              <a
+                href="{{ shop.privacy_policy.url }}"
+                {% if request.path contains '/privacy-policy' %}aria-current="page"{% endif %}
+              >
+                {{- shop.privacy_policy.title -}}
+              </a>
+            </li>
+          {% endif %}
+          {% if shop.terms_of_service.url != blank %}
+            <li>
+              <a
+                href="{{ shop.terms_of_service.url }}"
+                {% if request.path contains '/terms-of-service' %}aria-current="page"{% endif %}
+              >
+                {{- shop.terms_of_service.title -}}
+              </a>
+            </li>
+          {% endif %}
+          {% if shop.refund_policy.url != blank %}
+            <li>
+              <a
+                href="{{ shop.refund_policy.url }}"
+                {% if request.path contains '/refund-policy' %}aria-current="page"{% endif %}
+              >
+                {{- shop.refund_policy.title -}}
+              </a>
+            </li>
+          {% endif %}
+          {% if shop.shipping_policy.url != blank %}
+            <li>
+              <a
+                href="{{ shop.shipping_policy.url }}"
+                {% if request.path contains '/shipping-policy' %}aria-current="page"{% endif %}
+              >
+                {{- shop.shipping_policy.title -}}
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</section>

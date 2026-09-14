@@ -1,0 +1,74 @@
+<footer class="fl-footer full-width">
+  <div class="fl-container--wide">
+    <div class="fl-footer__top">
+      <div>
+        <div class="fl-footer__brand">{{ shop.name | default: 'FORMELUNE' | upcase }}</div>
+        <p class="fl-footer__tagline">{{ section.settings.tagline }}</p>
+      </div>
+
+      <nav class="fl-footer__nav" aria-label="Footer navigation">
+        {%- assign footer_menus = 'shop_menu,help_menu,about_menu,legal_menu' | split: ',' -%}
+        {%- assign footer_titles = 'Shop,Help,About,Legal' | split: ',' -%}
+        {%- for menu_id in footer_menus -%}
+          <div>
+            <h2 class="fl-footer__heading">{{ footer_titles[forloop.index0] }}</h2>
+            <ul class="fl-footer__list">
+              {%- assign menu_setting = section.settings[menu_id] -%}
+              {%- for link in menu_setting.links -%}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endfor -%}
+      </nav>
+
+      <div class="fl-footer__newsletter">
+        <div>
+          <h2 class="fl-footer__heading">{{ section.settings.newsletter_heading }}</h2>
+          <p>{{ section.settings.newsletter_text }}</p>
+        </div>
+        {% form 'customer', id: 'FooterNewsletter' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label class="fl-visually-hidden" for="FooterEmail">Email address</label>
+          <input id="FooterEmail" class="fl-input" type="email" name="contact[email]" autocomplete="email" required placeholder="Email address" value="{% if customer %}{{ customer.email }}{% endif %}">
+          <button class="fl-button" type="submit">Subscribe</button>
+          {%- if form.posted_successfully? -%}<p role="status">Thank you. Check your inbox.</p>{%- endif -%}
+          {%- if form.errors -%}<div role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        {% endform %}
+        {%- if settings.support_email != blank -%}
+          <a href="mailto:{{ settings.support_email }}">{{ settings.support_email }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="fl-footer__bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. Objects worth living with.</span>
+      {%- if section.settings.show_payment_icons -%}
+        <div class="fl-payment-icons" aria-label="Accepted payment methods">
+          {%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag }}{%- endfor -%}
+        </div>
+      {%- endif -%}
+      <div class="fl-theme-picker" role="radiogroup" aria-label="Theme selection">
+        <button type="button" role="radio" aria-checked="true" data-theme-option="light">Light</button>
+        <button type="button" role="radio" aria-checked="false" data-theme-option="dark">Dark</button>
+        <button type="button" role="radio" aria-checked="false" data-theme-option="system">System</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "A considered edit of modern objects from makers worth knowing." },
+    { "type": "link_list", "id": "shop_menu", "label": "Shop menu" },
+    { "type": "link_list", "id": "help_menu", "label": "Help menu" },
+    { "type": "link_list", "id": "about_menu", "label": "About menu" },
+    { "type": "link_list", "id": "legal_menu", "label": "Legal menu" },
+    { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "The considered home" },
+    { "type": "textarea", "id": "newsletter_text", "label": "Newsletter promise", "default": "A monthly edit of new makers, material notes, and rooms worth saving." },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,15 @@
+{%- liquid
+  assign price_item = item | default: product.selected_or_first_available_variant | default: product
+  assign current_price = price_item.price
+  assign compare_price = price_item.compare_at_price
+-%}
+<div class="fl-price" aria-live="polite">
+  <span class="fl-price__current" data-product-price>{{ current_price | money }}</span>
+  <s
+    class="fl-price__compare"
+    data-product-compare-price
+    {% unless compare_price > current_price %}hidden{% endunless %}
+  >
+    {%- if compare_price > current_price -%}{{ compare_price | money }}{%- endif -%}
+  </s>
+</div>

@@ -1,0 +1,52 @@
+<section class="fl-section fl-section--surface full-width">
+  <div class="fl-container--wide">
+    <div class="fl-section__head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<span class="fl-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}<p class="fl-section__intro">{{ section.settings.text }}</p>{%- endif -%}
+    </div>
+    <div class="fl-values">
+      {%- for block in section.blocks -%}
+        <article class="fl-value" {{ block.shopify_attributes }}>
+          <div class="fl-value__number">0{{ forloop.index }}</div>
+          <h3>{{ block.settings.heading }}</h3>
+          <p>{{ block.settings.text }}</p>
+          {%- if block.settings.link_label != blank -%}<a class="fl-link" href="{{ block.settings.link }}">{{ block.settings.link_label }}</a>{%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Value propositions",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Formelune" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Fewer pieces. Better reasons." },
+    { "type": "text", "id": "text", "label": "Supporting text", "default": "Every claim sits beside the detail that proves it." }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Selected, not stacked" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "A focused edit removes marketplace noise and makes each choice easier to understand." },
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Value propositions",
+    "blocks": [
+      { "type": "value", "settings": { "heading": "Selected, not stacked", "text": "A focused edit removes marketplace noise and makes each choice easier to understand." } },
+      { "type": "value", "settings": { "heading": "Materials made clear", "text": "Origin, dimensions, care, and natural variation stay close to every buying decision." } },
+      { "type": "value", "settings": { "heading": "Service without mystery", "text": "Delivery timing, return terms, and human support remain visible before checkout." } }
+    ]
+  }]
+}
+{% endschema %}

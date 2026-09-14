@@ -1,0 +1,119 @@
+{
+  "general": {
+    "404": "غير موجود",
+    "article": "مقال",
+    "block": "كتلة",
+    "blog": "مدونة",
+    "cart": "السلة",
+    "collection": "مجموعة",
+    "collections": "المجموعات",
+    "collection_card": "بطاقة مجموعة",
+    "collections_grid": "شبكة المجموعات",
+    "colors": "الألوان",
+    "column": "عمود",
+    "content": "المحتوى",
+    "custom_section": "قسم مخصص",
+    "fonts": "الخطوط",
+    "footer": "التذييل",
+    "group": "مجموعة",
+    "header": "الرأس",
+    "layout": "التخطيط",
+    "main": "رئيسي",
+    "page": "صفحة",
+    "password": "كلمة المرور",
+    "policy_pages": "صفحات السياسات",
+    "primary": "أساسي",
+    "product": "منتج",
+    "row": "صف",
+    "search": "بحث",
+    "secondary": "ثانوي",
+    "section": "قسم",
+    "settings": "الإعدادات",
+    "sidebar": "الشريط الجانبي",
+    "text": "نص",
+    "theme": "القالب",
+    "typography": "الخطوط"
+  },
+  "labels": {
+    "alignment": "المحاذاة",
+    "background": "الخلفية",
+    "cart_appearance": "المظهر",
+    "cart_button": "الزر",
+    "cart_button_text": "نص الزر",
+    "cart_checkout": "إتمام الطلب",
+    "cart_content_width": "عرض المحتوى",
+    "cart_continue_label": "نص متابعة التسوق",
+    "cart_continue_url": "رابط متابعة التسوق",
+    "cart_empty_heading": "عنوان السلة الفارغة",
+    "cart_empty_state": "حالة السلة الفارغة",
+    "cart_empty_text": "النص المساند",
+    "cart_reassurance": "الطمأنة",
+    "cart_show_continue_button": "إظهار زر متابعة التسوق",
+    "cart_show_dynamic_checkout": "إظهار أزرار الدفع السريع",
+    "cart_show_sustainability_note": "إظهار ملاحظة الاستدامة",
+    "cart_show_trust_strip": "إظهار شريط الطمأنة",
+    "cart_sustainability_link": "رابط الاستدامة",
+    "cart_sustainability_link_label": "نص رابط الاستدامة",
+    "cart_sustainability_text": "بيان الاستدامة",
+    "cart_trust_heading": "عنوان الطمأنة",
+    "cart_trust_link_label": "نص رابط الطمأنة",
+    "cart_trust_link_url": "رابط الطمأنة",
+    "cart_trust_text": "نص الطمأنة",
+    "foreground": "المقدمة",
+    "grid_gap": "تباعد الشبكة",
+    "grid_item_width": "عرض عنصر الشبكة",
+    "input_corner_radius": "استدارة حواف الحقول",
+    "layout_direction": "اتجاه التخطيط",
+    "menu": "القائمة",
+    "customer_account_menu": "قائمة حساب العميل",
+    "padding": "الحشو",
+    "page_margin": "هامش الصفحة",
+    "page_width": "عرض الصفحة",
+    "policy_appearance": "المظهر",
+    "policy_background": "الخلفية",
+    "policy_body_size": "حجم نص المحتوى",
+    "policy_border": "الحدود",
+    "policy_content_width": "عرض المحتوى",
+    "policy_heading_style": "نمط العنوان",
+    "policy_link": "الروابط",
+    "policy_section_spacing": "تباعد الأقسام",
+    "policy_text": "النص",
+    "policy_title_size": "حجم العنوان",
+    "show_payment_icons": "إظهار أيقونات الدفع",
+    "show_policy_mark": "إظهار الرمز القانوني",
+    "show_policy_navigation": "إظهار تنقل السياسات",
+    "text_style": "نمط النص",
+    "text": "نص"
+  },
+  "info": {
+    "cart_locale_fallback": "اتركه فارغًا لاستخدام لغة واجهة المتجر الحالية."
+  },
+  "options": {
+    "alignment": {
+      "left": "يسار",
+      "center": "وسط",
+      "right": "يمين"
+    },
+    "direction": {
+      "horizontal": "أفقي",
+      "vertical": "رأسي"
+    },
+    "heading_style": {
+      "sans": "بدون زخارف",
+      "serif": "بزخارف"
+    },
+    "page_width": {
+      "narrow": "ضيق",
+      "wide": "واسع"
+    },
+    "size": {
+      "large": "كبير",
+      "small": "صغير"
+    },
+    "text_style": {
+      "title": "عنوان",
+      "subtitle": "عنوان فرعي",
+      "normal": "نص عادي"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+<section class="fl-trust-strip full-width" aria-label="Why shop with us">
+  <div class="fl-trust-strip__grid fl-container--wide">
+    {%- for block in section.blocks -%}
+      {%- if block.settings.link != blank -%}<a class="fl-trust-strip__item" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{%- else -%}<div class="fl-trust-strip__item" {{ block.shopify_attributes }}>{%- endif -%}
+        <span class="fl-trust-strip__label">{{ block.settings.label }}</span>
+        <span class="fl-trust-strip__detail">{{ block.settings.detail }}</span>
+      {%- if block.settings.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust strip",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "fact",
+      "name": "Verified fact",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Vetted makers" },
+        { "type": "text", "id": "detail", "label": "Detail", "default": "Every studio reviewed" },
+        { "type": "url", "id": "link", "label": "Evidence or policy link" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Trust strip",
+    "blocks": [
+      { "type": "fact", "settings": { "label": "Vetted makers", "detail": "Every studio reviewed" } },
+      { "type": "fact", "settings": { "label": "Clear delivery", "detail": "Timing before checkout" } },
+      { "type": "fact", "settings": { "label": "30-day returns", "detail": "Plain-language terms" } },
+      { "type": "fact", "settings": { "label": "Human support", "detail": "Real help when needed" } }
+    ]
+  }]
+}
+{% endschema %}

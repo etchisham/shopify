@@ -1,0 +1,125 @@
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "404": {
+    "title": "404",
+    "not_found": "Page not found.",
+    "back_to_shopping": "Back to shopping"
+  },
+  "blog": {
+    "article_comments": "Comments",
+    "article_metadata_html": "{{ date }} by {{ author }}",
+    "comment_form_body": "Comment",
+    "comment_form_email": "Email",
+    "comment_form_name": "Name",
+    "comment_form_submit": "Post",
+    "comment_form_title": "Add a comment"
+  },
+  "cart": {
+    "checkout": "Proceed to checkout",
+    "continue_shopping": "Continue shopping",
+    "empty": "Your cart is empty.",
+    "items": "Cart items",
+    "items_count": "Items ({{ count }})",
+    "order_summary": "Order summary",
+    "quantity": "Quantity",
+    "update": "Update",
+    "remove": "Remove",
+    "see_details": "See details",
+    "shipping_at_checkout": "Shipping and taxes calculated at checkout.",
+    "title": "Your cart",
+    "total": "Total",
+    "trust_heading": "Shop with confidence",
+    "trust_text": "Review delivery, returns, and support details before checkout."
+  },
+  "customers": {
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "title": "Login"
+    }
+  },
+  "collections": {
+    "title": "Collections"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "Add to Apple Wallet",
+    "card": "Gift card",
+    "expired": "This gift card has expired",
+    "expires_on": "Expires on {{ expires_on }}",
+    "use_at_checkout": "Use this gift card at checkout"
+  },
+  "legal": {
+    "hub_title": "Legal / Utility",
+    "hub_description": "Store policies and important information",
+    "navigation_label": "Store policies"
+  },
+  "password": {
+    "title": "This shop is private",
+    "password": "Password",
+    "enter": "Enter"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search articles, pages, or products",
+    "submit": "Search",
+    "no_results_html": "No results found for {{ terms }}",
+    "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "support": {
+    "general": {
+      "home": "Home",
+      "error_heading": "Please check the highlighted details.",
+      "required_note": "Fields marked * are required."
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email address",
+      "phone": "Phone (optional)",
+      "order_number": "Order number",
+      "order_number_optional": "Order number (if applicable)",
+      "topic": "What can we help with?",
+      "choose_topic": "Choose a topic",
+      "topic_product": "Product advice",
+      "topic_order": "Order status",
+      "topic_delivery": "Delivery or damage",
+      "topic_return": "Return or exchange",
+      "topic_trade": "Trade or press",
+      "topic_other": "Other",
+      "message": "How can we help?"
+    },
+    "contact": {
+      "routes_label": "Ways we can help",
+      "email_label": "Email",
+      "response_label": "Response",
+      "availability_label": "Service hours",
+      "submit": "Send message",
+      "success_heading": "Message received.",
+      "success_text": "Thank you. The team will reply using the email address you provided."
+    },
+    "returns": {
+      "items": "Item or items",
+      "items_placeholder": "Product name or SKU",
+      "reason": "Reason",
+      "choose_reason": "Choose a reason",
+      "reason_mind": "Changed my mind",
+      "reason_size": "Size or scale",
+      "reason_expected": "Not as expected",
+      "reason_damage": "Arrived damaged",
+      "reason_incorrect": "Incorrect item",
+      "resolution": "Preferred resolution",
+      "choose_resolution": "Choose an option",
+      "resolution_refund": "Refund",
+      "resolution_replacement": "Replacement",
+      "resolution_exchange": "Exchange",
+      "resolution_advice": "I need advice",
+      "details": "What happened?",
+      "details_placeholder": "Include the item condition and any details that will help us review your request.",
+      "submit": "Submit return request",
+      "success_heading": "Request received.",
+      "success_text": "Keep the item and packaging. The team will review your request and email the next steps."
+    }
+  }
+}

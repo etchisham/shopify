@@ -1,0 +1,56 @@
+{%- liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign text_direction = 'ltr'
+  assign is_policy_page = false
+
+  if locale_root == 'ar'
+    assign text_direction = 'rtl'
+  endif
+
+  if request.path contains '/policies/'
+    assign is_policy_page = true
+  endif
+-%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="{{ text_direction }}" data-theme="light">
+  <head>
+    {% render 'css-variables' %}
+    <script>
+      (function () {
+        var theme = localStorage.getItem('fl-theme');
+        if (theme === 'system') document.documentElement.removeAttribute('data-theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+
+    {% unless settings.type_primary_font.system? %}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endunless %}
+
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'formelune.css' | asset_url | stylesheet_tag: preload: true }}
+    {% if is_policy_page %}{{ 'policy-pages.css' | asset_url | stylesheet_tag }}{% endif %}
+
+    {% render 'meta-tags' %}
+    {% render 'fl-commerce-schema' %}
+    {{ content_for_header }}
+    <script src="{{ 'formelune.js' | asset_url }}" defer="defer"></script>
+  </head>
+
+  <body{% if is_policy_page %} class="template-policy policy-heading--{{ settings.policy_heading_style }}"{% endif %}>
+    <a class="fl-skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+    {% sections 'header-group' %}
+
+    <main id="MainContent"{% if is_policy_page %} class="policy-page"{% endif %}>
+      {% if is_policy_page %}
+        {% render 'policy-navigation' %}
+        <div id="PolicyContent" tabindex="-1">{{ content_for_layout }}</div>
+      {% else %}
+        {{ content_for_layout }}
+      {% endif %}
+    </main>
+
+    {% sections 'footer-group' %}
+  </body>
+</html>
