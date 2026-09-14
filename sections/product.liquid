@@ -1,262 +1,213 @@
-{%- liquid
+{% liquid
   assign current_variant = product.selected_or_first_available_variant
-  assign has_explicit_variant = false
-  if product.selected_variant != blank
-    assign has_explicit_variant = true
-  endif
+  assign product_form_id = 'ProductForm-' | append: section.id
+%}
 
-  assign require_choice = section.settings.require_variant_selection
-  if product.has_only_default_variant
-    assign require_choice = false
-  endif
+<section class="product section-spacing product--media-{{ section.settings.media_position }}">
+  <div class="product__media" aria-label="{{ product.title | escape }}">
+    {% for media in product.media %}
+      <div class="product__media-item" data-media-id="{{ media.id }}">
+        {% case media.media_type %}
+          {% when 'image' %}
+            {% liquid
+              assign media_loading = 'lazy'
+              assign media_fetchpriority = 'auto'
+              if forloop.first
+                assign media_loading = 'eager'
+                assign media_fetchpriority = 'high'
+              endif
+            %}
+            {% render 'image',
+              image: media.preview_image,
+              width: 1600,
+              widths: '480, 720, 960, 1200, 1600',
+              sizes: '(min-width: 768px) 55vw, 100vw',
+              loading: media_loading,
+              fetchpriority: media_fetchpriority,
+              alt: media.alt
+            %}
+          {% when 'video' %}
+            {{ media | video_tag: controls: true, preload: 'none', image_size: '1200x' }}
+          {% when 'external_video' %}
+            {{ media | external_video_tag }}
+          {% when 'model' %}
+            {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true }}
+        {% endcase %}
+      </div>
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'product__placeholder' }}
+    {% endfor %}
+  </div>
 
-  assign initial_disabled = false
-  if require_choice and has_explicit_variant == false
-    assign initial_disabled = true
-  elsif current_variant.available == false
-    assign initial_disabled = true
-  endif
+  <div class="product__info">
+    {% if section.settings.show_product_vendor and product.vendor != blank %}
+      <p class="eyebrow">{{ product.vendor | escape }}</p>
+    {% endif %}
 
-  assign delivery_copy = product.metafields.custom.lead_time.value | default: section.settings.delivery_text | default: settings.delivery_message
-  assign return_copy = section.settings.return_text
-  if return_copy == blank
-    capture return_copy
-      echo settings.return_window_days
-      echo '-day returns on eligible items'
-    endcapture
-  endif
-  assign return_url = settings.return_policy_url | default: '/policies/refund-policy'
-  assign shipping_url = settings.shipping_policy_url | default: '/policies/shipping-policy'
--%}
+    <h1>{{ product.title | escape }}</h1>
+    {% render 'price', product: product, use_variant: true %}
 
-<section class="fl-product-main full-width">
-  {% render 'fl-breadcrumbs', product: product, collection: collection %}
-  <product-detail
-    class="fl-product-layout fl-container--wide"
-    data-product-detail
-    data-section-id="{{ section.id }}"
-    data-currency="{{ cart.currency.iso_code }}"
-  >
-    <div class="fl-gallery" data-product-gallery>
-      {%- if product.media.size > 0 -%}
-        <div class="fl-gallery__thumbnails" aria-label="Product media">
-          {%- for media in product.media -%}
-            <button
-              class="fl-gallery__thumb"
-              type="button"
-              data-gallery-thumbnail
-              data-media-id="{{ media.id }}"
-              aria-label="Show media {{ forloop.index }} of {{ product.media.size }}"
-              aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
-            >
-              {{ media.preview_image | image_url: width: 160 | image_tag: widths: '80, 160', loading: 'lazy', alt: '' }}
-            </button>
-          {%- endfor -%}
+    {% if section.settings.show_inventory and current_variant.inventory_management %}
+      {% if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}
+        <p class="product__inventory product__inventory--low">{{ 'products.product.inventory_low' | t: count: current_variant.inventory_quantity }}</p>
+      {% elsif current_variant.available %}
+        <p class="product__inventory">{{ 'products.product.inventory_in_stock' | t }}</p>
+      {% endif %}
+    {% endif %}
+
+    {% form 'product', product, id: product_form_id, class: 'product-form' %}
+      {% unless product.has_only_default_variant %}
+        <div class="product-form__field">
+          <label for="Variant-{{ section.id }}">{{ 'products.product.choose_variant' | t }}</label>
+          <select id="Variant-{{ section.id }}" name="id">
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if variant == current_variant %}selected{% endif %}
+                {% unless variant.available %}disabled{% endunless %}
+              >
+                {{ variant.title | escape }} — {{ variant.price | money }}{% unless variant.available %} — {{ 'products.product.sold_out' | t }}{% endunless %}
+              </option>
+            {% endfor %}
+          </select>
         </div>
-        <div class="fl-gallery__stage">
-          {%- for media in product.media -%}
-            <div class="fl-gallery__item" data-gallery-item data-media-id="{{ media.id }}" {% unless forloop.first %}hidden{% endunless %}>
-              {%- case media.media_type -%}
-                {%- when 'image' -%}
-                  {%- assign media_alt = media.alt | default: product.title -%}
-                  {%- if forloop.first -%}
-                    {{ media | image_url: width: 1800 | image_tag: widths: '640, 900, 1200, 1500, 1800', sizes: '(min-width: 1024px) 58vw, 100vw', loading: 'eager', fetchpriority: 'high', alt: media_alt }}
-                  {%- else -%}
-                    {{ media | image_url: width: 1800 | image_tag: widths: '640, 900, 1200, 1500, 1800', sizes: '(min-width: 1024px) 58vw, 100vw', loading: 'lazy', alt: media_alt }}
-                  {%- endif -%}
-                {%- when 'video' -%}
-                  {{ media | media_tag: image_size: '1200x', autoplay: false, controls: true, preload: 'none' }}
-                {%- when 'external_video' -%}
-                  {{ media | external_video_tag }}
-                {%- when 'model' -%}
-                  {{ media | model_viewer_tag: image_size: '1200x', reveal: 'interaction', toggleable: true }}
-              {%- endcase -%}
-            </div>
-          {%- endfor -%}
-        </div>
-      {%- else -%}
-        <div class="fl-gallery__stage">{{ 'product-1' | placeholder_svg_tag: 'fl-gallery__empty' }}</div>
-      {%- endif -%}
-    </div>
+      {% else %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+      {% endunless %}
 
-    <div class="fl-buy-box">
-      <div>
-        {%- assign maker_name = product.metafields.custom.maker.value.name | default: product.vendor -%}
-        {%- if maker_name != blank -%}<span class="fl-eyebrow">{{ maker_name }}</span>{%- endif -%}
-        {% render 'fl-rating', product: product %}
-        <h1 class="fl-buy-box__title">{{ product.title }}</h1>
+      <div class="product-form__field product-form__quantity">
+        <label for="Quantity-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+        <input id="Quantity-{{ section.id }}" type="number" name="quantity" min="1" value="1" inputmode="numeric">
       </div>
 
-      {% render 'fl-price', item: current_variant %}
-
-      <div class="fl-buy-box__support">
-        {%- if product.metafields.custom.short_description != blank -%}
-          {{ product.metafields.custom.short_description | metafield_tag }}
-        {%- elsif section.settings.support_line != blank -%}
-          <p>{{ section.settings.support_line }}</p>
-        {%- else -%}
-          <p>{{ product.description | strip_html | truncatewords: 28 }}</p>
-        {%- endif -%}
-      </div>
-
-      {% form 'product', product, class: 'fl-product-form', data-product-form: '' %}
-        <input
-          type="hidden"
-          name="id"
-          value="{% unless require_choice and has_explicit_variant == false %}{{ current_variant.id }}{% endunless %}"
-        >
-
-        {%- unless product.has_only_default_variant -%}
-          <div>
-            {%- for option in product.options_with_values -%}
-              <fieldset class="fl-option" data-option-position="{{ option.position }}">
-                <legend class="fl-option__legend">
-                  <span>{{ option.name }}</span>
-                  <span data-selected-option>{% if require_choice and has_explicit_variant == false %}Choose an option{% else %}{{ option.selected_value }}{% endif %}</span>
-                </legend>
-                <div class="fl-option__values">
-                  {%- for value in option.values -%}
-                    {%- liquid
-                      assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index
-                      assign should_check = false
-                      unless require_choice and has_explicit_variant == false
-                        if option.selected_value == value
-                          assign should_check = true
-                        endif
-                      endunless
-                    -%}
-                    <div class="fl-option__value">
-                      <input
-                        id="{{ input_id }}"
-                        type="radio"
-                        name="options[{{ option.name | escape }}]"
-                        value="{{ value | escape }}"
-                        data-option-input
-                        {% if should_check %}checked{% endif %}
-                      >
-                      <label for="{{ input_id }}">{{ value }}</label>
-                    </div>
-                  {%- endfor -%}
-                </div>
-              </fieldset>
-            {%- endfor -%}
-            {%- if section.settings.size_guide != blank -%}<a class="fl-link" href="{{ section.settings.size_guide.url }}">View dimensions guide</a>{%- endif -%}
-          </div>
-        {%- endunless -%}
-
-        <div class="fl-status{% unless current_variant.available %} fl-status--error{% endunless %}" data-inventory-status>
-          {%- if current_variant.available -%}
-            {%- if current_variant.inventory_management != blank and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= section.settings.low_stock_threshold -%}
-              {{ current_variant.inventory_quantity }} available from this batch
-            {%- else -%}
-              Available to order
-            {%- endif -%}
-          {%- else -%}
-            This option is currently unavailable
-          {%- endif -%}
-        </div>
-
-        <div class="fl-delivery-card">
-          <div class="fl-delivery-card__row">
-            {% render 'fl-icon', name: 'truck' %}
-            <div><strong>Delivery</strong><span>{{ delivery_copy }}. <a href="{{ shipping_url }}">Details</a></span></div>
-          </div>
-        </div>
-
-        <label class="fl-visually-hidden" for="Quantity-{{ section.id }}">Quantity</label>
-        <div class="fl-purchase-row">
-          <div class="fl-quantity" data-quantity>
-            <button type="button" data-quantity-minus aria-label="Decrease quantity">{% render 'fl-icon', name: 'minus' %}</button>
-            <input id="Quantity-{{ section.id }}" type="number" name="quantity" value="1" min="1" max="99" inputmode="numeric">
-            <button type="button" data-quantity-plus aria-label="Increase quantity">{% render 'fl-icon', name: 'plus' %}</button>
-          </div>
-          <button
-            class="fl-button fl-button--ink"
-            type="submit"
-            data-product-submit
-            data-available-label="Add to cart"
-            data-sold-label="Sold out"
-            {% if initial_disabled %}disabled{% endif %}
-          >
-            {%- if require_choice and has_explicit_variant == false -%}Choose options{%- elsif current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
-          </button>
-        </div>
-        <div class="fl-product-form__status" data-product-status role="status" aria-live="polite"></div>
-
-        {%- if section.settings.show_dynamic_checkout -%}
-          <div data-dynamic-checkout {% if require_choice and has_explicit_variant == false %}hidden{% endif %}>{{ form | payment_button }}</div>
-        {%- endif -%}
-
-        <div class="fl-delivery-card">
-          <div class="fl-delivery-card__row">
-            {% render 'fl-icon', name: 'return' %}
-            <div><strong>Returns</strong><span>{{ return_copy }}. <a href="{{ return_url }}">Terms</a></span></div>
-          </div>
-          <div class="fl-delivery-card__row">
-            {% render 'fl-icon', name: 'shield' %}
-            <div><strong>Arrives with care</strong><span>{{ settings.warranty_message }}</span></div>
-          </div>
-        </div>
-      {% endform %}
-
-      {%- if section.settings.show_payment_icons -%}
-        <div class="fl-payment-icons" aria-label="Accepted payment methods">
-          {%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag }}{%- endfor -%}
-        </div>
-      {%- endif -%}
-
-      <div>
-        {%- if product.description != blank -%}
-          <details class="fl-accordion" open>
-            <summary>About this piece</summary>
-            <div class="fl-accordion__body fl-richtext">{{ product.description }}</div>
-          </details>
-        {%- endif -%}
-        {%- if product.metafields.custom.materials != blank -%}
-          <details class="fl-accordion">
-            <summary>Materials</summary>
-            <div class="fl-accordion__body fl-richtext">{{ product.metafields.custom.materials | metafield_tag }}</div>
-          </details>
-        {%- endif -%}
-        {%- if product.metafields.custom.care != blank -%}
-          <details class="fl-accordion">
-            <summary>Care</summary>
-            <div class="fl-accordion__body fl-richtext">{{ product.metafields.custom.care | metafield_tag }}</div>
-          </details>
-        {%- endif -%}
-      </div>
-
-      <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
-    </div>
-  </product-detail>
-
-  {%- if section.settings.enable_sticky_buy -%}
-    <div class="fl-sticky-buy" data-sticky-buy="{{ section.id }}" data-visible="false">
-      <div>
-        <div class="fl-sticky-buy__title">{{ product.title }}</div>
-        <div class="fl-sticky-buy__price" data-sticky-price>{{ current_variant.price | money }}</div>
-      </div>
-      <button class="fl-button fl-button--ink" type="button" data-sticky-submit {% if initial_disabled %}disabled{% endif %}>
-        {%- if require_choice and has_explicit_variant == false -%}Choose options{%- elsif current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+      <button class="button button--full" type="submit" name="add"{% unless current_variant.available %} disabled{% endunless %}>
+        {% if current_variant.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}
       </button>
-    </div>
-  {%- endif -%}
+
+      {% if section.settings.show_dynamic_checkout and current_variant.available %}
+        {{ form | payment_button }}
+      {% endif %}
+    {% endform %}
+
+    {% if product.description != blank %}
+      <div class="product__description rte">{{ product.description }}</div>
+    {% endif %}
+
+    {% for block in section.blocks %}
+      {% render block %}
+    {% endfor %}
+  </div>
 </section>
+
+{% stylesheet %}
+  .product {
+    display: grid;
+    align-items: start;
+    gap: clamp(var(--space-6), 6vw, var(--space-8));
+  }
+
+  .product__media {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .product__media-item {
+    overflow: hidden;
+    border-radius: var(--radius-large);
+    background: var(--color-surface);
+  }
+
+  .product__media-item :is(img, video, iframe, model-viewer),
+  .product__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .product__info {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .product__info h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .product__inventory {
+    margin: 0;
+    color: var(--color-success);
+    font-weight: 650;
+  }
+
+  .product__inventory--low {
+    color: var(--color-error);
+  }
+
+  .product-form {
+    display: grid;
+    gap: var(--space-4);
+    border-block: 1px solid var(--color-border);
+    padding-block: var(--space-5);
+  }
+
+  .product-form__field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .product-form__field label {
+    font-weight: 700;
+  }
+
+  .product-form__quantity {
+    width: 7rem;
+  }
+
+  .shopify-payment-button__button {
+    min-height: 2.9rem !important;
+    border-radius: var(--radius-small) !important;
+  }
+
+  .product__description {
+    border-block-end: 1px solid var(--color-border);
+    padding-block-end: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .product {
+      grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 0.85fr);
+    }
+
+    .product--media-right .product__media {
+      order: 2;
+    }
+
+    .product__info {
+      position: sticky;
+      inset-block-start: var(--space-5);
+    }
+
+    .product__media {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .product__media-item:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Product details",
+  "name": "t:general.product",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "blocks": [{ "type": "@app" }],
   "settings": [
-    { "type": "textarea", "id": "support_line", "label": "Fallback outcome line", "default": "A distinctive object selected for material integrity, useful proportion, and lasting presence." },
-    { "type": "checkbox", "id": "require_variant_selection", "label": "Require explicit option selection", "default": true, "info": "Prevents costly size or finish options being selected without shopper intent." },
-    { "type": "page", "id": "size_guide", "label": "Dimensions guide page" },
-    { "type": "text", "id": "delivery_text", "label": "Optional product-template delivery message" },
-    { "type": "text", "id": "return_text", "label": "Optional product-template return summary" },
-    { "type": "range", "id": "low_stock_threshold", "label": "Low stock threshold", "min": 1, "max": 20, "step": 1, "default": 5 },
-    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show accelerated checkout", "default": true },
-    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment methods", "default": true },
-    { "type": "checkbox", "id": "enable_sticky_buy", "label": "Enable mobile sticky Add to Cart", "default": true }
-  ],
-  "disabled_on": { "groups": ["header", "footer"] }
+    { "type": "checkbox", "id": "show_product_vendor", "label": "t:labels.show_product_vendor", "default": false },
+    { "type": "checkbox", "id": "show_inventory", "label": "t:labels.show_inventory", "default": true },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "default": true },
+    { "type": "select", "id": "media_position", "label": "t:labels.image_position", "options": [{ "value": "left", "label": "t:options.image_position.left" }, { "value": "right", "label": "t:options.image_position.right" }], "default": "left" }
+  ]
 }
 {% endschema %}

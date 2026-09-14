@@ -1,55 +1,70 @@
-{% comment %}
-  This section is used in the list-collections template to render a list of
-  collections.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
-{% endcomment %}
-
-<h1>{{ 'collections.title' | t }}</h1>
-
-<div
-  class="collections {{ section.settings.grid_item_width }}"
-  style="--grid-gap: {{ section.settings.grid_gap }}px"
->
-  {% for collection in collections %}
-    <a class="collection-card" href="{{ collection.url }}">
-      {% if collection.featured_image %}
-        {% render 'image',
-          class: 'collection-card__image',
-          image: collection.featured_image,
-          width: 600,
-          height: 600,
-          crop: 'center'
-        %}
-      {% endif %}
-
-      <div class="collection-card__content">
-        <p>{{ collection.title }}</p>
-
-        {% if collection.description %}
-          <p>{{ collection.description | strip_html | truncatewords: 15 }}</p>
-        {% endif %}
-      </div>
-    </a>
-  {% endfor %}
-</div>
+<section class="collection-list section-spacing">
+  <h1>{{ 'collections.title' | t }}</h1>
+  <div class="collection-list__grid" style="--collection-gap: {{ section.settings.grid_gap }}px;">
+    {% for collection in collections %}
+      <article class="collection-card">
+        <a class="collection-card__media" href="{{ collection.url }}" tabindex="-1" aria-hidden="true">
+          {% if collection.featured_image %}
+            {% render 'image', image: collection.featured_image, width: 1000, widths: '360, 540, 720, 1000', sizes: '(min-width: 768px) 33vw, 100vw', alt: collection.featured_image.alt %}
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag: 'collection-card__placeholder' }}
+          {% endif %}
+        </a>
+        <div>
+          <h2><a href="{{ collection.url }}">{{ collection.title | escape }}</a></h2>
+          {% if collection.description != blank %}<p class="muted">{{ collection.description | strip_html | truncatewords: 20 }}</p>{% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
 
 {% stylesheet %}
-  .collections {
+  .collection-list > h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    margin-block-end: var(--space-6);
+  }
+
+  .collection-list__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(var(--collection-card-size), 100%), 1fr));
-    gap: var(--grid-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: var(--collection-gap);
   }
-  .collections--compact {
-    --collection-card-size: 160px;
-  }
-  .collections--full {
-    --collection-card-size: 280px;
-  }
+
   .collection-card {
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .collection-card__media {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-large);
+    background: var(--color-surface);
+  }
+
+  .collection-card__media .image,
+  .collection-card__media img,
+  .collection-card__placeholder {
     width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .collection-card h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  .collection-card h2 a {
+    text-decoration: none;
+  }
+
+  .collection-card h2 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
 {% endstylesheet %}
 
@@ -57,26 +72,7 @@
 {
   "name": "t:general.collections_grid",
   "settings": [
-    {
-      "type": "select",
-      "id": "grid_item_width",
-      "label": "t:labels.grid_item_width",
-      "options": [
-        { "value": "collections--compact", "label": "t:options.size.small" },
-        { "value": "collections--full", "label": "t:options.size.large" }
-      ],
-      "default": "collections--full"
-    },
-    {
-      "type": "range",
-      "id": "grid_gap",
-      "label": "t:labels.grid_gap",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "default": 10
-    }
+    { "type": "range", "id": "grid_gap", "label": "t:labels.grid_gap", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 24 }
   ],
   "presets": [{ "name": "t:general.collections_grid" }]
 }

@@ -1,0 +1,46 @@
+<section class="rich-text rich-text--{{ section.settings.alignment }} section-spacing" style="--rich-text-width: {{ section.settings.text_width }}rem;">
+  <div class="rich-text__inner">
+    {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+    {% if section.settings.heading != blank %}<h2>{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.text != blank %}<div class="rte muted">{{ section.settings.text }}</div>{% endif %}
+    {% if section.settings.button_label != blank %}
+      <a class="button" href="{{ section.settings.button_link | default: routes.root_url }}">{{ section.settings.button_label | escape }}</a>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rich-text__inner {
+    width: min(100%, var(--rich-text-width));
+  }
+
+  .rich-text--center .rich-text__inner {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .rich-text h2 {
+    margin-block-start: var(--space-2);
+  }
+
+  .rich-text .button {
+    margin-block-start: var(--space-5);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.rich_text",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "One clear idea per section" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>Keep copy specific, concise, and grounded in customer research.</p>" },
+    { "type": "text", "id": "button_label", "label": "t:labels.button_label" },
+    { "type": "url", "id": "button_link", "label": "t:labels.button_link" },
+    { "type": "select", "id": "alignment", "label": "t:labels.alignment", "options": [{ "value": "left", "label": "t:options.alignment.left" }, { "value": "center", "label": "t:options.alignment.center" }], "default": "center" },
+    { "type": "range", "id": "text_width", "min": 28, "max": 60, "step": 2, "unit": "rem", "label": "t:labels.text_width", "default": 44 }
+  ],
+  "presets": [{ "name": "t:general.rich_text" }]
+}
+{% endschema %}

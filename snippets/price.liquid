@@ -1,0 +1,56 @@
+{% doc %}
+  Renders product or selected-variant price with sale semantics.
+
+  @param {product} product - Product object.
+  @param {boolean} [use_variant] - Use selected or first available variant pricing.
+{% enddoc %}
+
+{% liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign price = target.price
+  assign compare_at_price = target.compare_at_price
+  assign available = target.available | default: false
+%}
+
+<div class="price{% unless available %} price--sold-out{% endunless %}{% if compare_at_price > price %} price--sale{% endif %}">
+  {% if compare_at_price > price %}
+    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+    <s class="price__compare">{{ compare_at_price | money }}</s>
+    <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+  {% endif %}
+  <span class="price__current">{{ price | money }}</span>
+
+  {% if target.unit_price_measurement %}
+    <small class="price__unit">
+      {{ target.unit_price | money }} /
+      {% if target.unit_price_measurement.reference_value != 1 %}{{ target.unit_price_measurement.reference_value }}{% endif %}
+      {{ target.unit_price_measurement.reference_unit }}
+    </small>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-weight: 700;
+  }
+
+  .price__compare {
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  .price__unit {
+    width: 100%;
+    color: var(--color-muted);
+    font-weight: 400;
+  }
+{% endstylesheet %}

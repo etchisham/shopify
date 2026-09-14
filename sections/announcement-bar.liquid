@@ -1,17 +1,76 @@
-{%- if section.settings.text != blank -%}
-  <div class="fl-announcement" role="region" aria-label="Store announcement">
-    {%- if section.settings.link != blank -%}<a href="{{ section.settings.link }}">{%- endif -%}
-      {{ section.settings.text }}
-    {%- if section.settings.link != blank -%}</a>{%- endif -%}
+{% liquid
+  assign announcement_text = section.settings.text
+  if announcement_text == blank
+    assign announcement_text = 'announcement.default' | t
+  endif
+%}
+
+{% style %}
+  :root { --announcement-bar-height: {{ section.settings.height }}px; }
+{% endstyle %}
+
+<aside
+  class="announcement-bar full-width"
+  style="
+    --announcement-background: {{ section.settings.background_color }};
+    --announcement-color: {{ section.settings.text_color }};
+    --announcement-height: {{ section.settings.height }}px;
+    --announcement-font-size: {{ section.settings.font_size }}px;
+  "
+  aria-label="{{ 'general.announcement' | t | escape }}"
+>
+  <div class="announcement-bar__content{% if section.settings.uppercase %} announcement-bar__content--uppercase{% endif %}">
+    {{ announcement_text }}
   </div>
-{%- endif -%}
+</aside>
+
+{% stylesheet %}
+  .announcement-bar {
+    display: grid;
+    min-height: var(--announcement-height);
+    place-items: center;
+    background: var(--announcement-background);
+    color: var(--announcement-color);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: var(--announcement-font-size);
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    line-height: 1.25;
+    padding: 0.55rem max(1.25rem, var(--page-margin));
+    text-align: center;
+  }
+
+  .announcement-bar__content--uppercase {
+    text-transform: uppercase;
+  }
+
+  .announcement-bar p {
+    margin: 0;
+  }
+
+  .announcement-bar a {
+    color: inherit;
+    text-underline-offset: 0.12em;
+  }
+
+  [dir='rtl'] .announcement-bar {
+    font-family: Tahoma, Arial, sans-serif;
+    letter-spacing: 0;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Announcement bar",
+  "name": "t:general.announcement_bar",
+  "enabled_on": { "groups": ["header"] },
   "settings": [
-    { "type": "text", "id": "text", "label": "Message", "default": "Clear delivery, returns, and human support" },
-    { "type": "url", "id": "link", "label": "Optional link" }
-  ]
+    { "type": "inline_richtext", "id": "text", "label": "t:labels.announcement_text" },
+    { "type": "color", "id": "background_color", "label": "t:labels.announcement_background", "default": "#F6A429" },
+    { "type": "color", "id": "text_color", "label": "t:labels.announcement_text_color", "default": "#000000" },
+    { "type": "range", "id": "height", "label": "t:labels.announcement_height", "min": 36, "max": 64, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "font_size", "label": "t:labels.announcement_font_size", "min": 11, "max": 18, "step": 1, "unit": "px", "default": 14 },
+    { "type": "checkbox", "id": "uppercase", "label": "t:labels.uppercase", "default": true }
+  ],
+  "presets": [{ "name": "t:general.announcement_bar" }]
 }
 {% endschema %}

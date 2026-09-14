@@ -1,19 +1,32 @@
-/** Critical CSS for the theme. This file is included on every page. */
-
-/* Reset styles inspired by https://www.joshwcomeau.com/css/custom-css-reset/ */
-* {
+/* Small, global layer. Section-specific styles stay beside their Liquid markup. */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
 }
 
 body {
   display: flex;
   flex-direction: column;
-  margin: 0;
+  min-width: 20rem;
   min-height: 100svh;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body-family);
+  font-size: var(--font-size-base);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
 }
 
-html:has(dialog[scroll-lock][open], details[scroll-lock][open]) {
+html:has(dialog[open], details[scroll-lock][open]) {
   overflow: hidden;
 }
 
@@ -27,98 +40,236 @@ svg {
   height: auto;
 }
 
+button,
 input,
 textarea,
 select {
+  color: inherit;
   font: inherit;
-  border-radius: var(--style-border-radius-inputs);
 }
 
+button,
 select {
-  background-color: var(--color-background);
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+a {
   color: currentcolor;
+  text-underline-offset: 0.2em;
 }
 
-dialog {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+a:hover {
+  text-decoration-thickness: 0.12em;
 }
 
-p {
-  text-wrap: pretty;
-}
-p,
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  margin-block: 0 0.6em;
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
   overflow-wrap: break-word;
+  text-wrap: balance;
 }
 
-p:empty {
-  display: none;
+h1 {
+  font-size: clamp(2.25rem, 7vw, 5rem);
 }
 
-:is(p, h1, h2, h3, h4, h5, h6):first-child,
-:empty:first-child + :where(p, h1, h2, h3, h4, h5, h6) {
-  margin-block-start: 0;
+h2 {
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
 }
 
-:is(p, h1, h2, h3, h4, h5, h6):last-child,
-:where(p, h1, h2, h3, h4, h5, h6) + :has(+ :empty:last-child) {
+h3 {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+p {
+  margin-block: 0 1em;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+:is(p, h1, h2, h3, h4, h5, h6):last-child {
   margin-block-end: 0;
 }
 
-/** Theme styles below */
-body {
-  font-family: var(--font-primary--family);
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+ul,
+ol {
+  padding-inline-start: 1.25rem;
 }
 
-/** Section layout utilities */
-
-/**
- * Setup a grid that enables both full-width and constrained layouts
- * depending on the class of the child elements.
- *
- * By default, a minimum content margin is set on the left and right
- * sides of the section and the content is centered in the viewport to
- * not exceed the maximum page width.
- *
- * When a child element is given the `full-width` class, it will span
- * the entire viewport.
- */
-.shopify-section {
-  --content-width: min(
-    calc(var(--page-width) - var(--page-margin) * 2),
-    calc(100% - var(--page-margin) * 2)
-  );
-  --content-margin: minmax(var(--page-margin), 1fr);
-  --content-grid: var(--content-margin) var(--content-width) var(--content-margin);
-
-  /* This is required to make <img> elements work as background images */
-  position: relative;
-  grid-template-columns: var(--content-grid);
-  display: grid;
+table {
+  border-collapse: collapse;
   width: 100%;
 }
 
-/* Child elements, by default, are constrained to the central column of the grid. */
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-background);
+  padding: 0.65rem 0.8rem;
+}
+
+textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+:focus-visible {
+  outline: 0.2rem solid var(--color-accent);
+  outline-offset: 0.2rem;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.main-content {
+  flex: 1;
+}
+
+.shopify-section {
+  --content-width: min(calc(var(--page-width) - var(--page-margin) * 2), calc(100% - var(--page-margin) * 2));
+  --content-margin: minmax(var(--page-margin), 1fr);
+  --content-grid: var(--content-margin) var(--content-width) var(--content-margin);
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--content-grid);
+  width: 100%;
+}
+
 .shopify-section > * {
   grid-column: 2;
 }
 
-/* Child elements that use the full-width utility class span the entire viewport. */
 .shopify-section > .full-width {
   grid-column: 1 / -1;
 }
 
-/* The section wrapper, rather than its child, must own sticky positioning. */
-.shopify-section:has(> .fl-header) {
-  position: sticky;
-  inset-block-start: 0;
-  z-index: 50;
+.section-spacing {
+  padding-block: clamp(var(--space-7), 7vw, var(--space-8));
+}
+
+.section-header {
+  display: grid;
+  gap: var(--space-3);
+  margin-block-end: var(--space-6);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.button,
+.shopify-payment-button__button--unbranded {
+  display: inline-flex;
+  min-height: 2.9rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-small);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: 700;
+  line-height: 1.1;
+  padding: 0.85rem 1.25rem;
+  text-align: center;
+  text-decoration: none;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.button:hover,
+.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  filter: brightness(0.9);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button--secondary {
+  border-color: var(--color-border);
+  background: transparent;
+  color: var(--color-foreground);
+}
+
+.button--full {
+  width: 100%;
+}
+
+.text-link {
+  font-weight: 700;
+}
+
+.muted {
+  color: var(--color-muted);
+}
+
+.rte > * + * {
+  margin-block-start: 1em;
+}
+
+.rte :is(ul, ol) {
+  padding-inline-start: 1.5rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  inset-block-start: var(--space-3);
+  inset-inline-start: var(--space-3);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

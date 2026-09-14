@@ -1,47 +1,114 @@
-{% comment %}
-  This section is used in the collection template to render collection page
-  listing all products within a collection.
+<section class="collection section-spacing">
+  <div class="collection__header">
+    <div>
+      <p class="eyebrow">{{ 'general.collection' | t }}</p>
+      <h1>{{ collection.title | escape }}</h1>
+      {% if section.settings.show_collection_description and collection.description != blank %}
+        <div class="collection__description rte muted">{{ collection.description }}</div>
+      {% endif %}
+    </div>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
-{% endcomment %}
+    {% if collection.sort_options.size > 1 %}
+      <form class="collection__sort" action="{{ collection.url }}" method="get">
+        <label for="SortBy-{{ section.id }}">{{ 'collections.sort_by' | t }}</label>
+        <select id="SortBy-{{ section.id }}" name="sort_by" onchange="this.form.submit()">
+          {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+          {% for option in collection.sort_options %}
+            <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+          {% endfor %}
+        </select>
+        <noscript><button class="button" type="submit">{{ 'collections.sort_by' | t }}</button></noscript>
+      </form>
+    {% endif %}
+  </div>
 
-<h1>{{ collection.title }}</h1>
-
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
-        {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
-        </div>
+  {% paginate collection.products by section.settings.products_per_page %}
+    {% if collection.products_count > 0 %}
+      <div class="collection__grid" style="--collection-columns: {{ section.settings.columns }};">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product, show_vendor: section.settings.show_product_vendor, sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw' %}
+        {% endfor %}
       </div>
-    {% endfor %}
-
-    {{ paginate | default_pagination }}
+      <div class="collection__pagination">{{ paginate | default_pagination }}</div>
+    {% else %}
+      <p class="collection__empty">{{ 'collections.empty' | t }}</p>
+    {% endif %}
   {% endpaginate %}
-</div>
+</section>
 
 {% stylesheet %}
-  .collection-products {
+  .collection__header {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    gap: var(--space-5);
+    margin-block-end: var(--space-7);
+  }
+
+  .collection__header h1 {
+    margin-block-start: var(--space-2);
+  }
+
+  .collection__description {
+    max-width: 48rem;
+  }
+
+  .collection__sort {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 13rem;
+  }
+
+  .collection__sort label {
+    font-weight: 650;
+  }
+
+  .collection__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--grid-gap);
+  }
+
+  .collection__pagination {
+    margin-block-start: var(--space-7);
+    text-align: center;
+  }
+
+  .collection__pagination > * {
+    display: inline-block;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.55rem;
+  }
+
+  .collection__empty {
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-large);
+    padding: var(--space-7);
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .collection__header {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .collection__grid {
+      grid-template-columns: repeat(var(--collection-columns), minmax(0, 1fr));
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.collection",
-  "settings": []
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "checkbox", "id": "show_collection_description", "label": "t:labels.show_collection_description", "default": true },
+    { "type": "checkbox", "id": "show_product_vendor", "label": "t:labels.show_product_vendor", "default": false },
+    { "type": "range", "id": "products_per_page", "min": 12, "max": 48, "step": 4, "label": "t:labels.products_to_show", "default": 24 },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "t:labels.columns", "default": 4 }
+  ]
 }
 {% endschema %}

@@ -1,1 +1,141 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Main Theme",
+    "theme_version": "0.1.0",
+    "theme_author": "etchisham",
+    "theme_documentation_url": "https://github.com/etchisham/shopify#readme",
+    "theme_support_url": "https://github.com/etchisham/shopify/issues"
+  },
+  {
+    "name": "t:general.brand",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "t:labels.logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:labels.favicon"
+      }
+    ]
+  },
+  {
+    "name": "t:general.typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "default": "work_sans_n4",
+        "label": "t:labels.body_font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_heading_font",
+        "default": "work_sans_n7",
+        "label": "t:labels.heading_font"
+      },
+      {
+        "type": "range",
+        "id": "type_base_size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 16,
+        "label": "t:labels.base_font_size"
+      }
+    ]
+  },
+  {
+    "name": "t:general.layout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "max_page_width",
+        "label": "t:labels.page_width",
+        "options": [
+          { "value": "80rem", "label": "t:options.page_width.narrow" },
+          { "value": "90rem", "label": "t:options.page_width.standard" },
+          { "value": "110rem", "label": "t:options.page_width.wide" }
+        ],
+        "default": "90rem"
+      },
+      {
+        "type": "range",
+        "id": "min_page_margin",
+        "min": 16,
+        "max": 64,
+        "step": 4,
+        "unit": "px",
+        "label": "t:labels.page_margin",
+        "default": 20
+      }
+    ]
+  },
+  {
+    "name": "t:general.colors",
+    "settings": [
+      { "type": "header", "content": "t:labels.light_palette" },
+      { "type": "color", "id": "background_color", "default": "#FFFCF7", "label": "t:labels.background" },
+      { "type": "color", "id": "foreground_color", "default": "#171714", "label": "t:labels.foreground" },
+      { "type": "color", "id": "muted_color", "default": "#625F58", "label": "t:labels.muted" },
+      { "type": "color", "id": "surface_color", "default": "#F4F0E8", "label": "t:labels.surface" },
+      { "type": "color", "id": "border_color", "default": "#D8D3C8", "label": "t:labels.border" },
+      { "type": "color", "id": "accent_color", "default": "#244C3A", "label": "t:labels.accent" },
+      { "type": "color", "id": "accent_contrast_color", "default": "#FFFFFF", "label": "t:labels.accent_contrast" },
+      { "type": "header", "content": "t:labels.dark_palette" },
+      { "type": "color", "id": "dark_background_color", "default": "#151714", "label": "t:labels.background" },
+      { "type": "color", "id": "dark_foreground_color", "default": "#F7F4ED", "label": "t:labels.foreground" },
+      { "type": "color", "id": "dark_muted_color", "default": "#BAB6AC", "label": "t:labels.muted" },
+      { "type": "color", "id": "dark_surface_color", "default": "#20231F", "label": "t:labels.surface" },
+      { "type": "color", "id": "dark_border_color", "default": "#3B4038", "label": "t:labels.border" },
+      { "type": "color", "id": "dark_accent_color", "default": "#A8D5BA", "label": "t:labels.accent" },
+      { "type": "color", "id": "dark_accent_contrast_color", "default": "#102117", "label": "t:labels.accent_contrast" },
+      {
+        "type": "select",
+        "id": "default_color_mode",
+        "label": "t:labels.default_color_mode",
+        "options": [
+          { "value": "system", "label": "t:options.color_mode.system" },
+          { "value": "light", "label": "t:options.color_mode.light" },
+          { "value": "dark", "label": "t:options.color_mode.dark" }
+        ],
+        "default": "system"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_theme_toggle",
+        "label": "t:labels.enable_theme_toggle",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "t:general.components",
+    "settings": [
+      {
+        "type": "range",
+        "id": "radius_small",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "label": "t:labels.small_corner_radius",
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "radius_large",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "unit": "px",
+        "label": "t:labels.large_corner_radius",
+        "default": 16
+      }
+    ]
+  }
+]

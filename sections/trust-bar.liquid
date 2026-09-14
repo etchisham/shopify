@@ -1,0 +1,91 @@
+<section class="trust-bar section-spacing" aria-label="{{ section.settings.heading | escape }}">
+  {% if section.settings.heading != blank %}<h2 class="visually-hidden">{{ section.settings.heading | escape }}</h2>{% endif %}
+  <ul class="trust-bar__grid" role="list">
+    {% for block in section.blocks %}
+      <li class="trust-bar__item" {{ block.shopify_attributes }}>
+        <span class="trust-bar__mark" aria-hidden="true">✓</span>
+        <div>
+          <h3>{{ block.settings.heading | escape }}</h3>
+          {% if block.settings.text != blank %}<p>{{ block.settings.text | escape }}</p>{% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+{% stylesheet %}
+  .trust-bar {
+    border-block: 1px solid var(--color-border);
+    padding-block: var(--space-5);
+  }
+
+  .trust-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--space-5);
+    margin: 0;
+    padding: 0;
+  }
+
+  .trust-bar__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .trust-bar__mark {
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-accent);
+    font-weight: 800;
+  }
+
+  .trust-bar h3 {
+    margin: 0;
+    font-family: var(--font-body-family);
+    font-size: 0.95rem;
+    letter-spacing: 0;
+  }
+
+  .trust-bar p {
+    margin: 0.15rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.trust_bar",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Why shop with us" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "t:general.content",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Secure checkout" },
+        { "type": "text", "id": "text", "label": "t:labels.text", "default": "Protected by Shopify" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.trust_bar",
+      "blocks": [
+        { "type": "item", "settings": { "heading": "Secure checkout", "text": "Protected by Shopify" } },
+        { "type": "item", "settings": { "heading": "Clear product details", "text": "Know what you are choosing" } },
+        { "type": "item", "settings": { "heading": "Questions?", "text": "Contact us before ordering" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

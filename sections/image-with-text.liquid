@@ -1,0 +1,83 @@
+<section class="image-with-text image-with-text--{{ section.settings.image_position }} section-spacing">
+  <div class="image-with-text__media">
+    {% if section.settings.image != blank %}
+      {% render 'image', image: section.settings.image, width: 1400, widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 768px) 50vw, 100vw' %}
+    {% else %}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'image-with-text__placeholder' }}
+    {% endif %}
+  </div>
+
+  <div class="image-with-text__content">
+    {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+    {% if section.settings.heading != blank %}<h2>{{ section.settings.heading | escape }}</h2>{% endif %}
+    {% if section.settings.text != blank %}<div class="rte muted">{{ section.settings.text }}</div>{% endif %}
+    {% if section.settings.button_label != blank %}
+      <a class="button" href="{{ section.settings.button_link | default: routes.root_url }}">{{ section.settings.button_label | escape }}</a>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .image-with-text {
+    display: grid;
+    align-items: center;
+    gap: clamp(var(--space-6), 6vw, var(--space-8));
+  }
+
+  .image-with-text__media {
+    overflow: hidden;
+    border-radius: var(--radius-large);
+    background: var(--color-surface);
+  }
+
+  .image-with-text__media .image,
+  .image-with-text__media img,
+  .image-with-text__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .image-with-text__content {
+    max-width: 34rem;
+  }
+
+  .image-with-text__content h2 {
+    margin-block-start: var(--space-2);
+  }
+
+  .image-with-text__content .button {
+    margin-block-start: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .image-with-text {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .image-with-text--right .image-with-text__media {
+      order: 2;
+    }
+
+    .image-with-text--right .image-with-text__content {
+      justify-self: end;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.image_with_text",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:labels.image" },
+    { "type": "select", "id": "image_position", "label": "t:labels.image_position", "options": [{ "value": "left", "label": "t:options.image_position.left" }, { "value": "right", "label": "t:options.image_position.right" }], "default": "left" },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Why it matters" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Make the benefit tangible" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>Use this section to explain the job your product helps customers complete. Replace general claims with specific, verifiable details.</p>" },
+    { "type": "text", "id": "button_label", "label": "t:labels.button_label", "default": "Learn more" },
+    { "type": "url", "id": "button_link", "label": "t:labels.button_link" }
+  ],
+  "presets": [{ "name": "t:general.image_with_text" }]
+}
+{% endschema %}

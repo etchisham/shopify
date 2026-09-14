@@ -1,37 +1,88 @@
 {
   "accessibility": {
-    "skip_to_content": "تخطي إلى المحتوى"
+    "skip_to_content": "تخطَّ إلى المحتوى",
+    "open_menu": "فتح القائمة",
+    "close_menu": "إغلاق القائمة",
+    "theme_system": "السمة: حسب النظام",
+    "theme_light": "السمة: فاتحة",
+    "theme_dark": "السمة: داكنة"
   },
-  "404": {
-    "title": "404",
-    "not_found": "الصفحة غير موجودة.",
-    "back_to_shopping": "العودة إلى التسوق"
+  "announcement": {
+    "default": "عرض اشترِ 2 واحصل على 1 مجانًا + شحن مجاني"
+  },
+  "navigation": {
+    "view_all": "عرض كل {{ title }}"
+  },
+  "general": {
+    "announcement": "إعلان",
+    "collection": "مجموعة",
+    "menu": "القائمة",
+    "search": "بحث",
+    "account": "الحساب",
+    "cart": "السلة ({{ count }})",
+    "continue_shopping": "متابعة التسوق"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "أضف إلى السلة",
+      "sold_out": "نفد المخزون",
+      "unavailable": "غير متاح",
+      "quantity": "الكمية",
+      "choose_variant": "اختر خيارًا",
+      "regular_price": "السعر العادي",
+      "sale_price": "سعر التخفيض",
+      "inventory_low": "متبقي {{ count }} فقط",
+      "inventory_in_stock": "متوفر",
+      "on_sale": "تخفيض"
+    }
+  },
+  "collections": {
+    "title": "المجموعات",
+    "view_all": "عرض الكل",
+    "sort_by": "ترتيب حسب",
+    "empty": "لا توجد منتجات.",
+    "choose_collection": "اختر مجموعة من محرر القالب."
+  },
+  "newsletter": {
+    "label": "البريد الإلكتروني",
+    "placeholder": "البريد الإلكتروني",
+    "button": "اشتراك",
+    "success": "شكرًا لاشتراكك.",
+    "error": "تحقق من بريدك الإلكتروني وحاول مرة أخرى."
+  },
+  "footer": {
+    "payment_methods": "طرق الدفع المقبولة",
+    "quick_links": "روابط سريعة",
+    "newsletter_heading": "النشرة البريدية",
+    "newsletter_text": "اشترك في نشرتنا البريدية لتصلك العروض الحصرية.",
+    "privacy_notice": "باشتراكك، فإنك توافق على سياسة الخصوصية.",
+    "follow_us": "تابعنا"
+  },
+  "cart": {
+    "checkout": "إتمام الشراء",
+    "empty": "سلة التسوق فارغة.",
+    "quantity": "كمية {{ title }}",
+    "remove": "إزالة",
+    "subtotal": "المجموع الفرعي",
+    "title": "سلة التسوق",
+    "update": "تحديث السلة",
+    "taxes_and_shipping_at_checkout": "تُحسب الضرائب والشحن عند الدفع"
+  },
+  "search": {
+    "title": "بحث",
+    "placeholder": "ابحث في المنتجات والمقالات والصفحات",
+    "submit": "بحث",
+    "no_results_html": "لا توجد نتائج لـ <strong>{{ terms }}</strong>.",
+    "results_for_html": "{{ count }} نتيجة لـ <strong>{{ terms }}</strong>."
   },
   "blog": {
     "article_comments": "التعليقات",
-    "article_metadata_html": "{{ date }} بواسطة {{ author }}",
+    "article_metadata_html": "{{ date }} بقلم {{ author }}",
     "comment_form_body": "التعليق",
     "comment_form_email": "البريد الإلكتروني",
     "comment_form_name": "الاسم",
-    "comment_form_submit": "نشر",
-    "comment_form_title": "إضافة تعليق"
-  },
-  "cart": {
-    "checkout": "المتابعة لإتمام الطلب",
-    "continue_shopping": "متابعة التسوق",
-    "empty": "سلة التسوق فارغة.",
-    "items": "منتجات السلة",
-    "items_count": "المنتجات ({{ count }})",
-    "order_summary": "ملخص الطلب",
-    "quantity": "الكمية",
-    "update": "تحديث",
-    "remove": "إزالة",
-    "see_details": "عرض التفاصيل",
-    "shipping_at_checkout": "تُحسب تكاليف الشحن والضرائب عند إتمام الطلب.",
-    "title": "سلة التسوق",
-    "total": "الإجمالي",
-    "trust_heading": "تسوق بثقة",
-    "trust_text": "راجع تفاصيل التوصيل والإرجاع والدعم قبل إتمام الطلب."
+    "comment_form_submit": "نشر التعليق",
+    "comment_form_title": "أضف تعليقًا"
   },
   "customers": {
     "login": {
@@ -41,85 +92,21 @@
       "title": "تسجيل الدخول"
     }
   },
-  "collections": {
-    "title": "المجموعات"
+  "404": {
+    "title": "الصفحة غير موجودة",
+    "not_found": "الصفحة المطلوبة غير موجودة.",
+    "back_to_shopping": "العودة إلى التسوق"
   },
   "gift_card": {
     "add_to_apple_wallet": "إضافة إلى Apple Wallet",
     "card": "بطاقة هدية",
-    "expired": "انتهت صلاحية بطاقة الهدية هذه",
+    "expired": "انتهت صلاحية بطاقة الهدية",
     "expires_on": "تنتهي في {{ expires_on }}",
-    "use_at_checkout": "استخدم بطاقة الهدية عند إتمام الطلب"
-  },
-  "legal": {
-    "hub_title": "قانوني / خدمي",
-    "hub_description": "سياسات المتجر والمعلومات المهمة",
-    "navigation_label": "سياسات المتجر"
+    "use_at_checkout": "استخدم بطاقة الهدية عند الدفع"
   },
   "password": {
     "title": "هذا المتجر خاص",
     "password": "كلمة المرور",
     "enter": "دخول"
-  },
-  "search": {
-    "title": "بحث",
-    "placeholder": "ابحث في المقالات أو الصفحات أو المنتجات",
-    "submit": "بحث",
-    "no_results_html": "لا توجد نتائج لـ {{ terms }}",
-    "results_for_html": "تم العثور على {{ count }} نتيجة لـ {{ terms }}"
-  },
-  "support": {
-    "general": {
-      "home": "الرئيسية",
-      "error_heading": "يرجى مراجعة التفاصيل المحددة.",
-      "required_note": "الحقول المعلّمة بـ * مطلوبة."
-    },
-    "form": {
-      "name": "الاسم",
-      "email": "البريد الإلكتروني",
-      "phone": "الهاتف (اختياري)",
-      "order_number": "رقم الطلب",
-      "order_number_optional": "رقم الطلب (إن وجد)",
-      "topic": "كيف يمكننا مساعدتك؟",
-      "choose_topic": "اختر موضوعًا",
-      "topic_product": "استشارة حول المنتج",
-      "topic_order": "حالة الطلب",
-      "topic_delivery": "التوصيل أو التلف",
-      "topic_return": "إرجاع أو استبدال",
-      "topic_trade": "التجارة أو الصحافة",
-      "topic_other": "أخرى",
-      "message": "كيف يمكننا مساعدتك؟"
-    },
-    "contact": {
-      "routes_label": "طرق مساعدتك",
-      "email_label": "البريد الإلكتروني",
-      "response_label": "الرد",
-      "availability_label": "ساعات الخدمة",
-      "submit": "إرسال الرسالة",
-      "success_heading": "تم استلام رسالتك.",
-      "success_text": "شكرًا لك. سيرد الفريق عبر البريد الإلكتروني الذي قدمته."
-    },
-    "returns": {
-      "items": "المنتج أو المنتجات",
-      "items_placeholder": "اسم المنتج أو رمزه",
-      "reason": "السبب",
-      "choose_reason": "اختر سببًا",
-      "reason_mind": "غيّرت رأيي",
-      "reason_size": "الحجم أو المقياس",
-      "reason_expected": "ليس كما توقعت",
-      "reason_damage": "وصل تالفًا",
-      "reason_incorrect": "منتج غير صحيح",
-      "resolution": "الحل المفضل",
-      "choose_resolution": "اختر خيارًا",
-      "resolution_refund": "استرداد المبلغ",
-      "resolution_replacement": "بديل",
-      "resolution_exchange": "استبدال",
-      "resolution_advice": "أحتاج إلى مساعدة",
-      "details": "ماذا حدث؟",
-      "details_placeholder": "اذكر حالة المنتج وأي تفاصيل تساعدنا في مراجعة طلبك.",
-      "submit": "إرسال طلب الإرجاع",
-      "success_heading": "تم استلام الطلب.",
-      "success_text": "احتفظ بالمنتج والتغليف. سيراجع الفريق طلبك ويرسل الخطوات التالية بالبريد الإلكتروني."
-    }
   }
 }

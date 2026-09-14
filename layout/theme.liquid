@@ -1,56 +1,53 @@
-{%- liquid
+{% liquid
   assign locale_root = request.locale.iso_code | split: '-' | first
+  assign rtl_locales = 'ar,fa,he,ur' | split: ','
   assign text_direction = 'ltr'
-  assign is_policy_page = false
-
-  if locale_root == 'ar'
+  if rtl_locales contains locale_root
     assign text_direction = 'rtl'
   endif
-
-  if request.path contains '/policies/'
-    assign is_policy_page = true
-  endif
--%}
+%}
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}" dir="{{ text_direction }}" data-theme="light">
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ text_direction }}" data-theme-preference="{{ settings.default_color_mode }}">
   <head>
     {% render 'css-variables' %}
+
     <script>
-      (function () {
-        var theme = localStorage.getItem('fl-theme');
-        if (theme === 'system') document.documentElement.removeAttribute('data-theme');
-        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
-      })();
+      document.documentElement.classList.remove('no-js');
+      try {
+        const savedTheme = localStorage.getItem('theme-preference');
+        const preferredTheme = savedTheme || {{ settings.default_color_mode | json }};
+        document.documentElement.dataset.themePreference = preferredTheme;
+        if (preferredTheme === 'light' || preferredTheme === 'dark') {
+          document.documentElement.dataset.theme = preferredTheme;
+        }
+      } catch (error) {
+        document.documentElement.dataset.themePreference = {{ settings.default_color_mode | json }};
+      }
     </script>
 
-    {% unless settings.type_primary_font.system? %}
+    {% unless settings.type_body_font.system? %}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+      {{ settings.type_body_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
     {% endunless %}
 
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'formelune.css' | asset_url | stylesheet_tag: preload: true }}
-    {% if is_policy_page %}{{ 'policy-pages.css' | asset_url | stylesheet_tag }}{% endif %}
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
 
     {% render 'meta-tags' %}
-    {% render 'fl-commerce-schema' %}
     {{ content_for_header }}
-    <script src="{{ 'formelune.js' | asset_url }}" defer="defer"></script>
   </head>
 
-  <body{% if is_policy_page %} class="template-policy policy-heading--{{ settings.policy_heading_style }}"{% endif %}>
-    <a class="fl-skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+  <body>
+    <a class="skip-link button" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
     {% sections 'header-group' %}
 
-    <main id="MainContent"{% if is_policy_page %} class="policy-page"{% endif %}>
-      {% if is_policy_page %}
-        {% render 'policy-navigation' %}
-        <div id="PolicyContent" tabindex="-1">{{ content_for_layout }}</div>
-      {% else %}
-        {{ content_for_layout }}
-      {% endif %}
+    <main id="MainContent" class="main-content" tabindex="-1">
+      {{ content_for_layout }}
     </main>
 
     {% sections 'footer-group' %}
+
+    <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-live-region></p>
   </body>
 </html>

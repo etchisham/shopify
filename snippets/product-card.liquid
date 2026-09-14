@@ -1,0 +1,120 @@
+{% doc %}
+  Renders a linked product summary card.
+
+  @param {product} product - Product object.
+  @param {boolean} [show_vendor] - Show product vendor.
+  @param {string} [sizes] - Responsive image sizes.
+{% enddoc %}
+
+<article class="product-card">
+  <a class="product-card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+    {% if product.featured_image %}
+      {% render 'image',
+        image: product.featured_image,
+        width: 900,
+        widths: '240, 360, 480, 640, 900',
+        sizes: sizes,
+        alt: product.featured_image.alt
+      %}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+    {% endif %}
+
+    {% unless product.available %}
+      <span class="product-card__badge">{{ 'products.product.sold_out' | t }}</span>
+    {% else %}
+      {% if product.compare_at_price_max > product.price %}
+        <span class="product-card__badge">{{ 'products.product.on_sale' | t }}</span>
+      {% endif %}
+    {% endunless %}
+  </a>
+
+  <div class="product-card__content">
+    {% if show_vendor and product.vendor != blank %}
+      <p class="product-card__vendor">{{ product.vendor | escape }}</p>
+    {% endif %}
+    <h3><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+    {% render 'price', product: product %}
+  </div>
+</article>
+
+{% stylesheet %}
+  .product-card {
+    position: relative;
+    min-width: 0;
+  }
+
+  .product-card__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-large);
+    background: var(--color-surface);
+    text-decoration: none;
+  }
+
+  .product-card__media .image,
+  .product-card__media img,
+  .product-card__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .product-card__media img {
+    transition: transform 300ms ease;
+  }
+
+  .product-card:hover .product-card__media img {
+    transform: scale(1.025);
+  }
+
+  .product-card__badge {
+    position: absolute;
+    inset-block-start: var(--space-3);
+    inset-inline-start: var(--space-3);
+    border-radius: 999px;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-size: 0.72rem;
+    font-weight: 750;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .product-card__content {
+    display: grid;
+    gap: var(--space-1);
+    padding-block-start: var(--space-3);
+  }
+
+  .product-card__content h3 {
+    margin: 0;
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+
+  .product-card__content h3 a {
+    text-decoration: none;
+  }
+
+  .product-card__content h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .product-card__vendor {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card__media img {
+      transition: none;
+    }
+  }
+{% endstylesheet %}

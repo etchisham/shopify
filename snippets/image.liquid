@@ -1,52 +1,30 @@
 {% doc %}
-  Renders a responsive image that might be wrapped in a link.
+  Renders a responsive Shopify-hosted image, optionally wrapped in a link.
 
-  When `width`, `height` and `crop` are provided, the image will be rendered
-  with a fixed aspect ratio.
-
-  Serves as an example of how to use the `image_url` filter and `image_tag` filter
-  as well as how you can use LiquidDoc to document your code.
-
-  @param {image} image - The image to be rendered
-  @param {string} [url] - An optional destination URL for the image
-  @param {string} [class] - Optional class to be added to the image wrapper
-  @param {number} [width] - The highest resolution width of the image to be rendered
-  @param {number} [height] - The highest resolution height of the image to be rendered
-  @param {string} [crop] - The crop position of the image
-
-  @example
-  {% render 'image', image: product.featured_image %}
-  {% render 'image', image: product.featured_image, url: product.url %}
-  {% render 'image',
-    class: 'product__image',
-    image: product.featured_image,
-    url: product.url,
-    width: 1200,
-    height: 800,
-    crop: 'center',
-  %}
+  @param {image} image - Image object.
+  @param {string} [url] - Optional link destination.
+  @param {string} [class] - Wrapper class.
+  @param {number} [width] - Maximum requested width.
+  @param {number} [height] - Optional fixed height.
+  @param {string} [crop] - Crop position.
+  @param {string} [widths] - Responsive source widths.
+  @param {string} [sizes] - Responsive sizes attribute.
+  @param {string} [loading] - Image loading behavior.
+  @param {string} [fetchpriority] - Browser fetch priority.
+  @param {string} [alt] - Accessible alt override.
 {% enddoc %}
 
 {% liquid
-  unless height
-    assign width = width | default: image.width
-  endunless
-
-  if url
-    assign wrapper = 'a'
-  else
-    assign wrapper = 'div'
-  endif
+  assign image_width = width | default: image.width
+  assign image_widths = widths | default: '320, 480, 640, 800, 1200, 1600'
+  assign image_sizes = sizes | default: '100vw'
+  assign image_loading = loading | default: 'lazy'
+  assign image_alt = alt | default: image.alt
 %}
 
-<{{ wrapper }}
-  class="image {{ class }}"
-  {% if url %}
-    href="{{ url }}"
-  {% endif %}
->
-  {{ image | image_url: width: width, height: height, crop: crop | image_tag }}
-</{{ wrapper }}>
+{% if url != blank %}<a class="image {{ class }}" href="{{ url }}">{% else %}<div class="image {{ class }}">{% endif %}
+  {{ image | image_url: width: image_width, height: height, crop: crop | image_tag: widths: image_widths, sizes: image_sizes, loading: image_loading, fetchpriority: fetchpriority, alt: image_alt }}
+{% if url != blank %}</a>{% else %}</div>{% endif %}
 
 {% stylesheet %}
   .image {
@@ -54,7 +32,6 @@
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: auto;
   }
 
   .image > img {

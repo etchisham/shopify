@@ -1,35 +1,61 @@
-{% comment %}
-  This section is used in the blog template to render the blog page listing all
-  articles within a blog.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/blog
-{% endcomment %}
-
-<h1>{{ blog.title }}</h1>
-
-{% paginate blog.articles by 5 %}
-  {% for article in blog.articles %}
-    <div>
-      {% if article.image %}
-        {{ article.image | image_url: width: 1000 | image_tag }}
-      {% endif %}
-      <h2>
-        {{ article.title | link_to: article.url }}
-      </h2>
-      {% assign date = article.published_at | time_tag: format: 'date' %}
-      <p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
-      <p>{{ article.excerpt }}</p>
+<section class="blog-index section-spacing">
+  <h1>{{ blog.title | escape }}</h1>
+  {% paginate blog.articles by 9 %}
+    <div class="blog-index__grid">
+      {% for article in blog.articles %}
+        <article class="article-card">
+          {% if article.image %}
+            {% render 'image', image: article.image, url: article.url, width: 1200, widths: '400, 600, 800, 1200', sizes: '(min-width: 768px) 33vw, 100vw', alt: article.image.alt %}
+          {% endif %}
+          {% assign date = article.published_at | time_tag: format: 'date' %}
+          <p class="eyebrow">{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
+          <h2><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+          <p class="muted">{{ article.excerpt_or_content | strip_html | truncatewords: 28 }}</p>
+        </article>
+      {% endfor %}
     </div>
-  {% endfor %}
+    {% if paginate.pages > 1 %}<div class="blog-index__pagination">{{ paginate | default_pagination }}</div>{% endif %}
+  {% endpaginate %}
+</section>
 
-  {%- if paginate.pages > 1 -%}
-    {{- paginate | default_pagination -}}
-  {%- endif -%}
-{% endpaginate %}
+{% stylesheet %}
+  .blog-index > h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    margin-block-end: var(--space-6);
+  }
+
+  .blog-index__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: var(--space-7) var(--grid-gap);
+  }
+
+  .article-card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+  }
+
+  .article-card .image {
+    overflow: hidden;
+    border-radius: var(--radius-large);
+  }
+
+  .article-card h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  .article-card h2 a {
+    text-decoration: none;
+  }
+
+  .blog-index__pagination {
+    margin-block-start: var(--space-7);
+    text-align: center;
+  }
+{% endstylesheet %}
 
 {% schema %}
-{
-  "name": "t:general.blog",
-  "settings": []
-}
+{ "name": "t:general.blog", "settings": [] }
 {% endschema %}
