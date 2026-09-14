@@ -1,6 +1,7 @@
 (() => {
   const root = document.documentElement;
   const modes = ['system', 'light', 'dark'];
+  const facetOpeners = new WeakMap();
 
   function applyTheme(mode) {
     root.dataset.themePreference = mode;
@@ -33,6 +34,22 @@
       const currentMode = root.dataset.themePreference || 'system';
       const nextMode = modes[(modes.indexOf(currentMode) + 1) % modes.length];
       applyTheme(nextMode);
+      return;
+    }
+
+    const facetsOpen = event.target.closest('[data-facets-open]');
+    if (facetsOpen) {
+      const dialog = document.getElementById(facetsOpen.getAttribute('aria-controls'));
+      if (dialog && !dialog.open) {
+        facetOpeners.set(dialog, facetsOpen);
+        dialog.showModal();
+      }
+      return;
+    }
+
+    const facetsClose = event.target.closest('[data-facets-close]');
+    if (facetsClose) {
+      facetsClose.closest('[data-facets-dialog]')?.close();
       return;
     }
 
@@ -70,9 +87,33 @@
     });
   }
 
+  function bindFacetDialogs(scope = document) {
+    scope.querySelectorAll('[data-facets-dialog]').forEach((dialog) => {
+      if (dialog.dataset.bound === 'true') return;
+      dialog.dataset.bound = 'true';
+
+      dialog.addEventListener('close', () => {
+        const opener = facetOpeners.get(dialog);
+        if (opener?.isConnected) opener.focus();
+      });
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target !== dialog) return;
+        const panel = dialog.querySelector('.facets-drawer__panel');
+        const bounds = panel?.getBoundingClientRect();
+        const outsidePanel = !bounds || event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+        if (outsidePanel) dialog.close();
+      });
+    });
+  }
+
   footerDesktop.addEventListener('change', syncFooterMenus);
-  document.addEventListener('shopify:section:load', syncFooterMenus);
+  document.addEventListener('shopify:section:load', (event) => {
+    syncFooterMenus();
+    bindFacetDialogs(event.target);
+  });
 
   applyTheme(root.dataset.themePreference || 'system');
   syncFooterMenus();
+  bindFacetDialogs();
 })();

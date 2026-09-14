@@ -3,6 +3,7 @@
     "skip_to_content": "Skip to content",
     "open_menu": "Open menu",
     "close_menu": "Close menu",
+    "close_filters": "Close filters",
     "theme_system": "Theme: system",
     "theme_light": "Theme: light",
     "theme_dark": "Theme: dark"
@@ -31,6 +32,12 @@
       "choose_variant": "Choose an option",
       "regular_price": "Regular price",
       "sale_price": "Sale price",
+      "rating": "{{ rating }} out of {{ maximum }} stars",
+      "rating_count": {
+        "one": "{{ count }} review",
+        "other": "{{ count }} reviews"
+      },
+      "discount": "{{ percent }}% off",
       "inventory_low": "Only {{ count }} left",
       "inventory_in_stock": "In stock",
       "on_sale": "Sale"
@@ -42,6 +49,20 @@
     "sort_by": "Sort by",
     "empty": "No products found.",
     "choose_collection": "Choose a collection in the theme editor."
+  },
+  "facets": {
+    "all_filters": "All filters",
+    "active_count": "{{ count }} selected",
+    "items_count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
+    "apply": "Apply filters",
+    "clear_all": "Clear all",
+    "minimum_price": "Minimum price",
+    "maximum_price": "Maximum price",
+    "from": "From",
+    "to": "To"
   },
   "newsletter": {
     "label": "Email address",

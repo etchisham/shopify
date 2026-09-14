@@ -137,5 +137,47 @@
         "default": 16
       }
     ]
+  },
+  {
+    "name": "t:general.product_cards",
+    "settings": [
+      {
+        "type": "range",
+        "id": "catalog_columns",
+        "min": 3,
+        "max": 5,
+        "step": 1,
+        "label": "t:labels.catalog_columns",
+        "default": 4
+      },
+      {
+        "type": "range",
+        "id": "card_image_radius",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "label": "t:labels.card_image_radius",
+        "default": 10
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "t:labels.card_show_vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_rating",
+        "label": "t:labels.card_show_rating",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_discount",
+        "label": "t:labels.card_show_discount",
+        "default": true
+      }
+    ]
   }
 ]

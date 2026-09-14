@@ -1,0 +1,563 @@
+{% doc %}
+  Renders a catalog toolbar, active filter chips, and modal side drawer.
+
+  @param {object} filters - Shopify collection or search filters.
+  @param {object} sort_options - Available Shopify sort options.
+  @param {string} sort_by - Current sort value.
+  @param {string} default_sort_by - Default sort value.
+  @param {string} results_url - Form action URL.
+  @param {string} clear_url - URL that removes all filters.
+  @param {number} results_count - Current result count.
+  @param {string} section_id - Unique section identifier.
+  @param {string} [search_terms] - Search query to preserve.
+  @param {boolean} [is_search] - Preserve product-only search scope.
+{% enddoc %}
+
+{% liquid
+  assign active_filter_count = 0
+  assign current_sort = sort_by | default: default_sort_by
+  assign facets_id = 'FacetsDrawer-' | append: section_id
+
+  for filter in filters
+    assign active_filter_count = active_filter_count | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_filter_count = active_filter_count | plus: 1
+      endif
+    endif
+  endfor
+%}
+
+<div class="catalog-toolbar" data-catalog-toolbar>
+  <div class="catalog-toolbar__filter">
+    {% if filters != blank %}
+      <button
+        class="catalog-toolbar__pill catalog-toolbar__filter-button"
+        type="button"
+        aria-controls="{{ facets_id }}"
+        aria-haspopup="dialog"
+        data-facets-open
+      >
+        <span class="catalog-toolbar__filter-icon">{% render 'icon', name: 'filters' %}</span>
+        <span>{{ 'facets.all_filters' | t }}</span>
+        {% if active_filter_count > 0 %}
+          <span class="catalog-toolbar__count" aria-label="{{ 'facets.active_count' | t: count: active_filter_count | escape }}">{{ active_filter_count }}</span>
+        {% endif %}
+      </button>
+    {% endif %}
+  </div>
+
+  <div class="catalog-toolbar__summary">
+    <p class="catalog-toolbar__results" role="status">{{ 'facets.items_count' | t: count: results_count }}</p>
+
+    {% if sort_options.size > 1 %}
+      <form class="catalog-toolbar__sort" action="{{ results_url | escape }}" method="get">
+        {% if search_terms != blank %}<input type="hidden" name="q" value="{{ search_terms | escape }}">{% endif %}
+        {% if is_search %}<input type="hidden" name="type" value="product">{% endif %}
+        {% for filter in filters %}
+          {% for value in filter.active_values %}
+            <input type="hidden" name="{{ value.param_name | escape }}" value="{{ value.value | escape }}">
+          {% endfor %}
+          {% if filter.type == 'price_range' %}
+            {% if filter.min_value.value != nil %}<input type="hidden" name="{{ filter.min_value.param_name | escape }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}">{% endif %}
+            {% if filter.max_value.value != nil %}<input type="hidden" name="{{ filter.max_value.param_name | escape }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}">{% endif %}
+          {% endif %}
+        {% endfor %}
+
+        <label class="catalog-toolbar__pill" for="SortBy-{{ section_id }}">
+          <span>{{ 'collections.sort_by' | t }}:</span>
+          <select id="SortBy-{{ section_id }}" name="sort_by" onchange="this.form.submit()">
+            {% for option in sort_options %}
+              <option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <noscript><button class="button" type="submit">{{ 'collections.sort_by' | t }}</button></noscript>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% if active_filter_count > 0 %}
+  <div class="active-facets" aria-label="{{ 'facets.active_count' | t: count: active_filter_count | escape }}">
+    {% for filter in filters %}
+      {% for value in filter.active_values %}
+        <a class="active-facets__pill" href="{{ value.url_to_remove | escape }}">
+          <span>{{ value.label | escape }}</span><span aria-hidden="true">×</span>
+        </a>
+      {% endfor %}
+      {% if filter.type == 'price_range' %}
+        {% if filter.min_value.value != nil or filter.max_value.value != nil %}
+          <a class="active-facets__pill" href="{{ filter.url_to_remove | escape }}">
+            <span>
+              {% if filter.min_value.value != nil %}{{ filter.min_value.value | money }}{% else %}{{ 0 | money }}{% endif %}
+              –
+              {% if filter.max_value.value != nil %}{{ filter.max_value.value | money }}{% else %}{{ filter.range_max | money }}{% endif %}
+            </span>
+            <span aria-hidden="true">×</span>
+          </a>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    <a class="active-facets__clear" href="{{ clear_url | escape }}">{{ 'facets.clear_all' | t }}</a>
+  </div>
+{% endif %}
+
+{% if filters != blank %}
+  <dialog class="facets-drawer" id="{{ facets_id }}" data-facets-dialog>
+    <form class="facets-drawer__panel" action="{{ results_url | escape }}" method="get">
+      {% if search_terms != blank %}<input type="hidden" name="q" value="{{ search_terms | escape }}">{% endif %}
+      {% if is_search %}<input type="hidden" name="type" value="product">{% endif %}
+      {% if current_sort != blank %}<input type="hidden" name="sort_by" value="{{ current_sort | escape }}">{% endif %}
+
+      <header class="facets-drawer__header">
+        <h2>{{ 'facets.all_filters' | t }}</h2>
+        <button class="facets-drawer__close" type="button" aria-label="{{ 'accessibility.close_filters' | t | escape }}" data-facets-close>
+          {% render 'icon', name: 'close' %}
+        </button>
+      </header>
+
+      <div class="facets-drawer__body">
+        {% for filter in filters %}
+          <details class="facet" open>
+            <summary>
+              <span>{{ filter.label | escape }}</span>
+              <span class="facet__chevron">{% render 'icon', name: 'chevron' %}</span>
+            </summary>
+
+            <div class="facet__content">
+              {% case filter.type %}
+                {% when 'boolean', 'list' %}
+                  <ul class="facet__values" role="list">
+                    {% for value in filter.values %}
+                      {% assign value_id = 'Facet-' | append: section_id | append: '-' | append: filter.param_name | handleize | append: '-' | append: forloop.index %}
+                      <li>
+                        <input
+                          id="{{ value_id }}"
+                          type="checkbox"
+                          name="{{ value.param_name | escape }}"
+                          value="{{ value.value | escape }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                        >
+                        <label for="{{ value_id }}">
+                          <span>{{ value.label | escape }}</span>
+                          <span class="facet__value-count">{{ value.count }}</span>
+                        </label>
+                      </li>
+                    {% endfor %}
+                  </ul>
+
+                {% when 'price_range' %}
+                  <div class="facet__price">
+                    <label>
+                      <span>{{ 'facets.from' | t }}</span>
+                      <span class="facet__price-input">
+                        <span aria-hidden="true">{{ cart.currency.symbol }}</span>
+                        <input
+                          type="number"
+                          name="{{ filter.min_value.param_name | escape }}"
+                          value="{% if filter.min_value.value != nil %}{{ filter.min_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          step="0.01"
+                          inputmode="decimal"
+                          aria-label="{{ 'facets.minimum_price' | t | escape }}"
+                        >
+                      </span>
+                    </label>
+                    <label>
+                      <span>{{ 'facets.to' | t }}</span>
+                      <span class="facet__price-input">
+                        <span aria-hidden="true">{{ cart.currency.symbol }}</span>
+                        <input
+                          type="number"
+                          name="{{ filter.max_value.param_name | escape }}"
+                          value="{% if filter.max_value.value != nil %}{{ filter.max_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          step="0.01"
+                          inputmode="decimal"
+                          aria-label="{{ 'facets.maximum_price' | t | escape }}"
+                        >
+                      </span>
+                    </label>
+                  </div>
+              {% endcase %}
+            </div>
+          </details>
+        {% endfor %}
+      </div>
+
+      <footer class="facets-drawer__footer">
+        {% if active_filter_count > 0 %}<a href="{{ clear_url | escape }}">{{ 'facets.clear_all' | t }}</a>{% endif %}
+        <button class="button" type="submit">{{ 'facets.apply' | t }}</button>
+      </footer>
+    </form>
+  </dialog>
+{% endif %}
+
+{% stylesheet %}
+  .catalog-toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    margin-block: 0 0.9rem;
+  }
+
+  .catalog-toolbar__summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  .catalog-toolbar__results {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .catalog-toolbar__pill {
+    display: inline-flex;
+    min-height: 2.9rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    border: 1px solid var(--color-foreground);
+    border-radius: 999px;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-size: 0.95rem;
+    line-height: 1;
+    padding: 0.65rem 1rem;
+  }
+
+  .catalog-toolbar__filter-button {
+    border-color: transparent;
+    background: var(--color-surface);
+    font-weight: 650;
+    padding-inline: 1.4rem;
+  }
+
+  .catalog-toolbar__pill:hover,
+  .catalog-toolbar__pill:focus-within {
+    box-shadow: 0 0.15rem 0.35rem rgb(0 0 0 / 12%);
+  }
+
+  .catalog-toolbar__filter-icon,
+  .catalog-toolbar__filter-icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .catalog-toolbar__filter-icon svg,
+  .facets-drawer__close svg,
+  .facet__chevron svg {
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+  }
+
+  .catalog-toolbar__count {
+    display: grid;
+    min-width: 1.3rem;
+    height: 1.3rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .catalog-toolbar__sort label {
+    width: 13.35rem;
+    justify-content: flex-start;
+    cursor: pointer;
+  }
+
+  .catalog-toolbar__sort select {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+    min-height: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-weight: 700;
+    padding: 0 1.2rem 0 0.1rem;
+  }
+
+  [dir='rtl'] .catalog-toolbar__sort select {
+    padding: 0 0.1rem 0 1.2rem;
+  }
+
+  .active-facets {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-end: 1rem;
+  }
+
+  .active-facets__pill {
+    display: inline-flex;
+    min-height: 2.35rem;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.4rem 0.75rem;
+    text-decoration: none;
+  }
+
+  .active-facets__clear {
+    font-weight: 650;
+  }
+
+  .facets-drawer {
+    position: fixed;
+    z-index: 100;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: min(28rem, calc(100vw - 1.5rem));
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-foreground);
+    padding: 0;
+  }
+
+  .facets-drawer::backdrop {
+    background: rgb(0 0 0 / 48%);
+  }
+
+  .facets-drawer__panel {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    background: var(--color-background);
+    box-shadow: 0.8rem 0 2.4rem rgb(0 0 0 / 18%);
+  }
+
+  [dir='rtl'] .facets-drawer__panel {
+    box-shadow: -0.8rem 0 2.4rem rgb(0 0 0 / 18%);
+  }
+
+  .facets-drawer__header,
+  .facets-drawer__footer {
+    display: flex;
+    min-height: 5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-block-end: 1px solid var(--color-border);
+    padding: 1rem 1.5rem;
+  }
+
+  .facets-drawer__header h2 {
+    margin: 0;
+    font-family: var(--font-body-family);
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .facets-drawer__close {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+  }
+
+  .facets-drawer__close:hover {
+    background: var(--color-surface);
+  }
+
+  .facets-drawer__close svg {
+    width: 1.35rem;
+  }
+
+  .facets-drawer__body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-inline: 1.5rem;
+  }
+
+  .facet {
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .facet > summary {
+    display: flex;
+    min-height: 3.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    font-weight: 700;
+    list-style: none;
+  }
+
+  .facet > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .facet__chevron {
+    transition: transform 160ms ease;
+  }
+
+  .facet__chevron svg {
+    width: 1.15rem;
+  }
+
+  .facet[open] .facet__chevron {
+    transform: rotate(180deg);
+  }
+
+  .facet__content {
+    padding-block: 0 1rem;
+  }
+
+  .facet__values {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .facet__values li {
+    position: relative;
+  }
+
+  .facet__values input {
+    position: absolute;
+    inset-block-start: 0.8rem;
+    inset-inline-start: 0.15rem;
+    width: 1.15rem;
+    min-height: 1.15rem;
+    accent-color: var(--color-accent);
+  }
+
+  .facet__values label {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    padding-inline-start: 2rem;
+  }
+
+  .facet__values input:disabled + label {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .facet__value-count {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+  }
+
+  .facet__price {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .facet__price label {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+
+  .facet__price-input {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.3rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    padding-inline-start: 0.7rem;
+  }
+
+  .facet__price-input input {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding-inline: 0;
+  }
+
+  .facets-drawer__footer {
+    justify-content: flex-end;
+    border-block-start: 1px solid var(--color-border);
+    border-block-end: 0;
+  }
+
+  .facets-drawer__footer > a {
+    margin-inline-end: auto;
+    font-weight: 650;
+  }
+
+  .facets-drawer__footer .button {
+    min-width: 9rem;
+    border-radius: 999px;
+  }
+
+  @media (max-width: 40rem) {
+    .catalog-toolbar {
+      grid-template-columns: auto 1fr;
+      align-items: end;
+    }
+
+    .catalog-toolbar__summary {
+      display: grid;
+      justify-items: end;
+      gap: 0.4rem;
+    }
+
+    .catalog-toolbar__results {
+      grid-column: 1 / -1;
+      font-size: 0.8rem;
+    }
+
+    .catalog-toolbar__pill {
+      min-height: 2.75rem;
+      padding-inline: 0.8rem;
+    }
+
+    .catalog-toolbar__sort label > span {
+      display: none;
+    }
+
+    .catalog-toolbar__sort select {
+      width: 100%;
+      max-width: 9.5rem;
+      font-size: 0.85rem;
+    }
+
+    .catalog-toolbar__sort label {
+      width: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .facet__chevron {
+      transition: none;
+    }
+  }
+{% endstylesheet %}

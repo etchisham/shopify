@@ -3,6 +3,7 @@
     "skip_to_content": "تخطَّ إلى المحتوى",
     "open_menu": "فتح القائمة",
     "close_menu": "إغلاق القائمة",
+    "close_filters": "إغلاق عوامل التصفية",
     "theme_system": "السمة: حسب النظام",
     "theme_light": "السمة: فاتحة",
     "theme_dark": "السمة: داكنة"
@@ -31,6 +32,12 @@
       "choose_variant": "اختر خيارًا",
       "regular_price": "السعر العادي",
       "sale_price": "سعر التخفيض",
+      "rating": "{{ rating }} من {{ maximum }} نجوم",
+      "rating_count": {
+        "one": "تقييم واحد",
+        "other": "{{ count }} تقييمات"
+      },
+      "discount": "خصم {{ percent }}٪",
       "inventory_low": "متبقي {{ count }} فقط",
       "inventory_in_stock": "متوفر",
       "on_sale": "تخفيض"
@@ -42,6 +49,20 @@
     "sort_by": "ترتيب حسب",
     "empty": "لا توجد منتجات.",
     "choose_collection": "اختر مجموعة من محرر القالب."
+  },
+  "facets": {
+    "all_filters": "كل عوامل التصفية",
+    "active_count": "تم تحديد {{ count }}",
+    "items_count": {
+      "one": "منتج واحد",
+      "other": "{{ count }} منتجات"
+    },
+    "apply": "تطبيق عوامل التصفية",
+    "clear_all": "مسح الكل",
+    "minimum_price": "الحد الأدنى للسعر",
+    "maximum_price": "الحد الأقصى للسعر",
+    "from": "من",
+    "to": "إلى"
   },
   "newsletter": {
     "label": "البريد الإلكتروني",

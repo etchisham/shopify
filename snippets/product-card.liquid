@@ -1,20 +1,33 @@
 {% doc %}
-  Renders a linked product summary card.
+  Renders the canonical store-wide product card.
 
   @param {product} product - Product object.
-  @param {boolean} [show_vendor] - Show product vendor.
   @param {string} [sizes] - Responsive image sizes.
+  @param {string} [heading_level] - Card title heading level; h2 or h3.
 {% enddoc %}
+
+{% liquid
+  assign card_image_alt = product.featured_image.alt | default: product.title
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign rating_value = rating.rating | default: rating
+  assign rating_maximum = rating.scale_max | default: 5
+  assign rating_percentage = 0
+
+  if rating_value != blank and rating_maximum > 0
+    assign rating_percentage = rating_value | times: 100.0 | divided_by: rating_maximum
+  endif
+%}
 
 <article class="product-card">
   <a class="product-card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
     {% if product.featured_image %}
       {% render 'image',
         image: product.featured_image,
-        width: 900,
-        widths: '240, 360, 480, 640, 900',
+        width: 1200,
+        widths: '240, 360, 480, 640, 800, 1000, 1200',
         sizes: sizes,
-        alt: product.featured_image.alt
+        alt: card_image_alt
       %}
     {% else %}
       {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
@@ -22,33 +35,55 @@
 
     {% unless product.available %}
       <span class="product-card__badge">{{ 'products.product.sold_out' | t }}</span>
-    {% else %}
-      {% if product.compare_at_price_max > product.price %}
-        <span class="product-card__badge">{{ 'products.product.on_sale' | t }}</span>
-      {% endif %}
     {% endunless %}
   </a>
 
   <div class="product-card__content">
-    {% if show_vendor and product.vendor != blank %}
+    {% if heading_level == 'h2' %}
+      <h2 class="product-card__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h2>
+    {% else %}
+      <h3 class="product-card__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+    {% endif %}
+
+    {% if settings.card_show_rating and rating_value != blank %}
+      <div class="product-card__rating">
+        <span
+          class="product-card__stars"
+          style="--rating-percentage: {{ rating_percentage }}%;"
+          role="img"
+          aria-label="{{ 'products.product.rating' | t: rating: rating_value, maximum: rating_maximum | escape }}"
+        >
+          <span aria-hidden="true">★★★★★</span>
+        </span>
+        {% if rating_count > 0 %}
+          <span class="product-card__rating-count">({{ rating_count }})</span>
+          <span class="visually-hidden">{{ 'products.product.rating_count' | t: count: rating_count }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% render 'price', product: product, card_layout: true, show_discount: settings.card_show_discount %}
+
+    {% if settings.card_show_vendor and product.vendor != blank %}
       <p class="product-card__vendor">{{ product.vendor | escape }}</p>
     {% endif %}
-    <h3><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
-    {% render 'price', product: product %}
   </div>
 </article>
 
 {% stylesheet %}
   .product-card {
     position: relative;
+    display: grid;
     min-width: 0;
+    align-content: start;
+    color: var(--color-foreground);
   }
 
   .product-card__media {
     position: relative;
     display: block;
     overflow: hidden;
-    border-radius: var(--radius-large);
+    border-radius: var(--product-card-radius);
     background: var(--color-surface);
     text-decoration: none;
   }
@@ -57,59 +92,178 @@
   .product-card__media img,
   .product-card__placeholder {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 5 / 4;
     object-fit: cover;
   }
 
   .product-card__media img {
-    transition: transform 300ms ease;
-  }
-
-  .product-card:hover .product-card__media img {
-    transform: scale(1.025);
+    transition: transform 240ms ease;
   }
 
   .product-card__badge {
     position: absolute;
-    inset-block-start: var(--space-3);
-    inset-inline-start: var(--space-3);
+    inset-block-start: 0.7rem;
+    inset-inline-start: 0.7rem;
+    border: 1px solid rgb(0 0 0 / 10%);
     border-radius: 999px;
     background: var(--color-background);
     color: var(--color-foreground);
     font-size: 0.72rem;
-    font-weight: 750;
-    padding: 0.35rem 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.45rem 0.65rem;
   }
 
   .product-card__content {
     display: grid;
-    gap: var(--space-1);
-    padding-block-start: var(--space-3);
+    gap: 0.18rem;
+    padding-block-start: 0.4rem;
   }
 
-  .product-card__content h3 {
+  .product-card__title {
+    min-width: 0;
     margin: 0;
+    overflow: hidden;
     font-family: var(--font-body-family);
-    font-size: 1rem;
-    letter-spacing: 0;
+    font-size: clamp(0.875rem, 0.9vw, 1rem);
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .product-card__content h3 a {
+  .product-card__title a {
+    color: inherit;
     text-decoration: none;
   }
 
-  .product-card__content h3 a::after {
+  .product-card__title a::after {
     content: '';
     position: absolute;
+    z-index: 1;
     inset: 0;
+    border-radius: var(--product-card-radius);
+  }
+
+  .product-card__title a:focus-visible {
+    outline: none;
+  }
+
+  .product-card__title a:focus-visible::after {
+    outline: 0.2rem solid var(--color-accent);
+    outline-offset: 0.2rem;
+  }
+
+  .product-card__rating {
+    display: flex;
+    min-height: 1.35rem;
+    align-items: center;
+    gap: 0.3rem;
+    line-height: 1;
+  }
+
+  .product-card__stars {
+    position: relative;
+    display: inline-block;
+    direction: ltr;
+    color: color-mix(in srgb, var(--color-foreground) 18%, transparent);
+    font-size: 1.05rem;
+    letter-spacing: -0.08em;
+    line-height: 1;
+    unicode-bidi: isolate;
+  }
+
+  .product-card__stars::after {
+    content: '★★★★★';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: var(--rating-percentage);
+    overflow: hidden;
+    color: var(--color-foreground);
+    white-space: nowrap;
+  }
+
+  .product-card__rating-count {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  .product-card .price {
+    gap: 0.35rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+
+  .product-card .price__current {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .product-card .price__compare {
+    font-size: 0.82rem;
   }
 
   .product-card__vendor {
     margin: 0;
+    overflow: hidden;
     color: var(--color-muted);
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.75rem, 2.2vw, 2.5rem) clamp(0.8rem, 1.2vw, 1.4rem);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .product-card:hover .product-card__media img {
+      transform: scale(1.02);
+    }
+
+    .product-card:hover .product-card__title {
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+  }
+
+  @media (min-width: 46.875rem) {
+    .catalog-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .catalog-grid {
+      grid-template-columns: repeat(var(--catalog-columns), minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 27rem) {
+    .product-card__content {
+      padding-block-start: 0.35rem;
+    }
+
+    .product-card__title,
+    .product-card .price__current {
+      font-size: 0.875rem;
+    }
+
+    .product-card__stars {
+      font-size: 0.92rem;
+    }
+
+    .product-card .price__compare,
+    .product-card .price__discount,
+    .product-card__rating-count,
+    .product-card__vendor {
+      font-size: 0.72rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

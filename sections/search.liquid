@@ -1,44 +1,74 @@
-<section class="search-page section-spacing">
-  <h1>{{ 'search.title' | t }}</h1>
+<section class="catalog-page search-page full-width section-spacing">
+  <div class="search-page__inner">
+    <header class="search-page__header">
+      <h1>{{ 'search.title' | t }}</h1>
 
-  <form class="search-page__form" action="{{ routes.search_url }}" method="get" role="search">
-    <label class="visually-hidden" for="SearchInput-{{ section.id }}">{{ 'search.placeholder' | t }}</label>
-    <input id="SearchInput-{{ section.id }}" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}">
-    <button class="button" type="submit">{{ 'search.submit' | t }}</button>
-  </form>
+      <form class="search-page__form" action="{{ routes.search_url }}" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <label class="visually-hidden" for="SearchInput-{{ section.id }}">{{ 'search.placeholder' | t }}</label>
+        <input id="SearchInput-{{ section.id }}" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}">
+        <button class="button" type="submit">{{ 'search.submit' | t }}</button>
+      </form>
+    </header>
 
-  {% if search.performed %}
-    {% if search.results_count == 0 %}
-      <p class="search-page__message">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
-    {% else %}
-      <p class="search-page__message">{{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}</p>
+    {% if search.performed %}
+      {% capture search_clear_url %}{{ routes.search_url }}?q={{ search.terms | url_encode }}&type=product{% endcapture %}
 
-      {% paginate search.results by 20 %}
-        <div class="search-page__results">
-          {% for result in search.results %}
-            {% if result.object_type == 'product' %}
-              {% render 'product-card', product: result, sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw' %}
-            {% else %}
-              <article class="search-card">
-                {% assign featured_image = result.image %}
-                {% if featured_image %}
-                  {% render 'image', image: featured_image, url: result.url, width: 800, widths: '320, 480, 640, 800', sizes: '(min-width: 768px) 33vw, 100vw' %}
-                {% endif %}
-                <p class="eyebrow">{{ result.object_type | capitalize }}</p>
-                <h2><a href="{{ result.url }}">{{ result.title | escape }}</a></h2>
-                <p class="muted">{{ result.content | strip_html | truncatewords: 24 }}</p>
-              </article>
-            {% endif %}
-          {% endfor %}
-        </div>
-        <div class="search-page__pagination">{{ paginate | default_pagination }}</div>
+      {% paginate search.results by 24 %}
+        {% render 'facets-toolbar',
+          filters: search.filters,
+          sort_options: search.sort_options,
+          sort_by: search.sort_by,
+          default_sort_by: search.default_sort_by,
+          results_url: routes.search_url,
+          clear_url: search_clear_url,
+          results_count: search.results_count,
+          section_id: section.id,
+          search_terms: search.terms,
+          is_search: true
+        %}
+
+        {% if search.results_count == 0 %}
+          <p class="search-page__empty">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
+        {% else %}
+          <div class="catalog-grid">
+            {% for result in search.results %}
+              {% if result.object_type == 'product' %}
+                {% render 'product-card', product: result, heading_level: 'h2', sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw' %}
+              {% else %}
+                <article class="search-card">
+                  {% assign featured_image = result.image %}
+                  {% if featured_image %}
+                    {% render 'image', image: featured_image, url: result.url, width: 1000, widths: '320, 480, 640, 800, 1000', sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw' %}
+                  {% endif %}
+                  <p class="eyebrow">{{ result.object_type | capitalize }}</p>
+                  <h2><a href="{{ result.url }}">{{ result.title | escape }}</a></h2>
+                  <p class="muted">{{ result.content | strip_html | truncatewords: 24 }}</p>
+                </article>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="search-page__pagination">{{ paginate | default_pagination }}</div>
+        {% endif %}
       {% endpaginate %}
     {% endif %}
-  {% endif %}
+  </div>
 </section>
 
 {% stylesheet %}
-  .search-page > h1 {
+  .search-page__inner {
+    width: 100%;
+    padding-inline: clamp(1rem, 5.2vw, 6.25rem);
+  }
+
+  .search-page__header {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 52rem;
+    margin-block-end: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .search-page__header h1 {
     font-size: clamp(2.2rem, 5vw, 4rem);
   }
 
@@ -46,42 +76,67 @@
     display: flex;
     max-width: 44rem;
     gap: var(--space-2);
-    margin-block: var(--space-5) var(--space-6);
   }
 
-  .search-page__form input {
+  .search-page__form input[type='search'] {
     min-width: 0;
-  }
-
-  .search-page__message {
-    margin-block-end: var(--space-5);
-  }
-
-  .search-page__results {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
-    gap: var(--space-7) var(--grid-gap);
   }
 
   .search-card {
     display: grid;
+    min-width: 0;
     align-content: start;
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
 
   .search-card .image {
-    overflow: hidden;
-    border-radius: var(--radius-large);
+    border-radius: var(--product-card-radius);
+  }
+
+  .search-card .image img {
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
   }
 
   .search-card h2 {
     margin: 0;
-    font-size: 1.25rem;
+    overflow: hidden;
+    font-family: var(--font-body-family);
+    font-size: 1rem;
+    letter-spacing: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .search-page__pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
     margin-block-start: var(--space-7);
     text-align: center;
+  }
+
+  .search-page__pagination > * {
+    display: inline-grid;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    place-items: center;
+    border-radius: 999px;
+    padding: 0.55rem;
+  }
+
+  .search-page__empty {
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-large);
+    padding: var(--space-7);
+    text-align: center;
+  }
+
+  @media (max-width: 40rem) {
+    .search-page__inner {
+      padding-inline: 1rem;
+    }
   }
 
   @media (max-width: 30rem) {

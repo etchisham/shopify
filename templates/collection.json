@@ -4,9 +4,7 @@
       "type": "collection",
       "settings": {
         "show_collection_description": true,
-        "show_product_vendor": false,
-        "products_per_page": 24,
-        "columns": 4
+        "products_per_page": 24
       }
     }
   },

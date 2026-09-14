@@ -1,101 +1,90 @@
-<section class="collection section-spacing">
-  <div class="collection__header">
-    <div>
+<section class="catalog-page collection full-width section-spacing">
+  <div class="catalog-page__inner">
+    <header class="catalog-page__header">
       <p class="eyebrow">{{ 'general.collection' | t }}</p>
       <h1>{{ collection.title | escape }}</h1>
       {% if section.settings.show_collection_description and collection.description != blank %}
-        <div class="collection__description rte muted">{{ collection.description }}</div>
+        <div class="catalog-page__description rte muted">{{ collection.description }}</div>
       {% endif %}
-    </div>
+    </header>
 
-    {% if collection.sort_options.size > 1 %}
-      <form class="collection__sort" action="{{ collection.url }}" method="get">
-        <label for="SortBy-{{ section.id }}">{{ 'collections.sort_by' | t }}</label>
-        <select id="SortBy-{{ section.id }}" name="sort_by" onchange="this.form.submit()">
-          {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
-          {% for option in collection.sort_options %}
-            <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+    {% paginate collection.products by section.settings.products_per_page %}
+      {% render 'facets-toolbar',
+        filters: collection.filters,
+        sort_options: collection.sort_options,
+        sort_by: collection.sort_by,
+        default_sort_by: collection.default_sort_by,
+        results_url: collection.url,
+        clear_url: collection.url,
+        results_count: collection.products_count,
+        section_id: section.id
+      %}
+
+      {% if collection.products_count > 0 %}
+        <div class="catalog-grid">
+          {% for product in collection.products %}
+            {% render 'product-card', product: product, heading_level: 'h2', sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw' %}
           {% endfor %}
-        </select>
-        <noscript><button class="button" type="submit">{{ 'collections.sort_by' | t }}</button></noscript>
-      </form>
-    {% endif %}
+        </div>
+        <div class="catalog-page__pagination">{{ paginate | default_pagination }}</div>
+      {% else %}
+        <p class="catalog-page__empty">{{ 'collections.empty' | t }}</p>
+      {% endif %}
+    {% endpaginate %}
   </div>
-
-  {% paginate collection.products by section.settings.products_per_page %}
-    {% if collection.products_count > 0 %}
-      <div class="collection__grid" style="--collection-columns: {{ section.settings.columns }};">
-        {% for product in collection.products %}
-          {% render 'product-card', product: product, show_vendor: section.settings.show_product_vendor, sizes: '(min-width: 990px) 25vw, (min-width: 600px) 50vw, 100vw' %}
-        {% endfor %}
-      </div>
-      <div class="collection__pagination">{{ paginate | default_pagination }}</div>
-    {% else %}
-      <p class="collection__empty">{{ 'collections.empty' | t }}</p>
-    {% endif %}
-  {% endpaginate %}
 </section>
 
 {% stylesheet %}
-  .collection__header {
-    display: grid;
-    gap: var(--space-5);
-    margin-block-end: var(--space-7);
+  .catalog-page__inner {
+    width: 100%;
+    padding-inline: clamp(1rem, 5.2vw, 6.25rem);
   }
 
-  .collection__header h1 {
+  .catalog-page__header {
+    max-width: 52rem;
+    margin-block-end: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .catalog-page__header h1 {
     margin-block-start: var(--space-2);
   }
 
-  .collection__description {
+  .catalog-page__description {
     max-width: 48rem;
   }
 
-  .collection__sort {
-    display: grid;
-    gap: var(--space-2);
-    min-width: 13rem;
-  }
-
-  .collection__sort label {
-    font-weight: 650;
-  }
-
-  .collection__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-6) var(--grid-gap);
-  }
-
-  .collection__pagination {
+  .catalog-page__pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
     margin-block-start: var(--space-7);
     text-align: center;
   }
 
-  .collection__pagination > * {
-    display: inline-block;
+  .catalog-page__pagination > * {
+    display: inline-grid;
     min-width: 2.75rem;
     min-height: 2.75rem;
+    place-items: center;
+    border-radius: 999px;
     padding: 0.55rem;
   }
 
-  .collection__empty {
+  .catalog-page__empty {
     border: 1px dashed var(--color-border);
     border-radius: var(--radius-large);
     padding: var(--space-7);
     text-align: center;
   }
 
-  @media (min-width: 48rem) {
-    .collection__header {
-      grid-template-columns: 1fr auto;
-      align-items: end;
+  @media (max-width: 40rem) {
+    .catalog-page__inner {
+      padding-inline: 1rem;
     }
-  }
 
-  @media (min-width: 64rem) {
-    .collection__grid {
-      grid-template-columns: repeat(var(--collection-columns), minmax(0, 1fr));
+    .catalog-page__header {
+      margin-block-end: 2rem;
     }
   }
 {% endstylesheet %}
@@ -106,9 +95,7 @@
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
     { "type": "checkbox", "id": "show_collection_description", "label": "t:labels.show_collection_description", "default": true },
-    { "type": "checkbox", "id": "show_product_vendor", "label": "t:labels.show_product_vendor", "default": false },
-    { "type": "range", "id": "products_per_page", "min": 12, "max": 48, "step": 4, "label": "t:labels.products_to_show", "default": 24 },
-    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "t:labels.columns", "default": 4 }
+    { "type": "range", "id": "products_per_page", "min": 12, "max": 48, "step": 4, "label": "t:labels.products_to_show", "default": 24 }
   ]
 }
 {% endschema %}

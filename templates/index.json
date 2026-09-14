@@ -32,8 +32,7 @@
         "heading": "Featured products",
         "collection": "",
         "products_to_show": 4,
-        "columns": 4,
-        "show_product_vendor": false
+        "columns": 4
       }
     },
     "imagetext": {

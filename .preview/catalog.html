@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Catalog visual QA</title>
+    <style>
+      :root {
+        --color-accent: #244c3a; --color-accent-contrast: #fff; --color-background: #fffcf7;
+        --color-border: #d8d3c8; --color-foreground: #171714; --color-muted: #625f58;
+        --color-surface: #f4f0e8; --font-body-family: Arial, sans-serif; --font-body-style: normal;
+        --font-body-weight: 400; --font-heading-family: Arial, sans-serif; --font-heading-style: normal;
+        --font-heading-weight: 700; --font-size-base: 1rem; --page-margin: 20px; --page-width: 90rem;
+        --product-card-radius: 10px; --catalog-columns: 4; --radius-small: 6px; --radius-large: 16px;
+        --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
+        --space-5: 1.5rem; --space-6: 2rem; --space-7: 3rem; --space-8: 4.5rem;
+      }
+      body { display: block !important; }
+      .qa-image-1 { background: linear-gradient(135deg,#d7b38c,#f7d8be 45%,#bf4d4d 46% 65%,#e4b445 66%); }
+      .qa-image-2 { background: linear-gradient(135deg,#fafafa,#e6ded3 50%,#c7ad8d 51% 56%,#dfe8df 57%); }
+      .qa-image-3 { background: linear-gradient(135deg,#d9d5ce,#efebe4 42%,#9eb493 43% 67%,#d8b99a 68%); }
+      .qa-image-4 { background: linear-gradient(135deg,#f0b8bc,#e88da1 50%,#e5c05f 51% 56%,#da8095 57%); }
+    </style>
+  </head>
+  <body>
+    <section class="catalog-page collection full-width section-spacing">
+      <div class="catalog-page__inner">
+        <header class="catalog-page__header"><p class="eyebrow">Collection</p><h1>Prints</h1></header>
+
+        <div class="catalog-toolbar" data-catalog-toolbar>
+          <div class="catalog-toolbar__filter">
+            <button class="catalog-toolbar__pill catalog-toolbar__filter-button" type="button" aria-controls="QaFacets" aria-haspopup="dialog" data-facets-open>
+              <span class="catalog-toolbar__filter-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="7" cy="18" r="2"/></svg></span>
+              <span>All filters</span>
+            </button>
+          </div>
+          <div class="catalog-toolbar__summary">
+            <p class="catalog-toolbar__results" role="status">1,000+ items</p>
+            <form class="catalog-toolbar__sort"><label class="catalog-toolbar__pill" for="QaSort"><span>Sort by:</span><select id="QaSort"><option>Relevancy</option><option>Price, low to high</option></select></label></form>
+          </div>
+        </div>
+
+        <div class="catalog-grid">
+          <article class="product-card">
+            <a class="product-card__media" href="#" tabindex="-1" aria-hidden="true"><div class="image qa-image-1"></div></a>
+            <div class="product-card__content"><h3 class="product-card__title"><a href="#">Entire Shop Sale, 35,000 Mega Bundle, Printable Wall Art</a></h3><div class="product-card__rating"><span class="product-card__stars" style="--rating-percentage:92%" role="img" aria-label="4.6 out of 5 stars"><span aria-hidden="true">★★★★★</span></span><span class="product-card__rating-count">(1,755)</span></div><div class="price price--sale"><span class="price__current">USD 10.14</span><s class="price__compare">USD 20.29</s><span class="price__discount">50% off</span></div><p class="product-card__vendor">Studio North</p></div>
+          </article>
+          <article class="product-card">
+            <a class="product-card__media" href="#" tabindex="-1" aria-hidden="true"><div class="image qa-image-2"></div></a>
+            <div class="product-card__content"><h3 class="product-card__title"><a href="#">Watercolor Chuppah Ketubah, Arch Trees Wedding Print</a></h3><div class="product-card__rating"><span class="product-card__stars" style="--rating-percentage:100%" role="img" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></span><span class="product-card__rating-count">(340)</span></div><div class="price price--sale"><span class="price__current">USD 244.79</span><s class="price__compare">USD 305.99</s><span class="price__discount">20% off</span></div><p class="product-card__vendor">Atelier Paper</p></div>
+          </article>
+          <article class="product-card">
+            <a class="product-card__media" href="#" tabindex="-1" aria-hidden="true"><div class="image qa-image-3"></div></a>
+            <div class="product-card__content"><h3 class="product-card__title"><a href="#">Funny Goose Bathroom Print Set of 3, Green Pink</a></h3><div class="product-card__rating"><span class="product-card__stars" style="--rating-percentage:96%" role="img" aria-label="4.8 out of 5 stars"><span aria-hidden="true">★★★★★</span></span><span class="product-card__rating-count">(388)</span></div><div class="price price--sale"><span class="price__current">USD 9.03</span><s class="price__compare">USD 12.90</s><span class="price__discount">30% off</span></div><p class="product-card__vendor">Mint House</p></div>
+          </article>
+          <article class="product-card">
+            <a class="product-card__media" href="#" tabindex="-1" aria-hidden="true"><div class="image qa-image-4"></div></a>
+            <div class="product-card__content"><h3 class="product-card__title"><a href="#">Tiny Swimmers at Pool Art Print, Minimalist Pink</a></h3><div class="product-card__rating"><span class="product-card__stars" style="--rating-percentage:90%" role="img" aria-label="4.5 out of 5 stars"><span aria-hidden="true">★★★★★</span></span><span class="product-card__rating-count">(415)</span></div><div class="price"><span class="price__current">USD 18.08</span></div><p class="product-card__vendor">Pink Gallery</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="facets-drawer" id="QaFacets" data-facets-dialog>
+      <form class="facets-drawer__panel">
+        <header class="facets-drawer__header"><h2>All filters</h2><button class="facets-drawer__close" type="button" aria-label="Close filters" data-facets-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button></header>
+        <div class="facets-drawer__body">
+          <details class="facet" open><summary><span>Availability</span><span class="facet__chevron">⌄</span></summary><div class="facet__content"><ul class="facet__values" role="list"><li><input id="qa-stock" type="checkbox"><label for="qa-stock"><span>In stock</span><span class="facet__value-count">128</span></label></li><li><input id="qa-sale" type="checkbox"><label for="qa-sale"><span>On sale</span><span class="facet__value-count">42</span></label></li></ul></div></details>
+          <details class="facet" open><summary><span>Product type</span><span class="facet__chevron">⌄</span></summary><div class="facet__content"><ul class="facet__values" role="list"><li><input id="qa-print" type="checkbox"><label for="qa-print"><span>Prints</span><span class="facet__value-count">86</span></label></li><li><input id="qa-canvas" type="checkbox"><label for="qa-canvas"><span>Canvas</span><span class="facet__value-count">38</span></label></li></ul></div></details>
+        </div>
+        <footer class="facets-drawer__footer"><button class="button" type="submit">Apply filters</button></footer>
+      </form>
+    </dialog>
+
+    <script>
+      if (new URLSearchParams(location.search).has('rtl')) {
+        document.documentElement.lang = 'ar';
+        document.documentElement.dir = 'rtl';
+      }
+      const paths = ['/assets/critical.css','/snippets/product-card.liquid','/snippets/price.liquid','/snippets/facets-toolbar.liquid','/sections/collection.liquid'];
+      Promise.all(paths.map((path) => fetch(path).then((response) => response.text()))).then(([critical, ...liquid]) => {
+        const extract = (source) => source.match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)?.[1] || '';
+        const style = document.createElement('style');
+        style.textContent = critical + liquid.map(extract).join('');
+        document.head.append(style);
+      });
+    </script>
+    <script src="/assets/theme.js"></script>
+  </body>
+</html>
