@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -12,13 +21,59 @@
     "trust": {
       "type": "trust-bar",
       "blocks": {
-        "secure": { "type": "item", "settings": { "heading": "Secure checkout", "text": "Protected by Shopify" } },
-        "details": { "type": "item", "settings": { "heading": "Clear product details", "text": "Know what you are choosing" } },
-        "support": { "type": "item", "settings": { "heading": "Questions?", "text": "Contact us before ordering" } }
+        "secure": {
+          "type": "item",
+          "settings": {
+            "heading": "Secure checkout",
+            "text": "Protected by Shopify"
+          }
+        },
+        "details": {
+          "type": "item",
+          "settings": {
+            "heading": "Clear product details",
+            "text": "Know what you are choosing"
+          }
+        },
+        "support": {
+          "type": "item",
+          "settings": {
+            "heading": "Questions?",
+            "text": "Contact us before ordering"
+          }
+        }
       },
-      "block_order": ["secure", "details", "support"],
-      "settings": { "heading": "Purchase information" }
+      "block_order": [
+        "secure",
+        "details",
+        "support"
+      ],
+      "settings": {
+        "heading": "Purchase information"
+      }
+    },
+    "1789423886655db41b": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_LxYaQx": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_LxYaQx"
+      ],
+      "settings": {}
     }
   },
-  "order": ["main", "trust"]
+  "order": [
+    "main",
+    "trust",
+    "1789423886655db41b"
+  ]
 }

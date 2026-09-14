@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "t:general.footer",
@@ -5,36 +14,12 @@
     "footer": {
       "type": "footer",
       "settings": {
-        "logo_width": 100,
-        "primary_menu": "footer",
-        "secondary_menu": "main-menu",
-        "secondary_menu_heading": "",
-        "show_newsletter": true,
         "newsletter_heading": "",
-        "newsletter_text": "",
-        "email_placeholder": "",
-        "subscribe_label": "",
-        "privacy_text": "",
-        "privacy_link": "",
-        "copyright_text": "",
-        "facebook_url": "",
-        "instagram_url": "",
-        "youtube_url": "",
-        "tiktok_url": "",
-        "background_color": "#1C1C1C",
-        "text_color": "#FFFFFF",
-        "muted_color": "#B8B8B8",
-        "border_color": "#333333",
-        "field_background_color": "#FFFFFF",
-        "field_text_color": "#444444",
-        "button_background_color": "#F7F7F7",
-        "button_text_color": "#000000",
-        "heading_font_size": 15,
-        "text_font_size": 16,
-        "desktop_padding": 60,
-        "top_padding": 96
+        "newsletter_text": ""
       }
     }
   },
-  "order": ["footer"]
+  "order": [
+    "footer"
+  ]
 }

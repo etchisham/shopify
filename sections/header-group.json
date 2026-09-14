@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "header",
   "name": "t:general.header",
@@ -5,10 +14,10 @@
     "announcement": {
       "type": "announcement-bar",
       "settings": {
-        "text": "",
-        "background_color": "#F6A429",
+        "text": "Buy one get one free",
+        "background_color": "#f6a429",
         "text_color": "#000000",
-        "height": 48,
+        "height": 40,
         "font_size": 14,
         "uppercase": true
       }
@@ -24,9 +33,9 @@
         "show_search": true,
         "show_account": true,
         "sticky_header": true,
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "text_color": "#111111",
-        "border_color": "#EFEFEF",
+        "border_color": "#efefef",
         "desktop_height": 84,
         "mobile_height": 72,
         "desktop_padding": 32,
@@ -34,5 +43,8 @@
       }
     }
   },
-  "order": ["announcement", "header"]
+  "order": [
+    "announcement",
+    "header"
+  ]
 }
