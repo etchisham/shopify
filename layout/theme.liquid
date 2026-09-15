@@ -20,6 +20,13 @@
 
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    {{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'newsletter.js' | asset_url }}" defer="defer"></script>
+    {% if request.page_type == 'product' %}
+      {{ 'bought-together.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'bought-together.js' | asset_url }}" defer="defer"></script>
+    {% endif %}
     {% if request.page_type == 'index' %}
       {{ 'home.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'home.js' | asset_url }}" defer="defer"></script>
@@ -40,6 +47,7 @@
 
     {% sections 'footer-group' %}
 
+    {% section 'cart-drawer' %}
     <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-live-region></p>
     {% render 'support-widget' %}
   </body>

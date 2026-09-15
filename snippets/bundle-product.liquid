@@ -1,0 +1,40 @@
+{% doc %}
+  Selectable product and variant for a frequently bought together group.
+
+  @param {product} product - Product to display.
+  @param {string} section_id - Owning section ID.
+  @param {boolean} [current] - Whether this is the main product.
+{% enddoc %}
+{% liquid
+  assign selected = product.selected_or_first_available_variant
+  assign selectable = product.available
+  if product.requires_selling_plan
+    assign selectable = false
+  endif
+  assign minimum_quantity = selected.quantity_rule.min | default: 1
+  assign line_price = selected.price | times: minimum_quantity
+%}
+<article class="bundle-product" data-bundle-item data-product-id="{{ product.id }}"{% if current %} data-bundle-current{% endif %}>
+  <div class="bundle-product__media">
+    <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {% if product.featured_image %}
+        {% render 'image', image: product.featured_image, width: 720, widths: '180, 360, 540, 720', sizes: '(min-width: 1000px) 20vw, 45vw', alt: product.title %}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'bundle-product__placeholder' }}
+      {% endif %}
+    </a>
+    <label class="bundle-product__check">
+      <input type="checkbox" data-bundle-check{% if selectable %} checked{% else %} disabled{% endif %}>
+      <span class="visually-hidden">{{ 'products.bundle.include' | t: title: product.title }}</span>
+    </label>
+  </div>
+  <h3>{% if current %}<span>{{ 'products.bundle.this_item' | t }}: </span>{% endif %}<a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+  <label class="visually-hidden" for="BundleVariant-{{ section_id }}-{{ product.id }}">{{ 'products.bundle.variant' | t: title: product.title }}</label>
+  <select id="BundleVariant-{{ section_id }}-{{ product.id }}" data-bundle-variant{% unless selectable %} disabled{% endunless %}{% if product.has_only_default_variant %} hidden{% endif %}>
+    {% for variant in product.variants %}
+      <option value="{{ variant.id }}" data-price="{{ variant.price }}" data-min="{{ variant.quantity_rule.min | default: 1 }}"{% if variant == selected %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>{{ variant.title | escape }}</option>
+    {% endfor %}
+  </select>
+  <p class="bundle-product__price"><bdi data-bundle-price>{{ line_price | money }}</bdi></p>
+  {% unless selectable %}<p class="bundle-product__unavailable">{% if product.requires_selling_plan %}{{ 'products.bundle.subscription_options' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</p>{% endunless %}
+</article>

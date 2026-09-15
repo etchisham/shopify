@@ -105,9 +105,9 @@
         </a>
       {% endif %}
 
-      <a class="header-icon-button site-header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}">
+      <a class="header-icon-button site-header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}" data-cart-open aria-haspopup="dialog" aria-controls="CartDrawer" aria-expanded="false">
         {% render 'icon', name: 'cart' %}
-        {% if cart.item_count > 0 %}<span class="site-header__cart-count" aria-hidden="true">{{ cart.item_count }}</span>{% endif %}
+        <span class="site-header__cart-count" aria-hidden="true" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
     </div>
   </div>

@@ -1,0 +1,11 @@
+{% if recommendations.performed and recommendations.products_count > 0 %}
+  {% assign cart_product_ids = cart.items | map: 'product_id' %}
+  {% render 'cart-recommendations', products: recommendations.products, cart_product_ids: cart_product_ids %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:cart_drawer.recommendations",
+  "settings": []
+}
+{% endschema %}

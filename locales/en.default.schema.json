@@ -287,5 +287,43 @@
   "contact": {
     "section": "Contact us",
     "override_info": "Leave blank to use Theme settings → Support & contact."
+  },
+  "cart_drawer": {
+    "name": "Cart drawer",
+    "recommendations": "Cart recommendations",
+    "recommendation_collection": "Fallback recommendation collection",
+    "recommendation_info": "Shopify recommendations appear first. This collection (or all products) is the fallback; cart products are excluded.",
+    "offer_heading": "Offer heading",
+    "offer_text": "Offer text",
+    "offer_info": "Only enter a real, active store offer. This text does not create a discount or unlock free items.",
+    "offer_note": "Offer terms"
+  },
+  "bought_together": {
+    "name": "Bought together",
+    "products": "Companion products",
+    "products_info": "Template fallback. For individual products, define custom.frequently_bought_together as a list of product references."
+  },
+  "footer_social": {
+    "name": "Social link",
+    "platform": "Platform",
+    "url": "Link"
+  },
+  "help_page": {
+    "name": "Help page",
+    "eyebrow_en": "Eyebrow — English",
+    "eyebrow_ar": "Eyebrow — Arabic",
+    "heading_info": "Leave blank to use each page’s translated title.",
+    "introduction_en": "Introduction — English",
+    "introduction_ar": "Introduction — Arabic",
+    "topic_navigation": "Show topic links",
+    "page_content": "Use page content",
+    "page_content_info": "Unique content per page from Online Store > Pages. Use H2 for topics and H3 for questions, then translate the page. Empty content uses the FAQ blocks below.",
+    "question": "Question",
+    "category_en": "Topic — English",
+    "category_ar": "Topic — Arabic",
+    "question_en": "Question — English",
+    "question_ar": "Question — Arabic",
+    "answer_en": "Answer — English",
+    "answer_ar": "Answer — Arabic"
   }
 }

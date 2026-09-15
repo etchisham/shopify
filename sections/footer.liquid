@@ -37,6 +37,8 @@
   endif
 
   assign copyright_text = section.settings.copyright_text | default: shop.name
+  assign social_blocks = section.blocks | where: 'type', 'social'
+  assign newsletter_form_id = 'FooterNewsletter-' | append: section.id
 
   assign has_social_links = false
   if section.settings.facebook_url != blank or section.settings.instagram_url != blank or section.settings.youtube_url != blank or section.settings.tiktok_url != blank
@@ -111,7 +113,7 @@
           <h2 id="FooterNewsletterHeading-{{ section.id }}">{{ newsletter_heading | escape }}</h2>
           <p>{{ newsletter_text | escape }}</p>
 
-          {% form 'customer', id: 'FooterNewsletter', class: 'site-footer__newsletter-form' %}
+          {% form 'customer', id: newsletter_form_id, class: 'site-footer__newsletter-form', data-newsletter-form: '' %}
             <input type="hidden" name="contact[tags]" value="newsletter">
             <div class="site-footer__newsletter-fields">
               <label class="visually-hidden" for="FooterNewsletterEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
@@ -127,14 +129,23 @@
                 aria-required="true"
                 required
               >
-              <button type="submit">{{ subscribe_label | escape }}</button>
+              <button type="submit" data-newsletter-button>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span data-newsletter-label>{{ subscribe_label | escape }}</span>
+                <span data-newsletter-loading hidden>{{ 'newsletter.loading' | t }}</span>
+              </button>
             </div>
 
             {% if form.posted_successfully? %}
-              <p class="site-footer__message site-footer__message--success" role="status">{{ 'newsletter.success' | t }}</p>
+              <p class="site-footer__message site-footer__message--success" role="status" data-newsletter-result="success">{{ 'newsletter.success' | t }}</p>
             {% elsif form.errors %}
-              <p class="site-footer__message site-footer__message--error" role="alert">{{ 'newsletter.error' | t }}</p>
+              <p class="site-footer__message site-footer__message--error" role="alert" data-newsletter-result="error">{{ 'newsletter.error' | t }}</p>
             {% endif %}
+            <p class="site-footer__message site-footer__message--error" role="alert" data-newsletter-error hidden></p>
+            <p class="site-footer__message" data-newsletter-verification hidden>{{ 'newsletter.verification' | t }}</p>
+            <button type="button" data-newsletter-cancel hidden>{{ 'newsletter.cancel' | t }}</button>
+            <span data-newsletter-success-message hidden>{{ 'newsletter.success' | t }}</span>
+            <span data-newsletter-error-message hidden>{{ 'newsletter.request_error' | t }}</span>
           {% endform %}
 
           {% if privacy_text != blank %}
@@ -152,7 +163,15 @@
   <div class="site-footer__bottom">
     <p class="site-footer__copyright">&copy; {{ 'now' | date: '%Y' }} - {{ copyright_text | escape }}</p>
 
-    {% if has_social_links %}
+    {% if social_blocks.size > 0 %}
+      <ul class="site-footer__socials" role="list" aria-label="{{ 'footer.follow_us' | t | escape }}">
+        {% for block in social_blocks %}
+          {% if block.settings.url != blank %}
+            <li {{ block.shopify_attributes }}><a href="{{ block.settings.url | escape }}" target="_blank" rel="noopener noreferrer" aria-label="{{ block.settings.platform | capitalize | escape }}"><span aria-hidden="true">{% render 'icon', name: block.settings.platform %}</span><span class="visually-hidden">{{ 'accessibility.opens_in_new_tab' | t }}</span></a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% elsif has_social_links %}
       <ul class="site-footer__socials" role="list" aria-label="{{ 'footer.follow_us' | t | escape }}">
         {% if section.settings.facebook_url != blank %}
           <li><a href="{{ section.settings.facebook_url }}" aria-label="Facebook">{% render 'icon', name: 'facebook' %}</a></li>
@@ -387,11 +406,19 @@
 
   .site-footer__socials a {
     display: grid;
-    width: 2rem;
-    height: 2rem;
+    width: 2.75rem;
+    height: 2.75rem;
     place-items: center;
     color: inherit;
   }
+
+  .site-footer__socials span[aria-hidden] { display: contents; }
+
+  .site-footer [hidden] { display: none; }
+  .site-footer__newsletter-fields button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+  .site-footer__newsletter-form[aria-busy='true'] [data-newsletter-label] { display: none; }
+  .site-footer__newsletter-frame { width: 100%; height: 24rem; margin-block-start: 1rem; border: 1px solid var(--footer-border); background: white; }
+  [data-newsletter-cancel] { margin-block-start: 0.75rem; color: inherit; background: transparent; border: 1px solid currentcolor; padding: 0.6rem 1rem; cursor: pointer; }
 
   .site-footer__socials svg {
     width: 1.15rem;
@@ -556,6 +583,19 @@
     { "type": "range", "id": "desktop_padding", "label": "t:labels.desktop_horizontal_padding", "min": 24, "max": 100, "step": 2, "unit": "px", "default": 60 },
     { "type": "range", "id": "top_padding", "label": "t:labels.footer_top_padding", "min": 56, "max": 140, "step": 2, "unit": "px", "default": 96 }
   ],
+  "max_blocks": 8,
+  "blocks": [{
+    "type": "social", "name": "t:footer_social.name",
+    "settings": [
+      { "type": "select", "id": "platform", "label": "t:footer_social.platform", "default": "instagram", "options": [
+        { "value": "facebook", "label": "Facebook" }, { "value": "instagram", "label": "Instagram" },
+        { "value": "youtube", "label": "YouTube" }, { "value": "tiktok", "label": "TikTok" },
+        { "value": "pinterest", "label": "Pinterest" }, { "value": "linkedin", "label": "LinkedIn" },
+        { "value": "x", "label": "X" }, { "value": "whatsapp", "label": "WhatsApp" }
+      ] },
+      { "type": "url", "id": "url", "label": "t:footer_social.url" }
+    ]
+  }],
   "presets": [{ "name": "t:general.footer" }]
 }
 {% endschema %}

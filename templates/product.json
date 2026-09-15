@@ -309,10 +309,15 @@
         "judge_me_reviews_review_widget_LxYaQx"
       ],
       "settings": {}
+    },
+    "bought_together": {
+      "type": "bought-together",
+      "settings": {}
     }
   },
   "order": [
     "main",
+    "bought_together",
     "feature_ready_to_hang",
     "feature_museum_quality",
     "feature_why_ikonick",

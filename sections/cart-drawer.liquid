@@ -1,0 +1,149 @@
+{% liquid
+  assign cart_product_ids = cart.items | map: 'product_id'
+  assign recommendation_collection = section.settings.recommendation_collection | default: collections.all
+%}
+
+<dialog
+  id="CartDrawer"
+  class="cart-drawer"
+  aria-labelledby="CartDrawerTitle"
+  data-cart-drawer
+  data-section-id="{{ section.id }}"
+  data-root-url="{{ routes.root_url }}"
+  data-cart-url="{{ routes.cart_url }}"
+  data-cart-page="{% if request.page_type == 'cart' %}true{% else %}false{% endif %}"
+  data-added-message="{{ 'cart.added' | t: title: '__product__' | escape }}"
+  data-added-multiple-message="{{ 'cart.added_multiple' | t: titles: '__products__' | escape }}"
+  data-error-message="{{ 'cart.error' | t | escape }}"
+  data-refresh-message="{{ 'cart.refresh_error' | t | escape }}"
+  data-updated-message="{{ 'cart.updated' | t | escape }}"
+  data-discount-applied="{{ 'cart.discount_applied' | t | escape }}"
+  data-discount-invalid="{{ 'cart.discount_invalid' | t | escape }}"
+>
+  <div class="cart-drawer__panel">
+    <header class="cart-drawer__header">
+      <button type="button" class="cart-drawer__close cart-icon-button" data-cart-close aria-label="{{ 'cart.close' | t | escape }}" autofocus>
+        {% render 'icon', name: 'close' %}
+      </button>
+      <h2 id="CartDrawerTitle" class="cart-drawer__title">
+        {% render 'icon', name: 'cart' %}
+        <span data-cart-title>{{ 'general.cart' | t: count: cart.item_count }}</span>
+      </h2>
+    </header>
+
+    <p class="cart-drawer__error" role="alert" data-cart-error hidden></p>
+    <button class="cart-drawer__retry text-link" type="button" data-cart-retry hidden>{{ 'cart.retry' | t }}</button>
+
+    <div class="cart-drawer__content" data-cart-content data-count="{{ cart.item_count }}" data-cart-label="{{ 'general.cart' | t: count: cart.item_count | escape }}" data-product-id="{{ cart.items.first.product_id }}">
+      <div class="cart-drawer__scroll" data-cart-scroll>
+        {% if cart.item_count == 0 %}
+          <div class="cart-drawer__empty">
+            {% render 'icon', name: 'cart' %}
+            <h3>{{ 'cart.empty' | t }}</h3>
+            <a class="button cart-drawer__shop" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+          </div>
+        {% else %}
+          {% if section.settings.offer_text != blank or cart.total_discount > 0 %}
+            <aside class="cart-offer" aria-label="{{ 'cart.savings' | t | escape }}">
+              <div class="cart-offer__heading">
+                {% if section.settings.offer_heading != blank %}<p>{{ section.settings.offer_heading | escape }}</p>{% endif %}
+                {% if section.settings.offer_text != blank %}<strong>{{ section.settings.offer_text | escape }}</strong>{% else %}<strong>{{ 'cart.savings' | t }}</strong>{% endif %}
+              </div>
+              {% if cart.total_discount > 0 %}
+                <div class="cart-offer__body">
+                  <strong>{{ 'cart.saved' | t }} <bdi>{{ cart.total_discount | money }}</bdi></strong>
+                  {% for discount in cart.cart_level_discount_applications %}<p>{{ discount.title | escape }}</p>{% endfor %}
+                </div>
+              {% endif %}
+              {% if section.settings.offer_note != blank %}<p class="cart-offer__note">{{ section.settings.offer_note | escape }}</p>{% endif %}
+            </aside>
+          {% endif %}
+
+          <div class="cart-drawer__items">
+            {% for item in cart.items %}
+              {% liquid
+                assign quantity_min = item.variant.quantity_rule.min | default: 1
+                assign quantity_step = item.variant.quantity_rule.increment | default: 1
+                assign quantity_max = item.variant.quantity_rule.max
+              %}
+              <article class="drawer-item" data-cart-item data-key="{{ item.key | escape }}">
+                <a class="drawer-item__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                  {% if item.image %}
+                    {% render 'image', image: item.image, width: 240, widths: '120, 180, 240', sizes: '108px', alt: item.product.title %}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'drawer-item__placeholder' }}
+                  {% endif %}
+                </a>
+                <div class="drawer-item__details">
+                  <h3><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h3>
+                  {% unless item.product.has_only_default_variant %}<p class="drawer-item__variant">{{ item.variant.title | escape }}</p>{% endunless %}
+                  {% if item.selling_plan_allocation %}<p class="drawer-item__variant">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
+                  {% for property in item.properties %}
+                    {% assign property_first_character = property.first | slice: 0 %}
+                    {% if property.last != blank and property_first_character != '_' %}
+                      <p class="drawer-item__property">{{ property.first | escape }}: {% if property.last contains '/uploads/' %}<a href="{{ property.last | escape }}">{{ 'cart.upload' | t }}</a>{% else %}{{ property.last | escape }}{% endif %}</p>
+                    {% endif %}
+                  {% endfor %}
+                  {% for allocation in item.line_level_discount_allocations %}
+                    <p class="drawer-item__discount">{{ allocation.discount_application.title | escape }} <bdi>(−{{ allocation.amount | money }})</bdi></p>
+                  {% endfor %}
+                  <div class="drawer-item__actions">
+                    <div class="cart-quantity">
+                      <button type="button" data-cart-decrease aria-label="{{ 'cart.decrease' | t: title: item.product.title | escape }}">−</button>
+                      <input type="number" data-cart-quantity data-focus="quantity" aria-label="{{ 'cart.quantity' | t: title: item.product.title | escape }}" value="{{ item.quantity }}" min="{{ quantity_min }}" step="{{ quantity_step }}"{% if quantity_max %} max="{{ quantity_max }}"{% endif %} inputmode="numeric">
+                      <button type="button" data-cart-increase aria-label="{{ 'cart.increase' | t: title: item.product.title | escape }}"{% if quantity_max and item.quantity >= quantity_max %} disabled{% endif %}>+</button>
+                    </div>
+                    <button type="button" class="drawer-item__remove text-link" data-cart-remove data-focus="remove" aria-label="{{ 'cart.remove_product' | t: title: item.product.title | escape }}">{{ 'cart.remove' | t }}</button>
+                  </div>
+                </div>
+                <div class="drawer-item__price">
+                  {% if item.original_line_price != item.final_line_price %}<s><bdi>{{ item.original_line_price | money }}</bdi></s>{% endif %}
+                  <bdi>{{ item.final_line_price | money }}</bdi>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% render 'cart-recommendations', products: recommendation_collection.products, cart_product_ids: cart_product_ids %}
+      </div>
+
+      {% if cart.item_count > 0 %}
+        <footer class="cart-drawer__footer">
+          <form action="{{ routes.cart_url }}" method="post" class="cart-discount" data-cart-discount>
+            <label class="visually-hidden" for="CartDiscount">{{ 'cart.discount_code' | t }}</label>
+            <input id="CartDiscount" name="discount" type="text" placeholder="{{ 'cart.discount_code' | t | escape }}" autocomplete="off" data-focus="discount">
+            <button type="submit" data-focus="apply">{{ 'cart.apply' | t }}</button>
+          </form>
+          {% for discount in cart.cart_level_discount_applications %}
+            <p class="cart-drawer__discount-total"><span>{{ discount.title | escape }}</span><bdi>−{{ discount.total_allocated_amount | money }}</bdi></p>
+          {% endfor %}
+          <p class="cart-drawer__total"><span>{{ 'cart.total' | t }}</span><strong><bdi>{{ cart.total_price | money_with_currency }}</bdi></strong></p>
+          <form action="{{ routes.cart_url }}" method="post" data-cart-checkout>
+            <button class="button button--full cart-drawer__checkout" type="submit" name="checkout" data-focus="checkout">{{ 'cart.checkout' | t }}</button>
+          </form>
+          <p class="cart-drawer__taxes">{{ 'cart.taxes_and_shipping_at_checkout' | t }}</p>
+        </footer>
+      {% endif %}
+    </div>
+  </div>
+</dialog>
+
+<div class="cart-toast" role="status" aria-live="polite" aria-atomic="true" data-cart-toast hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+  <span data-cart-toast-message></span>
+  <button type="button" data-cart-toast-close aria-label="{{ 'cart.dismiss' | t | escape }}">{% render 'icon', name: 'close' %}</button>
+</div>
+<p class="cart-feedback" role="alert" data-cart-feedback hidden></p>
+
+{% schema %}
+{
+  "name": "t:cart_drawer.name",
+  "settings": [
+    { "type": "collection", "id": "recommendation_collection", "label": "t:cart_drawer.recommendation_collection", "info": "t:cart_drawer.recommendation_info" },
+    { "type": "text", "id": "offer_heading", "label": "t:cart_drawer.offer_heading" },
+    { "type": "text", "id": "offer_text", "label": "t:cart_drawer.offer_text", "info": "t:cart_drawer.offer_info" },
+    { "type": "textarea", "id": "offer_note", "label": "t:cart_drawer.offer_note" }
+  ]
+}
+{% endschema %}

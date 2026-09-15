@@ -17,7 +17,8 @@
     "skip_to_content": "Skip to content",
     "open_menu": "Open menu",
     "close_menu": "Close menu",
-    "close_filters": "Close filters"
+    "close_filters": "Close filters",
+    "opens_in_new_tab": "Opens in a new tab"
   },
   "announcement": {
     "default": "BOGO savings — buy 2, get 1 free + free shipping"
@@ -52,6 +53,20 @@
       "inventory_low": "Only {{ count }} left",
       "inventory_in_stock": "In stock",
       "on_sale": "Sale"
+    },
+    "bundle": {
+      "heading": "Frequently bought together",
+      "include": "Include {{ title }}",
+      "variant": "Choose an option for {{ title }}",
+      "this_item": "This item",
+      "total": "Total price",
+      "add_selected": "Add selected products ({{ count }}) to cart",
+      "select_products": "Select at least one product",
+      "adding": "Adding…",
+      "price_note": "Taxes, shipping and eligible discounts calculated at checkout.",
+      "no_javascript": "Open each product to add it to your cart.",
+      "subscription_options": "Open this product to choose subscription options.",
+      "editor_setup": "Choose products in this section or the custom.frequently_bought_together product metafield."
     }
   },
   "collections": {
@@ -79,8 +94,12 @@
     "label": "Email address",
     "placeholder": "E-mail",
     "button": "Subscribe",
-    "success": "Thanks for subscribing.",
-    "error": "Please check your email address and try again."
+    "success": "You have been subscribed successfully.",
+    "error": "Please check your email address and try again.",
+    "loading": "Subscribing…",
+    "request_error": "Unable to confirm your subscription. Check your connection and try again.",
+    "verification": "Complete the verification below to confirm your subscription.",
+    "cancel": "Cancel verification"
   },
   "footer": {
     "payment_methods": "Accepted payment methods",
@@ -98,7 +117,31 @@
     "subtotal": "Subtotal",
     "title": "Your cart",
     "update": "Update cart",
-    "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout"
+    "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
+    "added": "{{ title }} added to your cart",
+    "close": "Close cart",
+    "dismiss": "Dismiss notification",
+    "error": "Unable to update your cart. Check your connection, then try again.",
+    "refresh_error": "Cart display could not refresh. Retry before checking out.",
+    "retry": "Retry",
+    "updated": "Cart updated",
+    "discount_code": "Discount code",
+    "apply": "Apply",
+    "discount_applied": "Discount applied",
+    "discount_invalid": "This code is not applicable to your cart. Check the code and offer requirements.",
+    "total": "Total",
+    "savings": "Your savings",
+    "saved": "You saved",
+    "upload": "View upload",
+    "decrease": "Decrease quantity for {{ title }}",
+    "increase": "Increase quantity for {{ title }}",
+    "remove_product": "Remove {{ title }}",
+    "you_may_also_like": "You may also like",
+    "from": "From",
+    "choose_options": "Choose options",
+    "previous_products": "Previous products",
+    "next_products": "Next products",
+    "added_multiple": "{{ titles }} added to your cart"
   },
   "search": {
     "title": "Search",
@@ -167,5 +210,10 @@
     "new_tab": "Opens in a new tab",
     "open": "Contact support on WhatsApp",
     "setup": "Add a valid WhatsApp link in Theme settings → Support & contact to enable the support bubble."
+  },
+  "help": {
+    "eyebrow": "Help center",
+    "heading": "Frequently asked questions",
+    "topics": "Help topics"
   }
 }

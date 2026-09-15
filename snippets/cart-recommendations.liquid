@@ -1,0 +1,43 @@
+{% doc %}
+  Compact, horizontal cart recommendation rail; excludes products already in the cart.
+
+  @param {product[]} products - Available recommendation or collection products.
+  @param {number[]} cart_product_ids - Product IDs currently in the cart.
+{% enddoc %}
+
+{% capture recommendation_cards %}
+  {% assign recommendation_count = 0 %}
+  {% for product in products %}
+    {% unless cart_product_ids contains product.id %}
+      {% if product.available %}
+        {% assign recommendation_count = recommendation_count | plus: 1 %}
+        <article class="cart-recommendation">
+          <a class="cart-recommendation__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+            {% if product.featured_image %}
+              {% render 'image', image: product.featured_image, width: 200, widths: '100, 150, 200', sizes: '90px', alt: product.title %}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'cart-recommendation__placeholder' }}
+            {% endif %}
+          </a>
+          <div class="cart-recommendation__details">
+            <h3><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+            <p class="cart-recommendation__price">{% if product.price_varies %}{{ 'cart.from' | t }} {% endif %}<bdi>{{ product.price | money }}</bdi></p>
+            <a class="cart-recommendation__choose" href="{{ product.url }}">{{ 'cart.choose_options' | t }}<span class="visually-hidden">: {{ product.title | escape }}</span></a>
+          </div>
+        </article>
+        {% if recommendation_count >= 6 %}{% break %}{% endif %}
+      {% endif %}
+    {% endunless %}
+  {% endfor %}
+{% endcapture %}
+
+<section class="cart-recommendations" data-cart-recommendations{% if recommendation_count == 0 %} hidden{% endif %} aria-label="{{ 'cart.you_may_also_like' | t | escape }}">
+  <div class="cart-recommendations__header">
+    <h3>{{ 'cart.you_may_also_like' | t }}</h3>
+    <div class="cart-recommendations__arrows">
+      <button class="cart-icon-button" type="button" data-cart-previous aria-label="{{ 'cart.previous_products' | t | escape }}" disabled>{% render 'icon', name: 'arrow' %}</button>
+      <button class="cart-icon-button" type="button" data-cart-next aria-label="{{ 'cart.next_products' | t | escape }}"{% if recommendation_count < 2 %} disabled{% endif %}>{% render 'icon', name: 'arrow' %}</button>
+    </div>
+  </div>
+  <div class="cart-recommendations__rail" data-cart-rail tabindex="0" aria-label="{{ 'cart.you_may_also_like' | t | escape }}">{{ recommendation_cards }}</div>
+</section>

@@ -85,6 +85,25 @@ node scripts/preview.cjs
 
 Open `http://127.0.0.1:4173/home` or `/contact`, adding `?lang=ar` for RTL. These render the actual section Liquid with mocked Shopify filters, placeholder imagery, and clearly marked example contact details. They are not a live Shopify preview and do not send forms. `.preview/`, scripts, and tests are excluded from theme uploads. Use `shopify theme dev --store your-store.myshopify.com` for full platform validation.
 
+## Cart drawer
+
+The header cart and storefront cart links open a modal drawer on the physical right in both LTR and RTL. Its header and checkout footer remain visible while items and recommendations scroll. Quantity changes, removal, discount codes, totals, line-item properties, and subscription labels use Shopify cart data. Adding a product keeps the current page and shows a green, translated notification with the product name. Writes are serialized; duplicate submissions are blocked; failed section refreshes expose a retry and block stale checkout totals.
+
+Shopify owns the `/cart` route. The standalone cart layout is retired: visiting an old cart URL returns to the localized storefront with the drawer open. Without JavaScript, that route provides a minimal total and native checkout fallback.
+
+In **Customize → Cart drawer**, choose a fallback recommendation collection and optionally enter a verified active offer and its terms. Blank recommendations fall back to the all-products collection. Shopify related-product recommendations replace the fallback when available; sold-out products and products already in the cart are excluded. Offer text does not create discounts or free items; savings and discount badges show only platform-calculated amounts.
+
+The implementation uses Shopify's [Ajax Cart API and bundled section rendering](https://shopify.dev/docs/api/ajax/reference/cart) and [Product Recommendations API](https://shopify.dev/docs/api/ajax/reference/product-recommendations). It adds no production dependency or custom backend.
+
+Local cart fixtures run in memory and never submit checkout. `/home` and `/ar/home` include an example add button; `/cart` and `/ar/cart` exercise legacy URL handling. `SAVE10` is a fixture-only example code. Install optional local test dependencies and run the interaction checks:
+
+```powershell
+npm install --prefix .preview --no-save --package-lock=false liquidjs jsdom
+node --test tests/storefront.test.cjs tests/cart.test.cjs
+```
+
+Cart conversion flow score: **7/10**. Checkout hierarchy and local behavior are verified. A higher evidence-based score requires live-store purchase validation, real offer/fulfillment terms, and measurement of add-to-cart, checkout-start, purchase, errors, and device-level abandonment. Conversion impact has not been measured.
+
 ## Catalog and product cards
 
 Collection, search, and featured-collection grids share `snippets/product-card.liquid`; use that snippet for future product grids to keep one store-wide card design. Theme settings control catalog columns, image corner radius, vendor visibility, verified rating visibility, and calculated discount visibility.

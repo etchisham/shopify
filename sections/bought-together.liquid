@@ -1,0 +1,70 @@
+{% liquid
+  assign related_products = product.metafields.custom.frequently_bought_together.value | default: section.settings.products
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign heading = section.settings.heading_en
+  if locale_root == 'ar'
+    assign heading = section.settings.heading_ar | default: heading
+  endif
+  if heading == blank
+    assign heading = 'products.bundle.heading' | t
+  endif
+  assign current_variant = product.selected_or_first_available_variant
+  assign current_minimum = current_variant.quantity_rule.min | default: 1
+  assign bundle_total = 0
+  assign bundle_count = 0
+  if current_variant.available and product.requires_selling_plan == false
+    assign bundle_total = current_variant.price | times: current_minimum
+    assign bundle_count = 1
+  endif
+%}
+
+{% if related_products != blank %}
+  <section class="bought-together section-spacing" data-bought-together data-section-id="{{ section.id }}" data-money-format="{{ shop.money_format | escape }}" data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-button-label="{{ 'products.bundle.add_selected' | t: count: '__count__' | escape }}" data-empty-label="{{ 'products.bundle.select_products' | t | escape }}" aria-labelledby="BundleHeading-{{ section.id }}">
+    <h2 id="BundleHeading-{{ section.id }}">{{ heading | escape }}</h2>
+    <form action="{{ routes.cart_add_url }}" method="post" data-bought-together-form>
+      <div class="bought-together__cards" data-bundle-cards>
+        {% render 'bundle-product', product: product, section_id: section.id, current: true %}
+        {% assign seen_ids = ',' | append: product.id | append: ',' %}
+        {% for related in related_products limit: 4 %}
+          {% assign related_token = ',' | append: related.id | append: ',' %}
+          {% unless seen_ids contains related_token %}
+            {% assign seen_ids = seen_ids | append: related_token %}
+            {% render 'bundle-product', product: related, section_id: section.id %}
+            {% if related.available and related.requires_selling_plan == false %}
+              {% assign selected = related.selected_or_first_available_variant %}
+              {% assign minimum_quantity = selected.quantity_rule.min | default: 1 %}
+              {% assign line_total = selected.price | times: minimum_quantity %}
+              {% assign bundle_total = bundle_total | plus: line_total %}
+              {% assign bundle_count = bundle_count | plus: 1 %}
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+      <div class="bought-together__summary">
+        <p>{{ 'products.bundle.total' | t }}: <strong><bdi data-bundle-total>{{ bundle_total | money }}</bdi></strong></p>
+        <button class="button button--full" type="submit" name="add" data-bundle-add disabled>
+          <span class="button-spinner" aria-hidden="true"></span>
+          <span data-add-label>{{ 'products.bundle.add_selected' | t: count: bundle_count }}</span>
+          <span class="visually-hidden" data-loading-label>{{ 'products.bundle.adding' | t }}</span>
+        </button>
+        <p class="bought-together__note">{{ 'products.bundle.price_note' | t }}</p>
+        <noscript><p>{{ 'products.bundle.no_javascript' | t }}</p></noscript>
+      </div>
+    </form>
+  </section>
+{% elsif request.design_mode %}
+  <section class="bought-together section-spacing"><h2>{{ heading | escape }}</h2><p>{{ 'products.bundle.editor_setup' | t }}</p></section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:bought_together.name",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "heading_en", "label": "t:labels.heading_en" },
+    { "type": "text", "id": "heading_ar", "label": "t:labels.heading_ar" },
+    { "type": "product_list", "id": "products", "label": "t:bought_together.products", "limit": 4, "info": "t:bought_together.products_info" }
+  ],
+  "presets": [{ "name": "t:bought_together.name" }]
+}
+{% endschema %}

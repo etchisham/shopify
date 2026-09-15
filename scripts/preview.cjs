@@ -1,10 +1,11 @@
-// Local visual fixtures, not a Shopify storefront. No form submission or external messages.
+// Local visual fixtures, not a Shopify storefront. Forms stay on this local server.
 // npm install --prefix .preview --no-save --package-lock=false liquidjs
 // node scripts/preview.cjs
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
 const { Liquid } = require('../.preview/node_modules/liquidjs');
+const cartFixture = require('./cart-fixture.cjs');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const json = file => JSON.parse(read(file).replace(/^\s*\/\*[\s\S]*?\*\/\s*/, ''));
@@ -13,8 +14,13 @@ const named = args => Object.fromEntries(args.filter(Array.isArray));
 const defaults = settings => Object.fromEntries(settings.filter(setting => setting.id).map(setting => [setting.id, setting.default ?? '']));
 const engine = new Liquid({ root: path.join(root, 'snippets'), extname: '.liquid' });
 engine.registerTag('doc', { parse(_token, tokens) { let token; while ((token = tokens.shift())) { if (token.name === 'enddoc') break; } }, render() { return ''; } });
+engine.registerTag('stylesheet', { parse(_token, tokens) { let token; while ((token = tokens.shift())) { if (token.name === 'endstylesheet') break; } }, render() { return ''; } });
 const schemaOf = file => JSON.parse(read(file).match(/{% schema %}([\s\S]*?){% endschema %}/)[1]);
-const strip = source => source.replace(/{% (schema|stylesheet) %}[\s\S]*?{% end\1 %}/g, '').replace(/{% style %}/g, '<style>').replace(/{% endstyle %}/g, '</style>').replace(/{% form [\s\S]*?%}/g, '<form action="/fixture-submit" method="get">').replace(/{% endform %}/g, '</form>');
+const strip = source => source.replace(/{% (schema|stylesheet) %}[\s\S]*?{% end\1 %}/g, '').replace(/{% style %}/g, '<style>').replace(/{% endstyle %}/g, '</style>').replace(/{% form ([\s\S]*?)%}/g, (_tag, arguments) => {
+  if (arguments.trim().startsWith("'customer'")) return '<form action="{{ routes.root_url }}contact" method="post" id="FooterNewsletter-{{ section.id }}" class="site-footer__newsletter-form" data-newsletter-form><input type="hidden" name="form_type" value="customer">';
+  if (arguments.trim().startsWith("'product'")) return '<form action="{{ routes.cart_add_url }}" method="post" id="ProductForm-{{ section.id }}" class="product-form" data-product-title="{{ product.title | escape }}">';
+  return '<form action="/fixture-submit" method="get">';
+}).replace(/{% endform %}/g, '</form>');
 const fonts = { family: 'Arial', fallback_families: 'sans-serif', style: 'normal', weight: 400 };
 const settings = Object.assign({}, ...json('config/settings_schema.json').filter(group => group.settings).map(group => defaults(group.settings)), json('config/settings_data.json').current);
 Object.assign(settings, { type_body_font: fonts, type_heading_font: fonts, support_whatsapp_url: 'https://wa.me/', support_email: 'support@example.test', support_phone: '+00 000 000 000' });
@@ -26,6 +32,7 @@ engine.registerFilter('placeholder_svg_tag', (value, className = '') => `<svg cl
 engine.registerFilter('font_face', () => '');
 engine.registerFilter('font_modify', value => value);
 engine.registerFilter('money', value => '$' + (Number(value || 0) / 100).toFixed(2));
+engine.registerFilter('money_with_currency', value => '$' + (Number(value || 0) / 100).toFixed(2) + ' USD');
 engine.registerFilter('t', function (key, ...args) {
   const locale = this.context.get(['request', 'locale', 'iso_code']);
   const dictionary = json(locale === 'ar' ? 'locales/ar.json' : 'locales/en.default.json');
@@ -48,24 +55,50 @@ async function renderSection(id, entry, data) {
     section.settings.desktop_menu = { links: [{ title: ar ? 'الرئيسية' : 'Home', url: '/home' }, { title: ar ? 'المنتجات' : 'Catalog', url: '/home#shop' }, { title: ar ? 'تواصل معنا' : 'Contact', url: '/contact' }] };
     section.settings.mobile_menu = section.settings.desktop_menu;
   }
-  return `<div class="shopify-section" id="shopify-section-${id}">${await engine.parseAndRender(strip(read('sections/' + entry.type + '.liquid')), { ...data, section })}</div>`;
+  return `<div class="shopify-section" id="shopify-section-${id}">${await engine.parseAndRender(strip(read('sections/' + entry.type + '.liquid')), { ...data, section }, { globals: data })}</div>`;
 }
-async function page(url) {
-  const locale = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
-  const data = { settings, request: { locale: { iso_code: locale }, design_mode: false }, shop: { name: 'My Store', customer_accounts_enabled: false }, cart: { item_count: 0 }, form: {}, customer: {}, routes: { root_url: '/home', search_url: '/home#search', cart_url: '/home#cart', all_products_collection_url: '/home#shop' } };
-  const contact = url.pathname === '/contact';
-  const template = json(contact ? 'templates/page.contact.json' : 'templates/index.json');
+function pageData(url, newsletterResult) {
+  const locale = url.searchParams.get('lang') === 'ar' || url.pathname.startsWith('/ar/') ? 'ar' : 'en';
+  const prefix = locale === 'ar' ? '/ar' : '';
+  const productIndex = Number(url.pathname.match(/example-(\d+)/)?.[1] || 1) - 1;
+  const product = { ...cartFixture.products[productIndex], metafields: { custom: { frequently_bought_together: { value: [cartFixture.products[productIndex], cartFixture.products[1], cartFixture.products[2], cartFixture.products[8]] } } } };
+  const isProduct = /\/product(?:s\/|$)/.test(url.pathname);
+  const isHelp = /\/(help|shipping|returns|care)$/.test(url.pathname);
+  const care = url.pathname.endsWith('/care');
+  const content = care ? (locale === 'ar' ? '<h2>العناية بالخامات</h2><h3>كيف أعتني بالمنتج؟</h3><p>محتوى تجريبي مستقل لصفحة العناية بالخامات.</p>' : '<h2>Material care</h2><h3>How do I care for my art?</h3><p>Independent sample content for the material care page.</p>') : (locale === 'ar' ? '<h2>الطلبات</h2><h3>كيف أتابع طلبي؟</h3><p>أضف معلومات تتبع الطلب المعتمدة هنا.</p><h3>هل يمكنني تعديل طلبي؟</h3><p>أضف تفاصيل التواصل وسياسة تعديل الطلب هنا.</p><h2>الشحن والإرجاع</h2><h3>أين أجد معلومات الشحن؟</h3><p>أضف معلومات الشحن والإرجاع الفعلية هنا.</p>' : '<h2>Orders</h2><h3>How do I track my order?</h3><p>Add your verified order tracking information here.</p><h3>Can I change my order?</h3><p>Add your contact details and actual order change policy here.</p><h2>Shipping and returns</h2><h3>Where can I find shipping information?</h3><p>Add your actual shipping and return information here.</p>');
+  return { settings, product, page: { title: care ? (locale === 'ar' ? 'العناية بالخامات' : 'Material care') : (locale === 'ar' ? 'الأسئلة الشائعة' : 'Frequently asked questions'), content }, request: { locale: { iso_code: locale }, design_mode: false, page_type: url.pathname.endsWith('/cart') ? 'cart' : isProduct ? 'product' : isHelp ? 'page' : 'index' }, shop: { name: 'My Store', currency: 'USD', money_format: '${{amount}}', customer_accounts_enabled: false }, cart: cartFixture.cart(), collections: { all: { products: cartFixture.products } }, recommendations: { performed: true, products_count: cartFixture.products.length, products: cartFixture.products }, form: newsletterResult === 'success' ? { 'posted_successfully?': true } : newsletterResult === 'error' ? { errors: true } : {}, customer: {}, routes: { root_url: prefix + '/', search_url: prefix + '/home#search', cart_url: prefix + '/cart', cart_add_url: prefix + '/cart/add', all_products_collection_url: prefix + '/home#shop' } };
+}
+const drawer = data => renderSection('cart-drawer', { type: 'cart-drawer', settings: {} }, data);
+async function page(url, newsletterResult) {
+  const data = pageData(url, newsletterResult);
+  const locale = data.request.locale.iso_code;
+  const contact = url.pathname.endsWith('/contact');
+  const isProduct = data.request.page_type === 'product';
+  const isHelp = data.request.page_type === 'page';
+  const template = isProduct ? { sections: { main: { type: 'product', settings: { show_dynamic_checkout: false } }, bought_together: { type: 'bought-together', settings: {} } }, order: ['main', 'bought_together'] } : json(isHelp ? 'templates/page.help.json' : contact ? 'templates/page.contact.json' : 'templates/index.json');
   const group = json('sections/header-group.json');
   const header = await Promise.all(group.order.map(id => renderSection(id, group.sections[id], data)));
   const sections = await Promise.all(template.order.map(id => renderSection(id, template.sections[id], data)));
   const variables = await engine.parseAndRender(strip(read('snippets/css-variables.liquid')), data);
   const widget = await engine.parseAndRender(read('snippets/support-widget.liquid'), data);
-  const sectionStyles = ['sections/header.liquid', 'sections/announcement-bar.liquid', 'sections/contact.liquid', 'snippets/product-card.liquid'].map(file => read(file).match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)?.[1] || '').join('\n');
-  return `<!doctype html><html lang="${locale}" dir="${locale === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local ${contact ? 'contact' : 'home'} fixture</title>${variables}<link rel="stylesheet" href="/assets/critical.css"><link rel="stylesheet" href="/assets/home.css"><style>${sectionStyles}</style><script src="/assets/theme.js" defer></script><script src="/assets/home.js" defer></script></head><body><p style="margin:0;padding:4px 16px;background:#fff5c5;color:#333;font-size:12px">LOCAL FIXTURE — placeholder images/contact details; forms do not send.</p>${header.join('')}<main id="MainContent" class="main-content">${sections.join('')}</main><footer style="background:#111;color:#fff;padding:48px 20px;text-align:center">Existing storefront footer</footer>${widget}</body></html>`;
+  const cart = await drawer(data);
+  const footerGroup = json('sections/footer-group.json');
+  const footer = await Promise.all(footerGroup.order.map(id => renderSection(id, { ...footerGroup.sections[id], blocks: { instagram: { type: 'social', settings: { platform: 'instagram', url: 'https://instagram.com/' } }, facebook: { type: 'social', settings: { platform: 'facebook', url: 'https://facebook.com/' } }, youtube: { type: 'social', settings: { platform: 'youtube', url: 'https://youtube.com/' } }, tiktok: { type: 'social', settings: { platform: 'tiktok', url: 'https://tiktok.com/' } } }, block_order: ['facebook', 'instagram', 'youtube', 'tiktok'] }, data)));
+  const addForm = `<form action="${locale === 'ar' ? '/ar' : ''}/cart/add" method="post" data-product-title="Frozen in time" style="padding:24px"><h2>Local cart fixture</h2><input type="hidden" name="id" value="3"><input type="hidden" name="quantity" value="1"><button class="button" name="add" type="submit">${locale === 'ar' ? 'أضف إلى السلة' : 'Add Frozen in time to cart'}</button></form>`;
+  const sectionStyles = ['sections/header.liquid', 'sections/announcement-bar.liquid', 'sections/contact.liquid', 'sections/footer.liquid', 'sections/product.liquid', 'snippets/price.liquid', 'snippets/image.liquid', 'snippets/product-card.liquid'].map(file => read(file).match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)?.[1] || '').join('\n');
+  return `<!doctype html><html lang="${locale}" dir="${locale === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local ${isProduct ? 'product' : isHelp ? 'help' : contact ? 'contact' : 'home'} fixture</title>${variables}<link rel="stylesheet" href="/assets/critical.css"><link rel="stylesheet" href="/assets/home.css"><link rel="stylesheet" href="/assets/cart-drawer.css">${isProduct ? '<link rel="stylesheet" href="/assets/bought-together.css"><script src="/assets/bought-together.js" defer></script>' : ''}<style>${sectionStyles}</style><script src="/assets/theme.js" defer></script><script src="/assets/home.js" defer></script><script src="/assets/cart-drawer.js" defer></script><script src="/assets/newsletter.js" defer></script></head><body><p style="margin:0;padding:4px 16px;background:#fff5c5;color:#333;font-size:12px">LOCAL FIXTURE — sample content/images/links; cart and subscriptions stay local; checkout does not send.</p>${header.join('')}<main id="MainContent" class="main-content">${isProduct || isHelp ? '' : addForm}${sections.join('')}</main>${footer.join('')}${cart}<p role="status" data-live-region class="visually-hidden"></p>${widget}</body></html>`;
 }
 const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://127.0.0.1:4173');
+    if (await cartFixture.handle(request, response, url, () => drawer(pageData(url)), () => renderSection('cart-recommendations', { type: 'cart-recommendations', settings: {} }, pageData(url)))) return;
+    if (request.method === 'POST' && url.pathname.endsWith('/contact')) {
+      const body = await cartFixture.bodyOf(request);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      response.setHeader('Content-Type', 'text/html; charset=utf-8');
+      response.end(await page(url, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body['contact[email]'] || '') ? 'success' : 'error'));
+      return;
+    }
     if (url.pathname.startsWith('/assets/')) {
       const file = path.resolve(root, '.' + url.pathname);
       if (!file.startsWith(path.join(root, 'assets') + path.sep)) { response.writeHead(403); return response.end(); }
@@ -80,4 +113,5 @@ const server = http.createServer(async (request, response) => {
     response.end(await page(url));
   } catch (error) { response.writeHead(500); response.end(String(error)); }
 });
-server.listen(4173, '127.0.0.1', () => console.log('Local fixtures: http://127.0.0.1:4173/home and /contact; add ?lang=ar'));
+if (require.main === module) server.listen(4173, '127.0.0.1', () => console.log('Local fixtures: http://127.0.0.1:4173/product, /help, /care, /home and /contact; add ?lang=ar'));
+module.exports = { server, page, renderSection, pageData };

@@ -1,173 +1,18 @@
-<section class="cart section-spacing">
-  <div class="cart__header">
+{% comment %}Shopify owns /cart. JavaScript sends old cart URLs to the storefront drawer.{% endcomment %}
+<noscript>
+  <section class="section-spacing">
     <h1>{{ 'cart.title' | t }}</h1>
-    {% if cart.item_count > 0 %}<p class="muted">{{ 'general.cart' | t: count: cart.item_count }}</p>{% endif %}
-  </div>
-
-  {% if cart.item_count == 0 %}
-    <div class="cart__empty">
+    {% if cart.item_count > 0 %}
+      <p>{{ 'cart.total' | t }}: {{ cart.total_price | money_with_currency }}</p>
+      <form action="{{ routes.cart_url }}" method="post">
+        <button class="button" type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
+      </form>
+    {% else %}
       <p>{{ 'cart.empty' | t }}</p>
-      <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
-    </div>
-  {% else %}
-    <form action="{{ routes.cart_url }}" method="post">
-      <div class="cart__items">
-        {% for item in cart.items %}
-          <article class="cart-item">
-            <div class="cart-item__media">
-              {% if item.image %}
-                {% render 'image', image: item.image, url: item.url, width: 320, widths: '160, 240, 320', sizes: '8rem', alt: item.image.alt %}
-              {% endif %}
-            </div>
-            <div class="cart-item__details">
-              <h2><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h2>
-              {% unless item.product.has_only_default_variant %}<p class="muted">{{ item.variant.title | escape }}</p>{% endunless %}
-              {% for property in item.properties %}
-                {% assign property_first_character = property.first | slice: 0 %}
-                {% if property.last != blank and property_first_character != '_' %}
-                  <p class="muted">{{ property.first | escape }}: {{ property.last | escape }}</p>
-                {% endif %}
-              {% endfor %}
-              <a class="text-link" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
-            </div>
-            <div class="cart-item__quantity">
-              <label for="Quantity-{{ forloop.index }}">{{ 'cart.quantity' | t: title: item.product.title }}</label>
-              <input id="Quantity-{{ forloop.index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
-            </div>
-            <div class="cart-item__price">
-              {% if item.original_line_price != item.final_line_price %}<s>{{ item.original_line_price | money }}</s>{% endif %}
-              <strong>{{ item.final_line_price | money }}</strong>
-            </div>
-          </article>
-        {% endfor %}
-      </div>
-
-      <div class="cart__footer">
-        <button class="button button--secondary" type="submit" name="update">{{ 'cart.update' | t }}</button>
-        <div class="cart__summary">
-          <p><span>{{ 'cart.subtotal' | t }}</span> <strong>{{ cart.total_price | money_with_currency }}</strong></p>
-          <p class="muted">{{ 'cart.taxes_and_shipping_at_checkout' | t }}</p>
-          <button class="button button--full" type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
-        </div>
-      </div>
-    </form>
-  {% endif %}
-</section>
-
-{% stylesheet %}
-  .cart__header {
-    margin-block-end: var(--space-6);
-  }
-
-  .cart__header h1 {
-    font-size: clamp(2.2rem, 5vw, 4rem);
-  }
-
-  .cart__empty {
-    display: grid;
-    justify-items: start;
-    gap: var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-large);
-    background: var(--color-surface);
-    padding: var(--space-7);
-  }
-
-  .cart__items {
-    border-block-start: 1px solid var(--color-border);
-  }
-
-  .cart-item {
-    display: grid;
-    grid-template-columns: 6rem 1fr;
-    gap: var(--space-4);
-    border-block-end: 1px solid var(--color-border);
-    padding-block: var(--space-5);
-  }
-
-  .cart-item__media {
-    overflow: hidden;
-    border-radius: var(--radius-small);
-    background: var(--color-surface);
-  }
-
-  .cart-item__media img {
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-
-  .cart-item__details h2 {
-    margin: 0;
-    font-family: var(--font-body-family);
-    font-size: 1rem;
-    letter-spacing: 0;
-  }
-
-  .cart-item__details p {
-    margin-block: var(--space-1);
-    font-size: 0.875rem;
-  }
-
-  .cart-item__quantity,
-  .cart-item__price {
-    grid-column: 2;
-  }
-
-  .cart-item__quantity {
-    display: grid;
-    gap: var(--space-2);
-    max-width: 8rem;
-  }
-
-  .cart-item__quantity label {
-    font-size: 0.875rem;
-    font-weight: 650;
-  }
-
-  .cart-item__price {
-    display: flex;
-    gap: var(--space-2);
-  }
-
-  .cart__footer {
-    display: grid;
-    gap: var(--space-6);
-    align-items: start;
-    margin-block-start: var(--space-6);
-  }
-
-  .cart__summary {
-    display: grid;
-    gap: var(--space-3);
-  }
-
-  .cart__summary > p:first-child {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-5);
-    font-size: 1.15rem;
-  }
-
-  .cart__summary .muted {
-    font-size: 0.875rem;
-  }
-
-  @media (min-width: 48rem) {
-    .cart-item {
-      grid-template-columns: 8rem 1fr 9rem auto;
-      align-items: center;
-    }
-
-    .cart-item__quantity,
-    .cart-item__price {
-      grid-column: auto;
-    }
-
-    .cart__footer {
-      grid-template-columns: 1fr minmax(20rem, 28rem);
-    }
-  }
-{% endstylesheet %}
+    {% endif %}
+    <a class="text-link" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+  </section>
+</noscript>
 
 {% schema %}
 {

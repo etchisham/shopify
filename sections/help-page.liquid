@@ -1,0 +1,90 @@
+{% liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign eyebrow = section.settings.eyebrow_en
+  assign heading = section.settings.heading_en
+  assign introduction = section.settings.introduction_en
+  if locale_root == 'ar'
+    assign eyebrow = section.settings.eyebrow_ar | default: eyebrow
+    assign heading = section.settings.heading_ar | default: heading
+    assign introduction = section.settings.introduction_ar | default: introduction
+  endif
+  if eyebrow == blank
+    assign eyebrow = 'help.eyebrow' | t
+  endif
+  assign heading = heading | default: page.title
+  if heading == blank
+    assign heading = 'help.heading' | t
+  endif
+%}
+{{ 'help-page.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'help-page.js' | asset_url }}" defer="defer"></script>
+
+<article class="help-page section-spacing" data-help-page data-section-id="{{ section.id }}">
+  <header class="help-page__header">
+    <p class="help-page__eyebrow">{{ eyebrow | escape }}</p>
+    <h1>{{ heading | escape }}</h1>
+    {% if introduction != blank %}<div class="rte help-page__introduction">{{ introduction }}</div>{% endif %}
+  </header>
+  {% if section.settings.show_topic_navigation %}
+    <nav class="help-page__topics" data-help-topics aria-label="{{ 'help.topics' | t | escape }}" hidden></nav>
+  {% endif %}
+  <div class="help-page__content rte" data-help-content>
+    {% if section.settings.show_page_content and page.content != blank %}
+      {{ page.content }}
+    {% else %}
+      {% assign last_category = '' %}
+      {% for block in section.blocks %}
+        {% liquid
+          assign category = block.settings.category_en
+          assign question = block.settings.question_en
+          assign answer = block.settings.answer_en
+          if locale_root == 'ar'
+            assign category = block.settings.category_ar | default: category
+            assign question = block.settings.question_ar | default: question
+            assign answer = block.settings.answer_ar | default: answer
+          endif
+        %}
+        {% if question != blank %}
+          {% if category != blank and category != last_category %}
+            <h2>{{ category | escape }}</h2>
+            {% assign last_category = category %}
+          {% endif %}
+          <details class="help-page__question" {{ block.shopify_attributes }}>
+            <summary>{{ question | escape }}</summary>
+            <div class="help-page__answer">{{ answer }}</div>
+          </details>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "t:help_page.name",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow_en", "label": "t:help_page.eyebrow_en" },
+    { "type": "text", "id": "eyebrow_ar", "label": "t:help_page.eyebrow_ar" },
+    { "type": "text", "id": "heading_en", "label": "t:labels.heading_en", "info": "t:help_page.heading_info" },
+    { "type": "text", "id": "heading_ar", "label": "t:labels.heading_ar" },
+    { "type": "richtext", "id": "introduction_en", "label": "t:help_page.introduction_en" },
+    { "type": "richtext", "id": "introduction_ar", "label": "t:help_page.introduction_ar" },
+    { "type": "checkbox", "id": "show_topic_navigation", "label": "t:help_page.topic_navigation", "default": true },
+    { "type": "checkbox", "id": "show_page_content", "label": "t:help_page.page_content", "info": "t:help_page.page_content_info", "default": true }
+  ],
+  "blocks": [{
+    "type": "question", "name": "t:help_page.question",
+    "settings": [
+      { "type": "text", "id": "category_en", "label": "t:help_page.category_en" },
+      { "type": "text", "id": "category_ar", "label": "t:help_page.category_ar" },
+      { "type": "text", "id": "question_en", "label": "t:help_page.question_en" },
+      { "type": "text", "id": "question_ar", "label": "t:help_page.question_ar" },
+      { "type": "richtext", "id": "answer_en", "label": "t:help_page.answer_en" },
+      { "type": "richtext", "id": "answer_ar", "label": "t:help_page.answer_ar" }
+    ]
+  }],
+  "max_blocks": 40,
+  "presets": [{ "name": "t:help_page.name" }]
+}
+{% endschema %}
