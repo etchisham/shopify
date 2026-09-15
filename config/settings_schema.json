@@ -78,39 +78,13 @@
   {
     "name": "t:general.colors",
     "settings": [
-      { "type": "header", "content": "t:labels.light_palette" },
       { "type": "color", "id": "background_color", "default": "#FFFCF7", "label": "t:labels.background" },
       { "type": "color", "id": "foreground_color", "default": "#171714", "label": "t:labels.foreground" },
       { "type": "color", "id": "muted_color", "default": "#625F58", "label": "t:labels.muted" },
       { "type": "color", "id": "surface_color", "default": "#F4F0E8", "label": "t:labels.surface" },
       { "type": "color", "id": "border_color", "default": "#D8D3C8", "label": "t:labels.border" },
       { "type": "color", "id": "accent_color", "default": "#244C3A", "label": "t:labels.accent" },
-      { "type": "color", "id": "accent_contrast_color", "default": "#FFFFFF", "label": "t:labels.accent_contrast" },
-      { "type": "header", "content": "t:labels.dark_palette" },
-      { "type": "color", "id": "dark_background_color", "default": "#151714", "label": "t:labels.background" },
-      { "type": "color", "id": "dark_foreground_color", "default": "#F7F4ED", "label": "t:labels.foreground" },
-      { "type": "color", "id": "dark_muted_color", "default": "#BAB6AC", "label": "t:labels.muted" },
-      { "type": "color", "id": "dark_surface_color", "default": "#20231F", "label": "t:labels.surface" },
-      { "type": "color", "id": "dark_border_color", "default": "#3B4038", "label": "t:labels.border" },
-      { "type": "color", "id": "dark_accent_color", "default": "#A8D5BA", "label": "t:labels.accent" },
-      { "type": "color", "id": "dark_accent_contrast_color", "default": "#102117", "label": "t:labels.accent_contrast" },
-      {
-        "type": "select",
-        "id": "default_color_mode",
-        "label": "t:labels.default_color_mode",
-        "options": [
-          { "value": "system", "label": "t:options.color_mode.system" },
-          { "value": "light", "label": "t:options.color_mode.light" },
-          { "value": "dark", "label": "t:options.color_mode.dark" }
-        ],
-        "default": "system"
-      },
-      {
-        "type": "checkbox",
-        "id": "enable_theme_toggle",
-        "label": "t:labels.enable_theme_toggle",
-        "default": true
-      }
+      { "type": "color", "id": "accent_contrast_color", "default": "#FFFFFF", "label": "t:labels.accent_contrast" }
     ]
   },
   {

@@ -6,7 +6,7 @@
   {{ settings.type_heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
 
   :root {
-    color-scheme: light dark;
+    color-scheme: light;
     --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
     --font-body-style: {{ settings.type_body_font.style }};
     --font-body-weight: {{ settings.type_body_font.weight }};
@@ -46,29 +46,4 @@
     --transition-fast: 160ms ease;
   }
 
-  [data-theme='dark'] {
-    color-scheme: dark;
-    --color-background: {{ settings.dark_background_color }};
-    --color-foreground: {{ settings.dark_foreground_color }};
-    --color-muted: {{ settings.dark_muted_color }};
-    --color-surface: {{ settings.dark_surface_color }};
-    --color-border: {{ settings.dark_border_color }};
-    --color-accent: {{ settings.dark_accent_color }};
-    --color-accent-contrast: {{ settings.dark_accent_contrast_color }};
-    --shadow-card: 0 0.75rem 2rem rgb(0 0 0 / 24%);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) {
-      color-scheme: dark;
-      --color-background: {{ settings.dark_background_color }};
-      --color-foreground: {{ settings.dark_foreground_color }};
-      --color-muted: {{ settings.dark_muted_color }};
-      --color-surface: {{ settings.dark_surface_color }};
-      --color-border: {{ settings.dark_border_color }};
-      --color-accent: {{ settings.dark_accent_color }};
-      --color-accent-contrast: {{ settings.dark_accent_contrast_color }};
-      --shadow-card: 0 0.75rem 2rem rgb(0 0 0 / 24%);
-    }
-  }
 {% endstyle %}

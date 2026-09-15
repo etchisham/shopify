@@ -12,10 +12,7 @@
     "skip_to_content": "Skip to content",
     "open_menu": "Open menu",
     "close_menu": "Close menu",
-    "close_filters": "Close filters",
-    "theme_system": "Theme: system",
-    "theme_light": "Theme: light",
-    "theme_dark": "Theme: dark"
+    "close_filters": "Close filters"
   },
   "announcement": {
     "default": "BOGO savings — buy 2, get 1 free + free shipping"

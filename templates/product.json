@@ -18,6 +18,246 @@
         "media_position": "left"
       }
     },
+    "feature_ready_to_hang": {
+      "type": "product-feature-showcase",
+      "blocks": {
+        "ready_image": {
+          "type": "image",
+          "settings": {
+            "alt_en": "Back of a framed canvas with installed hanging hardware",
+            "alt_ar": "ظهر لوحة قماشية بإطار مع ملحقات تعليق مثبتة",
+            "focal_point": "center"
+          }
+        },
+        "ready_point_1": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Installed hanging hardware.",
+            "text_ar": "ملحقات التعليق مثبتة مسبقًا.",
+            "icon": "check"
+          }
+        },
+        "ready_point_2": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Lightweight and easy to mount.",
+            "text_ar": "خفيفة الوزن وسهلة التثبيت.",
+            "icon": "check"
+          }
+        },
+        "ready_point_3": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Ships in protective packaging.",
+            "text_ar": "تُشحن في عبوة واقية.",
+            "icon": "check"
+          }
+        }
+      },
+      "block_order": [
+        "ready_image",
+        "ready_point_1",
+        "ready_point_2",
+        "ready_point_3"
+      ],
+      "settings": {
+        "heading_en": "READY TO HANG",
+        "subheading_en": "NO HASSLE. STRAIGHT ON THE WALL.",
+        "heading_ar": "جاهزة للتعليق",
+        "subheading_ar": "بدون عناء. مباشرة على الحائط.",
+        "media_position": "start",
+        "mobile_order": "media-first",
+        "content_alignment": "center",
+        "media_width": 50,
+        "max_width": 1800,
+        "column_gap": 64,
+        "media_aspect_ratio": "wide",
+        "image_fit": "cover",
+        "mobile_media_columns": 1,
+        "image_gap": 12,
+        "image_radius": 0,
+        "show_scribble": true,
+        "uppercase_subheading": true,
+        "uppercase_features": true,
+        "show_top_border": false,
+        "background_color": "#FFFFFF",
+        "text_color": "#202020",
+        "muted_color": "#343434",
+        "accent_color": "#F7941D",
+        "heading_size": 48,
+        "body_size": 24,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "feature_museum_quality": {
+      "type": "product-feature-showcase",
+      "blocks": {
+        "quality_image": {
+          "type": "image",
+          "settings": {
+            "alt_en": "Close-up of archival canvas and a wooden stretcher frame",
+            "alt_ar": "لقطة مقربة لقماش أرشيفي وإطار خشبي",
+            "focal_point": "center"
+          }
+        },
+        "quality_point_1": {
+          "type": "feature",
+          "settings": {
+            "text_en": "100+ year archival canvas.",
+            "text_ar": "قماش أرشيفي يدوم لأكثر من 100 عام.",
+            "icon": "check"
+          }
+        },
+        "quality_point_2": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Hand-stretched in the USA.",
+            "text_ar": "مشدودة يدويًا في الولايات المتحدة.",
+            "icon": "check"
+          }
+        },
+        "quality_point_3": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Vibrant, fade-resistant inks.",
+            "text_ar": "أحبار زاهية ومقاومة للبهتان.",
+            "icon": "check"
+          }
+        }
+      },
+      "block_order": [
+        "quality_image",
+        "quality_point_1",
+        "quality_point_2",
+        "quality_point_3"
+      ],
+      "settings": {
+        "heading_en": "MUSEUM QUALITY",
+        "subheading_en": "PREMIUM MATERIALS. GALLERY LEVEL EXECUTION.",
+        "heading_ar": "جودة تليق بالمتاحف",
+        "subheading_ar": "خامات فاخرة. تنفيذ بمستوى المعارض.",
+        "media_position": "end",
+        "mobile_order": "media-first",
+        "content_alignment": "center",
+        "media_width": 50,
+        "max_width": 1800,
+        "column_gap": 64,
+        "media_aspect_ratio": "wide",
+        "image_fit": "cover",
+        "mobile_media_columns": 1,
+        "image_gap": 12,
+        "image_radius": 0,
+        "show_scribble": true,
+        "uppercase_subheading": true,
+        "uppercase_features": true,
+        "show_top_border": true,
+        "background_color": "#FFFFFF",
+        "text_color": "#202020",
+        "muted_color": "#343434",
+        "accent_color": "#F7941D",
+        "heading_size": 48,
+        "body_size": 24,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "feature_why_ikonick": {
+      "type": "product-feature-showcase",
+      "blocks": {
+        "why_image_1": {
+          "type": "image",
+          "settings": {
+            "alt_en": "Customer with wall art in a bright interior",
+            "alt_ar": "عميل مع لوحة فنية في مساحة داخلية مضيئة",
+            "focal_point": "center"
+          }
+        },
+        "why_image_2": {
+          "type": "image",
+          "settings": {
+            "alt_en": "Artist standing beside a framed print",
+            "alt_ar": "فنان يقف بجوار لوحة مؤطرة",
+            "focal_point": "center"
+          }
+        },
+        "why_image_3": {
+          "type": "image",
+          "settings": {
+            "alt_en": "Collectors displaying licensed artwork",
+            "alt_ar": "مقتنون يعرضون أعمالًا فنية مرخصة",
+            "focal_point": "center"
+          }
+        },
+        "why_point_1": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Officially licensed collections.",
+            "text_ar": "مجموعات مرخصة رسميًا.",
+            "icon": "check"
+          }
+        },
+        "why_point_2": {
+          "type": "feature",
+          "settings": {
+            "text_en": "Over 250K sold worldwide.",
+            "text_ar": "بيع أكثر من 250 ألف قطعة حول العالم.",
+            "icon": "check"
+          }
+        },
+        "why_point_3": {
+          "type": "feature",
+          "settings": {
+            "text_en": "700K+ fans on Instagram.",
+            "text_ar": "أكثر من 700 ألف متابع على إنستغرام.",
+            "icon": "check"
+          }
+        }
+      },
+      "block_order": [
+        "why_image_1",
+        "why_image_2",
+        "why_image_3",
+        "why_point_1",
+        "why_point_2",
+        "why_point_3"
+      ],
+      "settings": {
+        "heading_en": "WHY IKONICK?",
+        "subheading_en": "TRUSTED BY THE BIGGEST NAMES IN THE WORLD.",
+        "heading_ar": "لماذا IKONICK؟",
+        "subheading_ar": "موثوقة من أكبر الأسماء في العالم.",
+        "media_position": "start",
+        "mobile_order": "media-first",
+        "content_alignment": "center",
+        "media_width": 50,
+        "max_width": 1800,
+        "column_gap": 64,
+        "media_aspect_ratio": "wide",
+        "image_fit": "cover",
+        "mobile_media_columns": 3,
+        "image_gap": 12,
+        "image_radius": 0,
+        "show_scribble": true,
+        "uppercase_subheading": true,
+        "uppercase_features": true,
+        "show_top_border": false,
+        "background_color": "#FFFFFF",
+        "text_color": "#202020",
+        "muted_color": "#343434",
+        "accent_color": "#F7941D",
+        "heading_size": 48,
+        "body_size": 24,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
     "trust": {
       "type": "trust-bar",
       "blocks": {
@@ -73,6 +313,9 @@
   },
   "order": [
     "main",
+    "feature_ready_to_hang",
+    "feature_museum_quality",
+    "feature_why_ikonick",
     "trust",
     "1789423886655db41b"
   ]

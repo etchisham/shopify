@@ -1,42 +1,7 @@
 (() => {
-  const root = document.documentElement;
-  const modes = ['system', 'light', 'dark'];
   const facetOpeners = new WeakMap();
 
-  function applyTheme(mode) {
-    root.dataset.themePreference = mode;
-
-    if (mode === 'light' || mode === 'dark') {
-      root.dataset.theme = mode;
-    } else {
-      delete root.dataset.theme;
-    }
-
-    try {
-      localStorage.setItem('theme-preference', mode);
-    } catch (error) {
-      // Storage can be unavailable in strict privacy modes. Theme still works for this page.
-    }
-
-    document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-      const key = `label${mode[0].toUpperCase()}${mode.slice(1)}`;
-      const label = button.dataset[key];
-      button.dataset.mode = mode;
-      button.setAttribute('aria-label', label);
-      const current = button.querySelector('[data-theme-label]');
-      if (current) current.textContent = label;
-    });
-  }
-
   document.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-theme-toggle]');
-    if (button) {
-      const currentMode = root.dataset.themePreference || 'system';
-      const nextMode = modes[(modes.indexOf(currentMode) + 1) % modes.length];
-      applyTheme(nextMode);
-      return;
-    }
-
     const facetsOpen = event.target.closest('[data-facets-open]');
     if (facetsOpen) {
       const dialog = document.getElementById(facetsOpen.getAttribute('aria-controls'));
@@ -113,7 +78,6 @@
     bindFacetDialogs(event.target);
   });
 
-  applyTheme(root.dataset.themePreference || 'system');
   syncFooterMenus();
   bindFacetDialogs();
 })();

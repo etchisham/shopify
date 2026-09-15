@@ -46,7 +46,7 @@ Architecture choice: Shopify Skeleton over Dawn. Skeleton gives a current, minim
 - App-block support on product pages
 - Responsive Shopify CDN images with dimensions and `srcset`
 - Semantic landmarks, labels, keyboard focus, skip link, 44px controls
-- Reduced-motion handling and light/dark/system modes
+- Reduced-motion handling and merchant-controlled storefront colors
 - Native Shopify product, newsletter, cart, search, account, and checkout flows
 - Structured product data, canonical URL, Open Graph, and Twitter metadata
 - Conversion-oriented homepage sequence: value proposition, confidence, discovery, benefit, final action
@@ -72,7 +72,7 @@ Collection and product-search pages include the same pill-shaped filter/sort too
 ## Build order
 
 1. Define target customer, product category, desired action, brand voice, and visual direction.
-2. Set global fonts, colors, logo, menus, footer, and color-mode behavior in Theme settings.
+2. Set global fonts, colors, logo, menus, footer, and spacing in Theme settings.
 3. Replace all starter homepage copy. Connect hero buttons and select a featured collection.
 4. Add verified shipping, returns, warranty, support, and payment facts at relevant decision points.
 5. Add product metafields and reusable sections only after the catalog model is stable.
