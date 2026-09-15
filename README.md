@@ -63,6 +63,12 @@ The header group renders the announcement bar first, followed by the header. In 
 
 Social icons render only when a real profile URL exists. Blank section copy uses the bundled English or Arabic storefront translation; merchant-entered copy and navigation titles should be localized with Shopify Translate & Adapt. Arabic, Persian, Hebrew, and Urdu storefronts automatically use RTL direction and logical layout spacing.
 
+## Catalog and product cards
+
+Collection, search, and featured-collection grids share `snippets/product-card.liquid`; use that snippet for future product grids to keep one store-wide card design. Theme settings control catalog columns, image corner radius, vendor visibility, verified rating visibility, and calculated discount visibility.
+
+Collection and product-search pages include the same pill-shaped filter/sort toolbar. **All filters** opens a keyboard-accessible modal side drawer: left in LTR, right in RTL. Configure available storefront filters in Shopify Search & Discovery. Ratings render only from Shopify's `reviews.rating` and `reviews.rating_count` product metafields; missing review data stays hidden rather than being invented.
+
 ## Build order
 
 1. Define target customer, product category, desired action, brand voice, and visual direction.
