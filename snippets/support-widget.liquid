@@ -1,0 +1,31 @@
+{% liquid
+  assign whatsapp_url = settings.support_whatsapp_url | strip
+  assign whatsapp_host = whatsapp_url | split: '/' | slice: 2 | first | downcase
+  assign whatsapp_protocol = whatsapp_url | split: ':' | first
+  assign allowed_hosts = 'wa.me,api.whatsapp.com,web.whatsapp.com,www.whatsapp.com,whatsapp.com' | split: ','
+  assign valid_whatsapp = false
+  if whatsapp_protocol == 'https' and allowed_hosts contains whatsapp_host
+    assign valid_whatsapp = true
+  endif
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign greeting = settings.support_greeting_en
+  if locale_root == 'ar'
+    assign greeting = settings.support_greeting_ar | default: greeting
+  endif
+%}
+{% if settings.support_enabled and valid_whatsapp %}
+  {{ 'support-widget.css' | asset_url | stylesheet_tag }}
+  <div class="support-widget" data-support-widget data-delay="{{ settings.support_delay | times: 1000 }}" style="--support-color: {{ settings.support_color }}; --support-text: {{ settings.support_text_color }}; --support-size: {{ settings.support_size }}px; --support-right: {{ settings.support_right }}px; --support-bottom: {{ settings.support_bottom }}px;">
+    <div class="support-widget__greeting" data-support-greeting hidden>
+      <button class="support-widget__close" type="button" data-support-close aria-label="{{ 'support.dismiss' | t }}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <p role="status" aria-live="polite" data-support-message data-message="{{ greeting | escape }}"></p>
+      <a href="{{ whatsapp_url | escape }}" target="_blank" rel="noopener noreferrer" data-support-link>{{ 'support.chat' | t }}<span class="visually-hidden"> — {{ 'support.new_tab' | t }}</span></a>
+    </div>
+    <a class="support-widget__bubble" href="{{ whatsapp_url | escape }}" target="_blank" rel="noopener noreferrer" data-support-link aria-label="{{ 'support.open' | t }} — {{ 'support.new_tab' | t }}">
+      <svg viewBox="0 0 32 32" width="32" height="32" fill="none" aria-hidden="true" focusable="false"><path d="M16 4a12 12 0 0 0-10.4 18L4 28l6.2-1.6A12 12 0 1 0 16 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10c-.4-.8-1.2-.7-1.7-.2-1.8 1.8-.3 5.1 2.2 7.6s5.8 4 7.6 2.2c.5-.5.6-1.3-.2-1.7l-2.2-1.1c-.5-.2-.9-.1-1.2.3l-.8.8c-1.5-.7-2.9-2.1-3.6-3.6l.8-.8c.4-.3.5-.7.3-1.2L12 10Z" fill="currentColor"/></svg>
+    </a>
+  </div>
+  <script src="{{ 'support-widget.js' | asset_url }}" defer="defer"></script>
+{% elsif request.design_mode and settings.support_enabled %}
+  <p class="support-setup-note" style="padding: 1rem; text-align: center;">{{ 'support.setup' | t }}</p>
+{% endif %}

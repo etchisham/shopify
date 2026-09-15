@@ -1,4 +1,7 @@
 # This file contains a list of files that will be excluded from Shopify CLI
+tests/**
+scripts/**
+.preview/**
 # operations such as push, pull, dev, etc.
 #
 # Examples:

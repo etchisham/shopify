@@ -57,9 +57,18 @@
         "id": "max_page_width",
         "label": "t:labels.page_width",
         "options": [
-          { "value": "80rem", "label": "t:options.page_width.narrow" },
-          { "value": "90rem", "label": "t:options.page_width.standard" },
-          { "value": "110rem", "label": "t:options.page_width.wide" }
+          {
+            "value": "80rem",
+            "label": "t:options.page_width.narrow"
+          },
+          {
+            "value": "90rem",
+            "label": "t:options.page_width.standard"
+          },
+          {
+            "value": "110rem",
+            "label": "t:options.page_width.wide"
+          }
         ],
         "default": "90rem"
       },
@@ -78,13 +87,48 @@
   {
     "name": "t:general.colors",
     "settings": [
-      { "type": "color", "id": "background_color", "default": "#FFFCF7", "label": "t:labels.background" },
-      { "type": "color", "id": "foreground_color", "default": "#171714", "label": "t:labels.foreground" },
-      { "type": "color", "id": "muted_color", "default": "#625F58", "label": "t:labels.muted" },
-      { "type": "color", "id": "surface_color", "default": "#F4F0E8", "label": "t:labels.surface" },
-      { "type": "color", "id": "border_color", "default": "#D8D3C8", "label": "t:labels.border" },
-      { "type": "color", "id": "accent_color", "default": "#244C3A", "label": "t:labels.accent" },
-      { "type": "color", "id": "accent_contrast_color", "default": "#FFFFFF", "label": "t:labels.accent_contrast" }
+      {
+        "type": "color",
+        "id": "background_color",
+        "default": "#FFFCF7",
+        "label": "t:labels.background"
+      },
+      {
+        "type": "color",
+        "id": "foreground_color",
+        "default": "#171714",
+        "label": "t:labels.foreground"
+      },
+      {
+        "type": "color",
+        "id": "muted_color",
+        "default": "#625F58",
+        "label": "t:labels.muted"
+      },
+      {
+        "type": "color",
+        "id": "surface_color",
+        "default": "#F4F0E8",
+        "label": "t:labels.surface"
+      },
+      {
+        "type": "color",
+        "id": "border_color",
+        "default": "#D8D3C8",
+        "label": "t:labels.border"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "default": "#244C3A",
+        "label": "t:labels.accent"
+      },
+      {
+        "type": "color",
+        "id": "accent_contrast_color",
+        "default": "#FFFFFF",
+        "label": "t:labels.accent_contrast"
+      }
     ]
   },
   {
@@ -151,6 +195,97 @@
         "id": "card_show_discount",
         "label": "t:labels.card_show_discount",
         "default": true
+      }
+    ]
+  },
+  {
+    "name": "t:support.section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "support_enabled",
+        "label": "t:support.enabled",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "support_email",
+        "label": "t:support.email"
+      },
+      {
+        "type": "text",
+        "id": "support_phone",
+        "label": "t:support.phone"
+      },
+      {
+        "type": "url",
+        "id": "support_whatsapp_url",
+        "label": "t:support.whatsapp_url",
+        "info": "t:support.url_info"
+      },
+      {
+        "type": "text",
+        "id": "support_greeting_en",
+        "label": "t:support.greeting_en",
+        "default": "Hello, can we help you?"
+      },
+      {
+        "type": "text",
+        "id": "support_greeting_ar",
+        "label": "t:support.greeting_ar",
+        "default": "مرحبًا، هل يمكننا مساعدتك؟"
+      },
+      {
+        "type": "range",
+        "id": "support_delay",
+        "label": "t:support.delay",
+        "min": 5,
+        "max": 60,
+        "step": 5,
+        "unit": "s",
+        "default": 15
+      },
+      {
+        "type": "color",
+        "id": "support_color",
+        "label": "t:labels.background",
+        "default": "#087F5B"
+      },
+      {
+        "type": "color",
+        "id": "support_text_color",
+        "label": "t:labels.foreground",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "range",
+        "id": "support_size",
+        "label": "t:support.size",
+        "min": 48,
+        "max": 72,
+        "step": 4,
+        "unit": "px",
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "support_right",
+        "label": "t:support.right_offset",
+        "min": 16,
+        "max": 48,
+        "step": 4,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "support_bottom",
+        "label": "t:support.bottom_offset",
+        "min": 16,
+        "max": 80,
+        "step": 4,
+        "unit": "px",
+        "default": 24
       }
     ]
   }

@@ -1,72 +1,220 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "hero": {
-      "type": "hero",
-      "settings": {
-        "overlay_opacity": 35,
-        "eyebrow": "Made for real life",
-        "heading": "Products worth making room for",
-        "text": "<p>Replace this copy with one clear, specific customer outcome.</p>",
-        "button_label": "Shop products",
-        "button_link": "shopify://collections/all",
-        "secondary_button_label": "",
-        "secondary_button_link": "",
-        "alignment": "center",
-        "text_width": 46
-      }
-    },
-    "trust": {
-      "type": "trust-bar",
+    "slideshow": {
+      "type": "home-slideshow",
+      "settings": {},
       "blocks": {
-        "secure": { "type": "item", "settings": { "heading": "Secure checkout", "text": "Protected by Shopify" } },
-        "details": { "type": "item", "settings": { "heading": "Clear product details", "text": "Know what you are choosing" } },
-        "support": { "type": "item", "settings": { "heading": "Questions?", "text": "Contact us before ordering" } }
+        "ambition": {
+          "type": "slide",
+          "settings": {
+            "prefix_en": "Art for",
+            "prefix_ar": "فن من أجل",
+            "heading_en": "The ambitious",
+            "heading_ar": "الطموحين",
+            "text_en": "Make room for what drives you. Discover art that brings your goals into focus.",
+            "text_ar": "امنح ما يلهمك مساحة. اكتشف لوحات تذكّرك بأهدافك كل يوم.",
+            "button_en": "Explore the collection",
+            "button_ar": "اكتشف المجموعة",
+            "link": "shopify://collections/all"
+          }
+        },
+        "sport": {
+          "type": "slide",
+          "settings": {
+            "prefix_en": "Art for",
+            "prefix_ar": "فن من أجل",
+            "heading_en": "Your game",
+            "heading_ar": "شغفك الرياضي",
+            "text_en": "Bring the spirit of sport into your space. Find the moment that moves you.",
+            "text_ar": "أضف روح الرياضة إلى مساحتك. اكتشف اللحظة التي تلهمك.",
+            "button_en": "Shop sports art",
+            "button_ar": "تسوّق لوحات الرياضة",
+            "link": "shopify://collections/sports"
+          }
+        },
+        "space": {
+          "type": "slide",
+          "settings": {
+            "prefix_en": "Art for",
+            "prefix_ar": "فن من أجل",
+            "heading_en": "Your everyday",
+            "heading_ar": "كل يوم",
+            "text_en": "A fresh perspective for your walls. Choose a piece that feels like you.",
+            "text_ar": "رؤية جديدة لجدرانك. اختر لوحة تعبّر عنك.",
+            "button_en": "Discover new arrivals",
+            "button_ar": "اكتشف الجديد",
+            "link": "shopify://collections/new-arrivals"
+          }
+        }
       },
-      "block_order": ["secure", "details", "support"],
-      "settings": { "heading": "Why shop with us" }
+      "block_order": [
+        "ambition",
+        "sport",
+        "space"
+      ]
     },
-    "featured": {
-      "type": "featured-collection",
+    "discovery_statement": {
+      "type": "home-statement",
+      "settings": {}
+    },
+    "discovery_tabs": {
+      "type": "collection-tabs",
+      "settings": {},
+      "blocks": {
+        "bestsellers": {
+          "type": "collection",
+          "settings": {
+            "collection": "best-sellers",
+            "label_en": "Best sellers",
+            "label_ar": "الأكثر مبيعًا"
+          }
+        },
+        "sports": {
+          "type": "collection",
+          "settings": {
+            "collection": "sports",
+            "label_en": "Sports",
+            "label_ar": "الرياضة"
+          }
+        },
+        "motivational": {
+          "type": "collection",
+          "settings": {
+            "collection": "motivational",
+            "label_en": "Motivational",
+            "label_ar": "التحفيز"
+          }
+        },
+        "new": {
+          "type": "collection",
+          "settings": {
+            "collection": "new-arrivals",
+            "label_en": "New arrivals",
+            "label_ar": "وصل حديثًا"
+          }
+        }
+      },
+      "block_order": [
+        "bestsellers",
+        "sports",
+        "motivational",
+        "new"
+      ]
+    },
+    "sports_statement": {
+      "type": "home-statement",
       "settings": {
-        "eyebrow": "Start here",
-        "heading": "Featured products",
-        "collection": "",
-        "products_to_show": 4,
-        "columns": 4
+        "kicker_en": "For the love of the game",
+        "kicker_ar": "من أجل شغفك بالرياضة",
+        "before_en": "Celebrate",
+        "before_ar": "احتفل بـ",
+        "highlight_en": "greatness",
+        "highlight_ar": "العظمة",
+        "after_en": "Find your inspiration.",
+        "after_ar": "واكتشف مصدر إلهامك.",
+        "button_en": "Explore sports art",
+        "button_ar": "اكتشف لوحات الرياضة",
+        "link": "shopify://collections/sports"
       }
     },
-    "imagetext": {
-      "type": "image-with-text",
+    "athlete_tabs": {
+      "type": "collection-tabs",
       "settings": {
-        "image_position": "left",
-        "eyebrow": "Why it matters",
-        "heading": "Make the benefit tangible",
-        "text": "<p>Explain the job your product helps customers complete. Replace general claims with specific, verifiable details.</p>",
-        "button_label": "Learn more",
-        "button_link": ""
-      }
+        "heading_en": "Explore athlete collections",
+        "heading_ar": "اكتشف مجموعات الرياضيين"
+      },
+      "blocks": {
+        "jordan": {
+          "type": "collection",
+          "settings": {
+            "collection": "michael-jordan",
+            "label_en": "Michael Jordan",
+            "label_ar": "مايكل جوردان"
+          }
+        },
+        "woods": {
+          "type": "collection",
+          "settings": {
+            "collection": "tiger-woods",
+            "label_en": "Tiger Woods",
+            "label_ar": "تايجر وودز"
+          }
+        },
+        "ali": {
+          "type": "collection",
+          "settings": {
+            "collection": "muhammad-ali",
+            "label_en": "Muhammad Ali",
+            "label_ar": "محمد علي"
+          }
+        },
+        "gretzky": {
+          "type": "collection",
+          "settings": {
+            "collection": "wayne-gretzky",
+            "label_en": "Wayne Gretzky",
+            "label_ar": "واين جريتزكي"
+          }
+        }
+      },
+      "block_order": [
+        "jordan",
+        "woods",
+        "ali",
+        "gretzky"
+      ]
     },
-    "closing": {
-      "type": "rich-text",
-      "settings": {
-        "eyebrow": "Ready when you are",
-        "heading": "End with one clear next step",
-        "text": "<p>Repeat the primary action after resolving the customer’s biggest objections.</p>",
-        "button_label": "Shop products",
-        "button_link": "shopify://collections/all",
-        "alignment": "center",
-        "text_width": 44
-      }
+    "categories": {
+      "type": "home-category-links",
+      "settings": {},
+      "blocks": {
+        "bestsellers": {
+          "type": "link",
+          "settings": {
+            "label_en": "Best sellers",
+            "label_ar": "الأكثر مبيعًا",
+            "link": "shopify://collections/best-sellers"
+          }
+        },
+        "sports": {
+          "type": "link",
+          "settings": {
+            "label_en": "Sports",
+            "label_ar": "الرياضة",
+            "link": "shopify://collections/sports"
+          }
+        },
+        "motivational": {
+          "type": "link",
+          "settings": {
+            "label_en": "Motivational",
+            "label_ar": "التحفيز",
+            "link": "shopify://collections/motivational"
+          }
+        },
+        "new": {
+          "type": "link",
+          "settings": {
+            "label_en": "New arrivals",
+            "label_ar": "وصل حديثًا",
+            "link": "shopify://collections/new-arrivals"
+          }
+        }
+      },
+      "block_order": [
+        "bestsellers",
+        "sports",
+        "motivational",
+        "new"
+      ]
     }
   },
-  "order": ["hero", "trust", "featured", "imagetext", "closing"]
+  "order": [
+    "slideshow",
+    "discovery_statement",
+    "discovery_tabs",
+    "sports_statement",
+    "athlete_tabs",
+    "categories"
+  ]
 }

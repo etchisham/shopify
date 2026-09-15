@@ -183,7 +183,8 @@
     "uppercase_features": "Use uppercase feature points",
     "uppercase_subheading": "Use uppercase subheading",
     "button_label_ar": "Arabic button label",
-    "button_label_en": "English button label"
+    "button_label_en": "English button label",
+    "heading_size": "Heading size"
   },
   "options": {
     "alignment": {
@@ -242,5 +243,49 @@
       "subtitle": "Subtitle",
       "normal": "Normal text"
     }
+  },
+  "home": {
+    "slideshow": "Split slideshow",
+    "slide": "Slide",
+    "autoplay": "Autoplay slides",
+    "interval": "Time between slides",
+    "desktop_height": "Desktop slide height",
+    "mobile_image": "Mobile image",
+    "prefix_en": "English heading prefix",
+    "prefix_ar": "Arabic heading prefix",
+    "before_en": "English heading — before highlight",
+    "before_ar": "Arabic heading — before highlight",
+    "highlight_en": "English highlighted word",
+    "highlight_ar": "Arabic highlighted word",
+    "after_en": "English heading — after highlight",
+    "after_ar": "Arabic heading — after highlight",
+    "line_break": "Line break after highlight",
+    "statement": "Statement with highlight",
+    "collection_tabs": "Collection tabs",
+    "products_to_show": "Products per collection",
+    "tab_size": "Desktop tab text size",
+    "vertical_padding": "Vertical padding",
+    "label_en": "English label",
+    "label_ar": "Arabic label",
+    "category_links": "Oversized category links",
+    "category_link": "Category link"
+  },
+  "support": {
+    "section": "Support & contact",
+    "enabled": "Show WhatsApp support",
+    "email": "Support email",
+    "phone": "Support phone",
+    "whatsapp_url": "WhatsApp link",
+    "url_info": "Use an HTTPS wa.me or whatsapp.com link. Blank or invalid links hide the widget.",
+    "greeting_en": "English greeting",
+    "greeting_ar": "Arabic greeting",
+    "delay": "Greeting delay after first interaction",
+    "size": "Bubble size",
+    "right_offset": "Right offset",
+    "bottom_offset": "Bottom offset"
+  },
+  "contact": {
+    "section": "Contact us",
+    "override_info": "Leave blank to use Theme settings → Support & contact."
   }
 }

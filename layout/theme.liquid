@@ -20,6 +20,10 @@
 
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    {% if request.page_type == 'index' %}
+      {{ 'home.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'home.js' | asset_url }}" defer="defer"></script>
+    {% endif %}
 
     {% render 'meta-tags' %}
     {{ content_for_header }}
@@ -37,5 +41,6 @@
     {% sections 'footer-group' %}
 
     <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-live-region></p>
+    {% render 'support-widget' %}
   </body>
 </html>

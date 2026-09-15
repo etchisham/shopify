@@ -1,0 +1,86 @@
+{% liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign heading = section.settings.heading_en
+  assign intro = section.settings.text_en
+  if locale_root == 'ar'
+    assign heading = section.settings.heading_ar | default: heading
+    assign intro = section.settings.text_ar | default: intro
+  endif
+  assign contact_email = section.settings.email | default: settings.support_email
+  assign contact_phone = section.settings.phone | default: settings.support_phone
+  assign phone_link = contact_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-'
+  assign form_id = 'ContactForm-' | append: section.id
+%}
+<section class="contact-page" style="--contact-background: {{ section.settings.background }}; --contact-foreground: {{ section.settings.foreground }}; --contact-padding: {{ section.settings.padding }}px;" aria-labelledby="ContactHeading-{{ section.id }}">
+  <header class="contact-page__header">
+    <h1 id="ContactHeading-{{ section.id }}">{{ heading | escape }}</h1>
+    {% if intro != blank %}<p>{{ intro | escape | newline_to_br }}</p>{% endif %}
+  </header>
+  <div class="contact-page__layout">
+    <div class="contact-page__details">
+      {% if contact_email != blank %}<div class="contact-page__detail"><h2>{{ 'contact.email_us' | t }}</h2><a href="mailto:{{ contact_email | escape }}"><bdi>{{ contact_email | escape }}</bdi></a></div>{% endif %}
+      {% if contact_phone != blank %}<div class="contact-page__detail"><h2>{{ 'contact.call_us' | t }}</h2><a href="tel:{{ phone_link | escape }}"><bdi dir="ltr">{{ contact_phone | escape }}</bdi></a></div>{% endif %}
+      {% if contact_email == blank and contact_phone == blank %}<p>{{ 'contact.use_form' | t }}</p>{% endif %}
+    </div>
+    <div class="contact-page__form">
+      <h2>{{ 'contact.form_heading' | t }}</h2>
+      {% form 'contact', id: form_id %}
+        {% if form.posted_successfully? %}
+          <div class="contact-page__message" role="status" tabindex="-1">{{ 'contact.success' | t }}</div>
+        {% else %}
+          {% if form.errors %}
+            <div class="contact-page__message contact-page__message--error" role="alert" tabindex="-1">
+              <h3>{{ 'contact.error_heading' | t }}</h3>
+              <ul>{% for field in form.errors %}<li>{% if field == 'form' %}{{ form.errors.messages[field] }}{% else %}<a href="#{{ form_id }}-{{ field }}">{{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}</a>{% endif %}</li>{% endfor %}</ul>
+            </div>
+          {% endif %}
+          <p class="contact-page__required">{{ 'contact.required_note' | t }}</p>
+          <div class="contact-page__fields">
+            <div class="contact-field"><label for="{{ form_id }}-name">{{ 'contact.name' | t }} <span aria-hidden="true">*</span></label><input id="{{ form_id }}-name" type="text" name="contact[name]" autocomplete="name" required value="{{ form.name | default: customer.name | escape }}"></div>
+            <div class="contact-field"><label for="{{ form_id }}-email">{{ 'contact.email' | t }} <span aria-hidden="true">*</span></label><input id="{{ form_id }}-email" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" autocorrect="off" required value="{{ form.email | default: customer.email | escape }}" {% if form.errors contains 'email' %}aria-invalid="true" aria-describedby="{{ form_id }}-email-error"{% endif %}>{% if form.errors contains 'email' %}<p id="{{ form_id }}-email-error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{% endif %}</div>
+            <div class="contact-field contact-field--wide"><label for="{{ form_id }}-phone">{{ 'contact.phone' | t }}</label><input id="{{ form_id }}-phone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone | escape }}"></div>
+            <div class="contact-field contact-field--wide"><label for="{{ form_id }}-body">{{ 'contact.message' | t }} <span aria-hidden="true">*</span></label><textarea id="{{ form_id }}-body" name="contact[body]" rows="6" required>{{ form.body | escape }}</textarea></div>
+          </div>
+          <button class="button contact-page__submit" type="submit">{{ 'contact.send' | t }}</button>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</section>
+{% stylesheet %}
+  .contact-page { width: 100%; max-width: 78rem; margin-inline: auto; padding-block: var(--contact-padding); background: var(--contact-background); color: var(--contact-foreground); }
+  .contact-page__header { max-width: 45rem; margin-bottom: 3rem; }
+  .contact-page__header h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; text-transform: uppercase; }
+  .contact-page__header p { font-size: 1.125rem; line-height: 1.6; }
+  .contact-page__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 5vw, 5rem); }
+  .contact-page__details { display: grid; align-content: start; gap: 2rem; }
+  .contact-page__detail h2, .contact-page__form > h2 { margin: 0 0 1rem; font-size: 1.4rem; }
+  .contact-page__detail a { color: inherit; text-underline-offset: .2em; overflow-wrap: anywhere; }
+  .contact-page__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+  .contact-field { display: grid; align-content: start; gap: .5rem; }
+  .contact-field--wide { grid-column: 1 / -1; }
+  .contact-field input, .contact-field textarea { width: 100%; min-height: 48px; padding: .875rem; border: 1px solid currentColor; border-radius: 0; background: transparent; color: inherit; font: inherit; }
+  .contact-field textarea { resize: vertical; }
+  .contact-field p { margin: 0; font-size: .875rem; }
+  .contact-page__required { font-size: .875rem; margin-block: 0 1.5rem; }
+  .contact-page__submit { margin-top: 1.5rem; border-radius: 0; background: var(--contact-foreground); color: var(--contact-background); }
+  .contact-page__message { padding: 1.25rem; border: 1px solid currentColor; margin-bottom: 1.5rem; }
+  .contact-page__message h3 { margin-top: 0; font-size: 1.125rem; }
+  @media (max-width: 749px) { .contact-page { padding-block: min(var(--contact-padding), 3rem); } .contact-page__layout, .contact-page__fields { grid-template-columns: minmax(0, 1fr); } .contact-page__details { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; } }
+  @media (max-width: 479px) { .contact-page__details { grid-template-columns: minmax(0, 1fr); } }
+{% endstylesheet %}
+{% schema %}
+{
+  "name":"t:contact.section","enabled_on":{"templates":["page"]},"settings":[
+    {"type":"text","id":"heading_en","label":"t:labels.heading_en","default":"Contact us"},
+    {"type":"text","id":"heading_ar","label":"t:labels.heading_ar","default":"تواصل معنا"},
+    {"type":"textarea","id":"text_en","label":"t:labels.body_text_en","default":"Questions about an order or finding the right piece? Send us a message. We’re here to help."},
+    {"type":"textarea","id":"text_ar","label":"t:labels.body_text_ar","default":"لديك سؤال عن طلبك أو اختيار اللوحة المناسبة؟ أرسل لنا رسالة. نحن هنا لمساعدتك."},
+    {"type":"text","id":"email","label":"t:support.email","info":"t:contact.override_info"},
+    {"type":"text","id":"phone","label":"t:support.phone","info":"t:contact.override_info"},
+    {"type":"range","id":"padding","label":"t:home.vertical_padding","min":32,"max":96,"step":8,"unit":"px","default":64},
+    {"type":"color","id":"background","label":"t:labels.background","default":"#FFFFFF"},
+    {"type":"color","id":"foreground","label":"t:labels.foreground","default":"#111111"}
+  ]
+}
+{% endschema %}

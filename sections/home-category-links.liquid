@@ -1,0 +1,38 @@
+{% liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign heading = section.settings.heading_en
+  if locale_root == 'ar'
+    assign heading = section.settings.heading_ar | default: heading
+  endif
+%}
+<section class="home-categories full-width" style="--home-background: {{ section.settings.background }}; --home-foreground: {{ section.settings.foreground }}; --category-size: {{ section.settings.heading_size }}px; --category-padding: {{ section.settings.padding }}px;" aria-labelledby="CategoryHeading-{{ section.id }}">
+  <h2 id="CategoryHeading-{{ section.id }}" class="visually-hidden">{{ heading | escape }}</h2>
+  <ul class="home-categories__list" role="list">
+    {% for block in section.blocks %}
+      {% liquid
+        assign label = block.settings.label_en
+        if locale_root == 'ar'
+          assign label = block.settings.label_ar | default: label
+        endif
+      %}
+      <li {{ block.shopify_attributes }}><a href="{{ block.settings.link | default: routes.all_products_collection_url }}"><span>{{ label | escape }}</span>{% render 'home-arrow', direction: 'next' %}</a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% schema %}
+{
+  "name":"t:home.category_links","enabled_on":{"templates":["index"]},"max_blocks":8,
+  "settings":[
+    {"type":"text","id":"heading_en","label":"t:labels.heading_en","default":"Shop by inspiration"},
+    {"type":"text","id":"heading_ar","label":"t:labels.heading_ar","default":"تسوّق حسب إلهامك"},
+    {"type":"range","id":"heading_size","label":"t:labels.heading_size","min":40,"max":112,"step":4,"unit":"px","default":80},
+    {"type":"range","id":"padding","label":"t:home.vertical_padding","min":24,"max":96,"step":8,"unit":"px","default":48},
+    {"type":"color","id":"background","label":"t:labels.background","default":"#F2F2F2"},
+    {"type":"color","id":"foreground","label":"t:labels.foreground","default":"#111111"}
+  ],"blocks":[{"type":"link","name":"t:home.category_link","settings":[
+    {"type":"text","id":"label_en","label":"t:home.label_en","default":"Best sellers"},
+    {"type":"text","id":"label_ar","label":"t:home.label_ar","default":"الأكثر مبيعًا"},
+    {"type":"url","id":"link","label":"t:labels.button_link"}
+  ]}],"presets":[{"name":"t:home.category_links","blocks":[{"type":"link"},{"type":"link","settings":{"label_en":"Sports","label_ar":"الرياضة"}},{"type":"link","settings":{"label_en":"Motivational","label_ar":"التحفيز"}},{"type":"link","settings":{"label_en":"New arrivals","label_ar":"وصل حديثًا"}}]}]
+}
+{% endschema %}

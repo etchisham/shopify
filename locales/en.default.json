@@ -8,6 +8,11 @@
  * ------------------------------------------------------------
  */
 {
+  "404": {
+    "title": "Page not found",
+    "not_found": "The page you requested does not exist.",
+    "back_to_shopping": "Back to shopping"
+  },
   "accessibility": {
     "skip_to_content": "Skip to content",
     "open_menu": "Open menu",
@@ -119,11 +124,6 @@
       "title": "Login"
     }
   },
-  "404": {
-    "title": "Page not found",
-    "not_found": "The page you requested does not exist.",
-    "back_to_shopping": "Back to shopping"
-  },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
     "card": "Gift card",
@@ -135,5 +135,37 @@
     "title": "This shop is private",
     "password": "Password",
     "enter": "Enter"
+  },
+  "home": {
+    "slide": "slide",
+    "slide_position": "{{ current }} of {{ total }}",
+    "previous_slide": "Previous slide",
+    "next_slide": "Next slide",
+    "go_to_slide": "Go to slide {{ number }}",
+    "pause": "Pause slideshow",
+    "play": "Play slideshow",
+    "previous_products": "Previous products",
+    "next_products": "Next products"
+  },
+  "contact": {
+    "email_us": "Email us",
+    "call_us": "Call us",
+    "use_form": "Send your question using the form. We’re here to help.",
+    "form_heading": "Send us a message",
+    "name": "Name",
+    "email": "Email address",
+    "phone": "Phone number (optional)",
+    "message": "Message",
+    "send": "Send message",
+    "required_note": "Fields marked * are required.",
+    "success": "Thank you. Your message has been sent.",
+    "error_heading": "Please check the following:"
+  },
+  "support": {
+    "dismiss": "Dismiss support greeting",
+    "chat": "Chat on WhatsApp",
+    "new_tab": "Opens in a new tab",
+    "open": "Contact support on WhatsApp",
+    "setup": "Add a valid WhatsApp link in Theme settings → Support & contact to enable the support bubble."
   }
 }

@@ -1,7 +1,15 @@
 {% layout none %}
+{% liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign rtl_locales = 'ar,fa,he,ur' | split: ','
+  assign text_direction = 'ltr'
+  if rtl_locales contains locale_root
+    assign text_direction = 'rtl'
+  endif
+%}
 
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ request.locale.iso_code }}" dir="{{ text_direction }}">
   <head>
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
@@ -69,5 +77,6 @@
         {% endif %}
       </div>
     </main>
+    {% render 'support-widget' %}
   </body>
 </html>

@@ -1,0 +1,71 @@
+{% liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign heading = section.settings.heading_en
+  if locale_root == 'ar'
+    assign heading = section.settings.heading_ar | default: heading
+  endif
+%}
+<section class="home-collections full-width" data-collection-tabs style="--home-background: {{ section.settings.background }}; --home-foreground: {{ section.settings.foreground }}; --collection-columns: {{ section.settings.columns }}; --tab-size: {{ section.settings.tab_size }}px; --collection-padding: {{ section.settings.padding }}px;" aria-labelledby="CollectionsHeading-{{ section.id }}">
+  <h2 id="CollectionsHeading-{{ section.id }}" class="visually-hidden">{{ heading | escape }}</h2>
+  <div class="home-collections__tabs" data-tab-list aria-label="{{ heading | escape }}">
+    {% for block in section.blocks %}
+      {% liquid
+        assign label = block.settings.label_en | default: block.settings.collection.title
+        if locale_root == 'ar'
+          assign label = block.settings.label_ar | default: label
+        endif
+      %}
+      <button class="home-collection-tab" type="button" id="CollectionTab-{{ section.id }}-{{ block.id }}" data-collection-tab data-block-id="{{ block.id }}" aria-controls="CollectionPanel-{{ section.id }}-{{ block.id }}">{{ label | default: heading | escape }}</button>
+    {% endfor %}
+  </div>
+  {% for block in section.blocks %}
+    {% liquid
+      assign selected_collection = block.settings.collection
+      assign label = block.settings.label_en | default: selected_collection.title
+      if locale_root == 'ar'
+        assign label = block.settings.label_ar | default: label
+      endif
+    %}
+    <div class="home-collection-panel" id="CollectionPanel-{{ section.id }}-{{ block.id }}" data-collection-panel data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+      <h3 class="home-collection-panel__fallback">{{ label | default: heading | escape }}</h3>
+      <div class="home-product-rail" data-product-rail tabindex="0" aria-label="{{ label | default: heading | escape }}">
+        {% if selected_collection != blank and selected_collection.products_count > 0 %}
+          {% for product in selected_collection.products limit: section.settings.products_to_show %}{% render 'product-card', product: product %}{% endfor %}
+        {% elsif selected_collection == blank %}
+          {% for i in (1..4) %}<div class="home-product-placeholder" aria-hidden="true">{{ 'product-' | append: i | placeholder_svg_tag }}</div>{% endfor %}
+        {% endif %}
+      </div>
+      <div class="home-collection-panel__footer">
+        {% if selected_collection != blank %}
+          {% if selected_collection.products_count == 0 %}<p>{{ 'collections.empty' | t }}</p>{% endif %}
+          <a class="home-button" href="{{ selected_collection.url }}">{{ 'navigation.view_all' | t: title: label }}</a>
+        {% else %}<p>{{ 'collections.choose_collection' | t }}</p>{% endif %}
+        <div class="home-rail-controls" data-rail-controls hidden>
+          <button class="home-control" type="button" data-rail-previous aria-label="{{ 'home.previous_products' | t }}">{% render 'home-arrow', direction: 'previous' %}</button>
+          <button class="home-control" type="button" data-rail-next aria-label="{{ 'home.next_products' | t }}">{% render 'home-arrow', direction: 'next' %}</button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+{% schema %}
+{
+  "name":"t:home.collection_tabs","enabled_on":{"templates":["index"]},"max_blocks":6,
+  "settings":[
+    {"type":"text","id":"heading_en","label":"t:labels.heading_en","default":"Find your next piece"},
+    {"type":"text","id":"heading_ar","label":"t:labels.heading_ar","default":"اكتشف لوحتك القادمة"},
+    {"type":"range","id":"products_to_show","label":"t:home.products_to_show","min":4,"max":20,"step":1,"default":12},
+    {"type":"range","id":"columns","label":"t:labels.catalog_columns","min":3,"max":5,"step":1,"default":4},
+    {"type":"range","id":"tab_size","label":"t:home.tab_size","min":24,"max":48,"step":2,"unit":"px","default":40},
+    {"type":"range","id":"padding","label":"t:home.vertical_padding","min":24,"max":120,"step":8,"unit":"px","default":56},
+    {"type":"color","id":"background","label":"t:labels.background","default":"#FFFFFF"},
+    {"type":"color","id":"foreground","label":"t:labels.foreground","default":"#111111"}
+  ],
+  "blocks":[{"type":"collection","name":"t:general.collection","settings":[
+    {"type":"collection","id":"collection","label":"t:labels.collection"},
+    {"type":"text","id":"label_en","label":"t:home.label_en","default":"Best sellers"},
+    {"type":"text","id":"label_ar","label":"t:home.label_ar","default":"الأكثر مبيعًا"}
+  ]}],
+  "presets":[{"name":"t:home.collection_tabs","blocks":[{"type":"collection"},{"type":"collection","settings":{"label_en":"Sports","label_ar":"الرياضة"}},{"type":"collection","settings":{"label_en":"Motivational","label_ar":"التحفيز"}},{"type":"collection","settings":{"label_en":"New arrivals","label_ar":"وصل حديثًا"}}]}]
+}
+{% endschema %}

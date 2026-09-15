@@ -1,0 +1,92 @@
+{% liquid
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign section_heading = section.settings.heading_en
+  if locale_root == 'ar' and section.settings.heading_ar != blank
+    assign section_heading = section.settings.heading_ar
+  endif
+%}
+<section class="home-slideshow full-width" data-home-slideshow data-autoplay="{{ section.settings.autoplay }}" data-interval="{{ section.settings.interval | times: 1000 }}" style="--home-background: {{ section.settings.background }}; --home-foreground: {{ section.settings.foreground }}; --home-accent: {{ section.settings.accent }}; --hero-height: {{ section.settings.desktop_height }}px; --hero-title-size: {{ section.settings.heading_size }}px;" aria-label="{{ section_heading | escape }}">
+  <h1 class="visually-hidden">{{ section_heading | escape }}</h1>
+  {% for block in section.blocks %}
+    {% liquid
+      assign prefix = block.settings.prefix_en
+      assign heading = block.settings.heading_en
+      assign body = block.settings.text_en
+      assign button_label = block.settings.button_en
+      assign image_alt = block.settings.alt_en
+      if locale_root == 'ar'
+        assign prefix = block.settings.prefix_ar | default: prefix
+        assign heading = block.settings.heading_ar | default: heading
+        assign body = block.settings.text_ar | default: body
+        assign button_label = block.settings.button_ar | default: button_label
+        assign image_alt = block.settings.alt_ar | default: image_alt
+      endif
+      assign slide_image = block.settings.image
+      assign mobile_image = block.settings.mobile_image | default: slide_image
+      assign image_loading = 'lazy'
+      assign image_priority = 'auto'
+      if forloop.first
+        assign image_loading = 'eager'
+        assign image_priority = 'high'
+      endif
+    %}
+    <div class="home-slide home-slide--media-{{ section.settings.media_position }}" data-home-slide data-block-id="{{ block.id }}" role="group" aria-roledescription="{{ 'home.slide' | t }}" aria-label="{{ 'home.slide_position' | t: current: forloop.index, total: forloop.length }}" {% unless forloop.first %}hidden{% endunless %} {{ block.shopify_attributes }}>
+      <div class="home-slide__content">
+        <h2 class="home-slide__heading">{% if prefix != blank %}<span class="home-slide__prefix">{{ prefix | escape }}</span>{% endif %}{{ heading | escape }}</h2>
+        {% if body != blank %}<p class="home-slide__text">{{ body | escape | newline_to_br }}</p>{% endif %}
+        {% if button_label != blank %}<a class="home-button home-button--inverse" href="{{ block.settings.link | default: routes.all_products_collection_url }}">{{ button_label | escape }}</a>{% endif %}
+      </div>
+      <div class="home-slide__media">
+        {% if slide_image != blank %}
+          <picture>
+            {% if mobile_image != blank %}<source media="(max-width: 749px)" srcset="{{ mobile_image | image_url: width: 480 }} 480w, {{ mobile_image | image_url: width: 750 }} 750w, {{ mobile_image | image_url: width: 1100 }} 1100w" sizes="100vw">{% endif %}
+            {{ slide_image | image_url: width: 2200 | image_tag: widths: '640, 960, 1280, 1600, 2200', sizes: '(min-width: 750px) 50vw, 100vw', loading: image_loading, fetchpriority: image_priority, alt: image_alt }}
+          </picture>
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'home-slide__placeholder' }}
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  {% if section.blocks.size > 1 %}
+    <div class="home-slideshow__controls" data-slide-controls hidden>
+      <button class="home-control" type="button" data-slide-previous aria-label="{{ 'home.previous_slide' | t }}">{% render 'home-arrow', direction: 'previous' %}</button>
+      <div class="home-slideshow__dots">{% for block in section.blocks %}<button type="button" class="home-slide-dot" data-slide-dot aria-label="{{ 'home.go_to_slide' | t: number: forloop.index }}" {% if forloop.first %}aria-current="true"{% endif %}><span></span></button>{% endfor %}</div>
+      <button class="home-control" type="button" data-slide-next aria-label="{{ 'home.next_slide' | t }}">{% render 'home-arrow', direction: 'next' %}</button>
+      <button class="home-slideshow__pause" type="button" data-slide-pause data-pause-label="{{ 'home.pause' | t }}" data-play-label="{{ 'home.play' | t }}">{{ 'home.pause' | t }}</button>
+    </div>
+  {% endif %}
+</section>
+{% schema %}
+{
+  "name": "t:home.slideshow", "enabled_on": {"templates": ["index"]}, "max_blocks": 5,
+  "settings": [
+    {"type":"text","id":"heading_en","label":"t:labels.heading_en","default":"Art for your everyday"},
+    {"type":"text","id":"heading_ar","label":"t:labels.heading_ar","default":"فن يلهم كل يوم"},
+    {"type":"select","id":"media_position","label":"t:labels.image_position","options":[{"value":"start","label":"t:options.position.start"},{"value":"end","label":"t:options.position.end"}],"default":"end"},
+    {"type":"checkbox","id":"autoplay","label":"t:home.autoplay","default":true},
+    {"type":"range","id":"interval","label":"t:home.interval","min":5,"max":12,"step":1,"unit":"s","default":7},
+    {"type":"range","id":"desktop_height","label":"t:home.desktop_height","min":480,"max":840,"step":40,"unit":"px","default":640},
+    {"type":"range","id":"heading_size","label":"t:labels.heading_size","min":40,"max":96,"step":4,"unit":"px","default":72},
+    {"type":"color","id":"background","label":"t:labels.background","default":"#111111"},
+    {"type":"color","id":"foreground","label":"t:labels.foreground","default":"#FFFFFF"},
+    {"type":"color","id":"accent","label":"t:labels.accent","default":"#FF9E18"}
+  ],
+  "blocks":[{"type":"slide","name":"t:home.slide","settings":[
+    {"type":"image_picker","id":"image","label":"t:labels.image"},
+    {"type":"image_picker","id":"mobile_image","label":"t:home.mobile_image"},
+    {"type":"text","id":"alt_en","label":"t:labels.image_alt_en"},
+    {"type":"text","id":"alt_ar","label":"t:labels.image_alt_ar"},
+    {"type":"text","id":"prefix_en","label":"t:home.prefix_en","default":"Art for"},
+    {"type":"text","id":"prefix_ar","label":"t:home.prefix_ar","default":"فن من أجل"},
+    {"type":"text","id":"heading_en","label":"t:labels.heading_en","default":"The ambitious"},
+    {"type":"text","id":"heading_ar","label":"t:labels.heading_ar","default":"الطموحين"},
+    {"type":"textarea","id":"text_en","label":"t:labels.body_text_en","default":"Make room for what drives you. Discover art that brings your goals into focus."},
+    {"type":"textarea","id":"text_ar","label":"t:labels.body_text_ar","default":"امنح ما يلهمك مساحة. اكتشف لوحات تذكّرك بأهدافك كل يوم."},
+    {"type":"text","id":"button_en","label":"t:labels.button_label_en","default":"Explore the collection"},
+    {"type":"text","id":"button_ar","label":"t:labels.button_label_ar","default":"اكتشف المجموعة"},
+    {"type":"url","id":"link","label":"t:labels.button_link"}
+  ]}],
+  "presets":[{"name":"t:home.slideshow","blocks":[{"type":"slide"},{"type":"slide"},{"type":"slide"}]}]
+}
+{% endschema %}
