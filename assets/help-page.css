@@ -9,6 +9,7 @@
 .help-page__topics a:hover { background: var(--color-foreground); color: var(--color-background); }
 .help-page__content > h2 { font-size: 1.5rem; margin-block: 2.75rem 1rem; scroll-margin-block-start: 7rem; }
 .help-page__question { border: 0; border-block-end: 1px solid var(--color-border, #ddd); }
+.help-page__question + .help-page__question { margin-block-start: 0; }
 .help-page__question summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; padding-block: 1.15rem; cursor: pointer; list-style: none; font-size: 1rem; font-weight: 600; line-height: 1.5; }
 .help-page__question summary::-webkit-details-marker { display: none; }
 .help-page__question summary::after { content: ''; flex-shrink: 0; width: 0.5rem; height: 0.5rem; border-block-end: 1.5px solid; border-inline-end: 1.5px solid; transform: rotate(45deg); margin-inline-end: 0.3rem; transition: transform 160ms ease; }

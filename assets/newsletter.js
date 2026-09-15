@@ -7,6 +7,7 @@
       form.dataset.newsletterBound = 'true';
       const button = form.querySelector('[data-newsletter-button]');
       const loading = form.querySelector('[data-newsletter-loading]');
+      const email = form.querySelector('[name="contact[email]"]');
       const error = form.querySelector('[data-newsletter-error]');
       const verification = form.querySelector('[data-newsletter-verification]');
       const cancel = form.querySelector('[data-newsletter-cancel]');
@@ -23,6 +24,7 @@
         pending = false;
         clearTimeout(timer);
         button.disabled = false;
+        email.readOnly = false;
         loading.hidden = true;
         form.removeAttribute('aria-busy');
         verification.hidden = true;
@@ -33,6 +35,7 @@
         finish();
         error.textContent = message || form.querySelector('[data-newsletter-error-message]').textContent;
         error.hidden = false;
+        frame.src = 'about:blank';
       };
       const showVerification = () => {
         clearTimeout(timer);
@@ -50,6 +53,7 @@
         cancel.hidden = true;
         frame.hidden = true;
         button.disabled = true;
+        email.readOnly = true;
         loading.hidden = false;
         form.setAttribute('aria-busy', 'true');
         timer = setTimeout(() => fail(), 30000);
@@ -62,7 +66,7 @@
           const result = response.getElementById(form.id);
           if (result?.querySelector('[data-newsletter-result="success"]')) {
             finish();
-            form.querySelector('[name="contact[email]"]').value = '';
+            email.value = '';
             document.dispatchEvent(new CustomEvent('theme:toast', { detail: { message: form.querySelector('[data-newsletter-success-message]').textContent } }));
             frame.src = 'about:blank';
           } else if (result?.querySelector('[data-newsletter-result="error"]')) {

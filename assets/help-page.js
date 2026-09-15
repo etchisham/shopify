@@ -8,13 +8,14 @@
       [...content.children].filter(node => node.tagName === 'H3').forEach(heading => {
         const details = document.createElement('details');
         details.className = 'help-page__question';
+        if (heading.id) details.id = heading.id;
         const summary = document.createElement('summary');
         summary.append(...heading.childNodes);
         const answer = document.createElement('div');
         answer.className = 'help-page__answer';
-        let next = heading.nextElementSibling;
-        while (next && !['H2', 'H3'].includes(next.tagName)) {
-          const following = next.nextElementSibling;
+        let next = heading.nextSibling;
+        while (next && !['H2', 'H3'].includes(next.nodeName)) {
+          const following = next.nextSibling;
           answer.append(next);
           next = following;
         }

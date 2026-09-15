@@ -167,7 +167,20 @@
       <ul class="site-footer__socials" role="list" aria-label="{{ 'footer.follow_us' | t | escape }}">
         {% for block in social_blocks %}
           {% if block.settings.url != blank %}
-            <li {{ block.shopify_attributes }}><a href="{{ block.settings.url | escape }}" target="_blank" rel="noopener noreferrer" aria-label="{{ block.settings.platform | capitalize | escape }}"><span aria-hidden="true">{% render 'icon', name: block.settings.platform %}</span><span class="visually-hidden">{{ 'accessibility.opens_in_new_tab' | t }}</span></a></li>
+            {% liquid
+              assign platform_label = block.settings.platform | capitalize
+              case block.settings.platform
+                when 'youtube'
+                  assign platform_label = 'YouTube'
+                when 'tiktok'
+                  assign platform_label = 'TikTok'
+                when 'whatsapp'
+                  assign platform_label = 'WhatsApp'
+                when 'linkedin'
+                  assign platform_label = 'LinkedIn'
+              endcase
+            %}
+            <li {{ block.shopify_attributes }}><a href="{{ block.settings.url | escape }}" target="_blank" rel="noopener noreferrer" aria-label="{{ platform_label | escape }}"><span aria-hidden="true">{% render 'icon', name: block.settings.platform %}</span><span class="visually-hidden">{{ 'accessibility.opens_in_new_tab' | t }}</span></a></li>
           {% endif %}
         {% endfor %}
       </ul>
@@ -400,6 +413,9 @@
 
   .site-footer__socials {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
     align-items: center;
     gap: 2.15rem;
   }
@@ -436,6 +452,11 @@
   .site-footer__socials .icon-fill {
     fill: currentcolor;
     stroke: none;
+  }
+
+  @media (min-width: 46.875rem) and (max-width: 68.75rem) {
+    .site-footer__newsletter-fields { grid-template-columns: 1fr; }
+    .site-footer__newsletter-fields button { width: 11.6rem; }
   }
 
   @media (max-width: 46.8125rem) {
@@ -534,6 +555,7 @@
 
     .site-footer__socials {
       order: -1;
+      justify-content: center;
       gap: 1.8rem;
     }
   }

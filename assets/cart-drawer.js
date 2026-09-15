@@ -275,6 +275,8 @@
     const buttons = [...form.querySelectorAll('[type="submit"]')].filter(button => !button.disabled);
     buttons.forEach(button => { button.disabled = true; });
     form.setAttribute('aria-busy', 'true');
+    const loadingLabel = form.querySelector('[data-loading-label]');
+    if (loadingLabel) loadingLabel.hidden = false;
     const bundleCards = form.querySelector('[data-bundle-cards]');
     if (bundleCards) bundleCards.inert = true;
     enqueue(async () => {
@@ -292,6 +294,7 @@
         activeForms.delete(form);
         buttons.forEach(button => { button.disabled = false; });
         form.removeAttribute('aria-busy');
+        if (loadingLabel) loadingLabel.hidden = true;
         if (bundleCards) bundleCards.inert = false;
       }
     });

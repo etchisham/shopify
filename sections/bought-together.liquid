@@ -45,7 +45,7 @@
         <button class="button button--full" type="submit" name="add" data-bundle-add disabled>
           <span class="button-spinner" aria-hidden="true"></span>
           <span data-add-label>{{ 'products.bundle.add_selected' | t: count: bundle_count }}</span>
-          <span class="visually-hidden" data-loading-label>{{ 'products.bundle.adding' | t }}</span>
+          <span data-loading-label hidden>{{ 'products.bundle.adding' | t }}</span>
         </button>
         <p class="bought-together__note">{{ 'products.bundle.price_note' | t }}</p>
         <noscript><p>{{ 'products.bundle.no_javascript' | t }}</p></noscript>

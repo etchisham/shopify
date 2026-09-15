@@ -42,7 +42,6 @@
       const current = section.querySelector('[data-bundle-current] [data-bundle-variant]');
       if (mainVariant && current) {
         mainVariant.addEventListener('change', () => { current.value = mainVariant.value; update(); });
-        current.addEventListener('change', () => { mainVariant.value = current.value; mainVariant.dispatchEvent(new Event('change', { bubbles: true })); });
       }
       update();
     });

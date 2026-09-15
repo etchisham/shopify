@@ -83,7 +83,7 @@ npm install --prefix .preview --no-save --package-lock=false liquidjs
 node scripts/preview.cjs
 ```
 
-Open `http://127.0.0.1:4173/home` or `/contact`, adding `?lang=ar` for RTL. These render the actual section Liquid with mocked Shopify filters, placeholder imagery, and clearly marked example contact details. They are not a live Shopify preview and do not send forms. `.preview/`, scripts, and tests are excluded from theme uploads. Use `shopify theme dev --store your-store.myshopify.com` for full platform validation.
+Open `http://127.0.0.1:4173/home` or `/contact`, adding `?lang=ar` for RTL. These render the actual section Liquid with mocked Shopify filters, placeholder imagery, and clearly marked example contact details. They are not a live Shopify preview and never send forms to Shopify or external services. `.preview/`, scripts, and tests are excluded from theme uploads. Use `shopify theme dev --store your-store.myshopify.com` for full platform validation.
 
 ## Cart drawer
 
@@ -103,6 +103,26 @@ node --test tests/storefront.test.cjs tests/cart.test.cjs
 ```
 
 Cart conversion flow score: **7/10**. Checkout hierarchy and local behavior are verified. A higher evidence-based score requires live-store purchase validation, real offer/fulfillment terms, and measurement of add-to-cart, checkout-start, purchase, errors, and device-level abandonment. Conversion impact has not been measured.
+
+## Product bundles, footer, and help pages
+
+The product template includes a **Bought together** section. In the theme editor, choose up to four companion products as a template fallback. For different picks on each product, create a product metafield under **Settings → Custom data → Products** with namespace/key `custom.frequently_bought_together`, type **Product**, and **List of values**. Then choose the companions on each product's admin page. The product metafield takes priority over the section fallback. Product names and variants use Shopify's translated product data; the section has separate English and Arabic heading fields.
+
+Customers can check/uncheck products and choose each variant before adding the selection in one cart request. Each selected product adds its variant's minimum order quantity. The current product follows the main product option selection; its bundle option can also be changed independently. Sold-out variants and products requiring subscription choices are excluded. Prices reflect the selected variants, with eligible platform discounts applied by Shopify. Adding retains the existing green toast behavior without opening the drawer.
+
+In **Customize → Footer → Add block → Social link**, select a platform and paste its URL. Drag blocks to reorder them. Eight platforms are supported: Facebook, Instagram, YouTube, TikTok, Pinterest, LinkedIn, X, and WhatsApp. Empty links stay hidden. Existing four social URL settings remain the fallback when no social blocks have been added.
+
+The newsletter uses Shopify's native [customer form for email consent](https://shopify.dev/docs/storefronts/themes/customer-engagement/email-consent), targeted into a response frame. The current storefront page stays in place while the button shows a loading state. A green toast appears only after the returned form confirms success. Errors retain the email for retry; verification challenges remain available in the response frame. Shopify's native CAPTCHA hooks are preserved; live-store CAPTCHA and subscription acceptance still need a development-theme check.
+
+Assign the **help** template to a page under **Online Store → Pages** for shipping, returns, material care, or a help center. Each page retains its own title and body. In the page editor, use **Heading 2** for a topic and **Heading 3** for a question, then place its answer underneath. Questions become native expandable accordions; ordinary content remains readable. Translate each page's title/body using Shopify's translation tools for independent Arabic/English content. Optional topic links appear when there are multiple topics.
+
+The help section also provides English/Arabic introductory fields and reorderable bilingual FAQ blocks. FAQ blocks appear when page content is empty or **Use page content** is switched off. Section fields and blocks are shared by pages assigned to the same template; use per-page content for different policies, or create another template based on **help** for a different block layout. Add your actual policies rather than the example site's wording.
+
+Local preview fixtures include `/product`, `/help`, `/care`, and their `/ar/` equivalents. `?socials=all` displays all eight social icons. Local newsletter posts return only simulated success/error HTML and never create a Shopify subscriber. Run all interaction checks with:
+
+```powershell
+node --test tests/storefront.test.cjs tests/cart.test.cjs tests/shop-features.test.cjs
+```
 
 ## Catalog and product cards
 

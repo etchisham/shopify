@@ -45,16 +45,16 @@ async function setup(t, route = '/product') {
   return { window, document, find, submit, change, calls };
 }
 
-test('bundle sums selected variants, syncs main product, excludes sold-out and adds once without navigation', async t => {
+test('bundle sums selected variants, follows main product selection, excludes sold-out and adds once without navigation', async t => {
   const ui = await setup(t);
   const cards = [...ui.document.querySelectorAll('[data-bundle-item]')];
   assert.equal(cards.length, 4); // Current product was also in merchant picks; no duplicate card.
   assert.equal(ui.find('[data-bundle-total]').textContent, '$1,186.00');
   assert.equal(cards[3].querySelector('input').disabled, true);
   const variant = cards[0].querySelector('select');
-  variant.value = '101';
-  ui.change(variant);
-  assert.equal(ui.find('.product-form [name="id"]').value, '101');
+  ui.find('.product-form [name="id"]').value = '101';
+  ui.change(ui.find('.product-form [name="id"]'));
+  assert.equal(variant.value, '101');
   assert.equal(ui.find('[data-bundle-total]').textContent, '$1,236.00');
   cards[1].querySelector('input').checked = false;
   ui.change(cards[1].querySelector('input'));
@@ -112,6 +112,7 @@ async function newsletterResponse(ui, result) {
   const response = new JSDOM(html, { url: origin + '/contact' });
   Object.defineProperty(frame, 'contentDocument', { configurable: true, value: response.window.document });
   frame.dispatchEvent(new ui.window.Event('load'));
+  delete frame.contentDocument; // Restore the real about:blank document for subsequent frame loads.
   response.window.close();
 }
 
@@ -129,10 +130,12 @@ test('newsletter preserves native form hooks, targets response frame, blocks dup
   assert.equal(form.target, form.querySelector('iframe').name);
   assert.equal(form.querySelector('[data-newsletter-button]').disabled, true);
   assert.equal(form.querySelector('[data-newsletter-loading]').hidden, false);
+  assert.equal(email.readOnly, true);
   assert.equal(ui.find('[data-cart-toast]').hidden, true);
   await newsletterResponse(ui, 'success');
   assert.equal(ui.window.location.href, location);
   assert.equal(email.value, '');
+  assert.equal(email.readOnly, false);
   assert.equal(form.querySelector('[data-newsletter-button]').disabled, false);
   assert.equal(form.querySelector('[data-newsletter-loading]').hidden, true);
   assert.equal(ui.find('[data-cart-toast-message]').textContent, 'You have been subscribed successfully.');
