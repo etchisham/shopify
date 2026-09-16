@@ -264,9 +264,23 @@
     event.preventDefault();
     if (activeForms.has(form)) return;
     const bundled = form.matches('[data-bought-together-form]');
-    const selectedItems = bundled ? [...form.querySelectorAll('[data-bundle-item]')].filter(item => item.querySelector('[data-bundle-check]').checked && !item.querySelector('[data-bundle-variant]').disabled).map(item => {
+    const selectedCards = bundled ? [...form.querySelectorAll('[data-bundle-item]')].filter(item => item.querySelector('[data-bundle-check]').checked && !item.querySelector('[data-bundle-variant]').disabled) : [];
+    const currentProduct = selectedCards.find(item => item.hasAttribute('data-bundle-current'));
+    const mainForm = currentProduct ? [...document.querySelectorAll('[data-product-page]')].find(page => page.dataset.productId === currentProduct.dataset.productId)?.querySelector('.product-form') : null;
+    const properties = {};
+    if (mainForm) {
+      if (mainForm.hasAttribute('data-variant-pending') || mainForm.getAttribute('aria-busy') === 'true') return;
+      for (const input of mainForm.elements) {
+        if (/^properties\[.+\]$/.test(input.name) && input.reportValidity && !input.reportValidity()) return;
+      }
+      for (const [name, value] of new FormData(mainForm)) {
+        const match = name.match(/^properties\[(.+)\]$/);
+        if (match && value !== '') properties[match[1]] = value;
+      }
+    }
+    const selectedItems = bundled ? selectedCards.map(item => {
       const select = item.querySelector('[data-bundle-variant]');
-      return { id: Number(select.value), quantity: Number(select.selectedOptions[0].dataset.min || 1) };
+      return { id: Number(select.value), quantity: Number(select.selectedOptions[0].dataset.min || 1), ...(item === currentProduct && Object.keys(properties).length ? { properties } : {}) };
     }) : null;
     if (bundled && !selectedItems.length) return;
     const body = bundled ? JSON.stringify({ items: selectedItems, ...bundle() }) : new FormData(form);
@@ -279,6 +293,8 @@
     if (loadingLabel) loadingLabel.hidden = false;
     const bundleCards = form.querySelector('[data-bundle-cards]');
     if (bundleCards) bundleCards.inert = true;
+    const productOptions = form.querySelector('[data-product-options]');
+    if (productOptions) productOptions.inert = true;
     enqueue(async () => {
       try {
         clearError();
@@ -296,6 +312,7 @@
         form.removeAttribute('aria-busy');
         if (loadingLabel) loadingLabel.hidden = true;
         if (bundleCards) bundleCards.inert = false;
+        if (productOptions) productOptions.inert = false;
       }
     });
   });

@@ -24,6 +24,8 @@
     <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'newsletter.js' | asset_url }}" defer="defer"></script>
     {% if request.page_type == 'product' %}
+      {{ 'product.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
       {{ 'bought-together.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'bought-together.js' | asset_url }}" defer="defer"></script>
     {% endif %}

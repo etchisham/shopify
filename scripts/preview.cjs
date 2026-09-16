@@ -6,6 +6,7 @@ const path = require('node:path');
 const http = require('node:http');
 const { Liquid } = require('../.preview/node_modules/liquidjs');
 const cartFixture = require('./cart-fixture.cjs');
+const { productFor } = require('./product-fixture.cjs');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const json = file => JSON.parse(read(file).replace(/^\s*\/\*[\s\S]*?\*\/\s*/, ''));
@@ -33,6 +34,7 @@ engine.registerFilter('font_face', () => '');
 engine.registerFilter('font_modify', value => value);
 engine.registerFilter('money', value => '$' + (Number(value || 0) / 100).toFixed(2));
 engine.registerFilter('money_with_currency', value => '$' + (Number(value || 0) / 100).toFixed(2) + ' USD');
+engine.registerFilter('metafield_tag', value => value?.fixture_html || escape(value?.value || ''));
 engine.registerFilter('t', function (key, ...args) {
   const locale = this.context.get(['request', 'locale', 'iso_code']);
   const dictionary = json(locale === 'ar' ? 'locales/ar.json' : 'locales/en.default.json');
@@ -60,8 +62,7 @@ async function renderSection(id, entry, data) {
 function pageData(url, newsletterResult) {
   const locale = url.searchParams.get('lang') === 'ar' || url.pathname.startsWith('/ar/') ? 'ar' : 'en';
   const prefix = locale === 'ar' ? '/ar' : '';
-  const productIndex = Number(url.pathname.match(/example-(\d+)/)?.[1] || 1) - 1;
-  const product = { ...cartFixture.products[productIndex], metafields: { custom: { frequently_bought_together: { value: [cartFixture.products[productIndex], cartFixture.products[1], cartFixture.products[2], cartFixture.products[8]] } } } };
+  const product = productFor(url, locale);
   const isProduct = /\/product(?:s\/|$)/.test(url.pathname);
   const isHelp = /\/(help|shipping|returns|care)$/.test(url.pathname);
   const care = url.pathname.endsWith('/care');
@@ -75,7 +76,8 @@ async function page(url, newsletterResult) {
   const contact = url.pathname.endsWith('/contact');
   const isProduct = data.request.page_type === 'product';
   const isHelp = data.request.page_type === 'page';
-  const template = isProduct ? { sections: { main: { type: 'product', settings: { show_dynamic_checkout: false } }, bought_together: { type: 'bought-together', settings: {} } }, order: ['main', 'bought_together'] } : json(isHelp ? 'templates/page.help.json' : contact ? 'templates/page.contact.json' : 'templates/index.json');
+  const productTemplate = json('templates/product.json');
+  const template = isProduct ? { sections: { main: { ...productTemplate.sections.main, settings: { ...productTemplate.sections.main.settings, show_dynamic_checkout: false } }, bought_together: productTemplate.sections.bought_together }, order: ['main', 'bought_together'] } : json(isHelp ? 'templates/page.help.json' : contact ? 'templates/page.contact.json' : 'templates/index.json');
   const group = json('sections/header-group.json');
   const header = await Promise.all(group.order.map(id => renderSection(id, group.sections[id], data)));
   const sections = await Promise.all(template.order.map(id => renderSection(id, template.sections[id], data)));
@@ -88,12 +90,18 @@ async function page(url, newsletterResult) {
   const footer = await Promise.all(footerGroup.order.map(id => renderSection(id, { ...footerGroup.sections[id], blocks: socialBlocks, block_order: platforms }, data)));
   const addForm = `<form action="${locale === 'ar' ? '/ar' : ''}/cart/add" method="post" data-product-title="Frozen in time" style="padding:24px"><h2>Local cart fixture</h2><input type="hidden" name="id" value="3"><input type="hidden" name="quantity" value="1"><button class="button" name="add" type="submit">${locale === 'ar' ? 'أضف إلى السلة' : 'Add Frozen in time to cart'}</button></form>`;
   const sectionStyles = ['sections/header.liquid', 'sections/announcement-bar.liquid', 'sections/contact.liquid', 'sections/footer.liquid', 'sections/product.liquid', 'snippets/price.liquid', 'snippets/image.liquid', 'snippets/product-card.liquid'].map(file => read(file).match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)?.[1] || '').join('\n');
-  return `<!doctype html><html lang="${locale}" dir="${locale === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local ${isProduct ? 'product' : isHelp ? 'help' : contact ? 'contact' : 'home'} fixture</title>${variables}<link rel="stylesheet" href="/assets/critical.css"><link rel="stylesheet" href="/assets/home.css"><link rel="stylesheet" href="/assets/cart-drawer.css">${isProduct ? '<link rel="stylesheet" href="/assets/bought-together.css"><script src="/assets/bought-together.js" defer></script>' : ''}<style>${sectionStyles}</style><script src="/assets/theme.js" defer></script><script src="/assets/home.js" defer></script><script src="/assets/cart-drawer.js" defer></script><script src="/assets/newsletter.js" defer></script></head><body><p style="margin:0;padding:4px 16px;background:#fff5c5;color:#333;font-size:12px">LOCAL FIXTURE — sample content/images/links; cart and subscriptions stay local; checkout does not send.</p>${header.join('')}<main id="MainContent" class="main-content">${isProduct || isHelp ? '' : addForm}${sections.join('')}</main>${footer.join('')}${cart}<p role="status" data-live-region class="visually-hidden"></p>${widget}</body></html>`;
+  return `<!doctype html><html lang="${locale}" dir="${locale === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local ${isProduct ? 'product' : isHelp ? 'help' : contact ? 'contact' : 'home'} fixture</title>${variables}<link rel="stylesheet" href="/assets/critical.css"><link rel="stylesheet" href="/assets/home.css"><link rel="stylesheet" href="/assets/cart-drawer.css">${isProduct ? '<link rel="stylesheet" href="/assets/product.css"><script src="/assets/product.js" defer></script><link rel="stylesheet" href="/assets/bought-together.css"><script src="/assets/bought-together.js" defer></script>' : ''}<style>${sectionStyles}</style><script src="/assets/theme.js" defer></script><script src="/assets/home.js" defer></script><script src="/assets/cart-drawer.js" defer></script><script src="/assets/newsletter.js" defer></script></head><body><p style="margin:0;padding:4px 16px;background:#fff5c5;color:#333;font-size:12px">LOCAL FIXTURE — sample content/images/links; cart and subscriptions stay local; checkout does not send.</p>${header.join('')}<main id="MainContent" class="main-content">${isProduct || isHelp ? '' : addForm}${sections.join('')}</main>${footer.join('')}${cart}<p role="status" data-live-region class="visually-hidden"></p>${widget}</body></html>`;
 }
 const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://127.0.0.1:4173');
     if (await cartFixture.handle(request, response, url, () => drawer(pageData(url)), () => renderSection('cart-recommendations', { type: 'cart-recommendations', settings: {} }, pageData(url)))) return;
+    if (url.searchParams.has('section_id') && /\/product(?:s\/|$)/.test(url.pathname)) {
+      const template = json('templates/product.json');
+      response.setHeader('Content-Type', 'text/html; charset=utf-8');
+      response.end(await renderSection(url.searchParams.get('section_id'), { ...template.sections.main, settings: { ...template.sections.main.settings, show_dynamic_checkout: false } }, pageData(url)));
+      return;
+    }
     if (request.method === 'POST' && url.pathname.endsWith('/contact')) {
       const body = await cartFixture.bodyOf(request);
       await new Promise(resolve => setTimeout(resolve, 300));
@@ -109,6 +117,11 @@ const server = http.createServer(async (request, response) => {
     }
     if (url.pathname === '/fixture-art.svg') {
       response.setHeader('Content-Type', 'image/svg+xml');
+      if (url.searchParams.has('view')) {
+        const view = Math.max(1, Math.min(9, Number(url.searchParams.get('view')) || 1));
+        const background = ['#ddd6c7', '#ddd0c0', '#d2d9d2', '#d4d6e0', '#e0d5d4', '#d2dfdf', '#e2ddcb', '#d9d1de', '#d8d8d8'][view - 1];
+        return response.end(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200"><rect width="1200" height="1200" fill="${background}"/><rect x="300" y="150" width="600" height="900" fill="#1c2622" stroke="#fff" stroke-width="20"/><text x="600" y="505" text-anchor="middle" font-family="Arial" font-size="100" font-weight="bold" fill="#fff">MAKE</text><text x="600" y="630" text-anchor="middle" font-family="Arial" font-size="86" font-weight="bold" fill="#fff">IT YOURS</text><text x="600" y="930" text-anchor="middle" font-family="Arial" font-size="24" fill="#ccc">SAMPLE VIEW ${view}</text></svg>`);
+      }
       return response.end('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><rect width="1600" height="1000" fill="#d9d4c9"/><rect x="400" y="100" width="700" height="750" fill="#1c2622" stroke="#fff" stroke-width="20"/><text x="750" y="450" text-anchor="middle" font-family="Arial" font-size="110" font-weight="bold" fill="#fff">MAKE</text><text x="750" y="570" text-anchor="middle" font-family="Arial" font-size="110" font-weight="bold" fill="#fff">IT YOURS</text></svg>');
     }
     response.setHeader('Content-Type', 'text/html; charset=utf-8');

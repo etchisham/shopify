@@ -16,6 +16,12 @@ products.forEach(product => {
     { id: product.id, title: 'Canvas / 48 × 24', price: product.price, available: product.available, quantity_rule: { min: 1, increment: 1, max: 5 } },
     { id: product.id + 100, title: 'Framed canvas / 48 × 24', price: product.price + 5000, available: product.available, quantity_rule: { min: 1, increment: 1, max: 5 } }
   ];
+  product.variants[0].options = ['Canvas', '48 × 24'];
+  product.variants[1].options = ['Framed canvas', '48 × 24'];
+  product.variants.push(
+    { id: product.id + 200, title: 'Canvas / 24 × 12', options: ['Canvas', '24 × 12'], price: product.price - 10000, available: product.available, quantity_rule: { min: 2, increment: 2, max: 4 } },
+    { id: product.id + 300, title: 'Framed canvas / 24 × 12', options: ['Framed canvas', '24 × 12'], price: product.price - 5000, available: product.available && product.id !== 1, quantity_rule: { min: 1, increment: 1, max: 5 } }
+  );
   product.selected_or_first_available_variant = product.variants[0];
 });
 let items;

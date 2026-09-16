@@ -11,6 +11,13 @@
   if product.requires_selling_plan
     assign selectable = false
   endif
+  assign requires_personalization = false
+  unless current
+    if product.metafields.custom.personalization_required.value
+      assign selectable = false
+      assign requires_personalization = true
+    endif
+  endunless
   assign minimum_quantity = selected.quantity_rule.min | default: 1
   assign line_price = selected.price | times: minimum_quantity
 %}
@@ -36,5 +43,5 @@
     {% endfor %}
   </select>
   <p class="bundle-product__price"><bdi data-bundle-price>{{ line_price | money }}</bdi></p>
-  {% unless selectable %}<p class="bundle-product__unavailable">{% if product.requires_selling_plan %}{{ 'products.bundle.subscription_options' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</p>{% endunless %}
+  {% unless selectable %}<p class="bundle-product__unavailable">{% if product.requires_selling_plan %}{{ 'products.bundle.subscription_options' | t }}{% elsif requires_personalization %}{{ 'products.bundle.personalization_options' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</p>{% endunless %}
 </article>

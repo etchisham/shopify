@@ -121,8 +121,33 @@ The help section also provides English/Arabic introductory fields and reorderabl
 Local preview fixtures include `/product`, `/help`, `/care`, and their `/ar/` equivalents. `?socials=all` displays all eight social icons. Local newsletter posts return only simulated success/error HTML and never create a Shopify subscriber. Run all interaction checks with:
 
 ```powershell
-node --test tests/storefront.test.cjs tests/cart.test.cjs tests/shop-features.test.cjs
+node --test tests/storefront.test.cjs tests/cart.test.cjs tests/shop-features.test.cjs tests/product.test.cjs
 ```
+
+## Product details setup
+
+The product page follows the supplied Etsy layout: centered collection breadcrumbs, a large image with a left thumbnail rail on desktop, horizontal thumbnails on mobile, arrows, swipe/scroll, keyboard navigation, and an image zoom dialog. Product media and their order come from the product admin page. Image ratio, fit, position, quantity, save controls, and native Shopify accelerated checkout are editable under **Customize → Products → Product**. The local fixture omits accelerated checkout; validate that button and real video/model media in a Shopify development theme.
+
+Each **Product information** block controls an accordion's English/Arabic heading, content source, default open state, highlights, and optional long-answer preview. Reorder or add blocks in the theme editor. **Product description** reads the description entered when creating each product. **Product metafield** reads a configurable namespace/key, with editor content as a fallback. **Theme editor content** provides shared template copy.
+
+For the default product-specific answers, create the following product metafield definitions under **Settings → Custom data → Products**, then fill them on each product's admin page:
+
+| Namespace/key | Type | Default use |
+| --- | --- | --- |
+| `custom.shipping_returns` | Rich text | Shipping and return policies |
+| `custom.material_care` | Rich text | Material care |
+| `custom.did_you_know` | Rich text | Did you know? |
+| `custom.about_seller` | Rich text | Meet your seller |
+| `custom.materials` | Single line or multi-line text | Item-details highlights |
+| `custom.delivery_note`, `custom.returns_note` | Single line, multi-line, or rich text | Short purchase-area notes |
+| `custom.personalization_prompt` | Multi-line text | Product-specific personalization instructions |
+| `custom.personalization_required` | True or false | Require personalization for this product |
+
+Translate descriptions and supported metafields with Shopify's translation tools. An accordion can optionally use a separate Arabic metafield key such as `shipping_returns_ar`; missing Arabic fields fall back to the main field. Personalization supports `custom.personalization_prompt_ar` or the editor's Arabic prompt. Blank answers stay hidden on the storefront, while the editor shows a setup hint. Use your actual shipping and return terms.
+
+Separate option dropdowns use Shopify's [option-value IDs and section rendering](https://shopify.dev/docs/storefronts/themes/product-merchandising/variants/support-high-variant-products) to update the selected variant, price, availability, quantity rules, featured image, URL, and current bundle option. Failed requests retain the previous valid choice; newer choices cannot be overwritten by late responses. Personalization survives updates and is passed as a cart line-item property, including when the current product is added through the bundle. Companion products requiring personalization must be opened separately.
+
+The two heart buttons save/remove the product in a collection stored on the current device. They share state and report storage failures; saved products do not sync to customer accounts. Verified review metafields, actual stock, and calculated discounts appear only when available. Product app blocks remain supported. Local browser checks cover desktop and narrow Arabic mobile layouts; interaction checks cover gallery, zoom, options, failures, personalization, saving, and accordion sources. Product conversion flow score remains **7/10**; live-store purchase validation and measured conversion impact are still pending.
 
 ## Catalog and product cards
 

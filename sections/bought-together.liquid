@@ -30,7 +30,7 @@
           {% unless seen_ids contains related_token %}
             {% assign seen_ids = seen_ids | append: related_token %}
             {% render 'bundle-product', product: related, section_id: section.id %}
-            {% if related.available and related.requires_selling_plan == false %}
+            {% if related.available and related.requires_selling_plan == false and related.metafields.custom.personalization_required.value != true %}
               {% assign selected = related.selected_or_first_available_variant %}
               {% assign minimum_quantity = selected.quantity_rule.min | default: 1 %}
               {% assign line_total = selected.price | times: minimum_quantity %}

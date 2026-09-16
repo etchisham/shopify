@@ -16,7 +16,81 @@
         "show_inventory": true,
         "show_dynamic_checkout": true,
         "media_position": "left"
-      }
+      },
+      "blocks": {
+        "details_item_details": {
+          "type": "accordion",
+          "settings": {
+            "heading_en": "Item details",
+            "heading_ar": "تفاصيل المنتج",
+            "source": "description",
+            "metafield_namespace": "custom",
+            "metafield_key": "item_details",
+            "open_by_default": true,
+            "truncate_content": true,
+            "show_highlights": true
+          }
+        },
+        "details_shipping_returns": {
+          "type": "accordion",
+          "settings": {
+            "heading_en": "Shipping and return policies",
+            "heading_ar": "سياسات الشحن والإرجاع",
+            "source": "metafield",
+            "metafield_namespace": "custom",
+            "metafield_key": "shipping_returns",
+            "open_by_default": true,
+            "truncate_content": false,
+            "show_highlights": false
+          }
+        },
+        "details_material_care": {
+          "type": "accordion",
+          "settings": {
+            "heading_en": "Material care",
+            "heading_ar": "العناية بالخامات",
+            "source": "metafield",
+            "metafield_namespace": "custom",
+            "metafield_key": "material_care",
+            "open_by_default": false,
+            "truncate_content": false,
+            "show_highlights": false
+          }
+        },
+        "details_did_you_know": {
+          "type": "accordion",
+          "settings": {
+            "heading_en": "Did you know?",
+            "heading_ar": "هل تعلم؟",
+            "source": "metafield",
+            "metafield_namespace": "custom",
+            "metafield_key": "did_you_know",
+            "open_by_default": false,
+            "truncate_content": false,
+            "show_highlights": false
+          }
+        },
+        "details_about_seller": {
+          "type": "accordion",
+          "settings": {
+            "heading_en": "Meet your seller",
+            "heading_ar": "تعرّف على البائع",
+            "source": "metafield",
+            "metafield_namespace": "custom",
+            "metafield_key": "about_seller",
+            "open_by_default": false,
+            "truncate_content": false,
+            "show_highlights": false
+          }
+        }
+      },
+      "block_order": [
+        "details_item_details",
+        "details_shipping_returns",
+        "details_material_care",
+        "details_did_you_know",
+        "details_about_seller"
+      ]
     },
     "feature_ready_to_hang": {
       "type": "product-feature-showcase",

@@ -1,0 +1,13 @@
+{% doc %}
+  Product category navigation, using the current collection when available.
+  @param {product} product - Current product.
+  @param {collection} [collection] - Current browsing collection.
+{% enddoc %}
+{% assign breadcrumb_collection = collection | default: product.collections.first %}
+<nav class="product-breadcrumbs" aria-label="{{ 'products.details.breadcrumbs' | t | escape }}">
+  <ol role="list">
+    <li><a href="{{ routes.root_url }}">{{ 'products.details.homepage' | t }}</a></li>
+    <li aria-hidden="true">›</li>
+    <li>{% if breadcrumb_collection != blank %}<a href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title | escape }}</a>{% else %}<a href="{{ routes.all_products_collection_url }}">{{ 'products.details.catalog' | t }}</a>{% endif %}</li>
+  </ol>
+</nav>

@@ -47,5 +47,21 @@
     });
   }
   bind();
+  document.addEventListener('theme:product-variant', event => {
+    const variant = event.detail;
+    if (!variant) return;
+    document.querySelectorAll('[data-bundle-current]').forEach(item => {
+      if (item.dataset.productId !== String(variant.productId)) return;
+      const select = item.querySelector('[data-bundle-variant]');
+      let option = [...select.options].find(option => option.value === String(variant.variantId));
+      if (!option) { option = document.createElement('option'); option.value = variant.variantId || ''; select.append(option); }
+      option.textContent = variant.title || '';
+      option.dataset.price = variant.price || '0';
+      option.dataset.min = variant.minimum || '1';
+      option.disabled = !variant.available;
+      select.value = option.value;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
   document.addEventListener('shopify:section:load', event => bind(event.target));
 })();

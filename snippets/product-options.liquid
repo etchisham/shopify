@@ -1,0 +1,30 @@
+{% doc %}
+  Product option values resolved by the Section Rendering API.
+  @param {product} product - Current product.
+  @param {string} section_id - Owning section ID.
+{% enddoc %}
+{% unless product.has_only_default_variant %}
+  <div class="product-options" data-product-options hidden>
+    {% for option in product.options_with_values %}
+      <div class="product-form__field">
+        <label for="ProductOption-{{ section_id }}-{{ option.position }}">{{ option.name | escape }}</label>
+        <select id="ProductOption-{{ section_id }}-{{ option.position }}" data-product-option data-option-position="{{ option.position }}">
+          {% for value in option.values %}
+            <option value="{{ value.id }}" data-product-url="{{ value.product_url }}"{% if value.selected %} selected data-selected{% endif %}{% unless value.available %} disabled{% endunless %}>{{ value.name | default: value | escape }}{% unless value.available %} — {{ 'products.product.sold_out' | t }}{% endunless %}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+  </div>
+  <noscript>
+    <div class="product-options-native">
+      {% for option in product.options_with_values %}
+        <p>{{ option.name | escape }}</p>
+        {% for value in option.values %}
+          {% capture option_ids %}{% for other_option in product.options_with_values %}{% unless forloop.first %},{% endunless %}{% if other_option.position == option.position %}{{ value.id }}{% else %}{% for other_value in other_option.values %}{% if other_value.selected %}{{ other_value.id }}{% endif %}{% endfor %}{% endif %}{% endfor %}{% endcapture %}
+          <a href="{{ value.product_url | default: product.url }}?option_values={{ option_ids | strip | url_encode }}"{% if value.selected %} aria-current="true"{% endif %}>{{ value.name | default: value | escape }}</a>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </noscript>
+{% endunless %}
