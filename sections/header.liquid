@@ -83,13 +83,15 @@
         </div>
       </details>
 
-      {% comment %}
-        {% if section.settings.show_search %}
-          <a class="header-icon-button site-header__mobile-search" href="{{ routes.search_url }}" aria-label="{{ 'general.search' | t | escape }}">
-            {% render 'icon', name: 'search' %}
-          </a>
-        {% endif %}
-      {% endcomment %}
+      {% if section.settings.show_search %}
+        <a
+          class="header-icon-button site-header__mobile-search"
+          href="{{ routes.search_url }}"
+          aria-label="{{ 'general.search' | t | escape }}"
+        >
+          {% render 'icon', name: 'search' %}
+        </a>
+      {% endif %}
 
       {% if section.settings.desktop_menu != blank %}
         <nav class="desktop-navigation" aria-label="{{ 'general.menu' | t | escape }}">
