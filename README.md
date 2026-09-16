@@ -57,9 +57,10 @@ Architecture choice: Shopify Skeleton over Dawn. Skeleton gives a current, minim
 The header group renders the announcement bar first, followed by the header. In the Theme Editor:
 
 1. Upload the global brand logo in **Theme settings → Brand**, or set separate header/footer logo overrides.
-2. Select a compact desktop menu and a richer mobile menu; nested mobile links automatically receive disclosure arrows.
-3. Edit announcement copy, height, colors, type size, search/account visibility, logo widths, and header spacing.
-4. Select the two footer menus, then edit newsletter copy, privacy link, copyright label, social URLs, colors, type sizes, and spacing.
+2. Select the desktop menu. The hamburger drawer intentionally ignores a manual menu: it links to **All products**, then lists every available collection as a category.
+3. Publish English and Arabic under **Settings → Languages** to show the compact EN/AR switcher. The active language stays highlighted and RTL is automatic for Arabic.
+4. Edit announcement copy, height, colors, type size, search/account visibility, logo widths, and header spacing.
+5. Select the two footer menus, then edit newsletter copy, privacy link, copyright label, social URLs, colors, type sizes, and spacing.
 
 Social icons render only when a real profile URL exists. Blank section copy uses the bundled English or Arabic storefront translation; merchant-entered copy and navigation titles should be localized with Shopify Translate & Adapt. Arabic, Persian, Hebrew, and Urdu storefronts automatically use RTL direction and logical layout spacing.
 
@@ -149,7 +150,9 @@ Translate descriptions and supported metafields with Shopify's translation tools
 
 Separate option dropdowns use Shopify's [option-value IDs and section rendering](https://shopify.dev/docs/storefronts/themes/product-merchandising/variants/support-high-variant-products) to update the selected variant, price, availability, quantity rules, featured image, URL, and current bundle option. Failed requests retain the previous valid choice; newer choices cannot be overwritten by late responses. Personalization survives updates and is passed as a cart line-item property, including when the current product is added through the bundle. Companion products requiring personalization must be opened separately.
 
-The two heart buttons save/remove the product in a collection stored on the current device. They share state and report storage failures; saved products do not sync to customer accounts. Verified review metafields, actual stock, and calculated discounts appear only when available. Product app blocks remain supported. Local browser checks cover desktop and narrow Arabic mobile layouts; interaction checks cover gallery, zoom, options, failures, personalization, saving, and accordion sources. Product conversion flow score remains **7/10**; live-store purchase validation and measured conversion impact are still pending.
+The two heart buttons save/remove the product in a wishlist stored on the current device. They share state with the header heart/count and the responsive wishlist page, and report storage failures; saved products do not sync to customer accounts. To activate the Shopify route, create a page named **Wishlist**, keep its handle as `wishlist`, and assign the **wishlist** theme template. Theme code supplies the complete page UI, but Shopify pages themselves are Admin content and cannot be created by a theme upload.
+
+Verified review metafields, actual stock, and calculated discounts appear only when available. Product app blocks remain supported. Local browser checks cover desktop, 320px mobile, the category drawer, the wishlist flow, and Arabic layouts; interaction checks cover gallery, zoom, options, failures, personalization, saving, and accordion sources. Product conversion flow score remains **7/10**; live-store purchase validation and measured conversion impact are still pending.
 
 ## Catalog and product cards
 

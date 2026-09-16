@@ -1,0 +1,35 @@
+<section
+  class="wishlist-page section-spacing"
+  data-wishlist-page
+  data-remove-label="{{ 'wishlist.remove' | t | escape }}"
+  data-removed-message="{{ 'wishlist.removed' | t: title: '__TITLE__' | escape }}"
+  data-storage-error="{{ 'wishlist.storage_error' | t | escape }}"
+  aria-labelledby="WishlistHeading-{{ section.id }}"
+>
+  <header class="wishlist-page__header">
+    <p class="eyebrow">{{ 'wishlist.eyebrow' | t }}</p>
+    <h1 id="WishlistHeading-{{ section.id }}">{{ 'wishlist.title' | t }}</h1>
+    <p>{{ 'wishlist.intro' | t }}</p>
+  </header>
+
+  <div class="wishlist-page__empty" data-wishlist-empty>
+    <span class="wishlist-page__empty-icon" aria-hidden="true">{% render 'icon', name: 'heart' %}</span>
+    <h2>{{ 'wishlist.empty_title' | t }}</h2>
+    <p>{{ 'wishlist.empty_text' | t }}</p>
+    <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'wishlist.shop_products' | t }}</a>
+  </div>
+
+  <div class="wishlist-page__grid" data-wishlist-grid hidden></div>
+  <p class="wishlist-page__error" data-wishlist-error role="alert" hidden></p>
+  <p class="visually-hidden" data-wishlist-status role="status" aria-live="polite"></p>
+
+  <noscript><p class="wishlist-page__noscript">{{ 'wishlist.javascript_required' | t }}</p></noscript>
+</section>
+
+{% schema %}
+{
+  "name": "t:general.wishlist",
+  "enabled_on": { "templates": ["page"] },
+  "presets": [{ "name": "t:general.wishlist" }]
+}
+{% endschema %}

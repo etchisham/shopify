@@ -1,6 +1,10 @@
 {% liquid
   assign header_logo = section.settings.logo | default: settings.logo
-  assign drawer_menu = section.settings.mobile_menu | default: section.settings.desktop_menu
+  assign wishlist_page = pages['wishlist']
+  assign wishlist_url = routes.root_url | append: 'pages/wishlist'
+  if wishlist_page != blank
+    assign wishlist_url = wishlist_page.url
+  endif
 %}
 
 {% if section.settings.sticky_header %}
@@ -39,49 +43,39 @@
 
         <div class="header-menu__panel">
           <nav class="drawer-navigation" aria-label="{{ 'general.menu' | t | escape }}">
-            <ul role="list">
-              {% for link in drawer_menu.links %}
-                <li>
-                  {% if link.links != blank %}
-                    <details class="drawer-navigation__submenu">
-                      <summary>
-                        <span>{{ link.title | escape }}</span>
-                        <span class="drawer-navigation__arrow">{% render 'icon', name: 'arrow' %}</span>
-                      </summary>
-                      <ul role="list">
-                        <li>
-                          <a href="{{ link.url }}">{{ 'navigation.view_all' | t: title: link.title }}</a>
-                        </li>
-                        {% for child_link in link.links %}
-                          <li>
-                            <a
-                              href="{{ child_link.url }}"
-                              {% if child_link.current %}
-                                aria-current="page"
-                              {% endif %}
-                            >
-                              {{- child_link.title | escape -}}
-                            </a>
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </details>
-                  {% else %}
-                    <a
-                      href="{{ link.url }}"
-                      {% if link.current %}
-                        aria-current="page"
-                      {% endif %}
-                    >
-                      {{- link.title | escape -}}
+            <a class="drawer-navigation__all" href="{{ routes.all_products_collection_url }}">
+              <span>{{ 'general.all_products' | t }}</span>
+              <span aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+            </a>
+            <p class="drawer-navigation__heading">{{ 'general.categories' | t }}</p>
+            <ul class="drawer-navigation__categories" role="list">
+              {% for category in collections %}
+                {% unless category.handle == 'all' or category.handle == 'frontpage' %}
+                  <li>
+                    <a href="{{ category.url }}">
+                      <span>{{ category.title | escape }}</span>
+                      {% if category.all_products_count > 0 %}<span class="drawer-navigation__count">{{ category.all_products_count }}</span>{% endif %}
                     </a>
-                  {% endif %}
-                </li>
+                  </li>
+                {% endunless %}
               {% endfor %}
             </ul>
           </nav>
         </div>
       </details>
+
+      {% if localization.available_languages.size > 1 %}
+        {% form 'localization', id: 'HeaderLanguageForm', class: 'header-language' %}
+          <span class="header-language__icon" aria-hidden="true">{% render 'icon', name: 'globe' %}</span>
+          <span class="visually-hidden">{{ 'general.language' | t }}</span>
+          {% for language in localization.available_languages %}
+            {% assign language_root = language.iso_code | split: '-' | first %}
+            {% if language_root == 'ar' or language_root == 'en' %}
+              <button type="submit" name="locale_code" value="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == request.locale.iso_code %} class="is-active" aria-current="true"{% endif %}>{{ language_root | upcase }}</button>
+            {% endif %}
+          {% endfor %}
+        {% endform %}
+      {% endif %}
 
       {% if section.settings.show_search %}
         <a
@@ -149,6 +143,15 @@
       {% endif %}
 
       <a
+        class="header-icon-button site-header__wishlist"
+        href="{{ wishlist_url }}"
+        aria-label="{{ 'general.wishlist' | t | escape }}"
+      >
+        {% render 'icon', name: 'heart' %}
+        <span class="site-header__wishlist-count" aria-hidden="true" data-wishlist-count hidden>0</span>
+      </a>
+
+      <a
         class="header-icon-button site-header__cart"
         href="{{ routes.cart_url }}"
         aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}"
@@ -206,7 +209,7 @@
   .site-header__left {
     grid-column: 1;
     justify-content: flex-start;
-    gap: 0.35rem;
+    gap: 0.2rem;
   }
 
   .site-header__actions {
@@ -257,6 +260,16 @@
 
   .header-icon-button:hover {
     background: rgb(0 0 0 / 4%);
+  }
+
+  .header-icon-button,
+  .header-language button {
+    transition: background-color 150ms ease, transform 150ms ease;
+  }
+
+  .header-icon-button:hover,
+  .header-language button:hover {
+    transform: translateY(-1px);
   }
 
   .header-icon-button svg {
@@ -315,88 +328,132 @@
   }
 
   .drawer-navigation > ul,
-  .drawer-navigation__submenu ul,
   .desktop-navigation ul {
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .drawer-navigation > ul {
-    border-block-end: 1px solid var(--header-border);
-    padding-block-end: 2.15rem;
-  }
-
-  .drawer-navigation > ul > li > a,
-  .drawer-navigation__submenu > summary {
+  .drawer-navigation__all {
     display: flex;
-    min-height: 3rem;
+    min-height: 4rem;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     color: inherit;
     font-size: clamp(1.65rem, 7vw, var(--drawer-font-size));
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: -0.055em;
     line-height: 1.15;
-    padding-block: 0.27rem;
+    padding-block: 0.35rem 1.35rem;
+    border-block-end: 1px solid var(--header-border);
     text-decoration: none;
   }
 
-  [dir='rtl'] .drawer-navigation > ul > li > a,
-  [dir='rtl'] .drawer-navigation__submenu > summary,
-  [dir='rtl'] .desktop-navigation a {
-    letter-spacing: 0;
-  }
-
-  .drawer-navigation__submenu > summary {
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .drawer-navigation__arrow {
-    display: inline-grid;
-    flex: 0 0 auto;
-    place-items: center;
-    transition: transform 160ms ease;
-  }
-
-  .drawer-navigation__arrow svg {
-    width: 1.85rem;
+  .drawer-navigation__all svg {
+    width: 1.65rem;
     fill: none;
     stroke: currentcolor;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-width: 1.15;
+    stroke-width: 1.3;
+    transition: transform 150ms ease;
   }
 
-  [dir='rtl'] .drawer-navigation__arrow {
+  .drawer-navigation__all:hover svg {
+    transform: translateX(0.3rem);
+  }
+
+  [dir='rtl'] .drawer-navigation__all:hover svg {
+    transform: rotate(180deg) translateX(0.3rem);
+  }
+
+  [dir='rtl'] .drawer-navigation__all,
+  [dir='rtl'] .desktop-navigation a {
+    letter-spacing: 0;
+  }
+
+  [dir='rtl'] .drawer-navigation__all svg {
     transform: rotate(180deg);
   }
 
-  .drawer-navigation__submenu[open] .drawer-navigation__arrow {
-    transform: rotate(90deg);
+  .drawer-navigation__heading {
+    margin: 1.5rem 0 0.55rem;
+    color: color-mix(in srgb, currentcolor 62%, transparent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
-  [dir='rtl'] .drawer-navigation__submenu[open] .drawer-navigation__arrow {
-    transform: rotate(90deg);
-  }
-
-  .drawer-navigation__submenu ul {
+  .drawer-navigation__categories {
     display: grid;
-    gap: 0.4rem;
-    border-inline-start: 1px solid var(--header-border);
-    margin-block: 0.35rem 0.8rem;
-    margin-inline-start: 0.25rem;
-    padding-inline-start: 1.25rem;
+    gap: 0.1rem;
   }
 
-  .drawer-navigation__submenu ul a {
-    display: block;
+  .drawer-navigation__categories a {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 0.5rem;
     color: inherit;
-    font-size: 1rem;
-    padding-block: 0.35rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 0.55rem 0.65rem;
     text-decoration: none;
+    transition: background-color 150ms ease, padding 150ms ease;
+  }
+
+  .drawer-navigation__categories a:hover,
+  .drawer-navigation__categories a[aria-current='page'] {
+    background: rgb(0 0 0 / 5%);
+    padding-inline-start: 0.9rem;
+  }
+
+  .drawer-navigation__count {
+    color: color-mix(in srgb, currentcolor 55%, transparent);
+    font-size: 0.75rem;
+  }
+
+  .header-language {
+    display: flex;
+    align-items: center;
+    gap: 0.05rem;
+    margin-inline-start: 0.1rem;
+  }
+
+  .header-language__icon {
+    display: grid;
+    width: 1.5rem;
+    place-items: center;
+  }
+
+  .header-language__icon svg {
+    width: 1.05rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 1.5;
+  }
+
+  .header-language button {
+    min-width: 2.1rem;
+    min-height: 2.4rem;
+    padding: 0.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .header-language button.is-active {
+    background: var(--header-color);
+    color: var(--header-background);
   }
 
   .desktop-navigation,
@@ -408,7 +465,8 @@
     display: inline-grid;
   }
 
-  .site-header__cart-count {
+  .site-header__cart-count,
+  .site-header__wishlist-count {
     position: absolute;
     inset-block-start: 0.15rem;
     inset-inline-end: 0.05rem;
@@ -422,6 +480,11 @@
     font-size: 0.625rem;
     font-weight: 700;
     line-height: 1;
+  }
+
+  .site-header__wishlist-count {
+    background: var(--header-color);
+    color: var(--header-background);
   }
 
   @media (min-width: 61.875rem) {
@@ -496,6 +559,33 @@
     .header-icon-button {
       width: 2.5rem;
       min-width: 2.5rem;
+    }
+
+    .header-language__icon {
+      display: none;
+    }
+
+    .header-language button {
+      min-width: 1.8rem;
+      padding-inline: 0.15rem;
+    }
+  }
+
+  @media (max-width: 46.8125rem) {
+    .site-header__inner {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+
+    .site-header__brand {
+      position: static;
+      grid-column: 2;
+      width: min(var(--header-mobile-logo-width), 24vw);
+      transform: none;
+      font-size: 1.2rem;
+    }
+
+    .header-language__icon {
+      display: none;
     }
   }
 {% endstylesheet %}

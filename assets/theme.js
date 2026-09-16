@@ -1,5 +1,18 @@
 (() => {
   const facetOpeners = new WeakMap();
+  const wishlistKey = 'theme:saved-products';
+
+  function syncWishlistCount() {
+    let count = 0;
+    try {
+      const records = JSON.parse(localStorage.getItem(wishlistKey) || '[]');
+      if (Array.isArray(records)) count = records.length;
+    } catch (_error) { /* Storage can be unavailable or malformed. */ }
+    document.querySelectorAll('[data-wishlist-count]').forEach(badge => {
+      badge.textContent = count > 99 ? '99+' : String(count);
+      badge.hidden = count === 0;
+    });
+  }
 
   document.addEventListener('click', (event) => {
     const facetsOpen = event.target.closest('[data-facets-open]');
@@ -73,11 +86,15 @@
   }
 
   footerDesktop.addEventListener('change', syncFooterMenus);
+  document.addEventListener('theme:wishlist-change', syncWishlistCount);
+  window.addEventListener('storage', event => { if (event.key === wishlistKey) syncWishlistCount(); });
   document.addEventListener('shopify:section:load', (event) => {
     syncFooterMenus();
     bindFacetDialogs(event.target);
+    syncWishlistCount();
   });
 
   syncFooterMenus();
   bindFacetDialogs();
+  syncWishlistCount();
 })();

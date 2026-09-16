@@ -26,13 +26,21 @@
     assign saved_image_url = product.featured_image | image_url: width: 360
   endif
 %}
-<article class="product-page product-page--media-{{ section.settings.media_position }}" data-product-page data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-product-url="{{ product.url }}" data-product-title="{{ product.title | escape }}" data-product-image="{{ saved_image_url }}" data-save-enabled="{{ section.settings.show_save_button }}" data-option-error="{{ 'products.details.option_error' | t | escape }}" data-back-label="{{ 'products.details.back_to_results' | t | escape }}" data-save-message="{{ 'products.details.saved' | t: title: product.title | escape }}" data-remove-message="{{ 'products.details.unsaved' | t: title: product.title | escape }}" data-save-error="{{ 'products.details.save_error' | t | escape }}" data-save-label="{{ 'products.details.save_item' | t | escape }}" data-unsave-label="{{ 'products.details.unsave_item' | t | escape }}" style="--product-image-ratio: {{ section.settings.image_ratio }}; --product-image-fit: {{ section.settings.image_fit }};">
+<article class="product-page product-page--media-{{ section.settings.media_position }}" data-product-page data-section-id="{{ section.id }}" data-product-id="{{ product.id }}" data-product-url="{{ product.url }}" data-product-title="{{ product.title | escape }}" data-product-image="{{ saved_image_url }}" data-product-price="{{ current_variant.price | money | escape }}" data-product-vendor="{{ product.vendor | escape }}" data-save-enabled="{{ section.settings.show_save_button }}" data-option-error="{{ 'products.details.option_error' | t | escape }}" data-back-label="{{ 'products.details.back_to_results' | t | escape }}" data-save-message="{{ 'products.details.saved' | t: title: product.title | escape }}" data-remove-message="{{ 'products.details.unsaved' | t: title: product.title | escape }}" data-save-error="{{ 'products.details.save_error' | t | escape }}" data-save-label="{{ 'products.details.save_item' | t | escape }}" data-unsave-label="{{ 'products.details.unsave_item' | t | escape }}" style="--product-image-ratio: {{ section.settings.image_ratio }}; --product-image-fit: {{ section.settings.image_fit }};">
   {% if section.settings.show_breadcrumbs %}{% render 'product-breadcrumbs', product: product, collection: collection %}{% endif %}
   <a class="product-page__back" data-product-back href="{{ browsing_collection.url | default: routes.all_products_collection_url }}"><span aria-hidden="true">←</span> <span data-product-back-label>{{ 'products.details.back_to_catalog' | t }}</span></a>
   <div class="product-layout">
     {% render 'product-gallery', product: product, section_id: section.id %}
     <div class="product__info">
-      <div data-product-variant-content data-variant-id="{{ current_variant.id }}" data-featured-media-id="{{ current_variant.featured_media.id }}" data-variant-title="{{ current_variant.title | escape }}" data-variant-price="{{ current_variant.price }}" data-variant-minimum="{{ current_variant.quantity_rule.min | default: 1 }}" data-variant-available="{{ current_variant.available | default: false }}">
+      <div data-product-variant-content data-variant-id="{{ current_variant.id }}" data-featured-media-id="{{ current_variant.featured_media.id }}" data-variant-title="{{ current_variant.title | escape }}" data-variant-price="{{ current_variant.price }}" data-variant-price-label="{{ current_variant.price | money | escape }}" data-variant-minimum="{{ current_variant.quantity_rule.min | default: 1 }}" data-variant-available="{{ current_variant.available | default: false }}">
+        <div class="product-page__seller">
+          {% if section.settings.show_product_vendor and product.vendor != blank %}<span class="product-page__shop">{{ product.vendor | escape }}</span>{% endif %}
+          {% if section.settings.show_rating and rating_value != blank and rating_count > 0 %}
+            {% assign rating_percent = rating_value | times: 100.0 | divided_by: rating_maximum | at_most: 100 %}
+            <span class="product-page__stars" style="--rating-percentage: {{ rating_percent }}%;" role="img" aria-label="{{ 'products.product.rating' | t: rating: rating_value, maximum: rating_maximum | escape }}"><span aria-hidden="true">★★★★★</span></span><span class="product-page__rating-count">({{ rating_count }})</span>
+          {% endif %}
+        </div>
+        <h1>{{ product.title | escape }}</h1>
         <div class="product-page__price">
           {% if current_variant != blank %}{% render 'price', product: product, use_variant: true %}{% else %}<p>{{ 'products.product.unavailable' | t }}</p>{% endif %}
           {% if current_variant.compare_at_price > current_variant.price %}
@@ -41,14 +49,6 @@
           {% endif %}
         </div>
         {% if section.settings.show_tax_note %}<p class="product-page__tax-note">{% if cart.taxes_included %}{{ 'products.details.taxes_included' | t }}{% else %}{{ 'cart.taxes_and_shipping_at_checkout' | t }}{% endif %}</p>{% endif %}
-        <h1>{{ product.title | escape }}</h1>
-        <div class="product-page__seller">
-          {% if section.settings.show_product_vendor and product.vendor != blank %}<span>{{ product.vendor | escape }}</span>{% endif %}
-          {% if section.settings.show_rating and rating_value != blank and rating_count > 0 %}
-            {% assign rating_percent = rating_value | times: 100.0 | divided_by: rating_maximum | at_most: 100 %}
-            <span class="product-page__stars" style="--rating-percentage: {{ rating_percent }}%;" role="img" aria-label="{{ 'products.product.rating' | t: rating: rating_value, maximum: rating_maximum | escape }}"><span aria-hidden="true">★★★★★</span></span><span class="product-page__rating-count">({{ rating_count }})</span>
-          {% endif %}
-        </div>
         {% if section.settings.show_inventory and current_variant.inventory_management %}
           {% if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}<p class="product__inventory product__inventory--low">{{ 'products.product.inventory_low' | t: count: current_variant.inventory_quantity }}</p>{% elsif current_variant.available %}<p class="product__inventory">{{ 'products.product.inventory_in_stock' | t }}</p>{% endif %}
         {% endif %}

@@ -193,11 +193,19 @@
       const error = root.querySelector('[data-product-error]');
       try {
         const records = read().filter(item => item.id !== root.dataset.productId);
-        if (!saved) records.push({ id: root.dataset.productId, title: root.dataset.productTitle, url: root.dataset.productUrl, image: root.dataset.productImage });
+        if (!saved) records.push({
+          id: root.dataset.productId,
+          title: root.dataset.productTitle,
+          url: root.dataset.productUrl,
+          image: root.dataset.productImage,
+          price: root.dataset.productPrice,
+          vendor: root.dataset.productVendor
+        });
         localStorage.setItem(key, JSON.stringify(records.slice(-200)));
         saved = !saved;
         paint();
         error.hidden = true;
+        document.dispatchEvent(new CustomEvent('theme:wishlist-change'));
         document.dispatchEvent(new CustomEvent('theme:toast', { detail: { message: saved ? root.dataset.saveMessage : root.dataset.removeMessage } }));
       } catch (_error) { error.textContent = root.dataset.saveError; error.hidden = false; }
     }, { signal }));
@@ -254,6 +262,7 @@
         const values = new Map([...root.querySelectorAll('.product-form input, .product-form textarea')].filter(input => input.name !== 'id' && input.type !== 'hidden').map(input => [input.name, input.value]));
         const personalizationOpen = root.querySelector('.product-personalization')?.open;
         root.querySelector('[data-product-variant-content]').replaceWith(replacement);
+        root.dataset.productPrice = replacement.dataset.variantPriceLabel || root.dataset.productPrice;
         reveal();
         values.forEach((value, name) => {
           const input = [...root.querySelectorAll('.product-form input, .product-form textarea')].find(input => input.name === name);

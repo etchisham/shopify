@@ -32,6 +32,10 @@
     "menu": "القائمة",
     "search": "بحث",
     "account": "الحساب",
+    "wishlist": "المفضلة",
+    "language": "اللغة",
+    "all_products": "كل المنتجات",
+    "categories": "الفئات",
     "cart": "السلة ({{ count }})",
     "continue_shopping": "متابعة التسوق"
   },
@@ -92,8 +96,8 @@
       "saved": "تم حفظ {{ title }} على هذا الجهاز.",
       "unsaved": "تمت إزالة {{ title }} من مجموعتك.",
       "save_error": "تعذر حفظ المنتج. التخزين في المتصفح غير متاح.",
-      "add_to_collection": "أضف إلى المجموعة",
-      "remove_from_collection": "إزالة من المجموعة",
+      "add_to_collection": "أضف إلى المفضلة",
+      "remove_from_collection": "إزالة من المفضلة",
       "saved_device_note": "تُحفظ المنتجات على هذا الجهاز.",
       "more_information": "معلومات إضافية",
       "brand": "العلامة التجارية",
@@ -114,6 +118,18 @@
     "sort_by": "ترتيب حسب",
     "empty": "لا توجد منتجات.",
     "choose_collection": "اختر مجموعة من محرر القالب."
+  },
+  "wishlist": {
+    "eyebrow": "محفوظ لوقت لاحق",
+    "title": "قائمة المفضلة",
+    "intro": "احتفظ بقطعك المفضلة معًا حتى تتخذ قرارك.",
+    "empty_title": "قائمة المفضلة فارغة",
+    "empty_text": "احفظ المنتجات بزر القلب وستظهر هنا على هذا الجهاز.",
+    "shop_products": "استكشف كل المنتجات",
+    "remove": "إزالة",
+    "removed": "تمت إزالة {{ title }} من قائمة المفضلة.",
+    "storage_error": "قائمة المفضلة غير متاحة لأن تخزين المتصفح محظور.",
+    "javascript_required": "فعّل JavaScript لعرض المنتجات المحفوظة على هذا الجهاز."
   },
   "facets": {
     "all_filters": "كل عوامل التصفية",

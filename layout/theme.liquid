@@ -33,6 +33,10 @@
       {{ 'home.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'home.js' | asset_url }}" defer="defer"></script>
     {% endif %}
+    {% if request.page_type == 'page' and template.suffix == 'wishlist' %}
+      {{ 'wishlist.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'wishlist.js' | asset_url }}" defer="defer"></script>
+    {% endif %}
 
     {% render 'meta-tags' %}
     {{ content_for_header }}

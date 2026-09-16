@@ -284,11 +284,13 @@ test('description preview expands and native information accordions remain indep
 test('save buttons share state and persist a real device collection; storage failure shows error', async t => {
   const ui = await setup(t);
   ui.find('[data-save-icon]').click();
-  assert.equal(ui.find('[data-save-text]').textContent, 'Remove from collection');
+  assert.equal(ui.find('[data-save-text]').textContent, 'Remove from wishlist');
   assert.equal(ui.find('[data-save-icon]').getAttribute('aria-pressed'), 'true');
   const stored = JSON.parse(ui.window.localStorage.getItem('theme:saved-products'));
   assert.equal(stored[0].id, '1');
   assert.equal(stored[0].url, '/products/example-1');
+  assert.equal(stored[0].price, '$559.00');
+  assert.equal(stored[0].vendor, 'Example Studio');
   ui.find('[data-save-text]').parentElement.click();
   assert.deepEqual(JSON.parse(ui.window.localStorage.getItem('theme:saved-products')), []);
   ui.window.Storage.prototype.setItem = () => { throw new Error('Storage disabled'); };

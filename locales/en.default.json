@@ -32,6 +32,10 @@
     "menu": "Menu",
     "search": "Search",
     "account": "Account",
+    "wishlist": "Wishlist",
+    "language": "Language",
+    "all_products": "All products",
+    "categories": "Categories",
     "cart": "Cart ({{ count }})",
     "continue_shopping": "Continue shopping"
   },
@@ -92,8 +96,8 @@
       "saved": "{{ title }} saved on this device.",
       "unsaved": "{{ title }} removed from your collection.",
       "save_error": "Unable to save this item. Browser storage is unavailable.",
-      "add_to_collection": "Add to collection",
-      "remove_from_collection": "Remove from collection",
+      "add_to_collection": "Add to wishlist",
+      "remove_from_collection": "Remove from wishlist",
       "saved_device_note": "Saved products stay on this device.",
       "more_information": "More information",
       "brand": "Brand",
@@ -114,6 +118,18 @@
     "sort_by": "Sort by",
     "empty": "No products found.",
     "choose_collection": "Choose a collection in the theme editor."
+  },
+  "wishlist": {
+    "eyebrow": "Saved for later",
+    "title": "Your wishlist",
+    "intro": "Keep your favorite pieces together while you decide.",
+    "empty_title": "Your wishlist is empty",
+    "empty_text": "Save items with the heart button and they will appear here on this device.",
+    "shop_products": "Explore all products",
+    "remove": "Remove",
+    "removed": "{{ title }} removed from your wishlist.",
+    "storage_error": "Wishlist is unavailable because browser storage is blocked.",
+    "javascript_required": "Enable JavaScript to view products saved on this device."
   },
   "facets": {
     "all_filters": "All filters",
