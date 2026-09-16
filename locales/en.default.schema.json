@@ -327,6 +327,8 @@
     "answer_ar": "Answer — Arabic"
   },
   "product_details": {
+    "show_buy_now": "Show Buy it now button",
+    "accelerated_checkout_info": "Accelerated checkout appears when the standard Buy it now button is switched off.",
     "accordion": "Product information",
     "content_source": "Content source",
     "description": "Product description",

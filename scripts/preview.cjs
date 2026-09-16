@@ -92,9 +92,22 @@ async function page(url, newsletterResult) {
   const sectionStyles = ['sections/header.liquid', 'sections/announcement-bar.liquid', 'sections/contact.liquid', 'sections/footer.liquid', 'sections/product.liquid', 'snippets/price.liquid', 'snippets/image.liquid', 'snippets/product-card.liquid'].map(file => read(file).match(/{% stylesheet %}([\s\S]*?){% endstylesheet %}/)?.[1] || '').join('\n');
   return `<!doctype html><html lang="${locale}" dir="${locale === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local ${isProduct ? 'product' : isHelp ? 'help' : contact ? 'contact' : 'home'} fixture</title>${variables}<link rel="stylesheet" href="/assets/critical.css"><link rel="stylesheet" href="/assets/home.css"><link rel="stylesheet" href="/assets/cart-drawer.css">${isProduct ? '<link rel="stylesheet" href="/assets/product.css"><script src="/assets/product.js" defer></script><link rel="stylesheet" href="/assets/bought-together.css"><script src="/assets/bought-together.js" defer></script>' : ''}<style>${sectionStyles}</style><script src="/assets/theme.js" defer></script><script src="/assets/home.js" defer></script><script src="/assets/cart-drawer.js" defer></script><script src="/assets/newsletter.js" defer></script></head><body><p style="margin:0;padding:4px 16px;background:#fff5c5;color:#333;font-size:12px">LOCAL FIXTURE — sample content/images/links; cart and subscriptions stay local; checkout does not send.</p>${header.join('')}<main id="MainContent" class="main-content">${isProduct || isHelp ? '' : addForm}${sections.join('')}</main>${footer.join('')}${cart}<p role="status" data-live-region class="visually-hidden"></p>${widget}</body></html>`;
 }
+let checkoutPreview = {};
 const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://127.0.0.1:4173');
+    if (request.method === 'POST' && url.pathname.endsWith('/cart/add')) {
+      const body = await cartFixture.bodyOf(request);
+      const target = new URL(body.return_to || '/product', url);
+      if (target.origin !== url.origin || !/^\/(?:ar\/)?checkout$/.test(target.pathname)) { response.writeHead(400); return response.end('Invalid local checkout target'); }
+      checkoutPreview = body;
+      response.writeHead(303, { Location: target.pathname });
+      return response.end();
+    }
+    if (url.pathname.endsWith('/checkout')) {
+      response.setHeader('Content-Type', 'text/html; charset=utf-8');
+      return response.end(`<!doctype html><html lang="${url.pathname.startsWith('/ar/') ? 'ar' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Local checkout preview</title></head><body><h1>Local checkout preview</h1><p>LOCAL FIXTURE — no orders or payments are created. Native product form values received:</p><dl>${Object.entries(checkoutPreview).map(([name, value]) => `<dt>${escape(name)}</dt><dd>${escape(value)}</dd>`).join('')}</dl><a href="${url.pathname.startsWith('/ar/') ? '/ar/product' : '/product'}">Back to product</a></body></html>`);
+    }
     if (await cartFixture.handle(request, response, url, () => drawer(pageData(url)), () => renderSection('cart-recommendations', { type: 'cart-recommendations', settings: {} }, pageData(url)))) return;
     if (url.searchParams.has('section_id') && /\/product(?:s\/|$)/.test(url.pathname)) {
       const template = json('templates/product.json');

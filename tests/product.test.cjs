@@ -61,7 +61,7 @@ async function setup(t, route = '/product', intercept) {
   window.eval(source('product'));
   window.eval(source('bought-together'));
   const change = element => element.dispatchEvent(new window.Event('change', { bubbles: true }));
-  const submit = form => form.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+  const submit = (form, submitter) => form.dispatchEvent(new window.SubmitEvent('submit', { bubbles: true, cancelable: true, submitter: submitter || null }));
   const choose = async (position, value) => {
     const select = find(`[data-option-position="${position}"]`);
     select.value = value;
@@ -128,6 +128,8 @@ test('separate option dropdowns refresh price, stock, featured image, URL and bu
   ui.change(select);
   assert.equal(ui.find('[data-product-add]').disabled, true);
   assert.equal(ui.submit(ui.find('.product-form')), false);
+  assert.equal(ui.find('[data-product-buy]').disabled, true);
+  assert.equal(ui.submit(ui.find('.product-form'), ui.find('[data-product-buy]')), false);
   personalization.value = 'Updated while loading';
   await until(() => !ui.find('.product-form').hasAttribute('data-variant-pending'));
   assert.equal(ui.find('.product-form [name="id"]').value, '101');
@@ -154,6 +156,7 @@ test('quantity rules update after option selection; selecting a sold-out URL kee
   assert.equal(ui.find('[name="quantity"]').value, '2');
   const soldOut = await setup(t, '/product?variant=301');
   assert.equal(soldOut.find('[data-product-add]').disabled, true);
+  assert.equal(soldOut.find('[data-product-buy]').disabled, true);
   assert.match(soldOut.find('[data-product-add-label]').textContent, /Sold out/);
 });
 
@@ -199,6 +202,7 @@ test('product add retains toast-only cart behavior and personalization property'
   const url = ui.window.location.href;
   ui.submit(ui.find('.product-form'));
   assert.equal(ui.find('[data-product-options]').inert, true);
+  assert.equal(ui.find('[data-product-buy]').disabled, true);
   await until(() => !ui.find('.product-form').hasAttribute('aria-busy'));
   assert.equal(ui.window.location.href, url);
   assert.equal(ui.find('[data-cart-drawer]').open, false);
@@ -206,6 +210,36 @@ test('product add retains toast-only cart behavior and personalization property'
   const request = ui.calls.find(call => call.target.pathname.endsWith('/cart/add.js'));
   assert.equal(request.options.body.get('properties[Personalization]'), 'Name');
   assert.equal(ui.find('[data-product-options]').inert, false);
+});
+
+test('Buy it now submits selected variant, quantity and personalization natively to localized checkout', async t => {
+  for (const route of ['/product', '/ar/product']) {
+    const ui = await setup(t, route);
+    await ui.choose(1, '1102');
+    const form = ui.find('.product-form'), buy = ui.find('[data-product-buy]');
+    ui.find('[name="quantity"]').value = '2';
+    ui.find('[name="properties[Personalization]"]').value = 'Family & name';
+    assert.equal(buy.disabled, false);
+    assert.equal(buy.textContent, route.startsWith('/ar/') ? 'اشترِ الآن' : 'Buy it now');
+    assert.equal(form.reportValidity(), true);
+    assert.equal(ui.submit(form, buy), true); // The Ajax add handler leaves native checkout submission intact.
+    assert.equal(ui.calls.filter(call => call.target.pathname.endsWith('/cart/add.js')).length, 0);
+    const values = new ui.window.FormData(form, buy);
+    assert.equal(values.get('id'), '101');
+    assert.equal(values.get('quantity'), '2');
+    assert.equal(values.get('properties[Personalization]'), 'Family & name');
+    assert.equal(values.get('return_to'), route.startsWith('/ar/') ? '/ar/checkout' : '/checkout');
+    const response = await fetch(form.action, { method: 'POST', body: new URLSearchParams([...values]), redirect: 'manual' });
+    assert.equal(response.status, 303);
+    assert.equal(response.headers.get('location'), values.get('return_to'));
+    const checkout = await (await fetch(origin + values.get('return_to'))).text();
+    assert.match(checkout, /Local checkout preview/);
+    assert.match(checkout, /Family &amp; name/);
+    assert.equal(ui.find('[data-cart-drawer]').open, false);
+  }
+  const data = pageData(new URL(origin + '/product'));
+  const hidden = await renderSection('main', { type: 'product', settings: { show_buy_now: false, show_dynamic_checkout: false } }, data);
+  assert.doesNotMatch(hidden, /data-product-buy/);
 });
 
 test('invalid required personalization opens its disclosure so native validation can focus the field', async t => {

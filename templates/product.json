@@ -15,6 +15,7 @@
         "show_product_vendor": false,
         "show_inventory": true,
         "show_dynamic_checkout": true,
+        "show_buy_now": true,
         "media_position": "left"
       },
       "blocks": {

@@ -38,6 +38,8 @@
 .product-form__actions .button, .product-form__actions .shopify-payment-button__button--unbranded { min-height: 2.75rem; border-radius: 999px; }
 .product-form__actions .shopify-payment-button__button--unbranded { border: 1px solid var(--color-foreground); background: transparent; color: var(--color-foreground); }
 .product-form__actions .button { gap: 0.5rem; }
+.product-form__actions .product-form__buy-now { border: 1px solid var(--color-foreground); background: transparent; color: var(--color-foreground); }
+.product-form__actions .product-form__buy-now:hover:not(:disabled) { background: var(--color-surface); }
 .product-form[aria-busy='true'] [data-product-add-label] { display: none; }
 .product-personalization summary { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; list-style: none; min-height: 2.75rem; font-size: 0.8rem; font-weight: 600; }
 .product-personalization summary::-webkit-details-marker { display: none; }

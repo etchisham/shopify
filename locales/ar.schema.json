@@ -327,6 +327,8 @@
     "answer_ar": "الإجابة — العربية"
   },
   "product_details": {
+    "show_buy_now": "إظهار زر اشترِ الآن",
+    "accelerated_checkout_info": "يظهر الدفع السريع عند إيقاف زر اشترِ الآن العادي.",
     "accordion": "معلومات المنتج",
     "content_source": "مصدر المحتوى",
     "description": "وصف المنتج",

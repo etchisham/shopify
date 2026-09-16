@@ -217,6 +217,8 @@
       else form.removeAttribute('data-variant-pending');
       root.querySelector('[data-product-actions]').inert = value;
       root.querySelector('[data-product-add]').disabled = value || !root.querySelector('[data-product-variant-content]').dataset.variantId || root.querySelector('[data-product-add]').dataset.unavailable === 'true';
+      const buy = root.querySelector('[data-product-buy]');
+      if (buy) buy.disabled = root.querySelector('[data-product-add]').disabled;
       root.querySelector('[data-product-options]')?.setAttribute('aria-busy', String(value));
     };
     root.addEventListener('submit', event => {

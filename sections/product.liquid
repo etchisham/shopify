@@ -20,6 +20,7 @@
   assign rating_value = rating.rating | default: rating
   assign rating_maximum = rating.scale_max | default: 5
   assign browsing_collection = collection | default: product.collections.first
+  assign checkout_url = routes.root_url | append: '/checkout' | replace: '//', '/'
   assign saved_image_url = ''
   if product.featured_image != blank
     assign saved_image_url = product.featured_image | image_url: width: 360
@@ -73,7 +74,9 @@
             </div>
           {% else %}<input type="hidden" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}">{% endif %}
           <div class="product-form__actions" data-product-actions>
-            {% if section.settings.show_dynamic_checkout and current_variant.available %}{{ form | payment_button }}{% endif %}
+            {% if section.settings.show_buy_now %}
+              <button class="button button--full product-form__buy-now" type="submit" name="return_to" value="{{ checkout_url }}" data-product-buy{% unless current_variant.available %} disabled{% endunless %}>{{ 'products.details.buy_now' | t }}</button>
+            {% elsif section.settings.show_dynamic_checkout and current_variant.available %}{{ form | payment_button }}{% endif %}
             <button class="button button--full" type="submit" name="add" data-product-add{% unless current_variant.available %} data-unavailable="true" disabled{% endunless %}>
               <span class="button-spinner" aria-hidden="true"></span>
               <span data-product-add-label>{% if current_variant == blank %}{{ 'products.product.unavailable' | t }}{% elsif current_variant.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
@@ -121,7 +124,8 @@
     { "type": "checkbox", "id": "show_inventory", "label": "t:labels.show_inventory", "default": true },
     { "type": "checkbox", "id": "show_tax_note", "label": "t:product_details.show_tax_note", "default": true },
     { "type": "checkbox", "id": "show_quantity", "label": "t:product_details.show_quantity", "default": true },
-    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "default": true },
+    { "type": "checkbox", "id": "show_buy_now", "label": "t:product_details.show_buy_now", "default": true },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "info": "t:product_details.accelerated_checkout_info", "default": true },
     { "type": "checkbox", "id": "show_save_button", "label": "t:product_details.show_save_button", "default": true },
     { "type": "select", "id": "media_position", "label": "t:labels.image_position", "options": [{ "value": "left", "label": "t:options.image_position.left" }, { "value": "right", "label": "t:options.image_position.right" }], "default": "left" },
     { "type": "select", "id": "image_ratio", "label": "t:product_details.image_ratio", "default": "1 / 1", "options": [{ "value": "1 / 1", "label": "t:product_details.square" }, { "value": "4 / 5", "label": "t:product_details.portrait" }, { "value": "4 / 3", "label": "t:product_details.landscape" }] },
