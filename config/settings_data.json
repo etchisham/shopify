@@ -9,9 +9,23 @@
  */
 {
   "current": {
-    "type_body_font": "sans_serif_n4",
-    "type_heading_font": "sans_serif_n4",
+    "logo": "shopify://shop_images/hilya_logo_main_black.png",
+    "favicon": "shopify://shop_images/hilya_logo_main_black.png",
+    "type_body_font": "inter_n4",
+    "type_heading_font": "inter_n4",
     "max_page_width": "80rem",
+    "min_page_margin": 32,
+    "sections": {
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {
+          "recommendation_collection": "",
+          "offer_heading": "",
+          "offer_text": "",
+          "offer_note": ""
+        }
+      }
+    },
     "content_for_index": [],
     "blocks": {
       "14060646107696862457": {

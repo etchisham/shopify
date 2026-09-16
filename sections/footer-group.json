@@ -14,8 +14,35 @@
     "footer": {
       "type": "footer",
       "settings": {
+        "logo": "shopify://shop_images/hilya_logo_main.jpg",
+        "logo_width": 196,
+        "primary_menu": "footer",
+        "secondary_menu": "main-menu",
+        "secondary_menu_heading": "test",
+        "show_newsletter": true,
         "newsletter_heading": "",
-        "newsletter_text": ""
+        "newsletter_text": "",
+        "email_placeholder": "",
+        "subscribe_label": "",
+        "privacy_text": "privacy",
+        "privacy_link": "",
+        "copyright_text": "Hilya EG",
+        "facebook_url": "",
+        "instagram_url": "",
+        "youtube_url": "",
+        "tiktok_url": "",
+        "background_color": "#1c1c1c",
+        "text_color": "#ffffff",
+        "muted_color": "#b8b8b8",
+        "border_color": "#333333",
+        "field_background_color": "#ffffff",
+        "field_text_color": "#444444",
+        "button_background_color": "#f7f7f7",
+        "button_text_color": "#000000",
+        "heading_font_size": 15,
+        "text_font_size": 16,
+        "desktop_padding": 60,
+        "top_padding": 96
       }
     }
   },

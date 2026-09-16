@@ -49,14 +49,32 @@
                         <span class="drawer-navigation__arrow">{% render 'icon', name: 'arrow' %}</span>
                       </summary>
                       <ul role="list">
-                        <li><a href="{{ link.url }}">{{ 'navigation.view_all' | t: title: link.title }}</a></li>
+                        <li>
+                          <a href="{{ link.url }}">{{ 'navigation.view_all' | t: title: link.title }}</a>
+                        </li>
                         {% for child_link in link.links %}
-                          <li><a href="{{ child_link.url }}"{% if child_link.current %} aria-current="page"{% endif %}>{{ child_link.title | escape }}</a></li>
+                          <li>
+                            <a
+                              href="{{ child_link.url }}"
+                              {% if child_link.current %}
+                                aria-current="page"
+                              {% endif %}
+                            >
+                              {{- child_link.title | escape -}}
+                            </a>
+                          </li>
                         {% endfor %}
                       </ul>
                     </details>
                   {% else %}
-                    <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                    <a
+                      href="{{ link.url }}"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{- link.title | escape -}}
+                    </a>
                   {% endif %}
                 </li>
               {% endfor %}
@@ -65,17 +83,28 @@
         </div>
       </details>
 
-      {% if section.settings.show_search %}
-        <a class="header-icon-button site-header__mobile-search" href="{{ routes.search_url }}" aria-label="{{ 'general.search' | t | escape }}">
-          {% render 'icon', name: 'search' %}
-        </a>
-      {% endif %}
+      {% comment %}
+        {% if section.settings.show_search %}
+          <a class="header-icon-button site-header__mobile-search" href="{{ routes.search_url }}" aria-label="{{ 'general.search' | t | escape }}">
+            {% render 'icon', name: 'search' %}
+          </a>
+        {% endif %}
+      {% endcomment %}
 
       {% if section.settings.desktop_menu != blank %}
         <nav class="desktop-navigation" aria-label="{{ 'general.menu' | t | escape }}">
           <ul role="list">
             {% for link in section.settings.desktop_menu.links %}
-              <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+              <li>
+                <a
+                  href="{{ link.url }}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </a>
+              </li>
             {% endfor %}
           </ul>
         </nav>
@@ -84,7 +113,15 @@
 
     <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
       {% if header_logo != blank %}
-        {{ header_logo | image_url: width: section.settings.logo_width | image_tag: widths: '100, 140, 180, 220, 280, 360', width: section.settings.logo_width, alt: shop.name, loading: 'eager' }}
+        {{
+          header_logo
+          | image_url: width: section.settings.logo_width
+          | image_tag:
+            widths: '100, 140, 180, 220, 280, 360',
+            width: section.settings.logo_width,
+            alt: shop.name,
+            loading: 'eager'
+        }}
       {% else %}
         <span>{{ shop.name | escape }}</span>
       {% endif %}
@@ -100,14 +137,35 @@
       {% endif %}
 
       {% if section.settings.show_search %}
-        <a class="header-icon-button site-header__desktop-action" href="{{ routes.search_url }}" aria-label="{{ 'general.search' | t | escape }}">
+        <a
+          class="header-icon-button site-header__desktop-action"
+          href="{{ routes.search_url }}"
+          aria-label="{{ 'general.search' | t | escape }}"
+        >
           {% render 'icon', name: 'search' %}
         </a>
       {% endif %}
 
-      <a class="header-icon-button site-header__cart" href="{{ routes.cart_url }}" aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}" data-cart-open aria-haspopup="dialog" aria-controls="CartDrawer" aria-expanded="false">
+      <a
+        class="header-icon-button site-header__cart"
+        href="{{ routes.cart_url }}"
+        aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}"
+        data-cart-open
+        aria-haspopup="dialog"
+        aria-controls="CartDrawer"
+        aria-expanded="false"
+      >
         {% render 'icon', name: 'cart' %}
-        <span class="site-header__cart-count" aria-hidden="true" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+        <span
+          class="site-header__cart-count"
+          aria-hidden="true"
+          data-cart-count
+          {% if cart.item_count == 0 %}
+            hidden
+          {% endif %}
+        >
+          {{- cart.item_count -}}
+        </span>
       </a>
     </div>
   </div>
@@ -446,11 +504,34 @@
   "enabled_on": { "groups": ["header"] },
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "t:labels.logo" },
-    { "type": "range", "id": "logo_width", "label": "t:labels.logo_width", "min": 80, "max": 280, "step": 4, "unit": "px", "default": 140 },
-    { "type": "range", "id": "mobile_logo_width", "label": "t:labels.mobile_logo_width", "min": 72, "max": 180, "step": 4, "unit": "px", "default": 112 },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "t:labels.logo_width",
+      "min": 80,
+      "max": 280,
+      "step": 4,
+      "unit": "px",
+      "default": 140
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_width",
+      "label": "t:labels.mobile_logo_width",
+      "min": 72,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "default": 112
+    },
     { "type": "link_list", "id": "desktop_menu", "label": "t:labels.desktop_menu", "default": "main-menu" },
     { "type": "link_list", "id": "mobile_menu", "label": "t:labels.mobile_menu", "default": "main-menu" },
-    { "type": "link_list", "id": "customer_account_menu", "label": "t:labels.customer_account_menu", "default": "customer-account-main-menu" },
+    {
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "t:labels.customer_account_menu",
+      "default": "customer-account-main-menu"
+    },
     { "type": "checkbox", "id": "show_search", "label": "t:labels.show_search", "default": true },
     { "type": "checkbox", "id": "show_account", "label": "t:labels.show_account", "default": true },
     { "type": "checkbox", "id": "sticky_header", "label": "t:labels.sticky_header", "default": true },
@@ -458,10 +539,46 @@
     { "type": "color", "id": "background_color", "label": "t:labels.background", "default": "#FFFFFF" },
     { "type": "color", "id": "text_color", "label": "t:labels.foreground", "default": "#111111" },
     { "type": "color", "id": "border_color", "label": "t:labels.border", "default": "#EFEFEF" },
-    { "type": "range", "id": "desktop_height", "label": "t:labels.desktop_header_height", "min": 64, "max": 112, "step": 2, "unit": "px", "default": 84 },
-    { "type": "range", "id": "mobile_height", "label": "t:labels.mobile_header_height", "min": 56, "max": 88, "step": 2, "unit": "px", "default": 72 },
-    { "type": "range", "id": "desktop_padding", "label": "t:labels.desktop_horizontal_padding", "min": 16, "max": 80, "step": 2, "unit": "px", "default": 32 },
-    { "type": "range", "id": "mobile_menu_font_size", "label": "t:labels.mobile_menu_font_size", "min": 24, "max": 40, "step": 1, "unit": "px", "default": 32 }
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "t:labels.desktop_header_height",
+      "min": 64,
+      "max": 112,
+      "step": 2,
+      "unit": "px",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "t:labels.mobile_header_height",
+      "min": 56,
+      "max": 88,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "t:labels.desktop_horizontal_padding",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "mobile_menu_font_size",
+      "label": "t:labels.mobile_menu_font_size",
+      "min": 24,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    }
   ],
   "presets": [{ "name": "t:general.header" }]
 }
