@@ -26,6 +26,8 @@
             "source": "description",
             "metafield_namespace": "custom",
             "metafield_key": "item_details",
+            "content_en": "<p>Explore the product photos and available options. Contact us if you need more details or help choosing before placing your order.</p>",
+            "content_ar": "<p>تصفح صور المنتج والخيارات المتاحة. تواصل معنا إذا كنت بحاجة إلى تفاصيل إضافية أو مساعدة في الاختيار قبل إتمام طلبك.</p>",
             "open_by_default": true,
             "truncate_content": true,
             "show_highlights": true
@@ -39,6 +41,8 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "shipping_returns",
+            "content_en": "<p>Shipping options and costs are shown at checkout. For delivery estimates or return questions, contact us before placing your order.</p>",
+            "content_ar": "<p>تظهر خيارات الشحن وتكلفته عند إتمام الشراء. للاستفسار عن موعد التوصيل المتوقع أو الإرجاع، تواصل معنا قبل إتمام طلبك.</p>",
             "open_by_default": true,
             "truncate_content": false,
             "show_highlights": false
@@ -52,6 +56,8 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "material_care",
+            "content_en": "<p>Care requirements vary by material. Contact us for guidance before cleaning or storing your product.</p>",
+            "content_ar": "<p>تختلف متطلبات العناية حسب الخامة. تواصل معنا للحصول على إرشادات قبل تنظيف المنتج أو تخزينه.</p>",
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false
@@ -65,6 +71,8 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "did_you_know",
+            "content_en": "<p>Product options may change the price and availability. Select your preferred options to see the current details.</p>",
+            "content_ar": "<p>قد تتغير الأسعار وتوافر المنتج حسب الخيارات. حدد خياراتك المفضلة للاطلاع على التفاصيل الحالية.</p>",
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false
@@ -78,6 +86,8 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "about_seller",
+            "content_en": "<p>Have a question about this product? Contact our team for help before placing your order.</p>",
+            "content_ar": "<p>هل لديك سؤال عن هذا المنتج؟ تواصل مع فريقنا للحصول على المساعدة قبل إتمام طلبك.</p>",
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false

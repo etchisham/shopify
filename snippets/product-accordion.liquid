@@ -26,11 +26,17 @@
   {% case block.settings.source %}
     {% when 'description' %}{{ product.description }}
     {% when 'metafield' %}
-      {% if detail_metafield != blank %}{{ detail_metafield | metafield_tag }}{% else %}{{ body }}{% endif %}
+      {% if detail_metafield != blank %}{{ detail_metafield | metafield_tag }}{% endif %}
     {% else %}{{ body }}
   {% endcase %}
 {% endcapture %}
 {% assign detail_content = detail_content | strip %}
+{% assign detail_text = detail_content | strip_html | strip %}
+{% if detail_text == blank %}
+  {% unless detail_content contains '<img' or detail_content contains '<video' or detail_content contains '<iframe' or detail_content contains '<model-viewer' or detail_content contains '<svg' %}
+    {% assign detail_content = body | strip %}
+  {% endunless %}
+{% endif %}
 {% if detail_content != blank or request.design_mode %}
   <details class="product-accordion" data-product-accordion{% if block.settings.open_by_default %} open{% endif %} {{ block.shopify_attributes }}>
     <summary>{{ heading | escape }}{% render 'icon', name: 'chevron' %}</summary>

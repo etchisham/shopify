@@ -267,7 +267,7 @@ test('editor accordion sources prioritize product fields and Arabic override key
   const data = pageData(new URL(origin + '/ar/product'));
   data.product.metafields.custom.shipping_returns_ar = { type: 'rich_text_field', fixture_html: '<p>إجابة خاصة بهذا المنتج</p>' };
   const settings = { heading_en: 'Shipping', heading_ar: 'الشحن', source: 'metafield', metafield_namespace: 'custom', metafield_key: 'shipping_returns', metafield_key_ar: 'shipping_returns_ar', content_ar: '<p>Fallback</p>' };
-  const html = await renderSection('main', { type: 'product', settings: { show_dynamic_checkout: false }, blocks: { shipping: { type: 'accordion', settings }, blank: { type: 'accordion', settings: { heading_en: 'Empty', source: 'editor' } } }, block_order: ['shipping', 'blank'] }, data);
+  const html = await renderSection('main', { type: 'product', settings: { show_dynamic_checkout: false }, blocks: { shipping: { type: 'accordion', settings }, blank: { type: 'accordion', settings: { heading_en: 'Empty', source: 'editor', content_en: '', content_ar: '' } } }, block_order: ['shipping', 'blank'] }, data);
   assert.match(html, /إجابة خاصة بهذا المنتج/);
   assert.doesNotMatch(html, /Fallback|<summary>Empty/);
   assert.match(html, /اللوحات الفنية/);
@@ -284,4 +284,26 @@ test('editor accordion sources prioritize product fields and Arabic override key
   const fallback = await page(new URL(origin + '/product'));
   assert.match(fallback, /product-options-native/);
   assert.match(fallback, /option_values=/);
+});
+
+test('all default accordions show editable bilingual fallbacks for missing product answers; new blocks get a default', async t => {
+  const template = JSON.parse(fs.readFileSync(path.join(__dirname, '../templates/product.json'), 'utf8').replace(/^\/\*[\s\S]*?\*\//, ''));
+  for (const locale of ['en', 'ar']) {
+    const data = pageData(new URL(origin + (locale === 'ar' ? '/ar/product' : '/product')));
+    data.product.description = '<p> </p>';
+    data.product.metafields = { custom: { shipping_returns: { type: 'rich_text_field', fixture_html: '<div><p></p></div>' } } };
+    const dom = new JSDOM(await renderSection('main', template.sections.main, data));
+    t.after(() => dom.window.close());
+    assert.equal(dom.window.document.querySelectorAll('[data-product-accordion]').length, 5);
+    for (const id of template.sections.main.block_order) {
+      const expected = template.sections.main.blocks[id].settings['content_' + locale];
+      assert.ok(expected);
+      assert.equal(dom.window.document.getElementById('ProductDetail-main-' + id).innerHTML, expected);
+    }
+    const added = await renderSection('main', { type: 'product', blocks: { new: { type: 'accordion', settings: {} } }, block_order: ['new'] }, data);
+    assert.match(added, locale === 'ar' ? /تواصل معنا إذا كانت لديك أسئلة عن هذا المنتج/ : /Contact us if you have questions about this product/);
+    data.product.description = '<p><img src="/fixture-art.svg" alt="Product detail"></p>';
+    const imageOnly = await renderSection('main', template.sections.main, data);
+    assert.match(imageOnly, /alt="Product detail"/);
+  }
 });
