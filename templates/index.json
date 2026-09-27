@@ -30,214 +30,86 @@
         "text_width": 38
       }
     },
-    "discovery_statement": {
-      "type": "home-statement",
+    "featured_collection_cxRRka": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
       "settings": {
-        "kicker_en": "A daily reminder of what matters",
-        "kicker_ar": "إلهام يرافقك كل يوم",
-        "before_en": "Find your",
-        "before_ar": "اكتشف",
-        "highlight_en": "inspiration",
-        "highlight_ar": "إلهامك",
-        "after_en": "Make it yours.",
-        "after_ar": "واجعل مساحتك تعبّر عنك.",
-        "line_break": true,
-        "button_en": "Shop all art",
-        "button_ar": "تسوّق كل اللوحات",
-        "link": "",
-        "heading_size": 64,
-        "padding": 64,
-        "background": "#ffffff",
-        "foreground": "#111111",
-        "accent": "#ff9e18"
+        "eyebrow": "SHOP BY CATEGORY",
+        "heading": "Find Your Perfect Piece",
+        "collection": "necklaces",
+        "products_to_show": 4,
+        "columns": 4
       }
     },
-    "discovery_tabs": {
-      "type": "collection-tabs",
+    "custom_section_hM7yip": {
+      "type": "custom-section",
       "blocks": {
-        "bestsellers": {
-          "type": "collection",
+        "group_iGJPXD": {
+          "type": "group",
+          "name": "t:general.column",
           "settings": {
-            "collection": "best-sellers",
-            "label_en": "Best sellers",
-            "label_ar": "الأكثر مبيعًا"
-          }
+            "layout_direction": "group--vertical",
+            "alignment": "flex-start",
+            "padding": 0
+          },
+          "blocks": {}
         },
-        "sports": {
-          "type": "collection",
+        "text_nCKF3r": {
+          "type": "text",
+          "name": "t:general.text",
           "settings": {
-            "collection": "sports",
-            "label_en": "Sports",
-            "label_ar": "الرياضة"
-          }
+            "text": "SHOP BY CATEGORY",
+            "text_style": "text--normal",
+            "alignment": "center"
+          },
+          "blocks": {}
         },
-        "motivational": {
-          "type": "collection",
+        "text_NGKEtw": {
+          "type": "text",
+          "name": "t:general.text",
           "settings": {
-            "collection": "motivational",
-            "label_en": "Motivational",
-            "label_ar": "التحفيز"
-          }
-        },
-        "new": {
-          "type": "collection",
-          "settings": {
-            "collection": "new-arrivals",
-            "label_en": "New arrivals",
-            "label_ar": "وصل حديثًا"
-          }
+            "text": "Find Your Perfect Piece",
+            "text_style": "text--title",
+            "alignment": "center"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "bestsellers",
-        "sports",
-        "motivational",
-        "new"
+        "group_iGJPXD",
+        "text_nCKF3r",
+        "text_NGKEtw"
       ],
+      "name": "t:general.custom_section",
+      "settings": {}
+    },
+    "collections_pUPfUG": {
+      "type": "collections",
+      "custom_css": [],
+      "name": "t:general.collections_grid",
       "settings": {
-        "heading_en": "Find your next piece",
-        "heading_ar": "اكتشف لوحتك القادمة",
-        "products_to_show": 12,
-        "columns": 4,
-        "tab_size": 40,
-        "padding": 56,
-        "background": "#ffffff",
-        "foreground": "#111111"
+        "grid_gap": 24
       }
     },
-    "sports_statement": {
-      "type": "home-statement",
+    "rich_text_kWJD9z": {
+      "type": "rich-text",
+      "name": "t:general.rich_text",
       "settings": {
-        "kicker_en": "For the love of the game",
-        "kicker_ar": "من أجل شغفك بالرياضة",
-        "before_en": "Celebrate",
-        "before_ar": "احتفل بـ",
-        "highlight_en": "greatness",
-        "highlight_ar": "العظمة",
-        "after_en": "Find your inspiration.",
-        "after_ar": "واكتشف مصدر إلهامك.",
-        "line_break": true,
-        "button_en": "Explore sports art",
-        "button_ar": "اكتشف لوحات الرياضة",
-        "link": "shopify://collections/sports",
-        "heading_size": 64,
-        "padding": 64,
-        "background": "#ffffff",
-        "foreground": "#111111",
-        "accent": "#ff9e18"
-      }
-    },
-    "athlete_tabs": {
-      "type": "collection-tabs",
-      "blocks": {
-        "jordan": {
-          "type": "collection",
-          "settings": {
-            "collection": "michael-jordan",
-            "label_en": "Michael Jordan",
-            "label_ar": "مايكل جوردان"
-          }
-        },
-        "woods": {
-          "type": "collection",
-          "settings": {
-            "collection": "tiger-woods",
-            "label_en": "Tiger Woods",
-            "label_ar": "تايجر وودز"
-          }
-        },
-        "ali": {
-          "type": "collection",
-          "settings": {
-            "collection": "muhammad-ali",
-            "label_en": "Muhammad Ali",
-            "label_ar": "محمد علي"
-          }
-        },
-        "gretzky": {
-          "type": "collection",
-          "settings": {
-            "collection": "wayne-gretzky",
-            "label_en": "Wayne Gretzky",
-            "label_ar": "واين جريتزكي"
-          }
-        }
-      },
-      "block_order": [
-        "jordan",
-        "woods",
-        "ali",
-        "gretzky"
-      ],
-      "settings": {
-        "heading_en": "Explore athlete collections",
-        "heading_ar": "اكتشف مجموعات الرياضيين",
-        "products_to_show": 12,
-        "columns": 4,
-        "tab_size": 40,
-        "padding": 56,
-        "background": "#ffffff",
-        "foreground": "#111111"
-      }
-    },
-    "categories": {
-      "type": "home-category-links",
-      "blocks": {
-        "bestsellers": {
-          "type": "link",
-          "settings": {
-            "label_en": "Best sellers",
-            "label_ar": "الأكثر مبيعًا",
-            "link": "shopify://collections/best-sellers"
-          }
-        },
-        "sports": {
-          "type": "link",
-          "settings": {
-            "label_en": "Sports",
-            "label_ar": "الرياضة",
-            "link": "shopify://collections/sports"
-          }
-        },
-        "motivational": {
-          "type": "link",
-          "settings": {
-            "label_en": "Motivational",
-            "label_ar": "التحفيز",
-            "link": "shopify://collections/motivational"
-          }
-        },
-        "new": {
-          "type": "link",
-          "settings": {
-            "label_en": "New arrivals",
-            "label_ar": "وصل حديثًا",
-            "link": "shopify://collections/new-arrivals"
-          }
-        }
-      },
-      "block_order": [
-        "bestsellers",
-        "sports",
-        "motivational",
-        "new"
-      ],
-      "settings": {
-        "heading_en": "Shop by inspiration",
-        "heading_ar": "تسوّق حسب إلهامك",
-        "heading_size": 80,
-        "padding": 48,
-        "background": "#f2f2f2",
-        "foreground": "#111111"
+        "eyebrow": "",
+        "heading": "One clear idea per section",
+        "text": "<p>Keep copy specific, concise, and grounded in customer research.</p>",
+        "button_label": "",
+        "button_link": "",
+        "alignment": "center",
+        "text_width": 44
       }
     }
   },
   "order": [
     "hero_N4mypj",
-    "discovery_statement",
-    "discovery_tabs",
-    "sports_statement",
-    "athlete_tabs",
-    "categories"
+    "featured_collection_cxRRka",
+    "custom_section_hM7yip",
+    "collections_pUPfUG",
+    "rich_text_kWJD9z"
   ]
 }
