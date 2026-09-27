@@ -9,81 +9,25 @@
  */
 {
   "sections": {
-    "slideshow": {
-      "type": "home-slideshow",
-      "blocks": {
-        "sport": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/bohemian-woman-long-hair.jpg",
-            "alt_en": "Elegant HILYA jewelry styled for everyday wear",
-            "alt_ar": "إكسسوارات هِليَا الأنيقة لإطلالة يومية راقية",
-            "prefix_en": "TIMELESS JEWELRY",
-            "prefix_ar": "إكسسوارات خالدة",
-            "heading_en": "Timeless Pieces, Made for You.",
-            "heading_ar": "قطعٌ خالدة، صُمِّمت لك.",
-            "text_en": "Elegant pieces designed to complement every moment, from everyday essentials to special occasions.",
-            "text_ar": "قطع أنيقة صُمِّمت لتكمّل كل لحظة، من إطلالتك اليومية إلى مناسباتك الخاصة.",
-            "button_en": "SHOP NOW",
-            "button_ar": "تسوّق الآن",
-            "link": "shopify://collections/all"
-          }
-        },
-        "ambition": {
-          "type": "slide",
-          "settings": {
-            "alt_en": "",
-            "alt_ar": "",
-            "prefix_en": "Art for",
-            "prefix_ar": "فن من أجل",
-            "heading_en": "The ambitious",
-            "heading_ar": "الطموحين",
-            "text_en": "Make room for what drives you. Discover art that brings your goals into focus.",
-            "text_ar": "امنح ما يلهمك مساحة. اكتشف لوحات تذكّرك بأهدافك كل يوم.",
-            "button_en": "Explore the collection",
-            "button_ar": "اكتشف المجموعة",
-            "link": "shopify://collections/all"
-          }
-        },
-        "space": {
-          "type": "slide",
-          "settings": {
-            "alt_en": "",
-            "alt_ar": "",
-            "prefix_en": "Art for",
-            "prefix_ar": "فن من أجل",
-            "heading_en": "Your everyday",
-            "heading_ar": "كل يوم",
-            "text_en": "A fresh perspective for your walls. Choose a piece that feels like you.",
-            "text_ar": "رؤية جديدة لجدرانك. اختر لوحة تعبّر عنك.",
-            "button_en": "Discover new arrivals",
-            "button_ar": "اكتشف الجديد",
-            "link": "shopify://collections/new-arrivals"
-          }
-        }
-      },
-      "block_order": [
-        "sport",
-        "ambition",
-        "space"
-      ],
+    "hero_N4mypj": {
+      "type": "hero",
       "custom_css": [
-        ".home-slideshow {--home-background: #f4eee5 !important; --home-foreground: #1b1917 !important; --home-accent: #b08a55 !important;}",
-        ".home-slide__content {padding-left: 8% !important; padding-right: 5% !important;}",
-        ".home-slide__prefix {color: #b08a55 !important;}",
-        ".home-button {background: #171614 !important; color: #fff !important; border: none !important;}"
+        ".hero__content,.hero__content h1,.hero__content .hero__text,.hero__content .eyebrow{color:#000!important}",
+        ".hero__content .button{background:#000!important;color:#fff!important;border-color:#000!important}"
       ],
+      "name": "t:general.hero",
       "settings": {
-        "heading_en": "Art for your everyday",
-        "heading_ar": "فن يلهم كل يوم",
-        "media_position": "end",
-        "autoplay": true,
-        "interval": 6,
-        "desktop_height": 640,
-        "heading_size": 56,
-        "background": "#F4EEE5",
-        "foreground": "#171717",
-        "accent": "#B08A55"
+        "image": "shopify://shop_images/ChatGPT_Image_Sep_27_2026_09_26_16_PM.png",
+        "overlay_opacity": 35,
+        "eyebrow": "TIMELESS JEWELRY",
+        "heading": "Timeless pieces, made for you.",
+        "text": "<p><br/>Elegant pieces designed to complement every moment, from everyday essentials to special occasions.<br/><br/></p>",
+        "button_label": "SHOP NOW",
+        "button_link": "shopify://collections/all",
+        "secondary_button_label": "",
+        "secondary_button_link": "",
+        "alignment": "left",
+        "text_width": 36
       }
     },
     "discovery_statement": {
@@ -289,7 +233,7 @@
     }
   },
   "order": [
-    "slideshow",
+    "hero_N4mypj",
     "discovery_statement",
     "discovery_tabs",
     "sports_statement",
