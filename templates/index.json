@@ -30,15 +30,17 @@
         "text_width": 38
       }
     },
-    "featured_collection_cxRRka": {
-      "type": "featured-collection",
-      "name": "t:general.featured_collection",
+    "rich_text_mq4yQj": {
+      "type": "rich-text",
+      "name": "t:general.rich_text",
       "settings": {
-        "eyebrow": "SHOP BY CATEGORY",
-        "heading": "Find Your Perfect Piece",
-        "collection": "necklaces",
-        "products_to_show": 4,
-        "columns": 4
+        "eyebrow": "",
+        "heading": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "alignment": "center",
+        "text_width": 28
       }
     },
     "custom_section_hM7yip": {
@@ -88,7 +90,18 @@
       "custom_css": [],
       "name": "t:general.collections_grid",
       "settings": {
-        "grid_gap": 24
+        "grid_gap": 12
+      }
+    },
+    "featured_collection_cxRRka": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
+      "settings": {
+        "eyebrow": "NEW ARRIVALS",
+        "heading": "Fresh Pieces, Same Timeless Vibe",
+        "collection": "necklaces",
+        "products_to_show": 4,
+        "columns": 4
       }
     },
     "rich_text_kWJD9z": {
@@ -107,9 +120,10 @@
   },
   "order": [
     "hero_N4mypj",
-    "featured_collection_cxRRka",
+    "rich_text_mq4yQj",
     "custom_section_hM7yip",
     "collections_pUPfUG",
+    "featured_collection_cxRRka",
     "rich_text_kWJD9z"
   ]
 }
