@@ -79,26 +79,12 @@
         "products_to_show": 4,
         "columns": 4
       }
-    },
-    "rich_text_kWJD9z": {
-      "type": "rich-text",
-      "name": "t:general.rich_text",
-      "settings": {
-        "eyebrow": "",
-        "heading": "One clear idea per section",
-        "text": "<p>Keep copy specific, concise, and grounded in customer research.</p>",
-        "button_label": "",
-        "button_link": "",
-        "alignment": "center",
-        "text_width": 44
-      }
     }
   },
   "order": [
     "hero_N4mypj",
     "custom_section_hM7yip",
     "collections_pUPfUG",
-    "featured_collection_cxRRka",
-    "rich_text_kWJD9z"
+    "featured_collection_cxRRka"
   ]
 }
