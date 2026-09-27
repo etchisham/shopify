@@ -30,22 +30,6 @@
         "text_width": 38
       }
     },
-    "rich_text_mq4yQj": {
-      "type": "rich-text",
-      "custom_css": [
-        ".rich-text {padding-block: 10px !important;}"
-      ],
-      "name": "t:general.rich_text",
-      "settings": {
-        "eyebrow": "",
-        "heading": "",
-        "text": "",
-        "button_label": "",
-        "button_link": "",
-        "alignment": "center",
-        "text_width": 28
-      }
-    },
     "custom_section_hM7yip": {
       "type": "custom-section",
       "blocks": {
@@ -112,7 +96,6 @@
   },
   "order": [
     "hero_N4mypj",
-    "rich_text_mq4yQj",
     "custom_section_hM7yip",
     "collections_pUPfUG",
     "featured_collection_cxRRka",
