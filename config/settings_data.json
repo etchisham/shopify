@@ -15,6 +15,7 @@
     "type_heading_font": "inter_n4",
     "max_page_width": "80rem",
     "min_page_margin": 32,
+    "card_image_radius": 10,
     "sections": {
       "cart-drawer": {
         "type": "cart-drawer",
@@ -34,5 +35,14 @@
         "settings": {}
       }
     }
+  },
+  "platform_customizations": {
+    "custom_css": [
+      ".home-slideshow .home-slide__heading{font-family:Georgia,\"Times New Roman\",serif!important;font-size:56px!important;line-height:1.08!important;font-weight:400!important;letter-spacing:-.5px!important;text-transform:none!important;color:#1B1917!important;margin:0!important}",
+      ".home-slideshow .home-slide__prefix{display:block!important;font-size:13px!important;font-weight:400!important;letter-spacing:3px!important;line-height:1.4!important;text-transform:uppercase!important;margin-bottom:18px!important}",
+      ".home-slideshow .home-slide__text{font-size:16px!important;line-height:1.65!important;font-weight:400!important;max-width:500px!important;margin-top:24px!important;color:#3D3935!important}",
+      ".home-slideshow .home-button{font-size:12px!important;font-weight:500!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:16px 30px!important;margin-top:28px!important}",
+      "@media(max-width:749px){.home-slideshow .home-slide__heading{font-size:38px!important}.home-slideshow .home-slide__prefix{font-size:11px!important;letter-spacing:2.2px!important;margin-bottom:12px!important}.home-slideshow .home-slide__text{font-size:15px!important}.home-slideshow .home-button{font-size:11px!important;padding:14px 24px!important}}"
+    ]
   }
 }

@@ -11,11 +11,29 @@
   "sections": {
     "slideshow": {
       "type": "home-slideshow",
-      "settings": {},
       "blocks": {
+        "sport": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/bohemian-woman-long-hair.jpg",
+            "alt_en": "Elegant HILYA jewelry styled for everyday wear",
+            "alt_ar": "إكسسوارات هِليَا الأنيقة لإطلالة يومية راقية",
+            "prefix_en": "TIMELESS JEWELRY",
+            "prefix_ar": "إكسسوارات خالدة",
+            "heading_en": "Timeless Pieces, Made for You.",
+            "heading_ar": "قطعٌ خالدة، صُمِّمت لك.",
+            "text_en": "Elegant pieces designed to complement every moment, from everyday essentials to special occasions.",
+            "text_ar": "قطع أنيقة صُمِّمت لتكمّل كل لحظة، من إطلالتك اليومية إلى مناسباتك الخاصة.",
+            "button_en": "SHOP NOW",
+            "button_ar": "تسوّق الآن",
+            "link": "shopify://collections/all"
+          }
+        },
         "ambition": {
           "type": "slide",
           "settings": {
+            "alt_en": "",
+            "alt_ar": "",
             "prefix_en": "Art for",
             "prefix_ar": "فن من أجل",
             "heading_en": "The ambitious",
@@ -27,23 +45,11 @@
             "link": "shopify://collections/all"
           }
         },
-        "sport": {
-          "type": "slide",
-          "settings": {
-            "prefix_en": "Art for",
-            "prefix_ar": "فن من أجل",
-            "heading_en": "Your game",
-            "heading_ar": "شغفك الرياضي",
-            "text_en": "Bring the spirit of sport into your space. Find the moment that moves you.",
-            "text_ar": "أضف روح الرياضة إلى مساحتك. اكتشف اللحظة التي تلهمك.",
-            "button_en": "Shop sports art",
-            "button_ar": "تسوّق لوحات الرياضة",
-            "link": "shopify://collections/sports"
-          }
-        },
         "space": {
           "type": "slide",
           "settings": {
+            "alt_en": "",
+            "alt_ar": "",
             "prefix_en": "Art for",
             "prefix_ar": "فن من أجل",
             "heading_en": "Your everyday",
@@ -57,18 +63,53 @@
         }
       },
       "block_order": [
-        "ambition",
         "sport",
+        "ambition",
         "space"
-      ]
+      ],
+      "custom_css": [
+        ".home-slideshow {--home-background: #f4eee5 !important; --home-foreground: #1b1917 !important; --home-accent: #b08a55 !important;}",
+        ".home-slide__content {padding-left: 8% !important; padding-right: 5% !important;}",
+        ".home-slide__prefix {color: #b08a55 !important;}",
+        ".home-button {background: #171614 !important; color: #fff !important; border: none !important;}"
+      ],
+      "settings": {
+        "heading_en": "Art for your everyday",
+        "heading_ar": "فن يلهم كل يوم",
+        "media_position": "end",
+        "autoplay": true,
+        "interval": 6,
+        "desktop_height": 640,
+        "heading_size": 56,
+        "background": "#F4EEE5",
+        "foreground": "#171717",
+        "accent": "#B08A55"
+      }
     },
     "discovery_statement": {
       "type": "home-statement",
-      "settings": {}
+      "settings": {
+        "kicker_en": "A daily reminder of what matters",
+        "kicker_ar": "إلهام يرافقك كل يوم",
+        "before_en": "Find your",
+        "before_ar": "اكتشف",
+        "highlight_en": "inspiration",
+        "highlight_ar": "إلهامك",
+        "after_en": "Make it yours.",
+        "after_ar": "واجعل مساحتك تعبّر عنك.",
+        "line_break": true,
+        "button_en": "Shop all art",
+        "button_ar": "تسوّق كل اللوحات",
+        "link": "",
+        "heading_size": 64,
+        "padding": 64,
+        "background": "#ffffff",
+        "foreground": "#111111",
+        "accent": "#ff9e18"
+      }
     },
     "discovery_tabs": {
       "type": "collection-tabs",
-      "settings": {},
       "blocks": {
         "bestsellers": {
           "type": "collection",
@@ -108,7 +149,17 @@
         "sports",
         "motivational",
         "new"
-      ]
+      ],
+      "settings": {
+        "heading_en": "Find your next piece",
+        "heading_ar": "اكتشف لوحتك القادمة",
+        "products_to_show": 12,
+        "columns": 4,
+        "tab_size": 40,
+        "padding": 56,
+        "background": "#ffffff",
+        "foreground": "#111111"
+      }
     },
     "sports_statement": {
       "type": "home-statement",
@@ -121,17 +172,19 @@
         "highlight_ar": "العظمة",
         "after_en": "Find your inspiration.",
         "after_ar": "واكتشف مصدر إلهامك.",
+        "line_break": true,
         "button_en": "Explore sports art",
         "button_ar": "اكتشف لوحات الرياضة",
-        "link": "shopify://collections/sports"
+        "link": "shopify://collections/sports",
+        "heading_size": 64,
+        "padding": 64,
+        "background": "#ffffff",
+        "foreground": "#111111",
+        "accent": "#ff9e18"
       }
     },
     "athlete_tabs": {
       "type": "collection-tabs",
-      "settings": {
-        "heading_en": "Explore athlete collections",
-        "heading_ar": "اكتشف مجموعات الرياضيين"
-      },
       "blocks": {
         "jordan": {
           "type": "collection",
@@ -171,11 +224,20 @@
         "woods",
         "ali",
         "gretzky"
-      ]
+      ],
+      "settings": {
+        "heading_en": "Explore athlete collections",
+        "heading_ar": "اكتشف مجموعات الرياضيين",
+        "products_to_show": 12,
+        "columns": 4,
+        "tab_size": 40,
+        "padding": 56,
+        "background": "#ffffff",
+        "foreground": "#111111"
+      }
     },
     "categories": {
       "type": "home-category-links",
-      "settings": {},
       "blocks": {
         "bestsellers": {
           "type": "link",
@@ -215,7 +277,15 @@
         "sports",
         "motivational",
         "new"
-      ]
+      ],
+      "settings": {
+        "heading_en": "Shop by inspiration",
+        "heading_ar": "تسوّق حسب إلهامك",
+        "heading_size": 80,
+        "padding": 48,
+        "background": "#f2f2f2",
+        "foreground": "#111111"
+      }
     }
   },
   "order": [
