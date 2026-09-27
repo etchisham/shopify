@@ -11,17 +11,6 @@
   "type": "header",
   "name": "t:general.header",
   "sections": {
-    "announcement": {
-      "type": "announcement-bar",
-      "settings": {
-        "text": "Buy one get one free",
-        "background_color": "#f6a429",
-        "text_color": "#000000",
-        "height": 40,
-        "font_size": 12,
-        "uppercase": true
-      }
-    },
     "header": {
       "type": "header",
       "settings": {
@@ -45,7 +34,6 @@
     }
   },
   "order": [
-    "announcement",
     "header"
   ]
 }

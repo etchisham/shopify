@@ -12,13 +12,13 @@
     "hero_N4mypj": {
       "type": "hero",
       "custom_css": [
-        ".hero__content,.hero__content h1,.hero__content .hero__text,.hero__content .eyebrow{color:#000!important}",
-        ".hero__content .button{background:#000!important;color:#fff!important;border-color:#000!important}"
+        ".hero__content,.hero__content h1,.hero__content .hero__text,.hero__content .eyebrow {color: #000 !important;}",
+        ".hero__content .button {background: #000 !important; color: #fff !important; border-color: #000 !important;}"
       ],
       "name": "t:general.hero",
       "settings": {
         "image": "shopify://shop_images/ChatGPT_Image_Sep_27_2026_09_26_16_PM.png",
-        "overlay_opacity": 35,
+        "overlay_opacity": 10,
         "eyebrow": "TIMELESS JEWELRY",
         "heading": "Timeless pieces, made for you.",
         "text": "<p><br/>Elegant pieces designed to complement every moment, from everyday essentials to special occasions.<br/><br/></p>",
