@@ -29,7 +29,7 @@
       style="--product-columns: {{ section.settings.columns }};"
     >
       {% for product in featured_collection.products limit: section.settings.products_to_show %}
-        <div class="featured-collection__product">
+        <div class="featured-collection__product{% if forloop.index > 4 %} featured-collection__product--mobile-hidden{% endif %}">
           {% render 'product-card',
             product: product,
             sizes: '(min-width: 990px) 20vw, 50vw'
@@ -75,6 +75,7 @@
 
 .featured-collection__eyebrow {
   margin: 0 0 10px;
+  color: #b89b62;
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
@@ -93,10 +94,8 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-
   color: inherit;
   text-decoration: none;
-
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
@@ -198,6 +197,10 @@
   .featured-collection__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px 14px;
+  }
+
+  .featured-collection__product--mobile-hidden {
+    display: none;
   }
 }
 
