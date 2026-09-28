@@ -83,6 +83,11 @@
   position: relative;
   display: grid;
 
+  width: 100%;
+  max-width: 1920px;
+
+  margin-inline: auto;
+
   min-height: 64svh;
 
   isolation: isolate;
@@ -139,8 +144,14 @@
 
   max-width: var(--hero-text-width);
 
+  /*
+    مهم:
+    نستخدم 100% بدل 100vw هنا.
+    كده مكان الـ content مرتبط بعرض الـ Hero نفسها،
+    وليس بعرض الـ viewport.
+  */
   margin-left:
-    max(24px, calc((100vw - 1400px) / 2));
+    max(24px, calc((100% - 1400px) / 2));
 
   margin-right: auto;
 
@@ -368,7 +379,7 @@
     margin-left:
       max(
         32px,
-        calc((100vw - 1500px) / 2)
+        calc((100% - 1500px) / 2)
       );
   }
 
@@ -408,6 +419,12 @@
 
   .hero {
     min-height: 62svh;
+
+    /*
+      على الموبايل نلغي الحد الأقصى
+      حتى يظل الـ Hero بعرض الشاشة.
+    */
+    max-width: 100%;
   }
 
   .hero__media img {
