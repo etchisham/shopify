@@ -70,6 +70,17 @@
         "grid_gap": 48
       }
     },
+    "featured_collection_CinWF3": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
+      "settings": {
+        "eyebrow": "BEST SELLERS",
+        "heading": "The Pieces Everyone Loves",
+        "collection": "best-sellers",
+        "products_to_show": 5,
+        "columns": 5
+      }
+    },
     "featured_collection_cxRRka": {
       "type": "featured-collection",
       "name": "t:general.featured_collection",
@@ -80,24 +91,13 @@
         "products_to_show": 5,
         "columns": 5
       }
-    },
-    "featured_collection_CinWF3": {
-      "type": "featured-collection",
-      "name": "t:general.featured_collection",
-      "settings": {
-        "eyebrow": "BEST SELLERS",
-        "heading": "Most Loved, Always Timeless",
-        "collection": "best-sellers",
-        "products_to_show": 5,
-        "columns": 5
-      }
     }
   },
   "order": [
     "hero_N4mypj",
     "custom_section_hM7yip",
     "collections_pUPfUG",
-    "featured_collection_cxRRka",
-    "featured_collection_CinWF3"
+    "featured_collection_CinWF3",
+    "featured_collection_cxRRka"
   ]
 }
