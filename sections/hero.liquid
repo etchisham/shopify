@@ -9,7 +9,7 @@
 %}
 
 <section
-class="hero hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
+  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
   style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
 >
   {% if section.settings.image != blank %}
