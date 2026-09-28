@@ -9,22 +9,15 @@
 %}
 
 <section
-  class="hero hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
-  style="
-    --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    --hero-text-width: {{ section.settings.text_width }}rem;
-  "
+  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
+  style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
 >
-
   {% if section.settings.image != blank %}
     <div class="hero__media">
       {{ section.settings.image
-        | image_url: width: 3840
+        | image_url: width: 2400
         | image_tag:
-          width: section.settings.image.width,
-          widths: '640, 960, 1280, 1600, 2000, 2400, 3200, 3840',
-          height: section.settings.image.height,
-          alt: section.settings.image.alt,
+          widths: '640, 960, 1280, 1600, 2000, 2400',
           sizes: '100vw',
           loading: image_loading,
           fetchpriority: image_fetchpriority
@@ -37,13 +30,12 @@
   <div class="hero__content">
 
     {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow">
-        {{ section.settings.eyebrow | escape }}
-      </p>
+      <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
 
     <h1 class="hero__heading">
-      {{ section.settings.heading | escape }}
+      <span>Elegance</span>
+      <span>in Every Detail</span>
     </h1>
 
     {% if section.settings.text != blank %}
@@ -60,14 +52,8 @@
             class="hero__button"
             href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
           >
-            <span>
-              {{ section.settings.button_label | escape }}
-            </span>
-
-            <span
-              class="hero__button-arrow"
-              aria-hidden="true"
-            ></span>
+            <span>{{ section.settings.button_label | escape }}</span>
+            <span class="hero__button-arrow" aria-hidden="true"></span>
           </a>
         {% endif %}
 
@@ -76,14 +62,8 @@
             class="hero__button hero__button--secondary"
             href="{{ section.settings.secondary_button_link | default: routes.root_url }}"
           >
-            <span>
-              {{ section.settings.secondary_button_label | escape }}
-            </span>
-
-            <span
-              class="hero__button-arrow"
-              aria-hidden="true"
-            ></span>
+            <span>{{ section.settings.secondary_button_label | escape }}</span>
+            <span class="hero__button-arrow" aria-hidden="true"></span>
           </a>
         {% endif %}
 
@@ -91,98 +71,90 @@
     {% endif %}
 
   </div>
-
 </section>
 
 {% stylesheet %}
 
-/* =====================================================
+/* =========================
    HERO
-   ===================================================== */
+========================= */
 
 .hero {
   position: relative;
   display: grid;
-  width: 100%;
-  max-width: 100vw;
-  /* تحديد نسبة أبعاد ثابتة للصورة (مثلاً 16 لـ 9)، ممكن تعديلها حسب رغبتك مثل 21/9 أو 16/10 */
-  aspect-ratio: 16 / 9;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow: hidden;
+
+  min-height: 64svh;
+
   isolation: isolate;
+  overflow: hidden;
+
   background: var(--color-surface);
+
   place-items: center start;
 }
 
 
-/* =====================================================
+/* =========================
    MEDIA
-   ===================================================== */
+========================= */
 
-.hero__media {
+.hero__media,
+.hero__overlay {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   z-index: -2;
-  overflow: hidden;
+  inset: 0;
 }
 
 .hero__media img {
   display: block;
+
   width: 100%;
   height: 100%;
-  max-width: none;
+
   object-fit: cover;
-  object-position: center center;
+  object-position: center;
 }
 
 
-/* =====================================================
+/* =========================
    OVERLAY
-   ===================================================== */
+========================= */
 
 .hero__overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   z-index: -1;
+
   background: rgb(0 0 0 / var(--hero-overlay));
 }
 
 
-/* =====================================================
+/* =========================
    CONTENT
-   ===================================================== */
+========================= */
 
 .hero__content {
-  position: relative;
   width: min(
     var(--hero-text-width),
     calc(100% - 48px)
   );
+
   max-width: var(--hero-text-width);
-  margin-left: max(
-    24px,
-    calc((100vw - 1400px) / 2)
-  );
+
+  margin-left:
+    max(24px, calc((100vw - 1400px) / 2));
+
   margin-right: auto;
+
   padding-block: 48px;
-  box-sizing: border-box;
+
   color: #fff;
+
   text-align: left;
 }
 
 
-/* =====================================================
-   HEADING
-   ===================================================== */
-
 .hero__heading {
   margin-block: var(--space-3);
+
   color: #fff;
 }
 
@@ -190,140 +162,150 @@
   display: block;
 }
 
-
-/* =====================================================
-   EYEBROW
-   ===================================================== */
-
 .hero__content .eyebrow {
   color: #fff;
 }
 
-
-/* =====================================================
-   DESCRIPTION
-   ===================================================== */
-
 .hero__text {
   max-width: 34rem;
+
+  font-size:
+    clamp(1rem, 1.5vw, 1.15rem);
+
   color: #fff;
-  font-size: clamp(
-    1rem,
-    1.5vw,
-    1.15rem
-  );
 }
 
 
-/* =====================================================
-   ACTIONS
-   ===================================================== */
+/* =========================
+   BUTTONS
+========================= */
 
 .hero__actions {
   display: flex;
+
   flex-wrap: wrap;
+
   justify-content: flex-start;
+
   gap: 12px;
+
   margin-top: 26px;
 }
 
-
-/* =====================================================
-   BUTTON
-   ===================================================== */
-
 .hero__button {
   display: inline-flex;
+
   align-items: center;
+
   gap: 15px;
+
   padding: 13px 19px;
+
   background: #fff;
   color: #000;
+
   border: 1px solid #fff;
+
   text-decoration: none;
+
   font-size: 11px;
   line-height: 1;
   font-weight: 500;
+
   letter-spacing: .12em;
   text-transform: uppercase;
+
   transition:
     background .3s ease,
     color .3s ease,
     border-color .3s ease;
 }
 
-
-/* =====================================================
-   BUTTON ARROW
-   ===================================================== */
-
 .hero__button-arrow {
   position: relative;
+
   display: block;
+
   width: 13px;
   height: 10px;
+
   flex-shrink: 0;
 }
 
 .hero__button-arrow::before {
   content: "";
+
   position: absolute;
+
   left: 0;
   top: 5px;
+
   width: 8px;
   height: 1px;
+
   background: currentColor;
 }
 
 .hero__button-arrow::after {
   content: "";
+
   position: absolute;
+
   right: 1px;
   top: 2px;
+
   width: 6px;
   height: 6px;
+
   border-top: 1px solid currentColor;
   border-right: 1px solid currentColor;
+
   transform: rotate(45deg);
+
   transition: transform .3s ease;
 }
 
-
-/* =====================================================
-   BUTTON HOVER
-   ===================================================== */
-
 .hero__button:hover {
   background: transparent;
+
   color: #fff;
+
   border-color: #fff;
 }
 
-.hero__button:hover .hero__button-arrow::after {
-  transform: translateX(4px) rotate(45deg);
+.hero__button:hover
+.hero__button-arrow::after {
+  transform:
+    translateX(4px)
+    rotate(45deg);
 }
 
 
-/* =====================================================
+/* =========================
    SECONDARY BUTTON
-   ===================================================== */
+========================= */
 
 .hero__button--secondary {
   background: transparent;
+
   color: #fff;
-  border-color: rgb(255 255 255 / 70%);
+
+  border-color:
+    rgb(255 255 255 / 70%);
 }
 
 .hero__button--secondary:hover {
   background: #fff;
+
   color: #000;
+
   border-color: #fff;
 }
 
 
-/* =====================================================
+/* =========================
    CENTER
-   ===================================================== */
+========================= */
 
 .hero--center {
   place-items: center;
@@ -343,9 +325,9 @@
 }
 
 
-/* =====================================================
+/* =========================
    LEFT
-   ===================================================== */
+========================= */
 
 .hero--left {
   place-items: center start;
@@ -360,9 +342,9 @@
 }
 
 
-/* =====================================================
+/* =========================
    NO IMAGE
-   ===================================================== */
+========================= */
 
 .hero--no-image .hero__content,
 .hero--no-image .hero__heading,
@@ -372,45 +354,60 @@
 }
 
 
-/* =====================================================
+/* =========================
    LARGE DESKTOP
-   ===================================================== */
+========================= */
 
 @media (min-width: 1500px) {
+
+  .hero {
+    min-height: 66svh;
+  }
+
   .hero__content {
-    margin-left: max(
-      32px,
-      calc((100vw - 1500px) / 2)
-    );
+    margin-left:
+      max(
+        32px,
+        calc((100vw - 1500px) / 2)
+      );
+  }
+
+  .hero__media img {
+    object-position: center;
   }
 }
 
 
-/* =====================================================
+/* =========================
    TABLET
-   ===================================================== */
+========================= */
 
 @media (min-width: 750px) and (max-width: 1100px) {
+
+  .hero {
+    min-height: 62svh;
+  }
+
   .hero__content {
-    width: min(
-      42rem,
-      calc(100% - 56px)
-    );
+    width:
+      min(
+        42rem,
+        calc(100% - 56px)
+      );
+
     margin-left: 28px;
   }
 }
 
 
-/* =====================================================
+/* =========================
    MOBILE
-   ===================================================== */
+========================= */
 
 @media (max-width: 749px) {
+
   .hero {
-    width: 100%;
-    max-width: none;
-    aspect-ratio: 4 / 5; /* نسبة أبعاد أطول شوية للموبايل تناسب الشاشات الرأسية */
-    margin: 0;
+    min-height: 62svh;
   }
 
   .hero__media img {
@@ -419,8 +416,11 @@
 
   .hero__content {
     width: calc(100% - 40px);
+
     max-width: none;
+
     margin-left: 20px;
+
     padding-block: 40px;
   }
 
@@ -430,6 +430,7 @@
 
   .hero__text {
     max-width: 21rem;
+
     font-size: .95rem;
   }
 
@@ -439,9 +440,12 @@
 
   .hero__button {
     padding: 12px 17px;
+
     gap: 13px;
+
     font-size: 10px;
   }
+
 }
 
 {% endstylesheet %}
@@ -449,11 +453,9 @@
 {% schema %}
 {
   "name": "t:general.hero",
-
   "disabled_on": {
     "groups": ["header", "footer"]
   },
-
   "settings": [
     {
       "type": "image_picker",
@@ -536,7 +538,6 @@
       "default": 46
     }
   ],
-
   "presets": [
     {
       "name": "t:general.hero"
