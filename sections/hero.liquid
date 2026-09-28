@@ -1,6 +1,7 @@
 {% liquid
   assign image_loading = 'lazy'
   assign image_fetchpriority = 'auto'
+
   if section.index == 1
     assign image_loading = 'eager'
     assign image_fetchpriority = 'high'
@@ -27,37 +28,48 @@
   <div class="hero__overlay" aria-hidden="true"></div>
 
   <div class="hero__content">
+
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
 
-    {% if section.settings.heading != blank %}
-      <h1>{{ section.settings.heading | escape }}</h1>
-    {% endif %}
+    <h1 class="hero__heading">
+      <span>Illusions</span>
+      <span>in every detail</span>
+    </h1>
 
     {% if section.settings.text != blank %}
-      <div class="hero__text rte">{{ section.settings.text }}</div>
+      <div class="hero__text rte">
+        {{ section.settings.text }}
+      </div>
     {% endif %}
 
     {% if section.settings.button_label != blank or section.settings.secondary_button_label != blank %}
       <div class="hero__actions">
 
         {% if section.settings.button_label != blank %}
-          <a class="hero__button" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+          <a
+            class="hero__button"
+            href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+          >
             <span>{{ section.settings.button_label | escape }}</span>
-            <span class="hero__button-arrow" aria-hidden="true">→</span>
+            <span class="hero__button-arrow" aria-hidden="true"></span>
           </a>
         {% endif %}
 
         {% if section.settings.secondary_button_label != blank %}
-          <a class="hero__button hero__button--secondary" href="{{ section.settings.secondary_button_link | default: routes.root_url }}">
+          <a
+            class="hero__button hero__button--secondary"
+            href="{{ section.settings.secondary_button_link | default: routes.root_url }}"
+          >
             <span>{{ section.settings.secondary_button_label | escape }}</span>
-            <span class="hero__button-arrow" aria-hidden="true">→</span>
+            <span class="hero__button-arrow" aria-hidden="true"></span>
           </a>
         {% endif %}
 
       </div>
     {% endif %}
+
   </div>
 </section>
 
@@ -66,7 +78,7 @@
 .hero {
   position: relative;
   display: grid;
-  min-height: clamp(32rem, 74svh, 52rem);
+  min-height: clamp(38rem, 78svh, 54rem);
   isolation: isolate;
   overflow: hidden;
   background: var(--color-surface);
@@ -84,6 +96,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .hero__overlay {
@@ -91,26 +104,25 @@
   background: rgb(0 0 0 / var(--hero-overlay));
 }
 
-/* HERO CONTENT */
+/* CONTENT */
 
 .hero__content {
-  width: min(var(--hero-text-width), calc(100% - var(--page-margin) * 2));
+  width: min(var(--hero-text-width), calc(100% - 48px));
   max-width: var(--hero-text-width);
-  color: #fff;
-  padding-block: var(--space-8);
-  text-align: left;
-
-  margin-left: max(
-    var(--page-margin),
-    calc((100vw - var(--page-width)) / 2)
-  );
-
+  margin-left: max(24px, calc((100vw - 1400px) / 2));
   margin-right: auto;
+  padding-block: 48px;
+  color: #fff;
+  text-align: left;
 }
 
-.hero__content h1 {
+.hero__heading {
   margin-block: var(--space-3);
   color: #fff;
+}
+
+.hero__heading span {
+  display: block;
 }
 
 .hero__content .eyebrow {
@@ -119,26 +131,25 @@
 
 .hero__text {
   max-width: 34rem;
-  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
   color: #fff;
 }
 
-/* BUTTON */
+/* BUTTONS */
 
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: var(--space-3);
-  margin-block-start: var(--space-5);
+  gap: 12px;
+  margin-top: 26px;
 }
 
 .hero__button {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
-
-  padding: 13px 20px;
+  gap: 15px;
+  padding: 13px 19px;
 
   background: #fff;
   color: #000;
@@ -146,24 +157,47 @@
   border: 1px solid #fff;
   text-decoration: none;
 
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: .12em;
   text-transform: uppercase;
 
   transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+    background .3s ease,
+    color .3s ease,
+    border-color .3s ease;
 }
 
 .hero__button-arrow {
-  display: inline-block;
-  font-size: 17px;
-  line-height: 1;
-  font-weight: 300;
-  transition: transform 0.3s ease;
+  position: relative;
+  display: block;
+  width: 25px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.hero__button-arrow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 20px;
+  height: 1px;
+  background: currentColor;
+}
+
+.hero__button-arrow::after {
+  content: "";
+  position: absolute;
+  right: 1px;
+  top: 2px;
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform .3s ease;
 }
 
 .hero__button:hover {
@@ -172,8 +206,8 @@
   border-color: #fff;
 }
 
-.hero__button:hover .hero__button-arrow {
-  transform: translateX(5px);
+.hero__button:hover .hero__button-arrow::after {
+  transform: translateX(4px) rotate(45deg);
 }
 
 /* SECONDARY BUTTON */
@@ -190,15 +224,15 @@
   border-color: #fff;
 }
 
-/* CENTER ALIGNMENT */
+/* CENTER */
 
 .hero--center {
   place-items: center;
 }
 
 .hero--center .hero__content {
+  margin-inline: auto;
   text-align: center;
-  transform: translateX(-7%);
 }
 
 .hero--center .hero__text {
@@ -209,16 +243,14 @@
   justify-content: center;
 }
 
-/* LEFT ALIGNMENT */
+/* LEFT */
 
 .hero--left {
   place-items: center start;
 }
 
 .hero--left .hero__content {
-  margin-inline: max(var(--page-margin), calc((100% - var(--page-width)) / 2));
-  text-align: start;
-  transform: none;
+  text-align: left;
 }
 
 .hero--left .hero__actions {
@@ -227,14 +259,45 @@
 
 /* NO IMAGE */
 
-.hero--no-image .hero__content {
-  color: var(--color-foreground);
-}
-
-.hero--no-image .hero__content h1,
+.hero--no-image .hero__content,
+.hero--no-image .hero__heading,
 .hero--no-image .hero__content .eyebrow,
 .hero--no-image .hero__text {
   color: var(--color-foreground);
+}
+
+/* LARGE DESKTOP */
+
+@media (min-width: 1500px) {
+
+  .hero {
+    min-height: 80svh;
+  }
+
+  .hero__content {
+    margin-left: max(
+      32px,
+      calc((100vw - 1500px) / 2)
+    );
+  }
+
+  .hero__media img {
+    object-position: center;
+  }
+}
+
+/* MEDIUM */
+
+@media (min-width: 750px) and (max-width: 1100px) {
+
+  .hero {
+    min-height: 70svh;
+  }
+
+  .hero__content {
+    width: min(42rem, calc(100% - 56px));
+    margin-left: 28px;
+  }
 }
 
 /* MOBILE */
@@ -242,26 +305,27 @@
 @media (max-width: 749px) {
 
   .hero {
-    min-height: 78svh;
+    min-height: 76svh;
+  }
+
+  .hero__media img {
+    object-position: 58% center;
   }
 
   .hero__content {
     width: calc(100% - 40px);
-    transform: translateX(0);
+    max-width: none;
+    margin-left: 20px;
     padding-block: 40px;
   }
 
-  .hero--center .hero__content {
-    transform: none;
-  }
-
-  .hero__content h1 {
-    max-width: 22rem;
+  .hero__heading {
+    max-width: 21rem;
   }
 
   .hero__text {
-    max-width: 22rem;
-    font-size: 0.95rem;
+    max-width: 21rem;
+    font-size: .95rem;
   }
 
   .hero__actions {
@@ -274,9 +338,6 @@
     font-size: 10px;
   }
 
-  .hero__button-arrow {
-    font-size: 15px;
-  }
 }
 
 {% endstylesheet %}
