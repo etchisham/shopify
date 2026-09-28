@@ -1,3 +1,4 @@
+```liquid
 {% liquid
   assign image_loading = 'lazy'
   assign image_fetchpriority = 'auto'
@@ -9,7 +10,7 @@
 %}
 
 <section
-  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
+  class="hero hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
   style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
 >
   {% if section.settings.image != blank %}
@@ -81,9 +82,17 @@
 
 .hero {
   position: relative;
+
   display: grid;
 
+  width: 100%;
+  max-width: 100%;
+
   min-height: 64svh;
+
+  margin: 0;
+
+  box-sizing: border-box;
 
   isolation: isolate;
   overflow: hidden;
@@ -93,15 +102,16 @@
   place-items: center start;
 }
 
-
 /* =========================
-   MEDIA
+   IMAGE
 ========================= */
 
 .hero__media,
 .hero__overlay {
   position: absolute;
+
   z-index: -2;
+
   inset: 0;
 }
 
@@ -115,7 +125,6 @@
   object-position: center;
 }
 
-
 /* =========================
    OVERLAY
 ========================= */
@@ -125,7 +134,6 @@
 
   background: rgb(0 0 0 / var(--hero-overlay));
 }
-
 
 /* =========================
    CONTENT
@@ -146,11 +154,16 @@
 
   padding-block: 48px;
 
+  box-sizing: border-box;
+
   color: #fff;
 
   text-align: left;
 }
 
+/* =========================
+   HEADING
+========================= */
 
 .hero__heading {
   margin-block: var(--space-3);
@@ -161,6 +174,10 @@
 .hero__heading span {
   display: block;
 }
+
+/* =========================
+   TEXT
+========================= */
 
 .hero__content .eyebrow {
   color: #fff;
@@ -174,7 +191,6 @@
 
   color: #fff;
 }
-
 
 /* =========================
    BUTTONS
@@ -213,6 +229,7 @@
   font-weight: 500;
 
   letter-spacing: .12em;
+
   text-transform: uppercase;
 
   transition:
@@ -280,11 +297,6 @@
     rotate(45deg);
 }
 
-
-/* =========================
-   SECONDARY BUTTON
-========================= */
-
 .hero__button--secondary {
   background: transparent;
 
@@ -302,9 +314,8 @@
   border-color: #fff;
 }
 
-
 /* =========================
-   CENTER
+   ALIGNMENT
 ========================= */
 
 .hero--center {
@@ -313,6 +324,7 @@
 
 .hero--center .hero__content {
   margin-inline: auto;
+
   text-align: center;
 }
 
@@ -323,11 +335,6 @@
 .hero--center .hero__actions {
   justify-content: center;
 }
-
-
-/* =========================
-   LEFT
-========================= */
 
 .hero--left {
   place-items: center start;
@@ -341,7 +348,6 @@
   justify-content: flex-start;
 }
 
-
 /* =========================
    NO IMAGE
 ========================= */
@@ -352,7 +358,6 @@
 .hero--no-image .hero__text {
   color: var(--color-foreground);
 }
-
 
 /* =========================
    LARGE DESKTOP
@@ -375,8 +380,8 @@
   .hero__media img {
     object-position: center;
   }
-}
 
+}
 
 /* =========================
    TABLET
@@ -397,8 +402,8 @@
 
     margin-left: 28px;
   }
-}
 
+}
 
 /* =========================
    MOBILE
