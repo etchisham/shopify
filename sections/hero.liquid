@@ -13,125 +13,359 @@
 >
   {% if section.settings.image != blank %}
     <div class="hero__media">
-      {{ section.settings.image | image_url: width: 2400 | image_tag: widths: '640, 960, 1280, 1600, 2000, 2400', sizes: '100vw', loading: image_loading, fetchpriority: image_fetchpriority }}
+      {{ section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          sizes: '100vw',
+          loading: image_loading,
+          fetchpriority: image_fetchpriority
+      }}
     </div>
   {% endif %}
+
   <div class="hero__overlay" aria-hidden="true"></div>
 
   <div class="hero__content">
-    {% if section.settings.eyebrow != blank %}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{% endif %}
-    {% if section.settings.heading != blank %}<h1>{{ section.settings.heading | escape }}</h1>{% endif %}
-    {% if section.settings.text != blank %}<div class="hero__text rte">{{ section.settings.text }}</div>{% endif %}
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+
+    {% if section.settings.heading != blank %}
+      <h1>{{ section.settings.heading | escape }}</h1>
+    {% endif %}
+
+    {% if section.settings.text != blank %}
+      <div class="hero__text rte">{{ section.settings.text }}</div>
+    {% endif %}
+
     {% if section.settings.button_label != blank or section.settings.secondary_button_label != blank %}
       <div class="hero__actions">
+
         {% if section.settings.button_label != blank %}
-          <a class="button" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label | escape }}</a>
+          <a class="hero__button" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+            <span>{{ section.settings.button_label | escape }}</span>
+            <span class="hero__button-arrow" aria-hidden="true">→</span>
+          </a>
         {% endif %}
+
         {% if section.settings.secondary_button_label != blank %}
-          <a class="button button--secondary" href="{{ section.settings.secondary_button_link | default: routes.root_url }}">{{ section.settings.secondary_button_label | escape }}</a>
+          <a class="hero__button hero__button--secondary" href="{{ section.settings.secondary_button_link | default: routes.root_url }}">
+            <span>{{ section.settings.secondary_button_label | escape }}</span>
+            <span class="hero__button-arrow" aria-hidden="true">→</span>
+          </a>
         {% endif %}
+
       </div>
     {% endif %}
   </div>
 </section>
 
 {% stylesheet %}
+
+.hero {
+  position: relative;
+  display: grid;
+  min-height: clamp(32rem, 74svh, 52rem);
+  isolation: isolate;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.hero__media,
+.hero__overlay {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero__overlay {
+  z-index: -1;
+  background: rgb(0 0 0 / var(--hero-overlay));
+}
+
+/* HERO CONTENT */
+
+.hero__content {
+  width: min(var(--hero-text-width), calc(100% - var(--page-margin) * 2));
+  color: #fff;
+  padding-block: var(--space-8);
+  text-align: left;
+  transform: translateX(-7%);
+}
+
+.hero__content h1 {
+  margin-block: var(--space-3);
+  color: #fff;
+}
+
+.hero__content .eyebrow {
+  color: #fff;
+}
+
+.hero__text {
+  max-width: 34rem;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: #fff;
+}
+
+/* BUTTON */
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  margin-block-start: var(--space-5);
+}
+
+.hero__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 13px 20px;
+
+  background: #fff;
+  color: #000;
+
+  border: 1px solid #fff;
+  text-decoration: none;
+
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.hero__button-arrow {
+  display: inline-block;
+  font-size: 17px;
+  line-height: 1;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
+
+.hero__button:hover {
+  background: transparent;
+  color: #fff;
+  border-color: #fff;
+}
+
+.hero__button:hover .hero__button-arrow {
+  transform: translateX(5px);
+}
+
+/* SECONDARY BUTTON */
+
+.hero__button--secondary {
+  background: transparent;
+  color: #fff;
+  border-color: rgb(255 255 255 / 70%);
+}
+
+.hero__button--secondary:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+/* CENTER ALIGNMENT */
+
+.hero--center {
+  place-items: center;
+}
+
+.hero--center .hero__content {
+  text-align: center;
+  transform: translateX(-7%);
+}
+
+.hero--center .hero__text {
+  margin-inline: auto;
+}
+
+.hero--center .hero__actions {
+  justify-content: center;
+}
+
+/* LEFT ALIGNMENT */
+
+.hero--left {
+  place-items: center start;
+}
+
+.hero--left .hero__content {
+  margin-inline: max(var(--page-margin), calc((100% - var(--page-width)) / 2));
+  text-align: start;
+  transform: none;
+}
+
+.hero--left .hero__actions {
+  justify-content: flex-start;
+}
+
+/* NO IMAGE */
+
+.hero--no-image .hero__content {
+  color: var(--color-foreground);
+}
+
+.hero--no-image .hero__content h1,
+.hero--no-image .hero__content .eyebrow,
+.hero--no-image .hero__text {
+  color: var(--color-foreground);
+}
+
+/* MOBILE */
+
+@media (max-width: 749px) {
+
   .hero {
-    position: relative;
-    display: grid;
-    min-height: clamp(32rem, 74svh, 52rem);
-    isolation: isolate;
-    place-items: center;
-    overflow: hidden;
-    background: var(--color-surface);
-  }
-
-  .hero__media,
-  .hero__overlay {
-    position: absolute;
-    z-index: -2;
-    inset: 0;
-  }
-
-  .hero__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .hero__overlay {
-    z-index: -1;
-    background: rgb(0 0 0 / var(--hero-overlay));
+    min-height: 78svh;
   }
 
   .hero__content {
-    width: min(var(--hero-text-width), calc(100% - var(--page-margin) * 2));
-    color: #fff;
-    padding-block: var(--space-8);
-    text-align: center;
+    width: calc(100% - 40px);
+    transform: translateX(0);
+    padding-block: 40px;
+  }
+
+  .hero--center .hero__content {
+    transform: none;
   }
 
   .hero__content h1 {
-    margin-block: var(--space-3);
+    max-width: 22rem;
   }
 
   .hero__text {
-    font-size: clamp(1rem, 2vw, 1.2rem);
+    max-width: 22rem;
+    font-size: 0.95rem;
   }
 
   .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-3);
-    margin-block-start: var(--space-5);
+    margin-top: 24px;
   }
 
-  .hero .button--secondary {
-    border-color: rgb(255 255 255 / 65%);
-    color: #fff;
+  .hero__button {
+    padding: 12px 17px;
+    gap: 13px;
+    font-size: 10px;
   }
 
-  .hero--no-image .hero__content {
-    color: var(--color-foreground);
+  .hero__button-arrow {
+    font-size: 15px;
   }
+}
 
-  .hero--no-image .button--secondary {
-    border-color: var(--color-border);
-    color: var(--color-foreground);
-  }
-
-  .hero--left {
-    place-items: center start;
-  }
-
-  .hero--left .hero__content {
-    margin-inline: max(var(--page-margin), calc((100% - var(--page-width)) / 2));
-    text-align: start;
-  }
-
-  .hero--left .hero__actions {
-    justify-content: flex-start;
-  }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.hero",
-  "disabled_on": { "groups": ["header", "footer"] },
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "t:labels.image" },
-    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "t:labels.overlay_opacity", "default": 35 },
-    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow", "default": "Made for real life" },
-    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Products worth making room for" },
-    { "type": "richtext", "id": "text", "label": "t:labels.text", "default": "<p>Clear value, thoughtful details, and an easy path from discovery to checkout.</p>" },
-    { "type": "text", "id": "button_label", "label": "t:labels.button_label", "default": "Shop products" },
-    { "type": "url", "id": "button_link", "label": "t:labels.button_link" },
-    { "type": "text", "id": "secondary_button_label", "label": "t:labels.secondary_button_label" },
-    { "type": "url", "id": "secondary_button_link", "label": "t:labels.secondary_button_link" },
-    { "type": "select", "id": "alignment", "label": "t:labels.alignment", "options": [{ "value": "left", "label": "t:options.alignment.left" }, { "value": "center", "label": "t:options.alignment.center" }], "default": "center" },
-    { "type": "range", "id": "text_width", "min": 28, "max": 60, "step": 2, "unit": "rem", "label": "t:labels.text_width", "default": 46 }
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "t:labels.overlay_opacity",
+      "default": 35
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:labels.eyebrow",
+      "default": "Made for real life"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Products worth making room for"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "<p>Clear value, thoughtful details, and an easy path from discovery to checkout.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:labels.button_label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:labels.button_link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "t:labels.secondary_button_label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "t:labels.secondary_button_link"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:labels.alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.alignment.center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "text_width",
+      "min": 28,
+      "max": 60,
+      "step": 2,
+      "unit": "rem",
+      "label": "t:labels.text_width",
+      "default": 46
+    }
   ],
-  "presets": [{ "name": "t:general.hero" }]
+  "presets": [
+    {
+      "name": "t:general.hero"
+    }
+  ]
 }
 {% endschema %}
