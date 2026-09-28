@@ -59,7 +59,7 @@
   width: 100vw;
   max-width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: 55px max(24px, calc((100vw - 1400px) / 2)) 0;
+  padding: 25px max(24px, calc((100vw - 1400px) / 2)) 0;
   box-sizing: border-box;
 }
 
@@ -84,7 +84,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: 1.9 / 1;
+  aspect-ratio: 2.15 / 1;
   object-fit: cover;
 }
 
@@ -98,6 +98,8 @@
   padding: 20px 0;
 }
 
+/* EYEBROW */
+
 .story-section__eyebrow {
   margin: 0 0 20px;
   color: #C8B28A;
@@ -108,15 +110,17 @@
   text-transform: uppercase;
 }
 
+/* HEADING */
+
 .story-section__heading {
   display: flex;
   flex-direction: column;
-
   margin: 0 0 28px;
 
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   font-size: clamp(42px, 4.3vw, 64px);
   font-weight: 400;
+  font-style: normal;
   line-height: .92;
   letter-spacing: -.025em;
 }
@@ -124,6 +128,8 @@
 .story-section__heading span {
   display: block;
 }
+
+/* TEXT */
 
 .story-section__text {
   max-width: 380px;
@@ -144,13 +150,17 @@
   font-weight: 600;
 }
 
+/* LINK */
+
 .story-section__link {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
   gap: 12px;
+
   color: #111111;
   text-decoration: none;
+
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
@@ -182,12 +192,17 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .story-section {
-    padding: 45px 28px 0;
+    padding: 25px 28px 0;
   }
 
   .story-section__inner {
     gap: 45px;
     grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+  }
+
+  .story-section__media img,
+  .story-section__placeholder {
+    aspect-ratio: 2.05 / 1;
   }
 
   .story-section__heading {
@@ -207,13 +222,13 @@
     width: 100%;
     max-width: none;
     margin-left: 0;
-    padding: 45px 5px 0;
+    padding: 25px 5px 0;
   }
 
   .story-section__inner {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
   }
 
   /* RECTANGULAR IMAGE */
@@ -226,7 +241,7 @@
   .story-section__placeholder {
     width: 100%;
     height: auto;
-    aspect-ratio: 1.9 / 1;
+    aspect-ratio: 2.05 / 1;
     object-fit: cover;
   }
 
@@ -263,6 +278,18 @@
 
   .story-section__arrow {
     font-size: 15px;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .story-section__media img {
+    transition: none;
+  }
+
+  .story-section__link:hover .story-section__arrow {
+    transform: none;
   }
 }
 
