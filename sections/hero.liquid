@@ -9,10 +9,9 @@
 %}
 
 <section
-  class="hero hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
+  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
   style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
 >
-
   {% if section.settings.image != blank %}
     <div class="hero__media">
       {{ section.settings.image
@@ -31,9 +30,7 @@
   <div class="hero__content">
 
     {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow">
-        {{ section.settings.eyebrow | escape }}
-      </p>
+      <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
 
     <h1 class="hero__heading">
@@ -74,9 +71,7 @@
     {% endif %}
 
   </div>
-
 </section>
-
 
 {% stylesheet %}
 
@@ -86,15 +81,9 @@
 
 .hero {
   position: relative;
-
-  width: calc(100vw - 32px);
-  max-width: 1432px;
+  display: grid;
 
   min-height: 64svh;
-
-  margin: 0 auto;
-
-  display: grid;
 
   isolation: isolate;
   overflow: hidden;
@@ -112,9 +101,7 @@
 .hero__media,
 .hero__overlay {
   position: absolute;
-
   z-index: -2;
-
   inset: 0;
 }
 
@@ -136,8 +123,7 @@
 .hero__overlay {
   z-index: -1;
 
-  background:
-    rgb(0 0 0 / var(--hero-overlay));
+  background: rgb(0 0 0 / var(--hero-overlay));
 }
 
 
@@ -154,7 +140,7 @@
   max-width: var(--hero-text-width);
 
   margin-left:
-    max(24px, calc((100% - 1400px) / 2));
+    max(24px, calc((100vw - 1400px) / 2));
 
   margin-right: auto;
 
@@ -176,11 +162,9 @@
   display: block;
 }
 
-
 .hero__content .eyebrow {
   color: #fff;
 }
-
 
 .hero__text {
   max-width: 34rem;
@@ -208,7 +192,6 @@
   margin-top: 26px;
 }
 
-
 .hero__button {
   display: inline-flex;
 
@@ -219,7 +202,6 @@
   padding: 13px 19px;
 
   background: #fff;
-
   color: #000;
 
   border: 1px solid #fff;
@@ -227,13 +209,10 @@
   text-decoration: none;
 
   font-size: 11px;
-
   line-height: 1;
-
   font-weight: 500;
 
   letter-spacing: .12em;
-
   text-transform: uppercase;
 
   transition:
@@ -242,19 +221,16 @@
     border-color .3s ease;
 }
 
-
 .hero__button-arrow {
   position: relative;
 
   display: block;
 
   width: 13px;
-
   height: 10px;
 
   flex-shrink: 0;
 }
-
 
 .hero__button-arrow::before {
   content: "";
@@ -269,7 +245,6 @@
 
   background: currentColor;
 }
-
 
 .hero__button-arrow::after {
   content: "";
@@ -287,10 +262,8 @@
 
   transform: rotate(45deg);
 
-  transition:
-    transform .3s ease;
+  transition: transform .3s ease;
 }
-
 
 .hero__button:hover {
   background: transparent;
@@ -299,7 +272,6 @@
 
   border-color: #fff;
 }
-
 
 .hero__button:hover
 .hero__button-arrow::after {
@@ -322,7 +294,6 @@
     rgb(255 255 255 / 70%);
 }
 
-
 .hero__button--secondary:hover {
   background: #fff;
 
@@ -340,18 +311,14 @@
   place-items: center;
 }
 
-
 .hero--center .hero__content {
   margin-inline: auto;
-
   text-align: center;
 }
-
 
 .hero--center .hero__text {
   margin-inline: auto;
 }
-
 
 .hero--center .hero__actions {
   justify-content: center;
@@ -366,11 +333,9 @@
   place-items: center start;
 }
 
-
 .hero--left .hero__content {
   text-align: left;
 }
-
 
 .hero--left .hero__actions {
   justify-content: flex-start;
@@ -396,10 +361,6 @@
 @media (min-width: 1500px) {
 
   .hero {
-    width: calc(100vw - 64px);
-
-    max-width: 1532px;
-
     min-height: 66svh;
   }
 
@@ -407,10 +368,13 @@
     margin-left:
       max(
         32px,
-        calc((100% - 1500px) / 2)
+        calc((100vw - 1500px) / 2)
       );
   }
 
+  .hero__media img {
+    object-position: center;
+  }
 }
 
 
@@ -421,8 +385,6 @@
 @media (min-width: 750px) and (max-width: 1100px) {
 
   .hero {
-    width: calc(100vw - 56px);
-
     min-height: 62svh;
   }
 
@@ -435,7 +397,6 @@
 
     margin-left: 28px;
   }
-
 }
 
 
@@ -446,12 +407,7 @@
 @media (max-width: 749px) {
 
   .hero {
-    width: calc(100% - 10px);
-
     min-height: 62svh;
-
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .hero__media img {
@@ -493,7 +449,6 @@
 }
 
 {% endstylesheet %}
-
 
 {% schema %}
 {
