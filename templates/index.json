@@ -65,7 +65,7 @@
       "name": "New Arrivals",
       "settings": {
         "image": "shopify://shop_images/08_New_Arrivals.jpg",
-        "button_link": ""
+        "button_link": "shopify://collections/new-arrivals"
       }
     }
   },
