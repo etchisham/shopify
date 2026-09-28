@@ -9,7 +9,7 @@
 %}
 
 <section
-  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
+  class="hero hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
   style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
 >
   {% if section.settings.image != blank %}
@@ -18,7 +18,7 @@
         | image_url: width: 2400
         | image_tag:
           widths: '640, 960, 1280, 1600, 2000, 2400',
-          sizes: '100vw',
+          sizes: '100%',
           loading: image_loading,
           fetchpriority: image_fetchpriority
       }}
@@ -78,11 +78,23 @@
 .hero {
   position: relative;
   display: grid;
+
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+
   min-height: clamp(38rem, 78svh, 54rem);
   isolation: isolate;
   overflow: hidden;
   background: var(--color-surface);
   place-items: center start;
+  box-sizing: border-box;
+}
+
+.hero *,
+.hero *::before,
+.hero *::after {
+  box-sizing: border-box;
 }
 
 .hero__media,
@@ -90,11 +102,16 @@
   position: absolute;
   z-index: -2;
   inset: 0;
+
+  width: 100%;
+  height: 100%;
 }
 
 .hero__media img {
+  display: block;
   width: 100%;
   height: 100%;
+  max-width: none;
   object-fit: cover;
   object-position: center;
 }
@@ -109,7 +126,7 @@
 .hero__content {
   width: min(var(--hero-text-width), calc(100% - 48px));
   max-width: var(--hero-text-width);
-  margin-left: max(24px, calc((100vw - 1400px) / 2));
+  margin-left: max(24px, calc((100% - 1400px) / 2));
   margin-right: auto;
   padding-block: 48px;
   color: #fff;
@@ -277,7 +294,7 @@
   .hero__content {
     margin-left: max(
       32px,
-      calc((100vw - 1500px) / 2)
+      calc((100% - 1500px) / 2)
     );
   }
 
