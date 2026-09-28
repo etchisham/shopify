@@ -1,0 +1,217 @@
+<section class="new-arrivals-banner">
+
+  <div class="new-arrivals-banner__image">
+    {% if section.settings.image != blank %}
+      {{ section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          sizes: '100vw',
+          loading: 'lazy'
+      }}
+    {% endif %}
+  </div>
+
+  <div class="new-arrivals-banner__overlay"></div>
+
+  <div class="new-arrivals-banner__content">
+
+    <p class="new-arrivals-banner__eyebrow">
+      NEW ARRIVALS
+    </p>
+
+    <h2 class="new-arrivals-banner__heading">
+      Fresh Pieces,<br>
+      Four New Moments
+    </h2>
+
+    <a
+      href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+      class="new-arrivals-banner__button"
+    >
+      <span>EXPLORE NEW ARRIVALS</span>
+      <span class="new-arrivals-banner__arrow">→</span>
+    </a>
+
+  </div>
+
+</section>
+
+{% stylesheet %}
+
+.new-arrivals-banner {
+  position: relative;
+  width: 100%;
+  min-height: 620px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #eee;
+}
+
+.new-arrivals-banner__image,
+.new-arrivals-banner__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.new-arrivals-banner__image {
+  z-index: -2;
+}
+
+.new-arrivals-banner__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.new-arrivals-banner__overlay {
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.new-arrivals-banner__content {
+  position: relative;
+  z-index: 1;
+
+  min-height: 620px;
+  padding: 60px 40px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  color: #fff;
+}
+
+.new-arrivals-banner__eyebrow {
+  margin: 0 0 18px;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+
+  color: #fff;
+}
+
+.new-arrivals-banner__heading {
+  margin: 0;
+
+  font-family:
+    "Cormorant Garamond",
+    "Bodoni Moda",
+    "Didot",
+    serif;
+
+  font-size: clamp(42px, 5vw, 72px);
+  line-height: 0.95;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+
+  color: #fff;
+}
+
+.new-arrivals-banner__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+
+  margin-top: 32px;
+  padding: 13px 20px;
+
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+
+  text-decoration: none;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.new-arrivals-banner__button:hover {
+  background: #fff;
+  color: #111;
+  border-color: #fff;
+}
+
+.new-arrivals-banner__arrow {
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.new-arrivals-banner__button:hover .new-arrivals-banner__arrow {
+  transform: translateX(4px);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 749px) {
+
+  .new-arrivals-banner {
+    min-height: 560px;
+  }
+
+  .new-arrivals-banner__content {
+    min-height: 560px;
+    padding: 40px 24px;
+  }
+
+  .new-arrivals-banner__eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.24em;
+    margin-bottom: 15px;
+  }
+
+  .new-arrivals-banner__heading {
+    font-size: clamp(38px, 11vw, 54px);
+  }
+
+  .new-arrivals-banner__button {
+    margin-top: 28px;
+    padding: 12px 17px;
+    font-size: 9px;
+  }
+
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "New Arrivals",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Arrivals"
+    }
+  ]
+}
+{% endschema %}
