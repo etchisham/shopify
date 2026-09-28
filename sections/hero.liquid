@@ -95,9 +95,17 @@
 
 .hero__content {
   width: min(var(--hero-text-width), calc(100% - var(--page-margin) * 2));
+  max-width: var(--hero-text-width);
   color: #fff;
   padding-block: var(--space-8);
   text-align: left;
+
+  margin-left: max(
+    var(--page-margin),
+    calc((100vw - var(--page-width)) / 2)
+  );
+
+  margin-right: auto;
 }
 
 .hero__content h1 {
