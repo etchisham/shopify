@@ -45,7 +45,7 @@
 
     {% if discount_percentage > 0 %}
       <span class="product-card__discount">
-        -{{ discount_percentage }}%
+        {{ discount_percentage }}% OFF
       </span>
     {% endif %}
 
@@ -150,19 +150,20 @@
   align-items: center;
   justify-content: center;
 
-  min-width: 40px;
+  min-width: 52px;
   height: 24px;
-  padding: 0 8px;
+  padding: 0 9px;
 
-  background: #fff;
-  color: #111;
+  background: rgba(232, 221, 202, 0.92);
+  color: #4a4033;
 
-  font-size: 9px;
+  font-size: 8px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .08em;
+  text-transform: uppercase;
 
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 /* SOLD OUT */
@@ -362,10 +363,10 @@
   .product-card__discount {
     top: 8px;
     left: 8px;
-    min-width: 36px;
+    min-width: 48px;
     height: 22px;
-    padding: 0 6px;
-    font-size: 8px;
+    padding: 0 7px;
+    font-size: 7px;
   }
 
   .product-card__stars {
