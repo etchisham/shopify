@@ -1,60 +1,303 @@
-<div class="custom-section full-width">
-  {% if section.settings.background_image %}
-    <div class="custom-section__background">
-      {{ section.settings.background_image | image_url: width: 2000 | image_tag }}
-    </div>
-  {% endif %}
+<section class="story-section">
 
-  <div class="custom-section__content">
-    {% content_for 'blocks' %}
+  <div class="story-section__inner">
+
+    <div class="story-section__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1800
+          | image_tag:
+            widths: '600, 900, 1200, 1500, 1800',
+            sizes: '(min-width: 750px) 58vw, 100vw',
+            loading: 'lazy',
+            alt: section.settings.image_alt
+        }}
+      {% else %}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'story-section__placeholder' }}
+      {% endif %}
+    </div>
+
+    <div class="story-section__content">
+
+      {% if section.settings.eyebrow != blank %}
+        <p class="story-section__eyebrow">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="story-section__heading">
+          {{ section.settings.heading | escape }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <div class="story-section__text">
+          {{ section.settings.text | escape | newline_to_br }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a
+          class="story-section__link"
+          href="{{ section.settings.button_link | default: '#' }}"
+        >
+          <span>{{ section.settings.button_label | escape }}</span>
+          <span class="story-section__arrow" aria-hidden="true">→</span>
+        </a>
+      {% endif %}
+
+    </div>
+
   </div>
-</div>
+
+</section>
 
 {% stylesheet %}
-  .custom-section {
-    position: relative;
-    overflow: hidden;
+
+.story-section {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 110px max(24px, calc((100vw - 1400px) / 2)) 0;
+  box-sizing: border-box;
+}
+
+.story-section__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
+  align-items: center;
+  gap: clamp(50px, 7vw, 120px);
+}
+
+/* IMAGE */
+
+.story-section__media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #f4f1eb;
+}
+
+.story-section__media img,
+.story-section__placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.35 / 1;
+  object-fit: cover;
+}
+
+/* CONTENT */
+
+.story-section__content {
+  max-width: 430px;
+  padding-right: 20px;
+}
+
+.story-section__eyebrow {
+  margin: 0 0 18px;
+  color: #C8B28A;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.story-section__heading {
+  margin: 0 0 24px;
+
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: clamp(38px, 4vw, 58px);
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.025em;
+}
+
+.story-section__text {
+  max-width: 390px;
+  margin-bottom: 30px;
+
+  color: var(--color-foreground);
+  font-size: 13px;
+  line-height: 1.8;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
+/* LINK */
+
+.story-section__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  color: inherit;
+  text-decoration: none;
+
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.story-section__arrow {
+  display: inline-block;
+  font-size: 17px;
+  line-height: 1;
+  transition: transform .3s ease;
+}
+
+.story-section__link:hover .story-section__arrow {
+  transform: translateX(5px);
+}
+
+/* LARGE DESKTOP */
+
+@media (min-width: 1500px) {
+  .story-section {
+    padding-left: max(32px, calc((100vw - 1500px) / 2));
+    padding-right: max(32px, calc((100vw - 1500px) / 2));
+  }
+}
+
+/* TABLET */
+
+@media (min-width: 750px) and (max-width: 1100px) {
+  .story-section {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .story-section__inner {
+    gap: 45px;
+  }
+
+  .story-section__content {
+    padding-right: 0;
+  }
+
+  .story-section__heading {
+    font-size: 42px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 749px) {
+
+  .story-section {
     width: 100%;
-    margin-top: 30px;
+    max-width: none;
+    margin-left: 0;
+    padding: 80px 5px 0;
   }
-  .custom-section__background {
-    position: absolute;
+
+  .story-section__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .story-section__media {
     width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
   }
-  .custom-section__background img {
-    position: absolute;
-    width: 100%;
-    height: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+  .story-section__media img,
+  .story-section__placeholder {
+    aspect-ratio: 1 / 1.08;
   }
-  .custom-section__content {
-    display: grid;
-    grid-template-columns: var(--content-grid);
+
+  .story-section__content {
+    max-width: none;
+    padding: 0 10px;
   }
-  .custom-section__content > * {
-    grid-column: 2;
+
+  .story-section__eyebrow {
+    margin-bottom: 14px;
+    font-size: 9px;
   }
+
+  .story-section__heading {
+    max-width: 360px;
+    margin-bottom: 20px;
+    font-size: 38px;
+    line-height: .98;
+  }
+
+  .story-section__text {
+    max-width: 340px;
+    margin-bottom: 26px;
+    font-size: 12px;
+    line-height: 1.75;
+  }
+
+  .story-section__link {
+    font-size: 9px;
+  }
+
+  .story-section__arrow {
+    font-size: 15px;
+  }
+}
+
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.custom_section",
-  "blocks": [{ "type": "@theme" }],
+  "name": "Discover Our Story",
+  "enabled_on": {
+    "templates": ["index"]
+  },
   "settings": [
     {
       "type": "image_picker",
-      "id": "background_image",
-      "label": "t:labels.background"
+      "id": "image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Hilya jewelry"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "More Than Jewelry. It's a Feeling."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "At Hilya, we believe the smallest details can hold the biggest meaning. Each piece is created to become part of your story — something personal, timeless, and entirely your own."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Discover Our Story"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
     }
   ],
   "presets": [
     {
-      "name": "t:general.custom_section"
+      "name": "Discover Our Story"
     }
   ]
 }
