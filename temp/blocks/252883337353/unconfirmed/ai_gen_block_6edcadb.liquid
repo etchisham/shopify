@@ -1,0 +1,28 @@
+{% doc %}
+  @prompt
+    generate a section name it new Arrival with an code file with same name make it empty
+{% enddoc %}
+{% schema %}
+{
+  "name": "New Arrival",
+  "settings": [
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Arrival"
+    }
+  ],
+  "tag": null,
+  "class": "new-arrival-block"
+}
+{% endschema %}

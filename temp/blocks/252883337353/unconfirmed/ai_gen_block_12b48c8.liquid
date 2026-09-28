@@ -1,0 +1,70 @@
+{% doc %}
+  @prompt
+    generate an empty section name it new arrival 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-new-arrival-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    min-height: {{ block.settings.min_height }}px;
+    padding: {{ block.settings.padding }}px;
+    box-sizing: border-box;
+    background-color: {{ block.settings.background_color }};
+  }
+{% endstyle %}
+
+<div class="ai-new-arrival-{{ ai_gen_id }}" {{ block.shopify_attributes }}></div>
+
+{% schema %}
+{
+  "name": "New arrival",
+  "settings": [
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 0,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFCF7"
+    }
+  ],
+  "presets": [
+    {
+      "name": "New arrival"
+    }
+  ],
+  "tag": null,
+  "class": "new-arrival-block"
+}
+{% endschema %}
