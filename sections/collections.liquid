@@ -28,7 +28,7 @@
                   {{ collection.title | escape }}
                 </h2>
 
-                <span class="collection-card__arrow">↓</span>
+                <span class="collection-card__arrow">→</span>
               </div>
             </div>
 
@@ -75,9 +75,9 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.42),
-    rgba(0, 0, 0, 0.08) 45%,
-    transparent 70%
+    rgba(0, 0, 0, 0.38),
+    rgba(0, 0, 0, 0.08) 40%,
+    transparent 65%
   );
   pointer-events: none;
 }
@@ -88,68 +88,69 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
 }
 
 .collection-card__link:hover .collection-card__media img {
   transform: scale(1.03);
 }
 
+/* Text + arrow */
 .collection-card__overlay {
   position: absolute;
   z-index: 2;
-  left: 0;
-  right: 0;
-  bottom: 28px;
+  left: 22px;
+  bottom: 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
+  gap: 10px;
   color: #fff;
-  pointer-events: none;
 }
 
 .collection-card__title {
   margin: 0;
   color: #fff;
-  font-size: 15px;
+  font-size: 11px;
+  line-height: 1;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .collection-card__arrow {
-  display: block;
-  margin-top: 9px;
-  font-size: 22px;
+  display: inline-block;
+  color: #fff;
+  font-size: 18px;
   line-height: 1;
   font-weight: 300;
   transition: transform 0.3s ease;
 }
 
 .collection-card__link:hover .collection-card__arrow {
-  transform: translateY(4px);
+  transform: translateX(5px);
 }
 
 /* Mobile */
 @media (max-width: 749px) {
+
   .collection-list__grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
 
   .collection-card__overlay {
-    bottom: 20px;
+    left: 14px;
+    bottom: 14px;
+    gap: 7px;
   }
 
   .collection-card__title {
-    font-size: 12px;
-    letter-spacing: 0.09em;
+    font-size: 9px;
+    letter-spacing: 0.11em;
   }
 
   .collection-card__arrow {
-    margin-top: 7px;
-    font-size: 19px;
+    font-size: 15px;
   }
 
   .collection-card:last-child {
