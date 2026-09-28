@@ -10,7 +10,13 @@
 
 <section
   class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
-  style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
+  style="
+    --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --hero-text-width: {{ section.settings.text_width }}rem;
+    {% if section.settings.image != blank %}
+      --hero-aspect-ratio: {{ section.settings.image.aspect_ratio }};
+    {% endif %}
+  "
 >
   {% if section.settings.image != blank %}
     <div class="hero__media">
@@ -87,7 +93,7 @@
   max-width: 1920px;
   margin-inline: auto;
 
-  min-height: 64svh;
+  aspect-ratio: var(--hero-aspect-ratio, 2.78);
 
   isolation: isolate;
   overflow: hidden;
