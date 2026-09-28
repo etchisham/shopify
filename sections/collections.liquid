@@ -8,7 +8,7 @@
       {% if collection != blank %}
         <article class="collection-card">
           <a href="{{ collection.url }}" class="collection-card__link">
-            
+
             <div class="collection-card__media">
               {% if collection.featured_image %}
                 {{ collection.featured_image
@@ -22,11 +22,15 @@
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'collection-card__placeholder' }}
               {% endif %}
-            </div>
 
-            <h2 class="collection-card__title">
-              {{ collection.title | escape }}
-            </h2>
+              <div class="collection-card__overlay">
+                <h2 class="collection-card__title">
+                  {{ collection.title | escape }}
+                </h2>
+
+                <span class="collection-card__arrow">↓</span>
+              </div>
+            </div>
 
           </a>
         </article>
@@ -58,10 +62,24 @@
 }
 
 .collection-card__media {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1.15;
   overflow: hidden;
   background: #f5f2ed;
+}
+
+.collection-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0.08) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
 }
 
 .collection-card__media img,
@@ -77,26 +95,61 @@
   transform: scale(1.03);
 }
 
-.collection-card__title {
-  margin: 14px 0 0;
+.collection-card__overlay {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.collection-card__title {
+  margin: 0;
+  color: #fff;
   font-size: 15px;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.collection-card__arrow {
+  display: block;
+  margin-top: 9px;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
+
+.collection-card__link:hover .collection-card__arrow {
+  transform: translateY(4px);
 }
 
 /* Mobile */
 @media (max-width: 749px) {
   .collection-list__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 28px 14px;
+    gap: 14px;
+  }
+
+  .collection-card__overlay {
+    bottom: 20px;
   }
 
   .collection-card__title {
-    margin-top: 11px;
-    font-size: 13px;
-    letter-spacing: 0.07em;
+    font-size: 12px;
+    letter-spacing: 0.09em;
+  }
+
+  .collection-card__arrow {
+    margin-top: 7px;
+    font-size: 19px;
   }
 
   .collection-card:last-child {
