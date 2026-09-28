@@ -69,6 +69,11 @@
         "grid_gap": 48
       }
     },
+    "custom_section_ETjLrM": {
+      "type": "custom-section",
+      "name": "Our Story",
+      "settings": {}
+    },
     "featured_collection_CinWF3": {
       "type": "featured-collection",
       "name": "t:general.featured_collection",
@@ -90,50 +95,13 @@
         "products_to_show": 5,
         "columns": 5
       }
-    },
-    "home_slideshow_efjzz3": {
-      "type": "home-slideshow",
-      "blocks": {
-        "slide_Gdi6yF": {
-          "type": "slide",
-          "settings": {
-            "alt_en": "",
-            "alt_ar": "",
-            "prefix_en": "Art for",
-            "prefix_ar": "فن من أجل",
-            "heading_en": "The ambitious",
-            "heading_ar": "الطموحين",
-            "text_en": "Make room for what drives you. Discover art that brings your goals into focus.",
-            "text_ar": "امنح ما يلهمك مساحة. اكتشف لوحات تذكّرك بأهدافك كل يوم.",
-            "button_en": "Explore the collection",
-            "button_ar": "اكتشف المجموعة",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_Gdi6yF"
-      ],
-      "name": "t:home.slideshow",
-      "settings": {
-        "heading_en": "Art for your everyday",
-        "heading_ar": "فن يلهم كل يوم",
-        "media_position": "end",
-        "autoplay": true,
-        "interval": 7,
-        "desktop_height": 640,
-        "heading_size": 72,
-        "background": "#111111",
-        "foreground": "#FFFFFF",
-        "accent": "#FF9E18"
-      }
     }
   },
   "order": [
     "hero_N4mypj",
     "custom_section_hM7yip",
     "collections_pUPfUG",
-    "home_slideshow_efjzz3",
+    "custom_section_ETjLrM",
     "featured_collection_CinWF3",
     "featured_collection_cxRRka"
   ]
