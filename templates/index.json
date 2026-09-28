@@ -30,37 +30,6 @@
         "text_width": 38
       }
     },
-    "custom_section_hM7yip": {
-      "type": "custom-section",
-      "blocks": {
-        "text_nCKF3r": {
-          "type": "text",
-          "name": "t:general.text",
-          "settings": {
-            "text": "SHOP BY CATEGORY",
-            "text_style": "text--normal",
-            "alignment": "center"
-          },
-          "blocks": {}
-        },
-        "text_NGKEtw": {
-          "type": "text",
-          "name": "t:general.text",
-          "settings": {
-            "text": "Find Your Perfect Piece",
-            "text_style": "text--title",
-            "alignment": "center"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_nCKF3r",
-        "text_NGKEtw"
-      ],
-      "name": "t:general.custom_section",
-      "settings": {}
-    },
     "collections_pUPfUG": {
       "type": "collections",
       "custom_css": [],
@@ -72,7 +41,13 @@
     "custom_section_ETjLrM": {
       "type": "custom-section",
       "name": "Our Story",
-      "settings": {}
+      "settings": {
+        "image": "shopify://shop_images/07_brand_story_lifestyle.jpg",
+        "image_alt": "Hilya jewelry",
+        "eyebrow": "Our Story",
+        "button_label": "Discover Our Story",
+        "button_link": ""
+      }
     },
     "featured_collection_CinWF3": {
       "type": "featured-collection",
@@ -99,7 +74,6 @@
   },
   "order": [
     "hero_N4mypj",
-    "custom_section_hM7yip",
     "collections_pUPfUG",
     "custom_section_ETjLrM",
     "featured_collection_CinWF3",
