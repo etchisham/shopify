@@ -60,15 +60,11 @@
         "columns": 5
       }
     },
-    "featured_collection_cxRRka": {
-      "type": "featured-collection",
-      "name": "t:general.featured_collection",
+    "new_arrivals_DPpLqt": {
+      "type": "new-arrivals",
+      "name": "New Arrivals",
       "settings": {
-        "eyebrow": "NEW ARRIVALS",
-        "heading": "Fresh Pieces, Same Timeless Vibe",
-        "collection": "new-arrivals",
-        "products_to_show": 5,
-        "columns": 5
+        "button_link": ""
       }
     }
   },
@@ -77,6 +73,6 @@
     "collections_pUPfUG",
     "custom_section_ETjLrM",
     "featured_collection_CinWF3",
-    "featured_collection_cxRRka"
+    "new_arrivals_DPpLqt"
   ]
 }
