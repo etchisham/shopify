@@ -11,13 +11,18 @@
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
 
-  width: 100% !important;
+  /* FULL VIEWPORT FIX */
+  width: 100vw !important;
   max-width: none !important;
-  margin: 0 !important;
+
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
+
   padding: 0 !important;
 
   background: var(--header-bg);
   color: var(--header-text);
+
   border-bottom: 1px solid var(--header-border);
 
   position: relative;
@@ -39,9 +44,10 @@
 .site-header__inner {
   width: 100% !important;
   max-width: none !important;
-  margin: 0 !important;
 
   height: var(--header-height);
+
+  margin: 0 !important;
 
   padding-left: {{ section.settings.desktop_padding }}px;
   padding-right: {{ section.settings.desktop_padding }}px;
@@ -52,6 +58,7 @@
 
   position: relative;
 }
+
 
 /* =========================================================
    BRAND
@@ -85,8 +92,9 @@
   color: var(--header-text);
 }
 
+
 /* =========================================================
-   DESKTOP NAVIGATION
+   DESKTOP NAV
    ========================================================= */
 
 .desktop-nav {
@@ -132,8 +140,9 @@
   opacity: 0.65;
 }
 
+
 /* =========================================================
-   DESKTOP DROPDOWN CONTAINERS
+   DESKTOP MENU / CATEGORIES
    ========================================================= */
 
 .desktop-menu,
@@ -163,6 +172,7 @@
   display: none;
 }
 
+
 /* =========================================================
    DESKTOP HAMBURGER
    ========================================================= */
@@ -184,6 +194,7 @@
 
   background: currentColor;
 }
+
 
 /* =========================================================
    DESKTOP DROPDOWN
@@ -240,6 +251,7 @@
   background: rgba(0, 0, 0, 0.035);
 }
 
+
 /* =========================================================
    DESKTOP HOVER OPEN
    ========================================================= */
@@ -257,6 +269,7 @@
 
   transform: translateX(-50%) translateY(0);
 }
+
 
 /* =========================================================
    RIGHT ACTIONS
@@ -313,6 +326,7 @@
 
   text-align: center;
 }
+
 
 /* =========================================================
    SEARCH
@@ -404,6 +418,7 @@
   stroke: currentColor;
 }
 
+
 /* =========================================================
    MOBILE MENU
    ========================================================= */
@@ -412,6 +427,7 @@
   display: none;
 }
 
+
 /* =========================================================
    MOBILE
    ========================================================= */
@@ -419,8 +435,11 @@
 @media screen and (max-width: 749px) {
 
   .site-header {
-    width: 100% !important;
+    width: 100vw !important;
     max-width: none !important;
+
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: 0 !important;
   }
 
   .site-header__inner {
@@ -432,6 +451,7 @@
     padding-left: 16px;
     padding-right: 16px;
   }
+
 
   /* -------------------------------------------------------
      MOBILE BRAND
@@ -448,6 +468,7 @@
     font-size: 2rem;
   }
 
+
   /* -------------------------------------------------------
      HIDE DESKTOP NAV
      ------------------------------------------------------- */
@@ -455,6 +476,7 @@
   .desktop-nav {
     display: none;
   }
+
 
   /* -------------------------------------------------------
      MOBILE HAMBURGER
@@ -506,8 +528,9 @@
     background: currentColor;
   }
 
+
   /* -------------------------------------------------------
-     MOBILE MENU PANEL
+     MOBILE FULL WIDTH MENU
      ------------------------------------------------------- */
 
   .mobile-menu__panel {
@@ -538,6 +561,7 @@
     box-sizing: border-box;
   }
 
+
   /* -------------------------------------------------------
      MOBILE LINKS
      ------------------------------------------------------- */
@@ -560,6 +584,7 @@
 
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
+
 
   /* -------------------------------------------------------
      MOBILE CATEGORIES
@@ -641,6 +666,7 @@
     border: 0;
   }
 
+
   /* -------------------------------------------------------
      MOBILE ACTIONS
      ------------------------------------------------------- */
@@ -655,6 +681,7 @@
     width: 18px;
     height: 18px;
   }
+
 
   /* -------------------------------------------------------
      MOBILE SEARCH
@@ -681,6 +708,7 @@
 
 }
 
+
 /* =========================================================
    DESKTOP ONLY
    ========================================================= */
@@ -702,6 +730,7 @@
 
   <div class="site-header__inner">
 
+
     <!-- =====================================================
          MOBILE MENU
          ===================================================== -->
@@ -721,21 +750,17 @@
 
       <nav class="mobile-menu__panel">
 
-        <!-- HOME -->
-
         <a href="{{ routes.root_url }}">
           Home
         </a>
 
-
-        <!-- ALL PRODUCTS -->
 
         <a href="{{ routes.all_products_collection_url }}">
           All Products
         </a>
 
 
-        <!-- CATEGORIES -->
+        <!-- MOBILE CATEGORIES -->
 
         <details class="mobile-categories">
 
@@ -777,8 +802,6 @@
         </details>
 
 
-        <!-- NEW ARRIVALS -->
-
         {% if section.settings.show_new_arrivals and section.settings.new_arrivals_link != blank %}
 
           <a href="{{ section.settings.new_arrivals_link }}">
@@ -787,8 +810,6 @@
 
         {% endif %}
 
-
-        <!-- BEST SELLERS -->
 
         {% if section.settings.show_best_sellers and section.settings.best_sellers_link != blank %}
 
@@ -799,21 +820,15 @@
         {% endif %}
 
 
-        <!-- CONTACT -->
-
         <a href="{{ section.settings.contact_link }}">
           Contact Us
         </a>
 
 
-        <!-- INSTAGRAM -->
-
         <a href="{{ section.settings.instagram_link }}">
           Our Instagram
         </a>
 
-
-        <!-- SHIPPING -->
 
         {% if section.settings.show_shipping and section.settings.shipping_page != blank %}
 
@@ -824,8 +839,6 @@
         {% endif %}
 
 
-        <!-- RETURNS -->
-
         {% if section.settings.show_returns and section.settings.returns_page != blank %}
 
           <a href="{{ section.settings.returns_page.url }}">
@@ -834,8 +847,6 @@
 
         {% endif %}
 
-
-        <!-- FAQ -->
 
         {% if section.settings.show_faq and section.settings.faq_page != blank %}
 
