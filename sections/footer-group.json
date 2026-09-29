@@ -13,48 +13,23 @@
   "sections": {
     "footer": {
       "type": "footer",
-      "blocks": {
-        "social_yQiEwr": {
-          "type": "social",
-          "settings": {
-            "platform": "whatsapp",
-            "url": "tel:01062701834"
-          }
-        }
-      },
-      "block_order": [
-        "social_yQiEwr"
-      ],
       "settings": {
-        "logo": "shopify://shop_images/hilya_logo_main.jpg",
-        "logo_width": 196,
-        "primary_menu": "footer",
-        "secondary_menu": "main-menu",
-        "secondary_menu_heading": "test",
-        "show_newsletter": true,
-        "newsletter_heading": "",
-        "newsletter_text": "",
-        "email_placeholder": "",
-        "subscribe_label": "",
-        "privacy_text": "privacy",
-        "privacy_link": "",
-        "copyright_text": "Hilya EG",
-        "facebook_url": "https://www.facebook.com/profile.php?id=61594014310962",
         "instagram_url": "https://www.instagram.com/hilya.insta/",
-        "youtube_url": "",
-        "tiktok_url": "",
-        "background_color": "#1c1c1c",
-        "text_color": "#ffffff",
-        "muted_color": "#b8b8b8",
-        "border_color": "#333333",
-        "field_background_color": "#ffffff",
-        "field_text_color": "#444444",
-        "button_background_color": "#f7f7f7",
-        "button_text_color": "#000000",
-        "heading_font_size": 15,
-        "text_font_size": 16,
-        "desktop_padding": 60,
-        "top_padding": 96
+        "facebook_url": "https://www.facebook.com/profile.php?id=61594014310962",
+        "whatsapp_number": "201062701834",
+        "all_products_link": "shopify://collections/all",
+        "new_arrivals_link": "shopify://collections/new-arrivals",
+        "best_sellers_link": "shopify://collections/best-sellers",
+        "sale_link": "shopify://collections/sales",
+        "necklaces_link": "shopify://collections/necklaces",
+        "rings_link": "shopify://collections/rings",
+        "pendants_link": "shopify://collections/pendants",
+        "bracelets_link": "shopify://collections/bracelets",
+        "keychains_link": "shopify://collections/keychains",
+        "our_story_link": "",
+        "contact_link": "shopify://pages/contact",
+        "shipping_link": "",
+        "returns_link": ""
       }
     }
   },
