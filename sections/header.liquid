@@ -1,677 +1,337 @@
-{% liquid
-  assign header_logo = section.settings.logo | default: settings.logo
-  assign wishlist_page = pages['wishlist']
-  assign wishlist_url = routes.root_url | append: 'pages/wishlist'
-  if wishlist_page != blank
-    assign wishlist_url = wishlist_page.url
-  endif
-%}
+<section class="hilya-header">
 
-{% if section.settings.sticky_header %}
-  {% style %}
-    #shopify-section-{{ section.id }} {
-      position: sticky;
-      z-index: 40;
-      inset-block-start: 0;
-    }
-  {% endstyle %}
-{% endif %}
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="hilya-announcement">
+    Free shipping on orders over 1,000 EGP
+  </div>
 
-<header
-  class="site-header full-width"
-  style="
-    --header-background: {{ section.settings.background_color }};
-    --header-color: {{ section.settings.text_color }};
-    --header-border: {{ section.settings.border_color }};
-    --header-desktop-height: {{ section.settings.desktop_height }}px;
-    --header-mobile-height: {{ section.settings.mobile_height }}px;
-    --header-desktop-padding: {{ section.settings.desktop_padding }}px;
-    --header-logo-width: {{ section.settings.logo_width }}px;
-    --header-mobile-logo-width: {{ section.settings.mobile_logo_width }}px;
-    --drawer-font-size: {{ section.settings.mobile_menu_font_size }}px;
-  "
->
-  <div class="site-header__inner">
-    <div class="site-header__left">
-      <details class="header-menu" data-menu-drawer scroll-lock>
-        <summary class="header-icon-button header-menu__toggle">
-          <span class="header-menu__open-icon">{% render 'icon', name: 'menu' %}</span>
-          <span class="header-menu__close-icon">{% render 'icon', name: 'close' %}</span>
-          <span class="header-menu__open-label visually-hidden">{{ 'accessibility.open_menu' | t }}</span>
-          <span class="header-menu__close-label visually-hidden">{{ 'accessibility.close_menu' | t }}</span>
-        </summary>
+  <!-- MAIN HEADER -->
+  <header class="hilya-nav">
 
-        <div class="header-menu__panel">
-          <nav class="drawer-navigation" aria-label="{{ 'general.menu' | t | escape }}">
-            <a class="drawer-navigation__all" href="{{ routes.all_products_collection_url }}">
-              <span>{{ 'general.all_products' | t }}</span>
-              <span aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
-            </a>
-            <p class="drawer-navigation__heading">{{ 'general.categories' | t }}</p>
-            <ul class="drawer-navigation__categories" role="list">
-              {% for category in collections %}
-                {% unless category.handle == 'all' or category.handle == 'frontpage' %}
-                  <li>
-                    <a href="{{ category.url }}">
-                      <span>{{ category.title | escape }}</span>
-                      {% if category.all_products_count > 0 %}<span class="drawer-navigation__count">{{ category.all_products_count }}</span>{% endif %}
-                    </a>
-                  </li>
-                {% endunless %}
-              {% endfor %}
-            </ul>
-          </nav>
-        </div>
-      </details>
+    <!-- MOBILE MENU -->
+    <button
+      class="hilya-menu"
+      type="button"
+      aria-label="Open menu"
+      onclick="document.querySelector('.hilya-mobile-menu').classList.toggle('is-open')"
+    >
+      <span></span>
+      <span></span>
+    </button>
 
-      {% if localization.available_languages.size > 1 %}
-        {% form 'localization', id: 'HeaderLanguageForm', class: 'header-language' %}
-          <span class="header-language__icon" aria-hidden="true">{% render 'icon', name: 'globe' %}</span>
-          <span class="visually-hidden">{{ 'general.language' | t }}</span>
-          {% for language in localization.available_languages %}
-            {% assign language_root = language.iso_code | split: '-' | first %}
-            {% if language_root == 'ar' or language_root == 'en' %}
-              <button type="submit" name="locale_code" value="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == request.locale.iso_code %} class="is-active" aria-current="true"{% endif %}>{{ language_root | upcase }}</button>
-            {% endif %}
-          {% endfor %}
-        {% endform %}
-      {% endif %}
+    <!-- LEFT NAV -->
+    <nav class="hilya-nav-left">
+      <a href="{{ routes.root_url }}">Shop</a>
+      <a href="{{ routes.root_url }}#collections">Categories</a>
+      <a href="/pages/about">About</a>
+    </nav>
 
-      {% if section.settings.show_search %}
-        <a
-          class="header-icon-button site-header__mobile-search"
-          href="{{ routes.search_url }}"
-          aria-label="{{ 'general.search' | t | escape }}"
-        >
-          {% render 'icon', name: 'search' %}
-        </a>
-      {% endif %}
-
-      {% if section.settings.desktop_menu != blank %}
-        <nav class="desktop-navigation" aria-label="{{ 'general.menu' | t | escape }}">
-          <ul role="list">
-            {% for link in section.settings.desktop_menu.links %}
-              <li>
-                <a
-                  href="{{ link.url }}"
-                  {% if link.current %}
-                    aria-current="page"
-                  {% endif %}
-                >
-                  {{- link.title | escape -}}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
-      {% endif %}
-    </div>
-
-    <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
-      {% if header_logo != blank %}
-        {{
-          header_logo
-          | image_url: width: section.settings.logo_width
-          | image_tag:
-            widths: '100, 140, 180, 220, 280, 360',
-            width: section.settings.logo_width,
-            alt: shop.name,
-            loading: 'eager'
-        }}
-      {% else %}
-        <span>{{ shop.name | escape }}</span>
-      {% endif %}
+    <!-- LOGO -->
+    <a href="{{ routes.root_url }}" class="hilya-logo">
+      Hilya
     </a>
 
-    <div class="site-header__actions">
-      {% if shop.customer_accounts_enabled and section.settings.show_account %}
-        <shopify-account class="site-header__desktop-action" menu="{{ section.settings.customer_account_menu }}">
-          <span class="header-icon-button" aria-label="{{ 'general.account' | t | escape }}">
-            {% render 'icon', name: 'account' %}
+    <!-- RIGHT ICONS -->
+    <div class="hilya-nav-right">
+
+      <!-- SEARCH -->
+      <a href="{{ routes.search_url }}" class="hilya-icon" aria-label="Search">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5"></circle>
+          <path d="M16 16L21 21"></path>
+        </svg>
+      </a>
+
+      <!-- ACCOUNT -->
+      <a href="{{ routes.account_url }}" class="hilya-icon" aria-label="Account">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="3.5"></circle>
+          <path d="M5 21c.7-4.2 3.2-6.5 7-6.5s6.3 2.3 7 6.5"></path>
+        </svg>
+      </a>
+
+      <!-- CART -->
+      <a href="{{ routes.cart_url }}" class="hilya-icon hilya-cart" aria-label="Cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 8h14l-1 12H6L5 8Z"></path>
+          <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+        </svg>
+
+        {% if cart.item_count > 0 %}
+          <span class="hilya-cart-count">
+            {{ cart.item_count }}
           </span>
-        </shopify-account>
-      {% endif %}
-
-      {% if section.settings.show_search %}
-        <a
-          class="header-icon-button site-header__desktop-action"
-          href="{{ routes.search_url }}"
-          aria-label="{{ 'general.search' | t | escape }}"
-        >
-          {% render 'icon', name: 'search' %}
-        </a>
-      {% endif %}
-
-      <a
-        class="header-icon-button site-header__wishlist"
-        href="{{ wishlist_url }}"
-        aria-label="{{ 'general.wishlist' | t | escape }}"
-      >
-        {% render 'icon', name: 'heart' %}
-        <span class="site-header__wishlist-count" aria-hidden="true" data-wishlist-count hidden>0</span>
+        {% endif %}
       </a>
 
-      <a
-        class="header-icon-button site-header__cart"
-        href="{{ routes.cart_url }}"
-        aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}"
-        data-cart-open
-        aria-haspopup="dialog"
-        aria-controls="CartDrawer"
-        aria-expanded="false"
-      >
-        {% render 'icon', name: 'cart' %}
-        <span
-          class="site-header__cart-count"
-          aria-hidden="true"
-          data-cart-count
-          {% if cart.item_count == 0 %}
-            hidden
-          {% endif %}
-        >
-          {{- cart.item_count -}}
-        </span>
-      </a>
     </div>
+
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div class="hilya-mobile-menu">
+
+    <a href="{{ routes.root_url }}">Shop</a>
+    <a href="{{ routes.root_url }}#collections">Categories</a>
+    <a href="/pages/about">About</a>
+
   </div>
-</header>
+
+</section>
+
 
 {% stylesheet %}
-  .site-header {
-    position: relative;
-    z-index: 40;
-    border-block-end: 1px solid var(--header-border);
-    background: var(--header-background);
-    color: var(--header-color);
-    font-family: Arial, Helvetica, sans-serif;
+
+.hilya-header {
+  width: 100%;
+  position: relative;
+  z-index: 50;
+  background: #ffffff;
+}
+
+/* ANNOUNCEMENT */
+
+.hilya-announcement {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee9e1;
+  color: #555;
+  font-family: Arial, sans-serif;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: .02em;
+}
+
+/* NAV */
+
+.hilya-nav {
+  position: relative;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 max(24px, calc((100vw - 1400px) / 2));
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+/* LEFT */
+
+.hilya-nav-left {
+  position: absolute;
+  left: max(24px, calc((100vw - 1400px) / 2));
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.hilya-nav-left a {
+  color: #171717;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+/* LOGO */
+
+.hilya-logo {
+  color: #111111;
+  text-decoration: none;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+/* RIGHT */
+
+.hilya-nav-right {
+  position: absolute;
+  right: max(24px, calc((100vw - 1400px) / 2));
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.hilya-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #171717;
+  text-decoration: none;
+}
+
+.hilya-icon svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hilya-cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  width: 11px;
+  height: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #171717;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 6px;
+  line-height: 1;
+}
+
+/* MOBILE MENU BUTTON */
+
+.hilya-menu {
+  display: none;
+}
+
+/* MOBILE MENU */
+
+.hilya-mobile-menu {
+  display: none;
+}
+
+
+/* TABLET */
+
+@media (min-width: 750px) and (max-width: 1100px) {
+
+  .hilya-nav-left {
+    left: 28px;
+    gap: 26px;
   }
 
-  [dir='rtl'] .site-header {
-    font-family: Tahoma, Arial, sans-serif;
+  .hilya-nav-right {
+    right: 28px;
   }
 
-  .site-header__inner {
-    display: grid;
-    width: 100%;
-    min-height: var(--header-mobile-height);
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    padding-inline: 1rem;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 749px) {
+
+  .hilya-announcement {
+    height: 23px;
+    font-size: 7px;
   }
 
-  .site-header__left,
-  .site-header__actions {
+  .hilya-nav {
+    height: 54px;
+    padding: 0 18px;
+  }
+
+  .hilya-nav-left {
+    display: none;
+  }
+
+  .hilya-logo {
+    font-size: 31px;
+  }
+
+  .hilya-nav-right {
+    right: 18px;
+    gap: 15px;
+  }
+
+  .hilya-nav-right .hilya-icon:first-child {
+    display: none;
+  }
+
+  .hilya-icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* MENU */
+
+  .hilya-menu {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    min-width: 0;
-    align-items: center;
-  }
-
-  .site-header__left {
-    grid-column: 1;
-    justify-content: flex-start;
-    gap: 0.2rem;
-  }
-
-  .site-header__actions {
-    grid-column: 3;
-    justify-content: flex-end;
-    gap: 0.2rem;
-  }
-
-  .site-header__brand {
-    position: absolute;
-    left: 50%;
-    width: min(var(--header-mobile-logo-width), 38vw);
-    transform: translateX(-50%);
-    color: inherit;
-    font-size: 1.45rem;
-    font-weight: 500;
-    letter-spacing: -0.07em;
-    line-height: 1;
-    text-align: center;
-    text-decoration: none;
-  }
-
-  [dir='rtl'] .site-header__brand {
-    direction: ltr;
-    unicode-bidi: isolate;
-  }
-
-  .site-header__brand img {
-    width: 100%;
-    max-height: calc(var(--header-mobile-height) - 1rem);
-    margin-inline: auto;
-    object-fit: contain;
-  }
-
-  .header-icon-button {
-    position: relative;
-    display: inline-grid;
-    width: 2.75rem;
-    min-width: 2.75rem;
-    height: 2.75rem;
-    place-items: center;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .header-icon-button:hover {
-    background: rgb(0 0 0 / 4%);
-  }
-
-  .header-icon-button,
-  .header-language button {
-    transition: background-color 150ms ease, transform 150ms ease;
-  }
-
-  .header-icon-button:hover,
-  .header-language button:hover {
-    transform: translateY(-1px);
-  }
-
-  .header-icon-button svg {
-    width: 1.35rem;
-    fill: none;
-    stroke: currentcolor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.45;
-  }
-
-  .header-menu,
-  .header-menu__toggle {
-    position: static;
-  }
-
-  .header-menu__toggle {
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .header-menu__toggle::-webkit-details-marker,
-  .drawer-navigation summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .header-menu__close-icon,
-  .header-menu__close-label,
-  .header-menu[open] .header-menu__open-icon,
-  .header-menu[open] .header-menu__open-label {
-    display: none;
-  }
-
-  .header-menu[open] .header-menu__close-icon,
-  .header-menu[open] .header-menu__close-label {
-    display: inline;
-  }
-
-  .header-menu__panel {
-    position: absolute;
-    z-index: 50;
-    inset-block-start: 100%;
-    inset-inline-start: 0;
-    width: 100%;
-    max-height: calc(100svh - var(--header-mobile-height) - var(--announcement-bar-height, 0px));
-    overflow-y: auto;
-    border-block-end: 1px solid var(--header-border);
-    background: var(--header-background);
-    box-shadow: 0 1rem 2rem rgb(0 0 0 / 8%);
-    overscroll-behavior: contain;
-  }
-
-  .drawer-navigation {
-    min-height: min(39rem, calc(100svh - var(--header-mobile-height) - var(--announcement-bar-height, 0px)));
-    padding: 2.25rem 1.75rem 1.8rem;
-  }
-
-  .drawer-navigation > ul,
-  .desktop-navigation ul {
-    margin: 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 20px;
+    height: 20px;
     padding: 0;
-    list-style: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
   }
 
-  .drawer-navigation__all {
+  .hilya-menu span {
+    display: block;
+    width: 17px;
+    height: 1px;
+    background: #111;
+  }
+
+  /* MOBILE MENU */
+
+  .hilya-mobile-menu {
     display: flex;
-    min-height: 4rem;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    color: inherit;
-    font-size: clamp(1.65rem, 7vw, var(--drawer-font-size));
-    font-weight: 500;
-    letter-spacing: -0.055em;
-    line-height: 1.15;
-    padding-block: 0.35rem 1.35rem;
-    border-block-end: 1px solid var(--header-border);
+    flex-direction: column;
+    gap: 22px;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px;
+    background: #fff;
+    transition: max-height .3s ease, padding .3s ease;
+  }
+
+  .hilya-mobile-menu.is-open {
+    max-height: 220px;
+    padding-top: 22px;
+    padding-bottom: 24px;
+  }
+
+  .hilya-mobile-menu a {
+    color: #111;
     text-decoration: none;
-  }
-
-  .drawer-navigation__all svg {
-    width: 1.65rem;
-    fill: none;
-    stroke: currentcolor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.3;
-    transition: transform 150ms ease;
-  }
-
-  .drawer-navigation__all:hover svg {
-    transform: translateX(0.3rem);
-  }
-
-  [dir='rtl'] .drawer-navigation__all:hover svg {
-    transform: rotate(180deg) translateX(0.3rem);
-  }
-
-  [dir='rtl'] .drawer-navigation__all,
-  [dir='rtl'] .desktop-navigation a {
-    letter-spacing: 0;
-  }
-
-  [dir='rtl'] .drawer-navigation__all svg {
-    transform: rotate(180deg);
-  }
-
-  .drawer-navigation__heading {
-    margin: 1.5rem 0 0.55rem;
-    color: color-mix(in srgb, currentcolor 62%, transparent);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: .08em;
     text-transform: uppercase;
   }
 
-  .drawer-navigation__categories {
-    display: grid;
-    gap: 0.1rem;
-  }
+}
 
-  .drawer-navigation__categories a {
-    display: flex;
-    min-height: 3rem;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    border-radius: 0.5rem;
-    color: inherit;
-    font-size: 1.05rem;
-    font-weight: 500;
-    padding: 0.55rem 0.65rem;
-    text-decoration: none;
-    transition: background-color 150ms ease, padding 150ms ease;
-  }
-
-  .drawer-navigation__categories a:hover,
-  .drawer-navigation__categories a[aria-current='page'] {
-    background: rgb(0 0 0 / 5%);
-    padding-inline-start: 0.9rem;
-  }
-
-  .drawer-navigation__count {
-    color: color-mix(in srgb, currentcolor 55%, transparent);
-    font-size: 0.75rem;
-  }
-
-  .header-language {
-    display: flex;
-    align-items: center;
-    gap: 0.05rem;
-    margin-inline-start: 0.1rem;
-  }
-
-  .header-language__icon {
-    display: grid;
-    width: 1.5rem;
-    place-items: center;
-  }
-
-  .header-language__icon svg {
-    width: 1.05rem;
-    fill: none;
-    stroke: currentcolor;
-    stroke-width: 1.5;
-  }
-
-  .header-language button {
-    min-width: 2.1rem;
-    min-height: 2.4rem;
-    padding: 0.25rem;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    font: inherit;
-    font-size: 0.7rem;
-    font-weight: 600;
-  }
-
-  .header-language button.is-active {
-    background: var(--header-color);
-    color: var(--header-background);
-  }
-
-  .desktop-navigation,
-  .site-header__desktop-action {
-    display: none;
-  }
-
-  .site-header__mobile-search {
-    display: inline-grid;
-  }
-
-  .site-header__cart-count,
-  .site-header__wishlist-count {
-    position: absolute;
-    inset-block-start: 0.15rem;
-    inset-inline-end: 0.05rem;
-    display: grid;
-    min-width: 1rem;
-    height: 1rem;
-    place-items: center;
-    border-radius: 999px;
-    background: var(--header-color);
-    color: var(--header-background);
-    font-size: 0.625rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .site-header__wishlist-count {
-    background: var(--header-color);
-    color: var(--header-background);
-  }
-
-  @media (min-width: 61.875rem) {
-    .site-header__inner {
-      min-height: var(--header-desktop-height);
-      padding-inline: var(--header-desktop-padding);
-    }
-
-    .site-header__left {
-      gap: 1rem;
-    }
-
-    .site-header__actions {
-      gap: 0.15rem;
-    }
-
-    .site-header__brand {
-      width: min(var(--header-logo-width), 22vw);
-      font-size: 1.7rem;
-    }
-
-    .site-header__brand img {
-      max-height: calc(var(--header-desktop-height) - 2rem);
-    }
-
-    .site-header__mobile-search {
-      display: none;
-    }
-
-    .desktop-navigation,
-    .site-header__desktop-action {
-      display: block;
-    }
-
-    .desktop-navigation ul {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    .desktop-navigation a {
-      color: inherit;
-      font-size: 0.9375rem;
-      font-weight: 400;
-      letter-spacing: 0.075em;
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-
-    .desktop-navigation a:hover,
-    .desktop-navigation a[aria-current='page'] {
-      text-decoration: underline;
-      text-underline-offset: 0.32em;
-    }
-
-    .header-menu__panel {
-      width: min(34rem, 100vw);
-      max-height: calc(100svh - var(--header-desktop-height));
-    }
-
-    .drawer-navigation {
-      min-height: min(42rem, calc(100svh - var(--header-desktop-height)));
-      padding: 3rem var(--header-desktop-padding);
-    }
-  }
-
-  @media (max-width: 23rem) {
-    .site-header__inner {
-      padding-inline: 0.5rem;
-    }
-
-    .header-icon-button {
-      width: 2.5rem;
-      min-width: 2.5rem;
-    }
-
-    .header-language__icon {
-      display: none;
-    }
-
-    .header-language button {
-      min-width: 1.8rem;
-      padding-inline: 0.15rem;
-    }
-  }
-
-  @media (max-width: 46.8125rem) {
-    .site-header__inner {
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    }
-
-    .site-header__brand {
-      position: static;
-      grid-column: 2;
-      width: min(var(--header-mobile-logo-width), 24vw);
-      transform: none;
-      font-size: 1.2rem;
-    }
-
-    .header-language__icon {
-      display: none;
-    }
-  }
 {% endstylesheet %}
+
 
 {% schema %}
 {
-  "name": "t:general.header",
-  "enabled_on": { "groups": ["header"] },
-  "settings": [
-    { "type": "image_picker", "id": "logo", "label": "t:labels.logo" },
+  "name": "Hilya Header",
+  "settings": [],
+  "presets": [
     {
-      "type": "range",
-      "id": "logo_width",
-      "label": "t:labels.logo_width",
-      "min": 80,
-      "max": 280,
-      "step": 4,
-      "unit": "px",
-      "default": 140
-    },
-    {
-      "type": "range",
-      "id": "mobile_logo_width",
-      "label": "t:labels.mobile_logo_width",
-      "min": 72,
-      "max": 180,
-      "step": 4,
-      "unit": "px",
-      "default": 112
-    },
-    { "type": "link_list", "id": "desktop_menu", "label": "t:labels.desktop_menu", "default": "main-menu" },
-    { "type": "link_list", "id": "mobile_menu", "label": "t:labels.mobile_menu", "default": "main-menu" },
-    {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
-    },
-    { "type": "checkbox", "id": "show_search", "label": "t:labels.show_search", "default": true },
-    { "type": "checkbox", "id": "show_account", "label": "t:labels.show_account", "default": true },
-    { "type": "checkbox", "id": "sticky_header", "label": "t:labels.sticky_header", "default": true },
-    { "type": "header", "content": "t:labels.header_style" },
-    { "type": "color", "id": "background_color", "label": "t:labels.background", "default": "#FFFFFF" },
-    { "type": "color", "id": "text_color", "label": "t:labels.foreground", "default": "#111111" },
-    { "type": "color", "id": "border_color", "label": "t:labels.border", "default": "#EFEFEF" },
-    {
-      "type": "range",
-      "id": "desktop_height",
-      "label": "t:labels.desktop_header_height",
-      "min": 64,
-      "max": 112,
-      "step": 2,
-      "unit": "px",
-      "default": 84
-    },
-    {
-      "type": "range",
-      "id": "mobile_height",
-      "label": "t:labels.mobile_header_height",
-      "min": 56,
-      "max": 88,
-      "step": 2,
-      "unit": "px",
-      "default": 72
-    },
-    {
-      "type": "range",
-      "id": "desktop_padding",
-      "label": "t:labels.desktop_horizontal_padding",
-      "min": 16,
-      "max": 80,
-      "step": 2,
-      "unit": "px",
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "mobile_menu_font_size",
-      "label": "t:labels.mobile_menu_font_size",
-      "min": 24,
-      "max": 40,
-      "step": 1,
-      "unit": "px",
-      "default": 32
+      "name": "Hilya Header"
     }
-  ],
-  "presets": [{ "name": "t:general.header" }]
+  ]
 }
 {% endschema %}
