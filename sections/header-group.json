@@ -15,7 +15,7 @@
       "type": "header",
       "settings": {
         "contact_link": "shopify://pages/contact",
-        "show_search": false,
+        "show_search": true,
         "show_account": true,
         "sticky_header": true,
         "background_color": "#FFFFFF",
