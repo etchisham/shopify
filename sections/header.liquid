@@ -253,23 +253,36 @@
 
 
 /* =========================================================
-   DESKTOP HOVER OPEN
+   DESKTOP HOVER DROPDOWNS
    ========================================================= */
 
-.desktop-menu:hover .desktop-dropdown,
-.desktop-menu:focus-within .desktop-dropdown,
-.desktop-menu[open] .desktop-dropdown,
+/* Categories + Menu open automatically on mouse hover */
+@media screen and (min-width: 750px) {
 
-.desktop-categories:hover .desktop-dropdown,
-.desktop-categories:focus-within .desktop-dropdown,
-.desktop-categories[open] .desktop-dropdown {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  .desktop-menu:hover .desktop-dropdown,
+  .desktop-categories:hover .desktop-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
 
-  transform: translateX(-50%) translateY(0);
+  /* Keep the dropdown connected to the trigger */
+  .desktop-menu,
+  .desktop-categories {
+    position: relative;
+  }
+
+  /* Remove click/focus behavior from affecting the visual state */
+  .desktop-menu:focus .desktop-dropdown,
+  .desktop-categories:focus .desktop-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+  }
+
 }
-
 
 /* =========================================================
    RIGHT ACTIONS
