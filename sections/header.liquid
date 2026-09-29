@@ -18,14 +18,20 @@
     top: 0;
   }
 
-  .site-header__inner {
-    position: relative;
-    height: var(--header-height);
-    padding: 0 {{ section.settings.desktop_padding }}px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+  .site-header {
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+.site-header__inner {
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  box-sizing: border-box;
+}
 
   /* =========================
      BRAND
