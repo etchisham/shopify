@@ -1,3 +1,4 @@
+```liquid
 <section class="catalog-page collection full-width section-spacing">
   <div class="catalog-page__inner">
 
@@ -5,12 +6,12 @@
       <p class="catalog-page__eyebrow">COLLECTION</p>
 
       <h1 class="catalog-page__title">
-  {% if collection.handle == 'all' %}
-    All Products
-  {% else %}
-    {{ collection.title | escape }}
-  {% endif %}
-</h1>
+        {% if collection.handle == 'all' %}
+          All Products
+        {% else %}
+          {{ collection.title | escape }}
+        {% endif %}
+      </h1>
 
       {% if section.settings.show_collection_description and collection.description != blank %}
         <div class="catalog-page__description rte">
@@ -37,51 +38,109 @@
       {% if collection.products_count > 0 %}
 
         <div class="catalog-grid">
+
           {% for product in collection.products %}
 
-  {% liquid
-  assign product_colors = ''
+            {% liquid
+              assign product_colors = ''
+              assign product_available = product.available
 
-  for option in product.options_with_values
-    if option.name == 'Color'
+              for option in product.options_with_values
+                if option.name == 'Color'
 
-      for value in option.values
-        assign product_colors = product_colors | append: value.name | append: '|'
-      endfor
+                  for value in option.values
+                    assign product_colors = product_colors | append: value.name | append: '|'
+                  endfor
 
-    endif
-  endfor
+                endif
+              endfor
+            %}
 
-  assign product_available = product.available
-%}
 
-  <div
-    class="catalog-product-item"
-    data-product-item
-    data-product-type="{{ product.type | escape }}"
-    data-product-price="{{ product.price | divided_by: 100.0 }}"
-    data-product-available="{{ product_available }}"
-    data-product-colors="{{ product_colors | escape }}"
-  >
+            <div
+              class="catalog-product-item"
+              data-product-item
+              data-product-type="{{ product.type | escape }}"
+              data-product-price="{{ product.price | divided_by: 100.0 }}"
+              data-product-available="{{ product_available }}"
+              data-product-colors="{{ product_colors | escape }}"
+            >
 
-    {% render 'product-card',
-      product: product,
-      heading_level: 'h2',
-      sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
-    %}
+              <script type="application/json" data-variant-data>
 
-  </div>
+                [
+                  {% for variant in product.variants %}
 
-{% endfor %}
+                    {
+                      "id": {{ variant.id | json }},
+                      "color": {{ variant.option1 | json }},
+                      "price": {{ variant.price | divided_by: 100.0 | json }},
+                      "available": {{ variant.available | json }},
+                      "url": {{ variant.url | json }},
+
+                      "image": {% if variant.featured_image %}
+                        {
+                          "src": {{ variant.featured_image | image_url: width: 1200 | json }},
+                          "alt": {{ variant.featured_image.alt | default: product.title | json }}
+                        }
+                      {% else %}
+                        null
+                      {% endif %},
+
+                      "images": [
+                        {% assign variant_color = variant.option1 | downcase | strip %}
+
+                        {% assign matched_image_count = 0 %}
+
+                        {% for image in product.images %}
+
+                          {% assign image_alt = image.alt | default: '' | downcase %}
+
+                          {% if image_alt contains variant_color %}
+
+                            {% if matched_image_count > 0 %},{% endif %}
+
+                            {
+                              "src": {{ image | image_url: width: 1200 | json }},
+                              "alt": {{ image.alt | default: product.title | json }}
+                            }
+
+                            {% assign matched_image_count = matched_image_count | plus: 1 %}
+
+                          {% endif %}
+
+                        {% endfor %}
+                      ]
+
+                    }{% unless forloop.last %},{% endunless %}
+
+                  {% endfor %}
+                ]
+
+              </script>
+
+
+              {% render 'product-card',
+                product: product,
+                heading_level: 'h2',
+                sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
+              %}
+
+            </div>
+
+          {% endfor %}
+
         </div>
 
         {% if paginate.pages > 1 %}
+
           <nav
             class="catalog-page__pagination"
             aria-label="Pagination"
           >
             {{ paginate | default_pagination }}
           </nav>
+
         {% endif %}
 
       {% else %}
@@ -123,9 +182,7 @@
 
 .catalog-page__eyebrow {
   margin: 0 0 0.8rem;
-
   color: var(--color-muted);
-
   font-size: 0.62rem;
   font-weight: 500;
   line-height: 1;
@@ -135,9 +192,7 @@
 
 .catalog-page__title {
   margin: 0;
-
   color: var(--color-foreground);
-
   font-size: clamp(1.9rem, 3.5vw, 3.2rem);
   font-weight: 400;
   line-height: 1.08;
@@ -148,9 +203,7 @@
 .catalog-page__description {
   max-width: 36rem;
   margin: 1rem auto 0;
-
   color: var(--color-muted);
-
   font-size: 0.85rem;
   line-height: 1.7;
 }
@@ -162,7 +215,6 @@
 
 .catalog-page__toolbar {
   margin-block-end: clamp(1.5rem, 2.5vw, 2.25rem);
-
   border-block: 1px solid rgb(0 0 0 / 8%);
 }
 
@@ -173,9 +225,7 @@
 
 .catalog-grid {
   display: grid;
-
   grid-template-columns: repeat(2, minmax(0, 1fr));
-
   column-gap: clamp(0.7rem, 1.5vw, 1.5rem);
   row-gap: clamp(2.5rem, 4vw, 4.25rem);
 }
@@ -192,34 +242,23 @@
 .catalog-page__pagination {
   display: flex;
   flex-wrap: wrap;
-
   justify-content: center;
   align-items: center;
-
   gap: 0.3rem;
-
   margin-block-start: 4.5rem;
-
   text-align: center;
 }
 
 .catalog-page__pagination > * {
   display: inline-grid;
-
   min-width: 2.5rem;
   min-height: 2.5rem;
-
   place-items: center;
-
   padding: 0.5rem;
-
   color: var(--color-foreground);
-
   border-radius: 50%;
-
   font-size: 0.75rem;
   line-height: 1;
-
   text-decoration: none;
 }
 
@@ -236,11 +275,8 @@
   max-width: 36rem;
   margin: 3rem auto;
   padding: 3rem 1.5rem;
-
   border: 1px solid rgb(0 0 0 / 8%);
-
   text-align: center;
-
   color: var(--color-muted);
 }
 
@@ -287,7 +323,6 @@
 
   .catalog-page__eyebrow {
     margin-bottom: 0.7rem;
-
     font-size: 0.58rem;
     letter-spacing: 0.22em;
   }
@@ -299,7 +334,6 @@
 
   .catalog-page__description {
     margin-top: 0.9rem;
-
     font-size: 0.78rem;
   }
 
@@ -381,3 +415,4 @@
 }
 
 {% endschema %}
+```
