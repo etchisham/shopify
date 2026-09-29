@@ -38,12 +38,42 @@
 
         <div class="catalog-grid">
           {% for product in collection.products %}
-            {% render 'product-card',
-              product: product,
-              heading_level: 'h2',
-              sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
-            %}
-          {% endfor %}
+
+  {% liquid
+    assign product_colors = ''
+    assign color_option_position = blank
+
+    for option in product.options_with_values
+      if option.name == 'Color'
+        assign color_option_position = option.position
+
+        for value in option.values
+          assign product_colors = product_colors | append: value.name | append: '|'
+        endfor
+      endif
+    endfor
+
+    assign product_available = product.available
+  %}
+
+  <div
+    class="catalog-product-item"
+    data-product-item
+    data-product-type="{{ product.type | escape }}"
+    data-product-price="{{ product.price | divided_by: 100.0 }}"
+    data-product-available="{{ product_available }}"
+    data-product-colors="{{ product_colors | escape }}"
+  >
+
+    {% render 'product-card',
+      product: product,
+      heading_level: 'h2',
+      sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
+    %}
+
+  </div>
+
+{% endfor %}
         </div>
 
         {% if paginate.pages > 1 %}
