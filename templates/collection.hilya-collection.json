@@ -12,7 +12,7 @@
     "main": {
       "type": "collection",
       "settings": {
-        "show_collection_description": true,
+        "show_collection_description": false,
         "products_per_page": 24
       }
     }
