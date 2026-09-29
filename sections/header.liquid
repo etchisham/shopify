@@ -1,1625 +1,677 @@
-{% style %}
-
-/* =========================================================
-   HILYA HEADER
-   ========================================================= */
-
-.site-header {
-  --header-bg: {{ section.settings.background_color }};
-  --header-text: {{ section.settings.text_color }};
-  --header-border: {{ section.settings.border_color }};
-  --header-height: {{ section.settings.desktop_height }}px;
-  --header-mobile-height: {{ section.settings.mobile_height }}px;
-  --hilya-header-height: {{ section.settings.desktop_height }}px;
-
-  width: 100vw !important;
-  max-width: none !important;
-
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: 0 !important;
-
-  padding: 0 !important;
-
-  background: var(--header-bg);
-  color: var(--header-text);
-
-  border-bottom: 1px solid var(--header-border);
-
-  position: relative;
-  z-index: 1000;
-
-  box-sizing: border-box;
-}
-
-.site-header,
-.site-header * {
-  box-sizing: border-box;
-}
-
-
-/* =========================================================
-   FIXED HEADER
-   ========================================================= */
-
-.site-header--sticky {
-  position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-
-  width: 100vw !important;
-  max-width: none !important;
-
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-
-  z-index: 99999 !important;
-}
-
-
-/* Reserve header space */
-
-body:has(.site-header--sticky) {
-  padding-top: var(--hilya-header-height);
-}
-
-
-/* =========================================================
-   HEADER INNER
-   ========================================================= */
-
-.site-header__inner {
-  width: 100% !important;
-  max-width: none !important;
-
-  height: var(--header-height);
-
-  margin: 0 !important;
-
-  padding-left: {{ section.settings.desktop_padding }}px;
-  padding-right: {{ section.settings.desktop_padding }}px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  position: relative;
-}
-
-
-/* =========================================================
-   BRAND
-   ========================================================= */
-
-.site-header__brand {
-  position: relative;
-  z-index: 20;
-
-  color: var(--header-text);
-  text-decoration: none;
-
-  font-family:
-    "Cormorant Garamond",
-    "Bodoni Moda",
-    "Didot",
-    "Times New Roman",
-    serif;
-
-  font-size: 2.4rem;
-  font-style: italic;
-  font-weight: 600;
-
-  letter-spacing: -0.075em;
-  line-height: 1;
-
-  white-space: nowrap;
-}
-
-.site-header__brand:hover {
-  color: var(--header-text);
-}
-
-
-/* =========================================================
-   DESKTOP NAV
-   ========================================================= */
-
-.desktop-nav {
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  transform: translate(-50%, -50%);
-
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-
-  gap: 30px;
-
-  z-index: 15;
-}
-
-.desktop-nav > a {
-  color: var(--header-text);
-  text-decoration: none;
-
-  font-size: 0.78rem;
-  font-weight: 500;
-
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-
-  white-space: nowrap;
-
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-}
-
-.desktop-nav > a:hover {
-  opacity: 0.65;
-}
-
-
-/* =========================================================
-   DESKTOP MENU + CATEGORIES
-   HOVER ONLY
-   ========================================================= */
-
-.desktop-menu,
-.desktop-categories {
-  position: relative;
-
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-}
-
-
-/* =========================================================
-   DESKTOP TRIGGERS
-   ========================================================= */
-
-.desktop-menu__trigger,
-.desktop-categories__trigger {
-  appearance: none;
-  -webkit-appearance: none;
-
-  border: 0;
-  outline: 0;
-
-  margin: 0;
-  padding: 0;
-
-  background: transparent;
-
-  color: var(--header-text);
-
-  font-family: inherit;
-
-  cursor: default;
-}
-
-.desktop-menu__trigger {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-}
-
-.desktop-categories__trigger {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-
-  font-size: 0.78rem;
-  font-weight: 500;
-
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-
-  white-space: nowrap;
-}
-
-
-/* =========================================================
-   DESKTOP HAMBURGER
-   ========================================================= */
-
-.desktop-menu__icon {
-  width: 18px;
-  height: 14px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  pointer-events: none;
-}
-
-.desktop-menu__icon span {
-  width: 100%;
-  height: 1px;
-
-  display: block;
-
-  background: currentColor;
-}
-
-
-/* =========================================================
-   DESKTOP DROPDOWN
-   ========================================================= */
-
-.desktop-dropdown {
-  position: absolute;
-
-  top: 100%;
-  left: 50%;
-
-  transform: translateX(-50%) translateY(8px);
-
-  min-width: 195px;
-
-  padding: 14px 0;
-
-  background: var(--header-bg);
-
-  border: 1px solid var(--header-border);
-
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.07);
-
-  opacity: 0;
-
-  visibility: hidden;
-
-  pointer-events: none;
-
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease,
-    visibility 0.18s ease;
-
-  z-index: 2000;
-}
-
-.desktop-dropdown a {
-  display: block;
-
-  padding: 9px 20px;
-
-  color: var(--header-text);
-
-  text-decoration: none;
-
-  font-size: 0.76rem;
-  font-weight: 500;
-
-  letter-spacing: 0.06em;
-
-  text-transform: uppercase;
-
-  white-space: nowrap;
-}
-
-.desktop-dropdown a:hover {
-  background: rgba(0, 0, 0, 0.035);
-}
-
-
-/* =========================================================
-   DESKTOP HOVER ONLY
-   ========================================================= */
-
-@media screen and (min-width: 750px) {
-
-  .desktop-menu:hover .desktop-dropdown,
-  .desktop-categories:hover .desktop-dropdown {
-
-    opacity: 1;
-
-    visibility: visible;
-
-    pointer-events: auto;
-
-    transform:
-      translateX(-50%)
-      translateY(0);
-  }
-
-}
-
-
-/* =========================================================
-   RIGHT ACTIONS
-   ========================================================= */
-
-.header-actions {
-  margin-left: auto;
-
-  display: flex;
-  align-items: center;
-
-  gap: 17px;
-
-  position: relative;
-
-  z-index: 20;
-}
-
-.header-action {
-  color: var(--header-text);
-
-  text-decoration: none;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: relative;
-}
-
-.header-action svg {
-  width: 18px;
-  height: 18px;
-
-  stroke: currentColor;
-}
-
-.cart-count {
-  position: absolute;
-
-  top: -8px;
-  right: -9px;
-
-  min-width: 15px;
-  height: 15px;
-
-  padding: 0 3px;
-
-  border-radius: 50%;
-
-  background: var(--header-text);
-  color: var(--header-bg);
-
-  font-size: 9px;
-  line-height: 15px;
-
-  text-align: center;
-}
-
-
-/* =========================================================
-   SEARCH
-   ========================================================= */
-
-.header-search {
-  position: relative;
-}
-
-.header-search summary {
-  list-style: none;
-  cursor: pointer;
-}
-
-.header-search summary::-webkit-details-marker {
-  display: none;
-}
-
-
-/* Search box */
-
-.header-search__panel {
-  position: absolute;
-
-  right: 0;
-  top: calc(100% + 18px);
-
-  width: 270px;
-
-  padding: 12px;
-
-  background: var(--header-bg);
-
-  border: 1px solid var(--header-border);
-
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.07);
-
-  z-index: 3000;
-}
-
-.header-search__form {
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-}
-
-.header-search__input {
-  flex: 1;
-
-  min-width: 0;
-
-  height: 38px;
-
-  padding: 0 11px;
-
-  border: 1px solid var(--header-border);
-
-  background: transparent;
-
-  color: var(--header-text);
-
-  outline: none;
-
-  font-size: 0.78rem;
-}
-
-.header-search__input::placeholder {
-  color: var(--header-text);
-  opacity: 0.55;
-}
-
-
-/* =========================================================
-   SEARCH SUBMIT BUTTON
-   WHITE SEARCH ICON
-   ========================================================= */
-
-.header-search__submit {
-  width: 38px;
-  height: 38px;
-
-  border: 1px solid #FFFFFF;
-
-  background: transparent;
-
-  color: #FFFFFF;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-}
-
-.header-search__submit svg {
-  width: 16px;
-  height: 16px;
-
-  stroke: #FFFFFF;
-}
-
-
-/* =========================================================
-   MOBILE MENU
-   ========================================================= */
-
-.mobile-menu {
-  display: none;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media screen and (max-width: 749px) {
-
+{% liquid
+  assign header_logo = section.settings.logo | default: settings.logo
+  assign wishlist_page = pages['wishlist']
+  assign wishlist_url = routes.root_url | append: 'pages/wishlist'
+  if wishlist_page != blank
+    assign wishlist_url = wishlist_page.url
+  endif
+%}
+
+{% if section.settings.sticky_header %}
+  {% style %}
+    #shopify-section-{{ section.id }} {
+      position: sticky;
+      z-index: 40;
+      inset-block-start: 0;
+    }
+  {% endstyle %}
+{% endif %}
+
+<header
+  class="site-header full-width"
+  style="
+    --header-background: {{ section.settings.background_color }};
+    --header-color: {{ section.settings.text_color }};
+    --header-border: {{ section.settings.border_color }};
+    --header-desktop-height: {{ section.settings.desktop_height }}px;
+    --header-mobile-height: {{ section.settings.mobile_height }}px;
+    --header-desktop-padding: {{ section.settings.desktop_padding }}px;
+    --header-logo-width: {{ section.settings.logo_width }}px;
+    --header-mobile-logo-width: {{ section.settings.mobile_logo_width }}px;
+    --drawer-font-size: {{ section.settings.mobile_menu_font_size }}px;
+  "
+>
+  <div class="site-header__inner">
+    <div class="site-header__left">
+      <details class="header-menu" data-menu-drawer scroll-lock>
+        <summary class="header-icon-button header-menu__toggle">
+          <span class="header-menu__open-icon">{% render 'icon', name: 'menu' %}</span>
+          <span class="header-menu__close-icon">{% render 'icon', name: 'close' %}</span>
+          <span class="header-menu__open-label visually-hidden">{{ 'accessibility.open_menu' | t }}</span>
+          <span class="header-menu__close-label visually-hidden">{{ 'accessibility.close_menu' | t }}</span>
+        </summary>
+
+        <div class="header-menu__panel">
+          <nav class="drawer-navigation" aria-label="{{ 'general.menu' | t | escape }}">
+            <a class="drawer-navigation__all" href="{{ routes.all_products_collection_url }}">
+              <span>{{ 'general.all_products' | t }}</span>
+              <span aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+            </a>
+            <p class="drawer-navigation__heading">{{ 'general.categories' | t }}</p>
+            <ul class="drawer-navigation__categories" role="list">
+              {% for category in collections %}
+                {% unless category.handle == 'all' or category.handle == 'frontpage' %}
+                  <li>
+                    <a href="{{ category.url }}">
+                      <span>{{ category.title | escape }}</span>
+                      {% if category.all_products_count > 0 %}<span class="drawer-navigation__count">{{ category.all_products_count }}</span>{% endif %}
+                    </a>
+                  </li>
+                {% endunless %}
+              {% endfor %}
+            </ul>
+          </nav>
+        </div>
+      </details>
+
+      {% if localization.available_languages.size > 1 %}
+        {% form 'localization', id: 'HeaderLanguageForm', class: 'header-language' %}
+          <span class="header-language__icon" aria-hidden="true">{% render 'icon', name: 'globe' %}</span>
+          <span class="visually-hidden">{{ 'general.language' | t }}</span>
+          {% for language in localization.available_languages %}
+            {% assign language_root = language.iso_code | split: '-' | first %}
+            {% if language_root == 'ar' or language_root == 'en' %}
+              <button type="submit" name="locale_code" value="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == request.locale.iso_code %} class="is-active" aria-current="true"{% endif %}>{{ language_root | upcase }}</button>
+            {% endif %}
+          {% endfor %}
+        {% endform %}
+      {% endif %}
+
+      {% if section.settings.show_search %}
+        <a
+          class="header-icon-button site-header__mobile-search"
+          href="{{ routes.search_url }}"
+          aria-label="{{ 'general.search' | t | escape }}"
+        >
+          {% render 'icon', name: 'search' %}
+        </a>
+      {% endif %}
+
+      {% if section.settings.desktop_menu != blank %}
+        <nav class="desktop-navigation" aria-label="{{ 'general.menu' | t | escape }}">
+          <ul role="list">
+            {% for link in section.settings.desktop_menu.links %}
+              <li>
+                <a
+                  href="{{ link.url }}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+    </div>
+
+    <a class="site-header__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+      {% if header_logo != blank %}
+        {{
+          header_logo
+          | image_url: width: section.settings.logo_width
+          | image_tag:
+            widths: '100, 140, 180, 220, 280, 360',
+            width: section.settings.logo_width,
+            alt: shop.name,
+            loading: 'eager'
+        }}
+      {% else %}
+        <span>{{ shop.name | escape }}</span>
+      {% endif %}
+    </a>
+
+    <div class="site-header__actions">
+      {% if shop.customer_accounts_enabled and section.settings.show_account %}
+        <shopify-account class="site-header__desktop-action" menu="{{ section.settings.customer_account_menu }}">
+          <span class="header-icon-button" aria-label="{{ 'general.account' | t | escape }}">
+            {% render 'icon', name: 'account' %}
+          </span>
+        </shopify-account>
+      {% endif %}
+
+      {% if section.settings.show_search %}
+        <a
+          class="header-icon-button site-header__desktop-action"
+          href="{{ routes.search_url }}"
+          aria-label="{{ 'general.search' | t | escape }}"
+        >
+          {% render 'icon', name: 'search' %}
+        </a>
+      {% endif %}
+
+      <a
+        class="header-icon-button site-header__wishlist"
+        href="{{ wishlist_url }}"
+        aria-label="{{ 'general.wishlist' | t | escape }}"
+      >
+        {% render 'icon', name: 'heart' %}
+        <span class="site-header__wishlist-count" aria-hidden="true" data-wishlist-count hidden>0</span>
+      </a>
+
+      <a
+        class="header-icon-button site-header__cart"
+        href="{{ routes.cart_url }}"
+        aria-label="{{ 'general.cart' | t: count: cart.item_count | escape }}"
+        data-cart-open
+        aria-haspopup="dialog"
+        aria-controls="CartDrawer"
+        aria-expanded="false"
+      >
+        {% render 'icon', name: 'cart' %}
+        <span
+          class="site-header__cart-count"
+          aria-hidden="true"
+          data-cart-count
+          {% if cart.item_count == 0 %}
+            hidden
+          {% endif %}
+        >
+          {{- cart.item_count -}}
+        </span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% stylesheet %}
   .site-header {
-    --hilya-header-height: {{ section.settings.mobile_height }}px;
-
-    width: 100vw !important;
-    max-width: none !important;
-
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    position: relative;
+    z-index: 40;
+    border-block-end: 1px solid var(--header-border);
+    background: var(--header-background);
+    color: var(--header-color);
+    font-family: Arial, Helvetica, sans-serif;
   }
 
+  [dir='rtl'] .site-header {
+    font-family: Tahoma, Arial, sans-serif;
+  }
 
   .site-header__inner {
-    width: 100% !important;
-    max-width: none !important;
-
-    height: var(--header-mobile-height);
-
-    padding-left: 16px;
-    padding-right: 16px;
+    display: grid;
+    width: 100%;
+    min-height: var(--header-mobile-height);
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding-inline: 1rem;
   }
 
+  .site-header__left,
+  .site-header__actions {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+  }
 
-  /* =======================================================
-     MOBILE BRAND
-     ======================================================= */
+  .site-header__left {
+    grid-column: 1;
+    justify-content: flex-start;
+    gap: 0.2rem;
+  }
+
+  .site-header__actions {
+    grid-column: 3;
+    justify-content: flex-end;
+    gap: 0.2rem;
+  }
 
   .site-header__brand {
     position: absolute;
-
     left: 50%;
-    top: 50%;
-
-    transform: translate(-50%, -50%);
-
-    font-size: 2rem;
-  }
-
-
-  /* =======================================================
-     HIDE DESKTOP NAV
-     ======================================================= */
-
-  .desktop-nav {
-    display: none;
-  }
-
-
-  /* =======================================================
-     MOBILE MENU
-     ======================================================= */
-
-  .mobile-menu {
-    display: block;
-
-    position: static;
-
-    z-index: 100000;
-  }
-
-
-  .mobile-menu summary {
-    list-style: none;
-
-    width: 22px;
-    height: 18px;
-
-    padding: 0;
-    margin: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    position: relative;
-  }
-
-  .mobile-menu summary::-webkit-details-marker {
-    display: none;
-  }
-
-
-  /* =======================================================
-     MOBILE HAMBURGER / X
-     ======================================================= */
-
-  .mobile-menu__icon {
-    width: 21px;
-    height: 16px;
-
-    display: flex;
-    flex-direction: column;
-
-    justify-content: space-between;
-
-    position: relative;
-  }
-
-  .mobile-menu__icon span {
-    width: 100%;
-    height: 1px;
-
-    display: block;
-
-    background: currentColor;
-
-    transition:
-      transform 0.2s ease,
-      opacity 0.2s ease;
-
-    transform-origin: center;
-  }
-
-
-  /* Open = X */
-
-  .mobile-menu[open]
-  .mobile-menu__icon span:nth-child(1) {
-    transform:
-      translateY(7.5px)
-      rotate(45deg);
-  }
-
-  .mobile-menu[open]
-  .mobile-menu__icon span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .mobile-menu[open]
-  .mobile-menu__icon span:nth-child(3) {
-    transform:
-      translateY(-7.5px)
-      rotate(-45deg);
-  }
-
-
-  /* =======================================================
-     MOBILE MENU FULL SCREEN
-     ======================================================= */
-
-  .mobile-menu__panel {
-    position: fixed;
-
-    top: var(--header-mobile-height);
-    left: 0;
-
-    width: 100vw;
-
-    height:
-      calc(100vh - var(--header-mobile-height));
-
-    max-height: none;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding:
-      18px 22px 40px;
-
-    background: var(--header-bg);
-
-    border-top:
-      1px solid var(--header-border);
-
-    border-bottom:
-      1px solid var(--header-border);
-
-    box-shadow:
-      none;
-
-    z-index: 99998;
-
-    box-sizing: border-box;
-
-    -webkit-overflow-scrolling: touch;
-  }
-
-
-  /* =======================================================
-     MOBILE MENU LINKS
-     ======================================================= */
-
-  .mobile-menu__panel > a {
-    display: block;
-
-    width: 100%;
-
-    padding: 15px 2px;
-
-    color: var(--header-text);
-
-    text-decoration: none;
-
-    font-size: 0.82rem;
+    width: min(var(--header-mobile-logo-width), 38vw);
+    transform: translateX(-50%);
+    color: inherit;
+    font-size: 1.45rem;
     font-weight: 500;
-
-    letter-spacing: 0.08em;
-
-    text-transform: uppercase;
-
-    border-bottom:
-      1px solid rgba(0, 0, 0, 0.08);
-  }
-
-
-  /* =======================================================
-     MOBILE CATEGORIES
-     ======================================================= */
-
-  .mobile-categories {
-    width: 100%;
-
-    border-bottom:
-      1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  .mobile-categories summary {
-    list-style: none;
-
-    width: 100%;
-
-    min-height: 48px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    color: var(--header-text);
-
-    font-size: 0.82rem;
-    font-weight: 500;
-
-    letter-spacing: 0.08em;
-
-    text-transform: uppercase;
-
-    cursor: pointer;
-  }
-
-  .mobile-categories summary::-webkit-details-marker {
-    display: none;
-  }
-
-
-  /* Categories arrow */
-
-  .mobile-categories__arrow {
-    width: 7px;
-    height: 7px;
-
-    border-right:
-      1px solid currentColor;
-
-    border-bottom:
-      1px solid currentColor;
-
-    transform: rotate(45deg);
-
-    margin-right: 3px;
-    margin-top: -4px;
-
-    transition:
-      transform 0.2s ease;
-  }
-
-  .mobile-categories[open]
-  .mobile-categories__arrow {
-
-    transform: rotate(225deg);
-
-    margin-top: 4px;
-  }
-
-
-  /* Category items */
-
-  .mobile-categories__items {
-    width: 100%;
-
-    padding:
-      0 0 5px 14px;
-  }
-
-  .mobile-categories__items a {
-    display: block;
-
-    width: 100%;
-
-    padding: 11px 2px;
-
-    color: var(--header-text);
-
+    letter-spacing: -0.07em;
+    line-height: 1;
+    text-align: center;
     text-decoration: none;
+  }
 
-    font-size: 0.76rem;
+  [dir='rtl'] .site-header__brand {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
 
-    letter-spacing: 0.07em;
+  .site-header__brand img {
+    width: 100%;
+    max-height: calc(var(--header-mobile-height) - 1rem);
+    margin-inline: auto;
+    object-fit: contain;
+  }
 
-    text-transform: uppercase;
-
+  .header-icon-button {
+    position: relative;
+    display: inline-grid;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
     border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    text-decoration: none;
   }
 
-
-  /* =======================================================
-     MOBILE ACTIONS
-     ======================================================= */
-
-  .header-actions {
-    margin-left: auto;
-
-    gap: 14px;
+  .header-icon-button:hover {
+    background: rgb(0 0 0 / 4%);
   }
 
-  .header-action svg {
-    width: 18px;
-    height: 18px;
+  .header-icon-button,
+  .header-language button {
+    transition: background-color 150ms ease, transform 150ms ease;
   }
 
-
-  /* =======================================================
-     MOBILE SEARCH
-     ======================================================= */
-
-  .header-search__panel {
-    position: fixed;
-
-    top: var(--header-mobile-height);
-    left: 0;
-
-    width: 100vw;
-
-    padding:
-      14px 16px;
-
-    box-sizing: border-box;
-
-    z-index: 99998;
+  .header-icon-button:hover,
+  .header-language button:hover {
+    transform: translateY(-1px);
   }
 
-  .header-search__form {
+  .header-icon-button svg {
+    width: 1.35rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.45;
+  }
+
+  .header-menu,
+  .header-menu__toggle {
+    position: static;
+  }
+
+  .header-menu__toggle {
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .header-menu__toggle::-webkit-details-marker,
+  .drawer-navigation summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .header-menu__close-icon,
+  .header-menu__close-label,
+  .header-menu[open] .header-menu__open-icon,
+  .header-menu[open] .header-menu__open-label {
+    display: none;
+  }
+
+  .header-menu[open] .header-menu__close-icon,
+  .header-menu[open] .header-menu__close-label {
+    display: inline;
+  }
+
+  .header-menu__panel {
+    position: absolute;
+    z-index: 50;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
     width: 100%;
+    max-height: calc(100svh - var(--header-mobile-height) - var(--announcement-bar-height, 0px));
+    overflow-y: auto;
+    border-block-end: 1px solid var(--header-border);
+    background: var(--header-background);
+    box-shadow: 0 1rem 2rem rgb(0 0 0 / 8%);
+    overscroll-behavior: contain;
   }
 
-}
-
-
-/* =========================================================
-   DESKTOP / MOBILE DISPLAY
-   ========================================================= */
-
-@media screen and (min-width: 750px) {
-
-  .mobile-menu {
-    display: none !important;
+  .drawer-navigation {
+    min-height: min(39rem, calc(100svh - var(--header-mobile-height) - var(--announcement-bar-height, 0px)));
+    padding: 2.25rem 1.75rem 1.8rem;
   }
 
-}
-
-
-/* =========================================================
-   FULL WIDTH SHOPIFY SECTION
-   ========================================================= */
-
-.shopify-section:has(.site-header) {
-  width: 100vw !important;
-  max-width: none !important;
-
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: 0 !important;
-
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-{% endstyle %}
-
-
-<header
-  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
->
-
-  <div class="site-header__inner">
-
-
-    <!-- =====================================================
-         MOBILE MENU
-         ===================================================== -->
-
-    <details class="mobile-menu">
-
-      <summary aria-label="Open menu">
-
-        <span class="mobile-menu__icon">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-
-      </summary>
-
-
-      <nav class="mobile-menu__panel">
-
-        <a href="{{ routes.root_url }}">
-          Home
-        </a>
-
-        <a href="{{ routes.all_products_collection_url }}">
-          All Products
-        </a>
-
-
-        <!-- MOBILE CATEGORIES -->
-
-        <details class="mobile-categories">
-
-          <summary>
-
-            <span>
-              Categories
-            </span>
-
-            <span class="mobile-categories__arrow"></span>
-
-          </summary>
-
-
-          <div class="mobile-categories__items">
-
-            <a href="{{ routes.collections_url }}/necklaces">
-              Necklaces
-            </a>
-
-            <a href="{{ routes.collections_url }}/rings">
-              Rings
-            </a>
-
-            <a href="{{ routes.collections_url }}/pendants">
-              Pendants
-            </a>
-
-            <a href="{{ routes.collections_url }}/bracelets">
-              Bracelets
-            </a>
-
-            <a href="{{ routes.collections_url }}/keychains">
-              Keychains
-            </a>
-
-          </div>
-
-        </details>
-
-
-        {% if section.settings.show_new_arrivals
-          and section.settings.new_arrivals_link != blank %}
-
-          <a href="{{ section.settings.new_arrivals_link }}">
-            New Arrivals
-          </a>
-
-        {% endif %}
-
-
-        {% if section.settings.show_best_sellers
-          and section.settings.best_sellers_link != blank %}
-
-          <a href="{{ section.settings.best_sellers_link }}">
-            Best Sellers
-          </a>
-
-        {% endif %}
-
-
-        <a href="{{ section.settings.contact_link }}">
-          Contact Us
-        </a>
-
-
-        <a href="{{ section.settings.instagram_link }}">
-          Our Instagram
-        </a>
-
-
-        {% if section.settings.show_shipping
-          and section.settings.shipping_page != blank %}
-
-          <a href="{{ section.settings.shipping_page.url }}">
-            Shipping
-          </a>
-
-        {% endif %}
-
-
-        {% if section.settings.show_returns
-          and section.settings.returns_page != blank %}
-
-          <a href="{{ section.settings.returns_page.url }}">
-            Returns
-          </a>
-
-        {% endif %}
-
-
-        {% if section.settings.show_faq
-          and section.settings.faq_page != blank %}
-
-          <a href="{{ section.settings.faq_page.url }}">
-            FAQ
-          </a>
-
-        {% endif %}
-
-      </nav>
-
-    </details>
-
-
-    <!-- =====================================================
-         BRAND
-         ===================================================== -->
-
-    <a
-      href="{{ routes.root_url }}"
-      class="site-header__brand"
-    >
-      Hilya
-    </a>
-
-
-    <!-- =====================================================
-         DESKTOP NAV
-         ===================================================== -->
-
-    <nav class="desktop-nav">
-
-
-      <!-- DESKTOP MENU -->
-
-      <div class="desktop-menu">
-
-        <button
-          class="desktop-menu__trigger"
-          type="button"
-          aria-label="Menu"
-        >
-
-          <span class="desktop-menu__icon">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-
-        </button>
-
-
-        <div class="desktop-dropdown">
-
-          <a href="{{ routes.all_products_collection_url }}">
-            All Products
-          </a>
-
-
-          {% if section.settings.show_new_arrivals
-            and section.settings.new_arrivals_link != blank %}
-
-            <a href="{{ section.settings.new_arrivals_link }}">
-              New Arrivals
-            </a>
-
-          {% endif %}
-
-
-          {% if section.settings.show_best_sellers
-            and section.settings.best_sellers_link != blank %}
-
-            <a href="{{ section.settings.best_sellers_link }}">
-              Best Sellers
-            </a>
-
-          {% endif %}
-
-
-          <a href="{{ section.settings.instagram_link }}">
-            Our Instagram
-          </a>
-
-
-          {% if section.settings.show_shipping
-            and section.settings.shipping_page != blank %}
-
-            <a href="{{ section.settings.shipping_page.url }}">
-              Shipping
-            </a>
-
-          {% endif %}
-
-
-          {% if section.settings.show_returns
-            and section.settings.returns_page != blank %}
-
-            <a href="{{ section.settings.returns_page.url }}">
-              Returns
-            </a>
-
-          {% endif %}
-
-
-          {% if section.settings.show_faq
-            and section.settings.faq_page != blank %}
-
-            <a href="{{ section.settings.faq_page.url }}">
-              FAQ
-            </a>
-
-          {% endif %}
-
-        </div>
-
-      </div>
-
-
-      <!-- HOME -->
-
-      <a href="{{ routes.root_url }}">
-        Home
-      </a>
-
-
-      <!-- DESKTOP CATEGORIES -->
-
-      <div class="desktop-categories">
-
-        <button
-          class="desktop-categories__trigger"
-          type="button"
-        >
-          Categories
-        </button>
-
-
-        <div class="desktop-dropdown">
-
-          <a href="{{ routes.collections_url }}/necklaces">
-            Necklaces
-          </a>
-
-          <a href="{{ routes.collections_url }}/rings">
-            Rings
-          </a>
-
-          <a href="{{ routes.collections_url }}/pendants">
-            Pendants
-          </a>
-
-          <a href="{{ routes.collections_url }}/bracelets">
-            Bracelets
-          </a>
-
-          <a href="{{ routes.collections_url }}/keychains">
-            Keychains
-          </a>
-
-        </div>
-
-      </div>
-
-
-      <!-- CONTACT -->
-
-      <a href="{{ section.settings.contact_link }}">
-        Contact Us
-      </a>
-
-    </nav>
-
-
-    <!-- =====================================================
-         RIGHT ACTIONS
-         ===================================================== -->
-
-    <div class="header-actions">
-
-
-      <!-- SEARCH -->
-
-      {% if section.settings.show_search %}
-
-        <details class="header-search">
-
-          <summary
-            class="header-action"
-            aria-label="Search"
-          >
-
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-
-              <circle
-                cx="11"
-                cy="11"
-                r="7"
-              ></circle>
-
-              <path
-                d="M20 20L16.2 16.2"
-              ></path>
-
-            </svg>
-
-          </summary>
-
-
-          <div class="header-search__panel">
-
-            <form
-              class="header-search__form"
-              action="{{ routes.search_url }}"
-              method="get"
-            >
-
-              <input
-                class="header-search__input"
-                type="search"
-                name="q"
-                placeholder="Search"
-                aria-label="Search"
-              >
-
-
-              <button
-                class="header-search__submit"
-                type="submit"
-                aria-label="Submit search"
-              >
-
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-
-                  <circle
-                    cx="11"
-                    cy="11"
-                    r="7"
-                  ></circle>
-
-                  <path
-                    d="M20 20L16.2 16.2"
-                  ></path>
-
-                </svg>
-
-              </button>
-
-            </form>
-
-          </div>
-
-        </details>
-
-      {% endif %}
-
-
-      <!-- ACCOUNT -->
-
-      {% if section.settings.show_account %}
-
-        <a
-          href="{{ routes.account_url }}"
-          class="header-action"
-          aria-label="Account"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-
-            <circle
-              cx="12"
-              cy="8"
-              r="3.5"
-            ></circle>
-
-            <path
-              d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5"
-            ></path>
-
-          </svg>
-
-        </a>
-
-      {% endif %}
-
-
-      <!-- CART -->
-
-      <a
-        href="{{ routes.cart_url }}"
-        class="header-action"
-        aria-label="Cart"
-      >
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-
-          <path
-            d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"
-          ></path>
-
-          <circle
-            cx="10"
-            cy="20"
-            r="1"
-          ></circle>
-
-          <circle
-            cx="18"
-            cy="20"
-            r="1"
-          ></circle>
-
-        </svg>
-
-
-        {% if cart.item_count > 0 %}
-
-          <span class="cart-count">
-            {{ cart.item_count }}
-          </span>
-
-        {% endif %}
-
-      </a>
-
-    </div>
-
-  </div>
-
-</header>
-
-
-<script>
-(function () {
-
-  function setupHilyaMobileMenu() {
-
-    const menu = document.querySelector('.mobile-menu');
-
-    if (!menu) return;
-
-    function lockPage() {
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
+  .drawer-navigation > ul,
+  .desktop-navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .drawer-navigation__all {
+    display: flex;
+    min-height: 4rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: inherit;
+    font-size: clamp(1.65rem, 7vw, var(--drawer-font-size));
+    font-weight: 500;
+    letter-spacing: -0.055em;
+    line-height: 1.15;
+    padding-block: 0.35rem 1.35rem;
+    border-block-end: 1px solid var(--header-border);
+    text-decoration: none;
+  }
+
+  .drawer-navigation__all svg {
+    width: 1.65rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.3;
+    transition: transform 150ms ease;
+  }
+
+  .drawer-navigation__all:hover svg {
+    transform: translateX(0.3rem);
+  }
+
+  [dir='rtl'] .drawer-navigation__all:hover svg {
+    transform: rotate(180deg) translateX(0.3rem);
+  }
+
+  [dir='rtl'] .drawer-navigation__all,
+  [dir='rtl'] .desktop-navigation a {
+    letter-spacing: 0;
+  }
+
+  [dir='rtl'] .drawer-navigation__all svg {
+    transform: rotate(180deg);
+  }
+
+  .drawer-navigation__heading {
+    margin: 1.5rem 0 0.55rem;
+    color: color-mix(in srgb, currentcolor 62%, transparent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .drawer-navigation__categories {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .drawer-navigation__categories a {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 0.5rem;
+    color: inherit;
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 0.55rem 0.65rem;
+    text-decoration: none;
+    transition: background-color 150ms ease, padding 150ms ease;
+  }
+
+  .drawer-navigation__categories a:hover,
+  .drawer-navigation__categories a[aria-current='page'] {
+    background: rgb(0 0 0 / 5%);
+    padding-inline-start: 0.9rem;
+  }
+
+  .drawer-navigation__count {
+    color: color-mix(in srgb, currentcolor 55%, transparent);
+    font-size: 0.75rem;
+  }
+
+  .header-language {
+    display: flex;
+    align-items: center;
+    gap: 0.05rem;
+    margin-inline-start: 0.1rem;
+  }
+
+  .header-language__icon {
+    display: grid;
+    width: 1.5rem;
+    place-items: center;
+  }
+
+  .header-language__icon svg {
+    width: 1.05rem;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 1.5;
+  }
+
+  .header-language button {
+    min-width: 2.1rem;
+    min-height: 2.4rem;
+    padding: 0.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .header-language button.is-active {
+    background: var(--header-color);
+    color: var(--header-background);
+  }
+
+  .desktop-navigation,
+  .site-header__desktop-action {
+    display: none;
+  }
+
+  .site-header__mobile-search {
+    display: inline-grid;
+  }
+
+  .site-header__cart-count,
+  .site-header__wishlist-count {
+    position: absolute;
+    inset-block-start: 0.15rem;
+    inset-inline-end: 0.05rem;
+    display: grid;
+    min-width: 1rem;
+    height: 1rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--header-color);
+    color: var(--header-background);
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .site-header__wishlist-count {
+    background: var(--header-color);
+    color: var(--header-background);
+  }
+
+  @media (min-width: 61.875rem) {
+    .site-header__inner {
+      min-height: var(--header-desktop-height);
+      padding-inline: var(--header-desktop-padding);
     }
 
-    function unlockPage() {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+    .site-header__left {
+      gap: 1rem;
     }
 
-    menu.addEventListener('toggle', function () {
+    .site-header__actions {
+      gap: 0.15rem;
+    }
 
-      if (menu.open) {
-        lockPage();
-      } else {
-        unlockPage();
-      }
+    .site-header__brand {
+      width: min(var(--header-logo-width), 22vw);
+      font-size: 1.7rem;
+    }
 
-    });
+    .site-header__brand img {
+      max-height: calc(var(--header-desktop-height) - 2rem);
+    }
 
-    window.addEventListener('resize', function () {
+    .site-header__mobile-search {
+      display: none;
+    }
 
-      if (window.innerWidth > 749) {
-        menu.open = false;
-        unlockPage();
-      }
+    .desktop-navigation,
+    .site-header__desktop-action {
+      display: block;
+    }
 
-    });
+    .desktop-navigation ul {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
 
+    .desktop-navigation a {
+      color: inherit;
+      font-size: 0.9375rem;
+      font-weight: 400;
+      letter-spacing: 0.075em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .desktop-navigation a:hover,
+    .desktop-navigation a[aria-current='page'] {
+      text-decoration: underline;
+      text-underline-offset: 0.32em;
+    }
+
+    .header-menu__panel {
+      width: min(34rem, 100vw);
+      max-height: calc(100svh - var(--header-desktop-height));
+    }
+
+    .drawer-navigation {
+      min-height: min(42rem, calc(100svh - var(--header-desktop-height)));
+      padding: 3rem var(--header-desktop-padding);
+    }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener(
-      'DOMContentLoaded',
-      setupHilyaMobileMenu
-    );
-  } else {
-    setupHilyaMobileMenu();
+  @media (max-width: 23rem) {
+    .site-header__inner {
+      padding-inline: 0.5rem;
+    }
+
+    .header-icon-button {
+      width: 2.5rem;
+      min-width: 2.5rem;
+    }
+
+    .header-language__icon {
+      display: none;
+    }
+
+    .header-language button {
+      min-width: 1.8rem;
+      padding-inline: 0.15rem;
+    }
   }
 
-})();
-</script>
+  @media (max-width: 46.8125rem) {
+    .site-header__inner {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
 
+    .site-header__brand {
+      position: static;
+      grid-column: 2;
+      width: min(var(--header-mobile-logo-width), 24vw);
+      transform: none;
+      font-size: 1.2rem;
+    }
+
+    .header-language__icon {
+      display: none;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
-
 {
-  "name": "Hilya Header",
-
+  "name": "t:general.header",
+  "enabled_on": { "groups": ["header"] },
   "settings": [
-
+    { "type": "image_picker", "id": "logo", "label": "t:labels.logo" },
     {
-      "type": "url",
-      "id": "contact_link",
-      "label": "Contact Us link"
+      "type": "range",
+      "id": "logo_width",
+      "label": "t:labels.logo_width",
+      "min": 80,
+      "max": 280,
+      "step": 4,
+      "unit": "px",
+      "default": 140
     },
-
     {
-      "type": "checkbox",
-      "id": "show_new_arrivals",
-      "label": "Show New Arrivals",
-      "default": true
+      "type": "range",
+      "id": "mobile_logo_width",
+      "label": "t:labels.mobile_logo_width",
+      "min": 72,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "default": 112
     },
-
+    { "type": "link_list", "id": "desktop_menu", "label": "t:labels.desktop_menu", "default": "main-menu" },
+    { "type": "link_list", "id": "mobile_menu", "label": "t:labels.mobile_menu", "default": "main-menu" },
     {
-      "type": "url",
-      "id": "new_arrivals_link",
-      "label": "New Arrivals link"
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "t:labels.customer_account_menu",
+      "default": "customer-account-main-menu"
     },
-
-    {
-      "type": "checkbox",
-      "id": "show_best_sellers",
-      "label": "Show Best Sellers",
-      "default": true
-    },
-
-    {
-      "type": "url",
-      "id": "best_sellers_link",
-      "label": "Best Sellers link"
-    },
-
-    {
-      "type": "url",
-      "id": "instagram_link",
-      "label": "Instagram link"
-    },
-
-    {
-      "type": "header",
-      "content": "Shipping"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_shipping",
-      "label": "Show Shipping",
-      "default": false
-    },
-
-    {
-      "type": "page",
-      "id": "shipping_page",
-      "label": "Shipping page"
-    },
-
-    {
-      "type": "header",
-      "content": "Returns"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_returns",
-      "label": "Show Returns",
-      "default": false
-    },
-
-    {
-      "type": "page",
-      "id": "returns_page",
-      "label": "Returns page"
-    },
-
-    {
-      "type": "header",
-      "content": "FAQ"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_faq",
-      "label": "Show FAQ",
-      "default": false
-    },
-
-    {
-      "type": "page",
-      "id": "faq_page",
-      "label": "FAQ page"
-    },
-
-    {
-      "type": "header",
-      "content": "Header settings"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_search",
-      "label": "Show search",
-      "default": true
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_account",
-      "label": "Show account",
-      "default": true
-    },
-
-    {
-      "type": "checkbox",
-      "id": "sticky_header",
-      "label": "Sticky header",
-      "default": true
-    },
-
-    {
-      "type": "header",
-      "content": "Style"
-    },
-
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background",
-      "default": "#F7F4EE"
-    },
-
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text",
-      "default": "#111111"
-    },
-
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "Border",
-      "default": "#E5E1D8"
-    },
-
+    { "type": "checkbox", "id": "show_search", "label": "t:labels.show_search", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "t:labels.show_account", "default": true },
+    { "type": "checkbox", "id": "sticky_header", "label": "t:labels.sticky_header", "default": true },
+    { "type": "header", "content": "t:labels.header_style" },
+    { "type": "color", "id": "background_color", "label": "t:labels.background", "default": "#FFFFFF" },
+    { "type": "color", "id": "text_color", "label": "t:labels.foreground", "default": "#111111" },
+    { "type": "color", "id": "border_color", "label": "t:labels.border", "default": "#EFEFEF" },
     {
       "type": "range",
       "id": "desktop_height",
-      "label": "Desktop height",
-      "min": 55,
-      "max": 100,
-      "step": 1,
+      "label": "t:labels.desktop_header_height",
+      "min": 64,
+      "max": 112,
+      "step": 2,
       "unit": "px",
-      "default": 72
+      "default": 84
     },
-
     {
       "type": "range",
       "id": "mobile_height",
-      "label": "Mobile height",
-      "min": 50,
-      "max": 90,
-      "step": 1,
+      "label": "t:labels.mobile_header_height",
+      "min": 56,
+      "max": 88,
+      "step": 2,
       "unit": "px",
-      "default": 64
+      "default": 72
     },
-
     {
       "type": "range",
       "id": "desktop_padding",
-      "label": "Desktop side padding",
-      "min": 10,
-      "max": 60,
+      "label": "t:labels.desktop_horizontal_padding",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "mobile_menu_font_size",
+      "label": "t:labels.mobile_menu_font_size",
+      "min": 24,
+      "max": 40,
       "step": 1,
       "unit": "px",
-      "default": 28
+      "default": 32
     }
-
   ],
-
-  "presets": [
-    {
-      "name": "Hilya Header"
-    }
-  ]
+  "presets": [{ "name": "t:general.header" }]
 }
-
 {% endschema %}
