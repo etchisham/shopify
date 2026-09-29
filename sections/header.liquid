@@ -37,6 +37,20 @@
   z-index: 99999 !important;
 }
 
+body:has(.site-header--sticky) {
+  padding-top: var(--hilya-header-height);
+}
+
+.site-header {
+  --hilya-header-height: {{ section.settings.desktop_height }}px;
+}
+
+@media screen and (max-width: 749px) {
+  .site-header {
+    --hilya-header-height: {{ section.settings.mobile_height }}px;
+  }
+}
+
 .site-header,
 .site-header * {
   box-sizing: border-box;
