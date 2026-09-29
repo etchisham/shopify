@@ -13,6 +13,18 @@
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "social_yQiEwr": {
+          "type": "social",
+          "settings": {
+            "platform": "whatsapp",
+            "url": "tel:01062701834"
+          }
+        }
+      },
+      "block_order": [
+        "social_yQiEwr"
+      ],
       "settings": {
         "logo": "shopify://shop_images/hilya_logo_main.jpg",
         "logo_width": 196,
