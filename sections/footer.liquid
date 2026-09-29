@@ -557,18 +557,22 @@
 
   .hilya-footer {
 
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
 
-    max-width: none;
-
-    margin-left: 0;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 
     padding: 38px 22px 18px;
+
+    box-sizing: border-box;
 
   }
 
 
   .hilya-footer__inner {
+
+    width: 100%;
 
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
@@ -599,6 +603,8 @@
 
 
   .hilya-footer__bottom {
+
+    width: 100%;
 
     flex-direction: column;
 
