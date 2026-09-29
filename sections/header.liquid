@@ -1,550 +1,754 @@
 {% style %}
-  .site-header {
-    --header-bg: {{ section.settings.background_color }};
-    --header-text: {{ section.settings.text_color }};
-    --header-border: {{ section.settings.border_color }};
-    --header-height: {{ section.settings.desktop_height }}px;
-    --header-mobile-height: {{ section.settings.mobile_height }}px;
 
-    width: 100%;
-    background: var(--header-bg);
-    color: var(--header-text);
-    border-bottom: 1px solid var(--header-border);
-    z-index: 1000;
-  }
+/* =========================================================
+   HILYA HEADER
+   ========================================================= */
 
-  .site-header--sticky {
-    position: sticky;
-    top: 0;
-  }
+.site-header {
+  --header-bg: {{ section.settings.background_color }};
+  --header-text: {{ section.settings.text_color }};
+  --header-border: {{ section.settings.border_color }};
+  --header-height: {{ section.settings.desktop_height }}px;
+  --header-mobile-height: {{ section.settings.mobile_height }}px;
 
-  .site-header {
-  width: 100%;
+  width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
   padding: 0 !important;
+
+  background: var(--header-bg);
+  color: var(--header-text);
+  border-bottom: 1px solid var(--header-border);
+
+  position: relative;
+  z-index: 1000;
+
+  box-sizing: border-box;
+}
+
+.site-header--sticky {
+  position: sticky;
+  top: 0;
+}
+
+.site-header,
+.site-header * {
   box-sizing: border-box;
 }
 
 .site-header__inner {
-  width: 100%;
+  width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
-  box-sizing: border-box;
+
+  height: var(--header-height);
+
+  padding-left: {{ section.settings.desktop_padding }}px;
+  padding-right: {{ section.settings.desktop_padding }}px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
 }
 
-  /* =========================
-     BRAND
-     ========================= */
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.site-header__brand {
+  position: relative;
+  z-index: 20;
+
+  color: var(--header-text);
+  text-decoration: none;
+
+  font-family:
+    "Cormorant Garamond",
+    "Bodoni Moda",
+    "Didot",
+    "Times New Roman",
+    serif;
+
+  font-size: 2.4rem;
+  font-style: italic;
+  font-weight: 600;
+
+  letter-spacing: -0.075em;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+.site-header__brand:hover {
+  color: var(--header-text);
+}
+
+/* =========================================================
+   DESKTOP NAVIGATION
+   ========================================================= */
+
+.desktop-nav {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 30px;
+
+  z-index: 15;
+}
+
+.desktop-nav > a,
+.desktop-nav summary {
+  color: var(--header-text);
+  text-decoration: none;
+
+  font-size: 0.78rem;
+  font-weight: 500;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.desktop-nav > a {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+.desktop-nav > a:hover {
+  opacity: 0.65;
+}
+
+/* =========================================================
+   DESKTOP DROPDOWN CONTAINERS
+   ========================================================= */
+
+.desktop-menu,
+.desktop-categories {
+  position: relative;
+
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+.desktop-menu summary,
+.desktop-categories summary {
+  list-style: none;
+
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.desktop-menu summary::-webkit-details-marker,
+.desktop-categories summary::-webkit-details-marker {
+  display: none;
+}
+
+/* =========================================================
+   DESKTOP HAMBURGER
+   ========================================================= */
+
+.desktop-menu__icon {
+  width: 18px;
+  height: 14px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.desktop-menu__icon span {
+  width: 100%;
+  height: 1px;
+
+  display: block;
+
+  background: currentColor;
+}
+
+/* =========================================================
+   DESKTOP DROPDOWN
+   ========================================================= */
+
+.desktop-dropdown {
+  position: absolute;
+
+  top: calc(50% + 27px);
+  left: 50%;
+
+  transform: translateX(-50%) translateY(8px);
+
+  min-width: 195px;
+
+  padding: 14px 0;
+
+  background: var(--header-bg);
+
+  border: 1px solid var(--header-border);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
+
+  z-index: 2000;
+}
+
+.desktop-dropdown a {
+  display: block;
+
+  padding: 9px 20px;
+
+  color: var(--header-text);
+  text-decoration: none;
+
+  font-size: 0.76rem;
+  font-weight: 500;
+
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.desktop-dropdown a:hover {
+  background: rgba(0, 0, 0, 0.035);
+}
+
+/* =========================================================
+   DESKTOP HOVER OPEN
+   ========================================================= */
+
+.desktop-menu:hover .desktop-dropdown,
+.desktop-menu:focus-within .desktop-dropdown,
+.desktop-menu[open] .desktop-dropdown,
+
+.desktop-categories:hover .desktop-dropdown,
+.desktop-categories:focus-within .desktop-dropdown,
+.desktop-categories[open] .desktop-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================================
+   RIGHT ACTIONS
+   ========================================================= */
+
+.header-actions {
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 17px;
+
+  position: relative;
+  z-index: 20;
+}
+
+.header-action {
+  color: var(--header-text);
+  text-decoration: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.header-action svg {
+  width: 18px;
+  height: 18px;
+
+  stroke: currentColor;
+}
+
+.cart-count {
+  position: absolute;
+
+  top: -8px;
+  right: -9px;
+
+  min-width: 15px;
+  height: 15px;
+
+  padding: 0 3px;
+
+  border-radius: 50%;
+
+  background: var(--header-text);
+  color: var(--header-bg);
+
+  font-size: 9px;
+  line-height: 15px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.header-search {
+  position: relative;
+}
+
+.header-search summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.header-search summary::-webkit-details-marker {
+  display: none;
+}
+
+.header-search__panel {
+  position: absolute;
+
+  right: 0;
+  top: calc(100% + 18px);
+
+  width: 270px;
+
+  padding: 12px;
+
+  background: var(--header-bg);
+
+  border: 1px solid var(--header-border);
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+
+  z-index: 3000;
+}
+
+.header-search__form {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.header-search__input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 38px;
+
+  padding: 0 11px;
+
+  border: 1px solid var(--header-border);
+
+  background: transparent;
+  color: var(--header-text);
+
+  outline: none;
+
+  font-size: 0.78rem;
+}
+
+.header-search__input::placeholder {
+  color: var(--header-text);
+  opacity: 0.55;
+}
+
+.header-search__submit {
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid var(--header-text);
+
+  background: var(--header-text);
+  color: var(--header-bg);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.header-search__submit svg {
+  width: 16px;
+  height: 16px;
+
+  stroke: currentColor;
+}
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.mobile-menu {
+  display: none;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 749px) {
+
+  .site-header {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .site-header__inner {
+    width: 100% !important;
+    max-width: none !important;
+
+    height: var(--header-mobile-height);
+
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* -------------------------------------------------------
+     MOBILE BRAND
+     ------------------------------------------------------- */
 
   .site-header__brand {
-    position: relative;
-    z-index: 20;
-    color: var(--header-text);
-    text-decoration: none;
-    font-family: "Cormorant Garamond", "Bodoni Moda", "Didot", "Times New Roman", serif;
-    font-size: 2.4rem;
-    font-style: italic;
-    font-weight: 600;
-    letter-spacing: -0.075em;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  .site-header__brand:hover {
-    color: var(--header-text);
-  }
-
-  /* =========================
-     DESKTOP NAV
-     ========================= */
-
-  .desktop-nav {
     position: absolute;
+
     left: 50%;
     top: 50%;
+
     transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    height: 100%;
-    z-index: 15;
+
+    font-size: 2rem;
   }
 
-  .desktop-nav > a,
-  .desktop-nav button,
-  .desktop-nav summary {
-    color: var(--header-text);
-    text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
+  /* -------------------------------------------------------
+     HIDE DESKTOP NAV
+     ------------------------------------------------------- */
 
-  .desktop-nav > a {
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-
-  .desktop-nav > a:hover {
-    opacity: 0.65;
-  }
-
-  /* =========================
-     HAMBURGER
-     ========================= */
-
-  .desktop-menu,
-  .desktop-categories {
-    position: relative;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-
-  .desktop-menu summary,
-  .desktop-categories summary {
-    list-style: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-
-  .desktop-menu summary::-webkit-details-marker,
-  .desktop-categories summary::-webkit-details-marker {
+  .desktop-nav {
     display: none;
   }
 
-  .desktop-menu__icon {
-    width: 18px;
-    height: 14px;
+  /* -------------------------------------------------------
+     MOBILE HAMBURGER
+     ------------------------------------------------------- */
+
+  .mobile-menu {
+    display: block;
+
+    position: static;
+
+    z-index: 5000;
+  }
+
+  .mobile-menu summary {
+    list-style: none;
+
+    width: 20px;
+    height: 17px;
+
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    cursor: pointer;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-menu__icon {
+    width: 20px;
+    height: 16px;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
 
-  .desktop-menu__icon span {
-    display: block;
+  .mobile-menu__icon span {
     width: 100%;
     height: 1px;
+
+    display: block;
+
     background: currentColor;
   }
 
-  /* =========================
-     DESKTOP DROPDOWNS
-     ========================= */
+  /* -------------------------------------------------------
+     MOBILE MENU PANEL
+     ------------------------------------------------------- */
 
-  .desktop-dropdown {
-    position: absolute;
-    top: calc(50% + 27px);
-    left: 50%;
-    transform: translateX(-50%) translateY(8px);
-    min-width: 190px;
-    padding: 14px 0;
+  .mobile-menu__panel {
+    position: fixed;
+
+    top: var(--header-mobile-height);
+    left: 0;
+
+    width: 100vw;
+    max-width: none;
+
+    height: auto;
+    max-height: calc(100vh - var(--header-mobile-height));
+
+    overflow-y: auto;
+
+    padding: 18px 22px 28px;
+
     background: var(--header-bg);
-    border: 1px solid var(--header-border);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
 
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-      opacity 0.18s ease,
-      transform 0.18s ease,
-      visibility 0.18s ease;
+    border-top: 1px solid var(--header-border);
+    border-bottom: 1px solid var(--header-border);
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+
+    z-index: 9999;
+
+    box-sizing: border-box;
   }
 
-  .desktop-dropdown a {
+  /* -------------------------------------------------------
+     MOBILE LINKS
+     ------------------------------------------------------- */
+
+  .mobile-menu__panel > a {
     display: block;
-    padding: 9px 20px;
+
+    width: 100%;
+
+    padding: 15px 2px;
+
     color: var(--header-text);
     text-decoration: none;
-    font-size: 0.76rem;
+
+    font-size: 0.82rem;
     font-weight: 500;
-    letter-spacing: 0.06em;
+
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    white-space: nowrap;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
 
-  .desktop-dropdown a:hover {
-    background: rgba(0, 0, 0, 0.035);
+  /* -------------------------------------------------------
+     MOBILE CATEGORIES
+     ------------------------------------------------------- */
+
+  .mobile-categories {
+    width: 100%;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
 
-  /*
-    OPEN ON HOVER
-    This is what makes Categories and Hamburger
-    open simply by hovering over them.
-  */
+  .mobile-categories summary {
+    list-style: none;
 
-  .desktop-menu:hover .desktop-dropdown,
-  .desktop-menu:focus-within .desktop-dropdown,
-  .desktop-menu[open] .desktop-dropdown,
-  .desktop-categories:hover .desktop-dropdown,
-  .desktop-categories:focus-within .desktop-dropdown,
-  .desktop-categories[open] .desktop-dropdown {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
+    width: 100%;
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: var(--header-text);
+
+    font-size: 0.82rem;
+    font-weight: 500;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    cursor: pointer;
   }
 
-  /* =========================
-     RIGHT ACTIONS
-     ========================= */
+  .mobile-categories summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-categories__arrow {
+    width: 7px;
+    height: 7px;
+
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+
+    transform: rotate(45deg);
+
+    margin-right: 3px;
+    margin-top: -4px;
+
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-categories[open] .mobile-categories__arrow {
+    transform: rotate(225deg);
+
+    margin-top: 4px;
+  }
+
+  .mobile-categories__items {
+    width: 100%;
+
+    padding: 0 0 5px 14px;
+  }
+
+  .mobile-categories__items a {
+    display: block;
+
+    width: 100%;
+
+    padding: 11px 2px;
+
+    color: var(--header-text);
+    text-decoration: none;
+
+    font-size: 0.76rem;
+
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+
+    border: 0;
+  }
+
+  /* -------------------------------------------------------
+     MOBILE ACTIONS
+     ------------------------------------------------------- */
 
   .header-actions {
     margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 17px;
-    position: relative;
-    z-index: 20;
-  }
 
-  .header-action {
-    color: var(--header-text);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    gap: 14px;
   }
 
   .header-action svg {
     width: 18px;
     height: 18px;
-    stroke: currentColor;
   }
 
-  .cart-count {
-    position: absolute;
-    top: -8px;
-    right: -9px;
-    min-width: 15px;
-    height: 15px;
-    padding: 0 3px;
-    border-radius: 50%;
-    background: var(--header-text);
-    color: var(--header-bg);
-    font-size: 9px;
-    line-height: 15px;
-    text-align: center;
-  }
-
-  /* =========================
-     SEARCH
-     ========================= */
-
-  .header-search {
-    position: relative;
-  }
-
-  .header-search summary {
-    list-style: none;
-    cursor: pointer;
-  }
-
-  .header-search summary::-webkit-details-marker {
-    display: none;
-  }
+  /* -------------------------------------------------------
+     MOBILE SEARCH
+     ------------------------------------------------------- */
 
   .header-search__panel {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 18px);
-    width: 270px;
-    padding: 12px;
-    background: var(--header-bg);
-    border: 1px solid var(--header-border);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+    position: fixed;
+
+    top: var(--header-mobile-height);
+    left: 0;
+
+    width: 100vw;
+
+    padding: 14px 16px;
+
+    box-sizing: border-box;
+
+    z-index: 9998;
   }
 
   .header-search__form {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    width: 100%;
   }
 
-  .header-search__input {
-    flex: 1;
-    min-width: 0;
-    height: 38px;
-    padding: 0 11px;
-    border: 1px solid var(--header-border);
-    background: transparent;
-    color: var(--header-text);
-    outline: none;
-    font-size: 0.78rem;
-  }
+}
 
-  .header-search__input::placeholder {
-    color: var(--header-text);
-    opacity: 0.55;
-  }
+/* =========================================================
+   DESKTOP ONLY
+   ========================================================= */
 
-  .header-search__submit {
-    width: 38px;
-    height: 38px;
-    border: 1px solid var(--header-text);
-    background: var(--header-text);
-    color: var(--header-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-
-  .header-search__submit svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-  }
-
-  /* =========================
-     MOBILE MENU
-     ========================= */
+@media screen and (min-width: 750px) {
 
   .mobile-menu {
-    display: none;
+    display: none !important;
   }
 
-  /* =========================
-     MOBILE
-     ========================= */
+}
 
-  @media screen and (max-width: 749px) {
-    .site-header__inner {
-      height: var(--header-mobile-height);
-      padding: 0 16px;
-    }
-
-    .site-header__brand {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 2rem;
-    }
-
-    .desktop-nav {
-      display: none;
-    }
-
-    .header-actions {
-      margin-left: auto;
-      gap: 14px;
-    }
-
-    .header-action svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* Mobile hamburger */
-
-    .mobile-menu {
-      display: block;
-      position: static;
-      z-index: 50;
-    }
-
-    .mobile-menu summary {
-      list-style: none;
-      cursor: pointer;
-      width: 20px;
-      height: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .mobile-menu summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .mobile-menu__icon {
-      width: 20px;
-      height: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .mobile-menu__icon span {
-      display: block;
-      width: 100%;
-      height: 1px;
-      background: currentColor;
-    }
-
-    /*
-      IMPORTANT:
-      Full-width mobile menu.
-      It is positioned relative to the viewport,
-      not as a tiny dropdown beside the button.
-    */
-
-    .mobile-menu__panel {
-      position: fixed;
-      top: var(--header-mobile-height);
-      left: 0;
-      right: 0;
-      width: 100vw;
-      max-width: none;
-      max-height: calc(100vh - var(--header-mobile-height));
-      overflow-y: auto;
-
-      background: var(--header-bg);
-      border-top: 1px solid var(--header-border);
-      border-bottom: 1px solid var(--header-border);
-
-      padding: 18px 22px 26px;
-
-      box-sizing: border-box;
-      z-index: 9999;
-    }
-
-    .mobile-menu__panel a {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-
-      padding: 15px 2px;
-
-      color: var(--header-text);
-      text-decoration: none;
-
-      font-size: 0.82rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    .mobile-menu__panel > a:last-child {
-      border-bottom: 0;
-    }
-
-    /* Mobile Categories */
-
-    .mobile-categories {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    .mobile-categories summary {
-      list-style: none;
-      cursor: pointer;
-
-      width: 100%;
-      min-height: 48px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      color: var(--header-text);
-
-      font-size: 0.82rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .mobile-categories summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .mobile-categories__arrow {
-      width: 7px;
-      height: 7px;
-
-      border-right: 1px solid currentColor;
-      border-bottom: 1px solid currentColor;
-
-      transform: rotate(45deg);
-      transition: transform 0.2s ease;
-      margin-right: 3px;
-      margin-top: -4px;
-    }
-
-    .mobile-categories[open] .mobile-categories__arrow {
-      transform: rotate(225deg);
-      margin-top: 4px;
-    }
-
-    .mobile-categories__items {
-      padding: 0 0 5px 14px;
-    }
-
-    .mobile-categories__items a {
-      border-bottom: 0;
-      padding: 11px 2px;
-      font-size: 0.76rem;
-      letter-spacing: 0.07em;
-    }
-
-    /* Search mobile */
-
-    .header-search__panel {
-      position: fixed;
-      top: var(--header-mobile-height);
-      left: 0;
-      right: 0;
-      width: 100vw;
-      box-sizing: border-box;
-      padding: 14px 16px;
-      z-index: 9998;
-    }
-
-    .header-search__form {
-      width: 100%;
-    }
-  }
-
-  @media screen and (min-width: 750px) {
-    .mobile-menu {
-      display: none !important;
-    }
-  }
 {% endstyle %}
 
 
 <header
   class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
 >
+
   <div class="site-header__inner">
 
-    <!-- MOBILE MENU -->
+    <!-- =====================================================
+         MOBILE MENU
+         ===================================================== -->
+
     <details class="mobile-menu">
+
       <summary aria-label="Open menu">
+
         <span class="mobile-menu__icon">
           <span></span>
           <span></span>
           <span></span>
         </span>
+
       </summary>
 
+
       <nav class="mobile-menu__panel">
+
+        <!-- HOME -->
 
         <a href="{{ routes.root_url }}">
           Home
         </a>
 
+
+        <!-- ALL PRODUCTS -->
+
         <a href="{{ routes.all_products_collection_url }}">
           All Products
         </a>
 
-        <!-- MOBILE CATEGORIES -->
+
+        <!-- CATEGORIES -->
+
         <details class="mobile-categories">
+
           <summary>
-            <span>Categories</span>
+
+            <span>
+              Categories
+            </span>
+
             <span class="mobile-categories__arrow"></span>
+
           </summary>
+
 
           <div class="mobile-categories__items">
 
@@ -569,68 +773,118 @@
             </a>
 
           </div>
+
         </details>
 
+
+        <!-- NEW ARRIVALS -->
+
         {% if section.settings.show_new_arrivals and section.settings.new_arrivals_link != blank %}
+
           <a href="{{ section.settings.new_arrivals_link }}">
             New Arrivals
           </a>
+
         {% endif %}
 
+
+        <!-- BEST SELLERS -->
+
         {% if section.settings.show_best_sellers and section.settings.best_sellers_link != blank %}
+
           <a href="{{ section.settings.best_sellers_link }}">
             Best Sellers
           </a>
+
         {% endif %}
+
+
+        <!-- CONTACT -->
 
         <a href="{{ section.settings.contact_link }}">
           Contact Us
         </a>
 
+
+        <!-- INSTAGRAM -->
+
         <a href="{{ section.settings.instagram_link }}">
           Our Instagram
         </a>
 
+
+        <!-- SHIPPING -->
+
         {% if section.settings.show_shipping and section.settings.shipping_page != blank %}
+
           <a href="{{ section.settings.shipping_page.url }}">
             Shipping
           </a>
+
         {% endif %}
 
+
+        <!-- RETURNS -->
+
         {% if section.settings.show_returns and section.settings.returns_page != blank %}
+
           <a href="{{ section.settings.returns_page.url }}">
             Returns
           </a>
+
         {% endif %}
 
+
+        <!-- FAQ -->
+
         {% if section.settings.show_faq and section.settings.faq_page != blank %}
+
           <a href="{{ section.settings.faq_page.url }}">
             FAQ
           </a>
+
         {% endif %}
 
       </nav>
+
     </details>
 
 
-    <!-- BRAND -->
-    <a href="{{ routes.root_url }}" class="site-header__brand">
+    <!-- =====================================================
+         BRAND
+         ===================================================== -->
+
+    <a
+      href="{{ routes.root_url }}"
+      class="site-header__brand"
+    >
       Hilya
     </a>
 
 
-    <!-- DESKTOP NAV -->
+    <!-- =====================================================
+         DESKTOP NAV
+         ===================================================== -->
+
     <nav class="desktop-nav">
 
-      <!-- DESKTOP HAMBURGER -->
+
+      <!-- HAMBURGER -->
+
       <details class="desktop-menu">
+
         <summary aria-label="Menu">
+
           <span class="desktop-menu__icon">
+
             <span></span>
             <span></span>
             <span></span>
+
           </span>
+
         </summary>
+
 
         <div class="desktop-dropdown">
 
@@ -638,55 +892,76 @@
             All Products
           </a>
 
+
           {% if section.settings.show_new_arrivals and section.settings.new_arrivals_link != blank %}
+
             <a href="{{ section.settings.new_arrivals_link }}">
               New Arrivals
             </a>
+
           {% endif %}
 
+
           {% if section.settings.show_best_sellers and section.settings.best_sellers_link != blank %}
+
             <a href="{{ section.settings.best_sellers_link }}">
               Best Sellers
             </a>
+
           {% endif %}
+
 
           <a href="{{ section.settings.instagram_link }}">
             Our Instagram
           </a>
 
+
           {% if section.settings.show_shipping and section.settings.shipping_page != blank %}
+
             <a href="{{ section.settings.shipping_page.url }}">
               Shipping
             </a>
+
           {% endif %}
 
+
           {% if section.settings.show_returns and section.settings.returns_page != blank %}
+
             <a href="{{ section.settings.returns_page.url }}">
               Returns
             </a>
+
           {% endif %}
 
+
           {% if section.settings.show_faq and section.settings.faq_page != blank %}
+
             <a href="{{ section.settings.faq_page.url }}">
               FAQ
             </a>
+
           {% endif %}
 
         </div>
+
       </details>
 
 
       <!-- HOME -->
+
       <a href="{{ routes.root_url }}">
         Home
       </a>
 
 
       <!-- CATEGORIES -->
+
       <details class="desktop-categories">
+
         <summary>
           Categories
         </summary>
+
 
         <div class="desktop-dropdown">
 
@@ -711,10 +986,12 @@
           </a>
 
         </div>
+
       </details>
 
 
       <!-- CONTACT -->
+
       <a href="{{ section.settings.contact_link }}">
         Contact Us
       </a>
@@ -722,16 +999,24 @@
     </nav>
 
 
-    <!-- RIGHT ACTIONS -->
+    <!-- =====================================================
+         RIGHT ACTIONS
+         ===================================================== -->
+
     <div class="header-actions">
 
+
+      <!-- SEARCH -->
+
       {% if section.settings.show_search %}
+
         <details class="header-search">
 
           <summary
             class="header-action"
             aria-label="Search"
           >
+
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -739,12 +1024,24 @@
               stroke-linecap="round"
               stroke-linejoin="round"
             >
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="M20 20L16.2 16.2"></path>
+
+              <circle
+                cx="11"
+                cy="11"
+                r="7"
+              ></circle>
+
+              <path
+                d="M20 20L16.2 16.2"
+              ></path>
+
             </svg>
+
           </summary>
 
+
           <div class="header-search__panel">
+
             <form
               class="header-search__form"
               action="{{ routes.search_url }}"
@@ -759,11 +1056,13 @@
                 aria-label="Search"
               >
 
+
               <button
                 class="header-search__submit"
                 type="submit"
                 aria-label="Submit search"
               >
+
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -771,24 +1070,40 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <circle cx="11" cy="11" r="7"></circle>
-                  <path d="M20 20L16.2 16.2"></path>
+
+                  <circle
+                    cx="11"
+                    cy="11"
+                    r="7"
+                  ></circle>
+
+                  <path
+                    d="M20 20L16.2 16.2"
+                  ></path>
+
                 </svg>
+
               </button>
 
             </form>
+
           </div>
 
         </details>
+
       {% endif %}
 
 
+      <!-- ACCOUNT -->
+
       {% if section.settings.show_account %}
+
         <a
           href="{{ routes.account_url }}"
           class="header-action"
           aria-label="Account"
         >
+
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -796,18 +1111,32 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <circle cx="12" cy="8" r="3.5"></circle>
-            <path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5"></path>
+
+            <circle
+              cx="12"
+              cy="8"
+              r="3.5"
+            ></circle>
+
+            <path
+              d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5"
+            ></path>
+
           </svg>
+
         </a>
+
       {% endif %}
 
+
+      <!-- CART -->
 
       <a
         href="{{ routes.cart_url }}"
         class="header-action"
         aria-label="Cart"
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -815,125 +1144,165 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"></path>
-          <circle cx="10" cy="20" r="1"></circle>
-          <circle cx="18" cy="20" r="1"></circle>
+
+          <path
+            d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"
+          ></path>
+
+          <circle
+            cx="10"
+            cy="20"
+            r="1"
+          ></circle>
+
+          <circle
+            cx="18"
+            cy="20"
+            r="1"
+          ></circle>
+
         </svg>
 
+
         {% if cart.item_count > 0 %}
+
           <span class="cart-count">
             {{ cart.item_count }}
           </span>
+
         {% endif %}
+
       </a>
 
     </div>
 
   </div>
+
 </header>
 
 
 {% schema %}
+
 {
   "name": "Hilya Header",
+
   "settings": [
+
     {
       "type": "url",
       "id": "contact_link",
       "label": "Contact Us link"
     },
+
     {
       "type": "checkbox",
       "id": "show_new_arrivals",
       "label": "Show New Arrivals",
       "default": true
     },
+
     {
       "type": "url",
       "id": "new_arrivals_link",
       "label": "New Arrivals link"
     },
+
     {
       "type": "checkbox",
       "id": "show_best_sellers",
       "label": "Show Best Sellers",
       "default": true
     },
+
     {
       "type": "url",
       "id": "best_sellers_link",
       "label": "Best Sellers link"
     },
+
     {
       "type": "url",
       "id": "instagram_link",
       "label": "Instagram link"
     },
 
+
     {
       "type": "header",
       "content": "Shipping"
     },
+
     {
       "type": "checkbox",
       "id": "show_shipping",
       "label": "Show Shipping",
       "default": false
     },
+
     {
       "type": "page",
       "id": "shipping_page",
       "label": "Shipping page"
     },
 
+
     {
       "type": "header",
       "content": "Returns"
     },
+
     {
       "type": "checkbox",
       "id": "show_returns",
       "label": "Show Returns",
       "default": false
     },
+
     {
       "type": "page",
       "id": "returns_page",
       "label": "Returns page"
     },
 
+
     {
       "type": "header",
       "content": "FAQ"
     },
+
     {
       "type": "checkbox",
       "id": "show_faq",
       "label": "Show FAQ",
       "default": false
     },
+
     {
       "type": "page",
       "id": "faq_page",
       "label": "FAQ page"
     },
 
+
     {
       "type": "header",
       "content": "Header settings"
     },
+
     {
       "type": "checkbox",
       "id": "show_search",
       "label": "Show search",
       "default": true
     },
+
     {
       "type": "checkbox",
       "id": "show_account",
       "label": "Show account",
       "default": true
     },
+
     {
       "type": "checkbox",
       "id": "sticky_header",
@@ -941,28 +1310,33 @@
       "default": true
     },
 
+
     {
       "type": "header",
       "content": "Style"
     },
+
     {
       "type": "color",
       "id": "background_color",
       "label": "Background",
       "default": "#F7F4EE"
     },
+
     {
       "type": "color",
       "id": "text_color",
       "label": "Text",
       "default": "#111111"
     },
+
     {
       "type": "color",
       "id": "border_color",
       "label": "Border",
       "default": "#E5E1D8"
     },
+
     {
       "type": "range",
       "id": "desktop_height",
@@ -973,6 +1347,7 @@
       "unit": "px",
       "default": 72
     },
+
     {
       "type": "range",
       "id": "mobile_height",
@@ -983,6 +1358,7 @@
       "unit": "px",
       "default": 64
     },
+
     {
       "type": "range",
       "id": "desktop_padding",
@@ -993,11 +1369,14 @@
       "unit": "px",
       "default": 28
     }
+
   ],
+
   "presets": [
     {
       "name": "Hilya Header"
     }
   ]
 }
+
 {% endschema %}
