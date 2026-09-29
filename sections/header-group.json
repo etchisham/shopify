@@ -15,17 +15,26 @@
       "type": "header",
       "settings": {
         "contact_link": "shopify://pages/contact",
+        "show_new_arrivals": true,
+        "new_arrivals_link": "shopify://collections/new-arrivals",
+        "show_best_sellers": true,
+        "best_sellers_link": "shopify://collections/best-sellers",
+        "show_our_story": true,
+        "our_story_link": "",
+        "show_shipping_returns": false,
+        "shipping_returns_page": "",
+        "show_faq": false,
+        "faq_page": "",
+        "instagram_link": "",
         "show_search": true,
         "show_account": true,
         "sticky_header": true,
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "text_color": "#111111",
         "border_color": "#efefef",
         "desktop_height": 64,
         "mobile_height": 64,
-        "desktop_padding": 32,
-        "mobile_menu_font_size": 32,
-        "mobile_logo_width": 180
+        "desktop_padding": 32
       }
     }
   },
