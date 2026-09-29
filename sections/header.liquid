@@ -11,13 +11,10 @@
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
 
-  /* FULL VIEWPORT FIX */
   width: 100vw !important;
   max-width: none !important;
-
   margin-left: calc(50% - 50vw) !important;
   margin-right: 0 !important;
-
   padding: 0 !important;
 
   background: var(--header-bg);
@@ -40,6 +37,11 @@
 .site-header * {
   box-sizing: border-box;
 }
+
+
+/* =========================================================
+   HEADER INNER
+   ========================================================= */
 
 .site-header__inner {
   width: 100% !important;
@@ -115,8 +117,7 @@
   z-index: 15;
 }
 
-.desktop-nav > a,
-.desktop-nav summary {
+.desktop-nav > a {
   color: var(--header-text);
   text-decoration: none;
 
@@ -127,9 +128,7 @@
   text-transform: uppercase;
 
   white-space: nowrap;
-}
 
-.desktop-nav > a {
   height: 100%;
 
   display: flex;
@@ -142,7 +141,8 @@
 
 
 /* =========================================================
-   DESKTOP MENU / CATEGORIES
+   DESKTOP MENU + CATEGORIES
+   HOVER ONLY
    ========================================================= */
 
 .desktop-menu,
@@ -155,21 +155,57 @@
   align-items: center;
 }
 
-.desktop-menu summary,
-.desktop-categories summary {
-  list-style: none;
 
+/* =========================================================
+   DESKTOP TRIGGERS
+   ========================================================= */
+
+.desktop-menu__trigger,
+.desktop-categories__trigger {
+  appearance: none;
+  -webkit-appearance: none;
+
+  border: 0;
+  outline: 0;
+
+  margin: 0;
+  padding: 0;
+
+  background: transparent;
+
+  color: var(--header-text);
+
+  font-family: inherit;
+
+  cursor: default;
+}
+
+
+/* Menu trigger */
+
+.desktop-menu__trigger {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+
+/* Categories trigger */
+
+.desktop-categories__trigger {
   height: 100%;
 
   display: flex;
   align-items: center;
 
-  cursor: pointer;
-}
+  font-size: 0.78rem;
+  font-weight: 500;
 
-.desktop-menu summary::-webkit-details-marker,
-.desktop-categories summary::-webkit-details-marker {
-  display: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  white-space: nowrap;
 }
 
 
@@ -184,6 +220,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  pointer-events: none;
 }
 
 .desktop-menu__icon span {
@@ -216,10 +254,13 @@
 
   border: 1px solid var(--header-border);
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.07);
 
   opacity: 0;
+
   visibility: hidden;
+
   pointer-events: none;
 
   transition:
@@ -230,18 +271,23 @@
   z-index: 2000;
 }
 
+
+/* Dropdown links */
+
 .desktop-dropdown a {
   display: block;
 
   padding: 9px 20px;
 
   color: var(--header-text);
+
   text-decoration: none;
 
   font-size: 0.76rem;
   font-weight: 500;
 
   letter-spacing: 0.06em;
+
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -253,36 +299,28 @@
 
 
 /* =========================================================
-   DESKTOP HOVER DROPDOWNS
+   DESKTOP HOVER ONLY
+   NO CLICK / NO FOCUS
    ========================================================= */
 
-/* Categories + Menu open automatically on mouse hover */
 @media screen and (min-width: 750px) {
 
   .desktop-menu:hover .desktop-dropdown,
   .desktop-categories:hover .desktop-dropdown {
+
     opacity: 1;
+
     visibility: visible;
+
     pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
-  }
 
-  /* Keep the dropdown connected to the trigger */
-  .desktop-menu,
-  .desktop-categories {
-    position: relative;
-  }
-
-  /* Remove click/focus behavior from affecting the visual state */
-  .desktop-menu:focus .desktop-dropdown,
-  .desktop-categories:focus .desktop-dropdown {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateX(-50%) translateY(8px);
+    transform:
+      translateX(-50%)
+      translateY(0);
   }
 
 }
+
 
 /* =========================================================
    RIGHT ACTIONS
@@ -297,11 +335,13 @@
   gap: 17px;
 
   position: relative;
+
   z-index: 20;
 }
 
 .header-action {
   color: var(--header-text);
+
   text-decoration: none;
 
   display: flex;
@@ -372,7 +412,8 @@
 
   border: 1px solid var(--header-border);
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.07);
 
   z-index: 3000;
 }
@@ -396,6 +437,7 @@
   border: 1px solid var(--header-border);
 
   background: transparent;
+
   color: var(--header-text);
 
   outline: none;
@@ -455,6 +497,7 @@
     margin-right: 0 !important;
   }
 
+
   .site-header__inner {
     width: 100% !important;
     max-width: none !important;
@@ -466,9 +509,9 @@
   }
 
 
-  /* -------------------------------------------------------
+  /* ---------------------------------------------------------
      MOBILE BRAND
-     ------------------------------------------------------- */
+     --------------------------------------------------------- */
 
   .site-header__brand {
     position: absolute;
@@ -482,18 +525,18 @@
   }
 
 
-  /* -------------------------------------------------------
+  /* ---------------------------------------------------------
      HIDE DESKTOP NAV
-     ------------------------------------------------------- */
+     --------------------------------------------------------- */
 
   .desktop-nav {
     display: none;
   }
 
 
-  /* -------------------------------------------------------
-     MOBILE HAMBURGER
-     ------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     MOBILE MENU
+     --------------------------------------------------------- */
 
   .mobile-menu {
     display: block;
@@ -502,6 +545,7 @@
 
     z-index: 5000;
   }
+
 
   .mobile-menu summary {
     list-style: none;
@@ -514,6 +558,7 @@
 
     display: flex;
     flex-direction: column;
+
     justify-content: space-between;
 
     cursor: pointer;
@@ -523,12 +568,16 @@
     display: none;
   }
 
+
+  /* Mobile hamburger */
+
   .mobile-menu__icon {
     width: 20px;
     height: 16px;
 
     display: flex;
     flex-direction: column;
+
     justify-content: space-between;
   }
 
@@ -542,9 +591,9 @@
   }
 
 
-  /* -------------------------------------------------------
-     MOBILE FULL WIDTH MENU
-     ------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     MOBILE MENU PANEL
+     --------------------------------------------------------- */
 
   .mobile-menu__panel {
     position: fixed;
@@ -556,18 +605,25 @@
     max-width: none;
 
     height: auto;
-    max-height: calc(100vh - var(--header-mobile-height));
+
+    max-height:
+      calc(100vh - var(--header-mobile-height));
 
     overflow-y: auto;
 
-    padding: 18px 22px 28px;
+    padding:
+      18px 22px 28px;
 
     background: var(--header-bg);
 
-    border-top: 1px solid var(--header-border);
-    border-bottom: 1px solid var(--header-border);
+    border-top:
+      1px solid var(--header-border);
 
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    border-bottom:
+      1px solid var(--header-border);
+
+    box-shadow:
+      0 12px 30px rgba(0, 0, 0, 0.06);
 
     z-index: 9999;
 
@@ -575,9 +631,9 @@
   }
 
 
-  /* -------------------------------------------------------
-     MOBILE LINKS
-     ------------------------------------------------------- */
+  /* ---------------------------------------------------------
+     MOBILE MAIN LINKS
+     --------------------------------------------------------- */
 
   .mobile-menu__panel > a {
     display: block;
@@ -587,32 +643,37 @@
     padding: 15px 2px;
 
     color: var(--header-text);
+
     text-decoration: none;
 
     font-size: 0.82rem;
     font-weight: 500;
 
     letter-spacing: 0.08em;
+
     text-transform: uppercase;
 
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom:
+      1px solid rgba(0, 0, 0, 0.08);
   }
 
 
-  /* -------------------------------------------------------
+  /* =========================================================
      MOBILE CATEGORIES
-     ------------------------------------------------------- */
+     ========================================================= */
 
   .mobile-categories {
     width: 100%;
 
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom:
+      1px solid rgba(0, 0, 0, 0.08);
   }
 
   .mobile-categories summary {
     list-style: none;
 
     width: 100%;
+
     min-height: 48px;
 
     display: flex;
@@ -625,6 +686,7 @@
     font-weight: 500;
 
     letter-spacing: 0.08em;
+
     text-transform: uppercase;
 
     cursor: pointer;
@@ -634,31 +696,44 @@
     display: none;
   }
 
+
+  /* Mobile arrow */
+
   .mobile-categories__arrow {
     width: 7px;
     height: 7px;
 
-    border-right: 1px solid currentColor;
-    border-bottom: 1px solid currentColor;
+    border-right:
+      1px solid currentColor;
+
+    border-bottom:
+      1px solid currentColor;
 
     transform: rotate(45deg);
 
     margin-right: 3px;
     margin-top: -4px;
 
-    transition: transform 0.2s ease;
+    transition:
+      transform 0.2s ease;
   }
 
-  .mobile-categories[open] .mobile-categories__arrow {
+  .mobile-categories[open]
+  .mobile-categories__arrow {
+
     transform: rotate(225deg);
 
     margin-top: 4px;
   }
 
+
+  /* Mobile category items */
+
   .mobile-categories__items {
     width: 100%;
 
-    padding: 0 0 5px 14px;
+    padding:
+      0 0 5px 14px;
   }
 
   .mobile-categories__items a {
@@ -669,20 +744,22 @@
     padding: 11px 2px;
 
     color: var(--header-text);
+
     text-decoration: none;
 
     font-size: 0.76rem;
 
     letter-spacing: 0.07em;
+
     text-transform: uppercase;
 
     border: 0;
   }
 
 
-  /* -------------------------------------------------------
+  /* ---------------------------------------------------------
      MOBILE ACTIONS
-     ------------------------------------------------------- */
+     --------------------------------------------------------- */
 
   .header-actions {
     margin-left: auto;
@@ -696,9 +773,9 @@
   }
 
 
-  /* -------------------------------------------------------
+  /* ---------------------------------------------------------
      MOBILE SEARCH
-     ------------------------------------------------------- */
+     --------------------------------------------------------- */
 
   .header-search__panel {
     position: fixed;
@@ -708,7 +785,8 @@
 
     width: 100vw;
 
-    padding: 14px 16px;
+    padding:
+      14px 16px;
 
     box-sizing: border-box;
 
@@ -723,7 +801,7 @@
 
 
 /* =========================================================
-   DESKTOP ONLY
+   DESKTOP / MOBILE DISPLAY CONTROL
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -732,6 +810,22 @@
     display: none !important;
   }
 
+}
+
+
+/* =========================================================
+   FULL-WIDTH SHOPIFY SECTION
+   ========================================================= */
+
+.shopify-section:has(.site-header) {
+  width: 100vw !important;
+  max-width: none !important;
+
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
+
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 {% endstyle %}
@@ -753,15 +847,18 @@
       <summary aria-label="Open menu">
 
         <span class="mobile-menu__icon">
+
           <span></span>
           <span></span>
           <span></span>
+
         </span>
 
       </summary>
 
 
       <nav class="mobile-menu__panel">
+
 
         <a href="{{ routes.root_url }}">
           Home
@@ -815,7 +912,8 @@
         </details>
 
 
-        {% if section.settings.show_new_arrivals and section.settings.new_arrivals_link != blank %}
+        {% if section.settings.show_new_arrivals
+          and section.settings.new_arrivals_link != blank %}
 
           <a href="{{ section.settings.new_arrivals_link }}">
             New Arrivals
@@ -824,7 +922,8 @@
         {% endif %}
 
 
-        {% if section.settings.show_best_sellers and section.settings.best_sellers_link != blank %}
+        {% if section.settings.show_best_sellers
+          and section.settings.best_sellers_link != blank %}
 
           <a href="{{ section.settings.best_sellers_link }}">
             Best Sellers
@@ -843,7 +942,8 @@
         </a>
 
 
-        {% if section.settings.show_shipping and section.settings.shipping_page != blank %}
+        {% if section.settings.show_shipping
+          and section.settings.shipping_page != blank %}
 
           <a href="{{ section.settings.shipping_page.url }}">
             Shipping
@@ -852,7 +952,8 @@
         {% endif %}
 
 
-        {% if section.settings.show_returns and section.settings.returns_page != blank %}
+        {% if section.settings.show_returns
+          and section.settings.returns_page != blank %}
 
           <a href="{{ section.settings.returns_page.url }}">
             Returns
@@ -861,13 +962,15 @@
         {% endif %}
 
 
-        {% if section.settings.show_faq and section.settings.faq_page != blank %}
+        {% if section.settings.show_faq
+          and section.settings.faq_page != blank %}
 
           <a href="{{ section.settings.faq_page.url }}">
             FAQ
           </a>
 
         {% endif %}
+
 
       </nav>
 
@@ -893,26 +996,37 @@
     <nav class="desktop-nav">
 
 
-      <!-- HAMBURGER -->
+      <!-- DESKTOP MENU -->
 
       <div class="desktop-menu">
-  <button class="desktop-menu__trigger" type="button" aria-label="Menu">
-    <span class="desktop-menu__icon">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
-  </button>
+
+        <button
+          class="desktop-menu__trigger"
+          type="button"
+          aria-label="Menu"
+        >
+
+          <span class="desktop-menu__icon">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+          </span>
+
+        </button>
 
 
         <div class="desktop-dropdown">
+
 
           <a href="{{ routes.all_products_collection_url }}">
             All Products
           </a>
 
 
-          {% if section.settings.show_new_arrivals and section.settings.new_arrivals_link != blank %}
+          {% if section.settings.show_new_arrivals
+            and section.settings.new_arrivals_link != blank %}
 
             <a href="{{ section.settings.new_arrivals_link }}">
               New Arrivals
@@ -921,7 +1035,8 @@
           {% endif %}
 
 
-          {% if section.settings.show_best_sellers and section.settings.best_sellers_link != blank %}
+          {% if section.settings.show_best_sellers
+            and section.settings.best_sellers_link != blank %}
 
             <a href="{{ section.settings.best_sellers_link }}">
               Best Sellers
@@ -935,7 +1050,8 @@
           </a>
 
 
-          {% if section.settings.show_shipping and section.settings.shipping_page != blank %}
+          {% if section.settings.show_shipping
+            and section.settings.shipping_page != blank %}
 
             <a href="{{ section.settings.shipping_page.url }}">
               Shipping
@@ -944,7 +1060,8 @@
           {% endif %}
 
 
-          {% if section.settings.show_returns and section.settings.returns_page != blank %}
+          {% if section.settings.show_returns
+            and section.settings.returns_page != blank %}
 
             <a href="{{ section.settings.returns_page.url }}">
               Returns
@@ -953,7 +1070,8 @@
           {% endif %}
 
 
-          {% if section.settings.show_faq and section.settings.faq_page != blank %}
+          {% if section.settings.show_faq
+            and section.settings.faq_page != blank %}
 
             <a href="{{ section.settings.faq_page.url }}">
               FAQ
@@ -961,9 +1079,10 @@
 
           {% endif %}
 
+
         </div>
 
-      </details>
+      </div>
 
 
       <!-- HOME -->
@@ -973,38 +1092,52 @@
       </a>
 
 
-      <!-- CATEGORIES -->
+      <!-- ===================================================
+           DESKTOP CATEGORIES
+           =================================================== -->
 
       <div class="desktop-categories">
-  <button class="desktop-categories__trigger" type="button">
-    Categories
-  </button>
 
-  <div class="desktop-dropdown">
 
-    <a href="{{ routes.collections_url }}/necklaces">
-      Necklaces
-    </a>
+        <button
+          class="desktop-categories__trigger"
+          type="button"
+        >
+          Categories
+        </button>
 
-    <a href="{{ routes.collections_url }}/rings">
-      Rings
-    </a>
 
-    <a href="{{ routes.collections_url }}/pendants">
-      Pendants
-    </a>
+        <div class="desktop-dropdown">
 
-    <a href="{{ routes.collections_url }}/bracelets">
-      Bracelets
-    </a>
 
-    <a href="{{ routes.collections_url }}/keychains">
-      Keychains
-    </a>
+          <a href="{{ routes.collections_url }}/necklaces">
+            Necklaces
+          </a>
 
-  </div>
-</div>
-      </details>
+
+          <a href="{{ routes.collections_url }}/rings">
+            Rings
+          </a>
+
+
+          <a href="{{ routes.collections_url }}/pendants">
+            Pendants
+          </a>
+
+
+          <a href="{{ routes.collections_url }}/bracelets">
+            Bracelets
+          </a>
+
+
+          <a href="{{ routes.collections_url }}/keychains">
+            Keychains
+          </a>
+
+
+        </div>
+
+      </div>
 
 
       <!-- CONTACT -->
@@ -1012,6 +1145,7 @@
       <a href="{{ section.settings.contact_link }}">
         Contact Us
       </a>
+
 
     </nav>
 
@@ -1028,6 +1162,7 @@
       {% if section.settings.show_search %}
 
         <details class="header-search">
+
 
           <summary
             class="header-action"
@@ -1059,11 +1194,13 @@
 
           <div class="header-search__panel">
 
+
             <form
               class="header-search__form"
               action="{{ routes.search_url }}"
               method="get"
             >
+
 
               <input
                 class="header-search__input"
@@ -1102,9 +1239,11 @@
 
               </button>
 
+
             </form>
 
           </div>
+
 
         </details>
 
@@ -1189,9 +1328,12 @@
 
         {% endif %}
 
+
       </a>
 
+
     </div>
+
 
   </div>
 
@@ -1211,6 +1353,7 @@
       "label": "Contact Us link"
     },
 
+
     {
       "type": "checkbox",
       "id": "show_new_arrivals",
@@ -1218,11 +1361,13 @@
       "default": true
     },
 
+
     {
       "type": "url",
       "id": "new_arrivals_link",
       "label": "New Arrivals link"
     },
+
 
     {
       "type": "checkbox",
@@ -1231,11 +1376,13 @@
       "default": true
     },
 
+
     {
       "type": "url",
       "id": "best_sellers_link",
       "label": "Best Sellers link"
     },
+
 
     {
       "type": "url",
@@ -1249,12 +1396,14 @@
       "content": "Shipping"
     },
 
+
     {
       "type": "checkbox",
       "id": "show_shipping",
       "label": "Show Shipping",
       "default": false
     },
+
 
     {
       "type": "page",
@@ -1268,12 +1417,14 @@
       "content": "Returns"
     },
 
+
     {
       "type": "checkbox",
       "id": "show_returns",
       "label": "Show Returns",
       "default": false
     },
+
 
     {
       "type": "page",
@@ -1287,12 +1438,14 @@
       "content": "FAQ"
     },
 
+
     {
       "type": "checkbox",
       "id": "show_faq",
       "label": "Show FAQ",
       "default": false
     },
+
 
     {
       "type": "page",
@@ -1306,6 +1459,7 @@
       "content": "Header settings"
     },
 
+
     {
       "type": "checkbox",
       "id": "show_search",
@@ -1313,12 +1467,14 @@
       "default": true
     },
 
+
     {
       "type": "checkbox",
       "id": "show_account",
       "label": "Show account",
       "default": true
     },
+
 
     {
       "type": "checkbox",
@@ -1333,12 +1489,14 @@
       "content": "Style"
     },
 
+
     {
       "type": "color",
       "id": "background_color",
       "label": "Background",
       "default": "#F7F4EE"
     },
+
 
     {
       "type": "color",
@@ -1347,12 +1505,14 @@
       "default": "#111111"
     },
 
+
     {
       "type": "color",
       "id": "border_color",
       "label": "Border",
       "default": "#E5E1D8"
     },
+
 
     {
       "type": "range",
@@ -1365,6 +1525,7 @@
       "default": 72
     },
 
+
     {
       "type": "range",
       "id": "mobile_height",
@@ -1375,6 +1536,7 @@
       "unit": "px",
       "default": 64
     },
+
 
     {
       "type": "range",
@@ -1389,11 +1551,13 @@
 
   ],
 
+
   "presets": [
     {
       "name": "Hilya Header"
     }
   ]
+
 }
 
 {% endschema %}
