@@ -10,11 +10,14 @@
   --header-border: {{ section.settings.border_color }};
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
+  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
   width: 100vw !important;
   max-width: none !important;
+
   margin-left: calc(50% - 50vw) !important;
   margin-right: 0 !important;
+
   padding: 0 !important;
 
   background: var(--header-bg);
@@ -28,27 +31,45 @@
   box-sizing: border-box;
 }
 
+
+/* =========================================================
+   FIXED HEADER
+   ========================================================= */
+
 .site-header--sticky {
   position: fixed !important;
+
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
+
   width: 100vw !important;
+  max-width: none !important;
+
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+
   z-index: 99999 !important;
 }
+
+
+/* Reserve the header's space in the page */
 
 body:has(.site-header--sticky) {
   padding-top: var(--hilya-header-height);
 }
 
-.site-header {
-  --hilya-header-height: {{ section.settings.desktop_height }}px;
-}
+
+/* =========================================================
+   MOBILE HEADER HEIGHT
+   ========================================================= */
 
 @media screen and (max-width: 749px) {
+
   .site-header {
     --hilya-header-height: {{ section.settings.mobile_height }}px;
   }
+
 }
 
 .site-header,
