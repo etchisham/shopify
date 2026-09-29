@@ -2,49 +2,120 @@
 
   <div class="hilya-social__inner">
 
+    <!-- TEXT -->
+
     <div class="hilya-social__intro">
-      <p class="hilya-social__eyebrow">
+
+      <p class="hilya-social__title">
         Follow Our Journey
       </p>
 
       <a
         href="{{ section.settings.instagram_url }}"
-        class="hilya-social__handle"
+        class="hilya-social__instagram"
         target="_blank"
         rel="noopener"
       >
-        @hilyaeg
+
+        <svg
+          class="hilya-social__instagram-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect>
+          <circle cx="12" cy="12" r="4"></circle>
+          <circle cx="17.5" cy="6.5" r="1"></circle>
+        </svg>
+
+        <span>@hilya.insta</span>
+
       </a>
+
     </div>
 
 
+    <!-- FOUR IMAGES -->
+
     <div class="hilya-social__grid">
 
-      {% for block in section.blocks %}
+      {% if section.settings.image_1 != blank %}
+        <a
+          href="{{ section.settings.instagram_url }}"
+          class="hilya-social__image"
+          target="_blank"
+          rel="noopener"
+        >
+          {{
+            section.settings.image_1
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              widths: '300, 500, 700, 800',
+              sizes: '(min-width: 750px) 16vw, 24vw',
+              alt: 'Hilya Instagram'
+          }}
+        </a>
+      {% endif %}
 
-        {% if block.settings.image != blank %}
 
-          <a
-            href="{{ section.settings.instagram_url }}"
-            class="hilya-social__image"
-            target="_blank"
-            rel="noopener"
-            {{ block.shopify_attributes }}
-          >
-            {{
-              block.settings.image
-              | image_url: width: 700
-              | image_tag:
-                loading: 'lazy',
-                widths: '300, 450, 600, 700',
-                sizes: '(min-width: 750px) 12vw, 42vw',
-                alt: 'Hilya Instagram'
-            }}
-          </a>
+      {% if section.settings.image_2 != blank %}
+        <a
+          href="{{ section.settings.instagram_url }}"
+          class="hilya-social__image"
+          target="_blank"
+          rel="noopener"
+        >
+          {{
+            section.settings.image_2
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              widths: '300, 500, 700, 800',
+              sizes: '(min-width: 750px) 16vw, 24vw',
+              alt: 'Hilya Instagram'
+          }}
+        </a>
+      {% endif %}
 
-        {% endif %}
 
-      {% endfor %}
+      {% if section.settings.image_3 != blank %}
+        <a
+          href="{{ section.settings.instagram_url }}"
+          class="hilya-social__image"
+          target="_blank"
+          rel="noopener"
+        >
+          {{
+            section.settings.image_3
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              widths: '300, 500, 700, 800',
+              sizes: '(min-width: 750px) 16vw, 24vw',
+              alt: 'Hilya Instagram'
+          }}
+        </a>
+      {% endif %}
+
+
+      {% if section.settings.image_4 != blank %}
+        <a
+          href="{{ section.settings.instagram_url }}"
+          class="hilya-social__image"
+          target="_blank"
+          rel="noopener"
+        >
+          {{
+            section.settings.image_4
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              widths: '300, 500, 700, 800',
+              sizes: '(min-width: 750px) 16vw, 24vw',
+              alt: 'Hilya Instagram'
+          }}
+        </a>
+      {% endif %}
 
     </div>
 
@@ -55,14 +126,19 @@
 
 {% stylesheet %}
 
+/* SECTION */
+
 .hilya-social {
   width: 100vw;
   max-width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: 18px max(24px, calc((100vw - 1400px) / 2)) 42px;
+  padding: 20px max(24px, calc((100vw - 1400px) / 2)) 42px;
   box-sizing: border-box;
   background: #ffffff;
 }
+
+
+/* LAYOUT */
 
 .hilya-social__inner {
   display: grid;
@@ -71,28 +147,52 @@
   gap: 55px;
 }
 
-/* INTRO */
+
+/* TEXT */
 
 .hilya-social__intro {
   text-align: center;
 }
 
-.hilya-social__eyebrow {
-  margin: 0 0 6px;
-  color: #222;
+.hilya-social__title {
+  margin: 0 0 7px;
+  color: #222222;
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.1;
   font-weight: 400;
 }
 
-.hilya-social__handle {
-  color: #777;
+
+/* INSTAGRAM LINK */
+
+.hilya-social__instagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #777777;
   text-decoration: none;
   font-family: Arial, sans-serif;
   font-size: 8px;
   line-height: 1;
+  letter-spacing: .02em;
 }
+
+.hilya-social__instagram:hover {
+  color: #111111;
+}
+
+.hilya-social__instagram-icon {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 
 /* IMAGES */
 
@@ -104,8 +204,9 @@
 
 .hilya-social__image {
   display: block;
-  overflow: hidden;
+  width: 100%;
   aspect-ratio: 1 / 1;
+  overflow: hidden;
   background: #f4f1eb;
 }
 
@@ -159,11 +260,11 @@
     width: 100%;
   }
 
-  .hilya-social__eyebrow {
+  .hilya-social__title {
     font-size: 18px;
   }
 
-  .hilya-social__handle {
+  .hilya-social__instagram {
     font-size: 8px;
   }
 
@@ -171,6 +272,17 @@
     width: 100%;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
+  }
+
+}
+
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hilya-social__image img {
+    transition: none;
   }
 
 }
@@ -186,30 +298,31 @@
       "type": "url",
       "id": "instagram_url",
       "label": "Instagram link"
-    }
-  ],
-  "blocks": [
+    },
     {
-      "type": "image",
-      "name": "Instagram image",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        }
-      ]
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Instagram image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Instagram image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Instagram image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Instagram image 4"
     }
   ],
   "presets": [
     {
-      "name": "Hilya Social",
-      "blocks": [
-        { "type": "image" },
-        { "type": "image" },
-        { "type": "image" },
-        { "type": "image" }
-      ]
+      "name": "Hilya Social"
     }
   ]
 }
