@@ -89,7 +89,8 @@ body:has(.site-header--sticky) {
 
 
 /* =========================================================
-   BRAND
+   HILYA BRAND
+   Elegant Script / Luxury Wordmark
    ========================================================= */
 
 .site-header__brand {
@@ -99,21 +100,32 @@ body:has(.site-header--sticky) {
   color: var(--header-text);
   text-decoration: none;
 
+  /*
+    Script-style font stack.
+    The first available font will be used.
+  */
+
   font-family:
-    "Cormorant Garamond",
-    "Bodoni Moda",
-    "Didot",
-    "Times New Roman",
-    serif;
+    "Snell Roundhand",
+    "Brittany Signature",
+    "Segoe Script",
+    "Brush Script MT",
+    "URW Chancery L",
+    "Apple Chancery",
+    "cursive";
 
-  font-size: 2.4rem;
+  font-size: 2.35rem;
+
   font-style: italic;
-  font-weight: 600;
+  font-weight: 400;
 
-  letter-spacing: -0.075em;
+  letter-spacing: -0.055em;
+
   line-height: 1;
 
   white-space: nowrap;
+
+  transform: translateY(-1px);
 }
 
 .site-header__brand:hover {
@@ -472,7 +484,6 @@ body:has(.site-header--sticky) {
 
 /* =========================================================
    SEARCH SUBMIT BUTTON
-   WHITE SEARCH ICON
    ========================================================= */
 
 .header-search__submit {
@@ -480,9 +491,10 @@ body:has(.site-header--sticky) {
   height: 38px;
 
   border: 0;
+
   background: transparent;
 
-  color: #000000FF;
+  color: #FFFFFF;
 
   display: flex;
   align-items: center;
@@ -555,9 +567,15 @@ body:has(.site-header--sticky) {
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+      translate(-50%, -50%)
+      translateY(-1px);
 
     font-size: 1.85rem;
+
+    font-weight: 400;
+
+    letter-spacing: -0.055em;
   }
 
 
@@ -1004,13 +1022,15 @@ body:has(.site-header--sticky) {
         </a>
 
 
+        <!-- INSTAGRAM - NEW TAB -->
+
         <a
-  href="{{ section.settings.instagram_link }}"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Our Instagram
-</a>
+          href="{{ section.settings.instagram_link }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Our Instagram
+        </a>
 
 
         {% if section.settings.show_shipping
@@ -1112,13 +1132,15 @@ body:has(.site-header--sticky) {
           {% endif %}
 
 
+          <!-- INSTAGRAM - NEW TAB -->
+
           <a
-  href="{{ section.settings.instagram_link }}"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Our Instagram
-</a>
+            href="{{ section.settings.instagram_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Our Instagram
+          </a>
 
 
           {% if section.settings.show_shipping
@@ -1433,12 +1455,16 @@ body:has(.site-header--sticky) {
   }
 
   if (document.readyState === 'loading') {
+
     document.addEventListener(
       'DOMContentLoaded',
       setupHilyaMobileMenu
     );
+
   } else {
+
     setupHilyaMobileMenu();
+
   }
 
 })();
