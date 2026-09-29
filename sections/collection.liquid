@@ -40,21 +40,20 @@
           {% for product in collection.products %}
 
   {% liquid
-    assign product_colors = ''
-    assign color_option_position = blank
+  assign product_colors = ''
 
-    for option in product.options_with_values
-      if option.name == 'Color'
-        assign color_option_position = option.position
+  for option in product.options_with_values
+    if option.name == 'Color'
 
-        for value in option.values
-          assign product_colors = product_colors | append: value.name | append: '|'
-        endfor
-      endif
-    endfor
+      for value in option.values
+        assign product_colors = product_colors | append: value.name | append: '|'
+      endfor
 
-    assign product_available = product.available
-  %}
+    endif
+  endfor
+
+  assign product_available = product.available
+%}
 
   <div
     class="catalog-product-item"
