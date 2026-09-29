@@ -67,6 +67,37 @@
         "image": "shopify://shop_images/08_New_Arrivals.jpg",
         "button_link": "shopify://collections/new-arrivals"
       }
+    },
+    "follow_our_journey_fFyeaN": {
+      "type": "follow-our-journey",
+      "blocks": {
+        "image_Pk7jr8": {
+          "type": "image",
+          "settings": {}
+        },
+        "image_FdjDxp": {
+          "type": "image",
+          "settings": {}
+        },
+        "image_8B4C43": {
+          "type": "image",
+          "settings": {}
+        },
+        "image_ynd6qg": {
+          "type": "image",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "image_Pk7jr8",
+        "image_FdjDxp",
+        "image_8B4C43",
+        "image_ynd6qg"
+      ],
+      "name": "Hilya Social",
+      "settings": {
+        "instagram_url": ""
+      }
     }
   },
   "order": [
@@ -74,6 +105,7 @@
     "collections_pUPfUG",
     "custom_section_ETjLrM",
     "featured_collection_CinWF3",
-    "new_arrivals_DPpLqt"
+    "new_arrivals_DPpLqt",
+    "follow_our_journey_fFyeaN"
   ]
 }
