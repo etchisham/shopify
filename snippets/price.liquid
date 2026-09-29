@@ -16,67 +16,135 @@
 
   assign price = target.price
   assign compare_at_price = target.compare_at_price
+
   if compare_at_price == blank and product.compare_at_price_min > product.price
     assign compare_at_price = product.compare_at_price_min
   endif
+
   assign available = target.available | default: false
 
   assign discount_percent = 0
+
   if compare_at_price > price
     assign discount_percent = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round
   endif
 %}
 
 <div class="price{% unless available %} price--sold-out{% endunless %}{% if compare_at_price > price %} price--sale{% endif %}">
+
   {% if card_layout %}
-    {% if compare_at_price > price %}<span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>{% endif %}
-    <span class="price__current">{{ price | money }}</span>
+
+    {% if compare_at_price > price %}
+      <span class="visually-hidden">
+        {{ 'products.product.sale_price' | t }}
+      </span>
+    {% endif %}
+
+    <span class="price__current">
+      {{ price | money_without_currency | strip }} EGB
+    </span>
+
   {% endif %}
+
 
   {% if compare_at_price > price %}
-    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
-    <s class="price__compare">{{ compare_at_price | money }}</s>
-    {% unless card_layout %}<span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>{% endunless %}
+
+    <span class="visually-hidden">
+      {{ 'products.product.regular_price' | t }}
+    </span>
+
+    <s class="price__compare">
+      {{ compare_at_price | money_without_currency | strip }} EGB
+    </s>
+
+    {% unless card_layout %}
+      <span class="visually-hidden">
+        {{ 'products.product.sale_price' | t }}
+      </span>
+    {% endunless %}
+
   {% endif %}
 
-  {% unless card_layout %}<span class="price__current">{{ price | money }}</span>{% endunless %}
+
+  {% unless card_layout %}
+
+    <span class="price__current">
+      {{ price | money_without_currency | strip }} EGB
+    </span>
+
+  {% endunless %}
+
 
   {% if show_discount and discount_percent > 0 %}
-    <span class="price__discount">{{ 'products.product.discount' | t: percent: discount_percent }}</span>
+
+    <span class="price__discount">
+      {{ 'products.product.discount' | t: percent: discount_percent }}
+    </span>
+
   {% endif %}
+
 
   {% if target.unit_price_measurement %}
+
     <small class="price__unit">
-      {{ target.unit_price | money }} /
-      {% if target.unit_price_measurement.reference_value != 1 %}{{ target.unit_price_measurement.reference_value }}{% endif %}
+
+      {{ target.unit_price | money_without_currency | strip }} EGB /
+
+      {% if target.unit_price_measurement.reference_value != 1 %}
+        {{ target.unit_price_measurement.reference_value }}
+      {% endif %}
+
       {{ target.unit_price_measurement.reference_unit }}
+
     </small>
+
   {% endif %}
+
 </div>
 
+
 {% stylesheet %}
-  .price {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-2);
-    font-weight: 700;
-  }
 
-  .price__compare {
-    color: var(--color-muted);
-    font-weight: 500;
-  }
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
 
-  .price__discount {
-    color: var(--color-muted);
-    font-size: 0.82em;
-    font-weight: 500;
-  }
+  font-weight: 400;
+}
 
-  .price__unit {
-    width: 100%;
-    color: var(--color-muted);
-    font-weight: 400;
-  }
+.price__current {
+  color: var(--color-foreground);
+
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.price__compare {
+  color: var(--color-muted);
+
+  font-size: 0.74rem;
+  font-weight: 400;
+
+  text-decoration: line-through;
+}
+
+.price__discount {
+  color: var(--color-muted);
+
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.price__unit {
+  width: 100%;
+
+  color: var(--color-muted);
+
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
 {% endstylesheet %}
