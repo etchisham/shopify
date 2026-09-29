@@ -36,31 +36,31 @@
 
     <div class="hilya-filters__sort">
 
-      <label for="HilyaSort-{{ section_id }}">
-        SORT
-      </label>
+  <label for="HilyaSort">
+    SORT
+  </label>
 
-      <select
-        id="HilyaSort-{{ section_id }}"
-        data-hilya-sort
+  <select
+    id="HilyaSort"
+    data-hilya-sort
+  >
+
+    {% for option in sort_options %}
+
+      <option
+        value="{{ option.value }}"
+        {% if option.value == sort_by %}
+          selected
+        {% endif %}
       >
+        {{ option.name }}
+      </option>
 
-        {% for option in sort_options %}
+    {% endfor %}
 
-          <option
-            value="{{ option.value }}"
-            {% if option.value == sort_by %}
-              selected
-            {% endif %}
-          >
-            {{ option.name }}
-          </option>
+  </select>
 
-        {% endfor %}
-
-      </select>
-
-    </div>
+</div>
 
   </div>
 
