@@ -31,6 +31,11 @@
   box-sizing: border-box;
 }
 
+.site-header,
+.site-header * {
+  box-sizing: border-box;
+}
+
 
 /* =========================================================
    FIXED HEADER
@@ -53,28 +58,10 @@
 }
 
 
-/* Reserve the header's space in the page */
+/* Reserve header space */
 
 body:has(.site-header--sticky) {
   padding-top: var(--hilya-header-height);
-}
-
-
-/* =========================================================
-   MOBILE HEADER HEIGHT
-   ========================================================= */
-
-@media screen and (max-width: 749px) {
-
-  .site-header {
-    --hilya-header-height: {{ section.settings.mobile_height }}px;
-  }
-
-}
-
-.site-header,
-.site-header * {
-  box-sizing: border-box;
 }
 
 
@@ -219,18 +206,12 @@ body:has(.site-header--sticky) {
   cursor: default;
 }
 
-
-/* Menu trigger */
-
 .desktop-menu__trigger {
   height: 100%;
 
   display: flex;
   align-items: center;
 }
-
-
-/* Categories trigger */
 
 .desktop-categories__trigger {
   height: 100%;
@@ -310,9 +291,6 @@ body:has(.site-header--sticky) {
   z-index: 2000;
 }
 
-
-/* Dropdown links */
-
 .desktop-dropdown a {
   display: block;
 
@@ -339,7 +317,6 @@ body:has(.site-header--sticky) {
 
 /* =========================================================
    DESKTOP HOVER ONLY
-   NO CLICK / NO FOCUS
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -437,6 +414,9 @@ body:has(.site-header--sticky) {
   display: none;
 }
 
+
+/* Search box */
+
 .header-search__panel {
   position: absolute;
 
@@ -489,14 +469,21 @@ body:has(.site-header--sticky) {
   opacity: 0.55;
 }
 
+
+/* =========================================================
+   SEARCH SUBMIT BUTTON
+   WHITE SEARCH ICON
+   ========================================================= */
+
 .header-search__submit {
   width: 38px;
   height: 38px;
 
-  border: 1px solid var(--header-text);
+  border: 1px solid #FFFFFF;
 
-  background: var(--header-text);
-  color: var(--header-bg);
+  background: transparent;
+
+  color: #FFFFFF;
 
   display: flex;
   align-items: center;
@@ -509,7 +496,7 @@ body:has(.site-header--sticky) {
   width: 16px;
   height: 16px;
 
-  stroke: currentColor;
+  stroke: #FFFFFF;
 }
 
 
@@ -529,10 +516,12 @@ body:has(.site-header--sticky) {
 @media screen and (max-width: 749px) {
 
   .site-header {
+    --hilya-header-height: {{ section.settings.mobile_height }}px;
+
     width: 100vw !important;
     max-width: none !important;
 
-    margin-left: calc(50% - 50vw) !important;
+    margin-left: 0 !important;
     margin-right: 0 !important;
   }
 
@@ -548,9 +537,9 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      MOBILE BRAND
-     --------------------------------------------------------- */
+     ======================================================= */
 
   .site-header__brand {
     position: absolute;
@@ -564,43 +553,44 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      HIDE DESKTOP NAV
-     --------------------------------------------------------- */
+     ======================================================= */
 
   .desktop-nav {
     display: none;
   }
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      MOBILE MENU
-     --------------------------------------------------------- */
+     ======================================================= */
 
   .mobile-menu {
     display: block;
 
     position: static;
 
-    z-index: 5000;
+    z-index: 100000;
   }
 
 
   .mobile-menu summary {
     list-style: none;
 
-    width: 20px;
-    height: 17px;
+    width: 22px;
+    height: 18px;
 
     padding: 0;
     margin: 0;
 
     display: flex;
-    flex-direction: column;
-
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
 
     cursor: pointer;
+
+    position: relative;
   }
 
   .mobile-menu summary::-webkit-details-marker {
@@ -608,16 +598,20 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* Mobile hamburger */
+  /* =======================================================
+     MOBILE HAMBURGER / X
+     ======================================================= */
 
   .mobile-menu__icon {
-    width: 20px;
+    width: 21px;
     height: 16px;
 
     display: flex;
     flex-direction: column;
 
     justify-content: space-between;
+
+    position: relative;
   }
 
   .mobile-menu__icon span {
@@ -627,12 +621,40 @@ body:has(.site-header--sticky) {
     display: block;
 
     background: currentColor;
+
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
+
+    transform-origin: center;
   }
 
 
-  /* ---------------------------------------------------------
-     MOBILE MENU PANEL
-     --------------------------------------------------------- */
+  /* Open = X */
+
+  .mobile-menu[open]
+  .mobile-menu__icon span:nth-child(1) {
+    transform:
+      translateY(7.5px)
+      rotate(45deg);
+  }
+
+  .mobile-menu[open]
+  .mobile-menu__icon span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu[open]
+  .mobile-menu__icon span:nth-child(3) {
+    transform:
+      translateY(-7.5px)
+      rotate(-45deg);
+  }
+
+
+  /* =======================================================
+     MOBILE MENU FULL SCREEN
+     ======================================================= */
 
   .mobile-menu__panel {
     position: fixed;
@@ -641,17 +663,17 @@ body:has(.site-header--sticky) {
     left: 0;
 
     width: 100vw;
-    max-width: none;
 
-    height: auto;
-
-    max-height:
+    height:
       calc(100vh - var(--header-mobile-height));
 
+    max-height: none;
+
     overflow-y: auto;
+    overflow-x: hidden;
 
     padding:
-      18px 22px 28px;
+      18px 22px 40px;
 
     background: var(--header-bg);
 
@@ -662,17 +684,19 @@ body:has(.site-header--sticky) {
       1px solid var(--header-border);
 
     box-shadow:
-      0 12px 30px rgba(0, 0, 0, 0.06);
+      none;
 
-    z-index: 9999;
+    z-index: 99998;
 
     box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
   }
 
 
-  /* ---------------------------------------------------------
-     MOBILE MAIN LINKS
-     --------------------------------------------------------- */
+  /* =======================================================
+     MOBILE MENU LINKS
+     ======================================================= */
 
   .mobile-menu__panel > a {
     display: block;
@@ -697,9 +721,9 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* =========================================================
+  /* =======================================================
      MOBILE CATEGORIES
-     ========================================================= */
+     ======================================================= */
 
   .mobile-categories {
     width: 100%;
@@ -736,7 +760,7 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* Mobile arrow */
+  /* Categories arrow */
 
   .mobile-categories__arrow {
     width: 7px;
@@ -766,7 +790,7 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* Mobile category items */
+  /* Category items */
 
   .mobile-categories__items {
     width: 100%;
@@ -796,9 +820,9 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      MOBILE ACTIONS
-     --------------------------------------------------------- */
+     ======================================================= */
 
   .header-actions {
     margin-left: auto;
@@ -812,9 +836,9 @@ body:has(.site-header--sticky) {
   }
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      MOBILE SEARCH
-     --------------------------------------------------------- */
+     ======================================================= */
 
   .header-search__panel {
     position: fixed;
@@ -829,7 +853,7 @@ body:has(.site-header--sticky) {
 
     box-sizing: border-box;
 
-    z-index: 9998;
+    z-index: 99998;
   }
 
   .header-search__form {
@@ -840,7 +864,7 @@ body:has(.site-header--sticky) {
 
 
 /* =========================================================
-   DESKTOP / MOBILE DISPLAY CONTROL
+   DESKTOP / MOBILE DISPLAY
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -853,7 +877,7 @@ body:has(.site-header--sticky) {
 
 
 /* =========================================================
-   FULL-WIDTH SHOPIFY SECTION
+   FULL WIDTH SHOPIFY SECTION
    ========================================================= */
 
 .shopify-section:has(.site-header) {
@@ -886,11 +910,9 @@ body:has(.site-header--sticky) {
       <summary aria-label="Open menu">
 
         <span class="mobile-menu__icon">
-
           <span></span>
           <span></span>
           <span></span>
-
         </span>
 
       </summary>
@@ -898,11 +920,9 @@ body:has(.site-header--sticky) {
 
       <nav class="mobile-menu__panel">
 
-
         <a href="{{ routes.root_url }}">
           Home
         </a>
-
 
         <a href="{{ routes.all_products_collection_url }}">
           All Products
@@ -1010,7 +1030,6 @@ body:has(.site-header--sticky) {
 
         {% endif %}
 
-
       </nav>
 
     </details>
@@ -1046,18 +1065,15 @@ body:has(.site-header--sticky) {
         >
 
           <span class="desktop-menu__icon">
-
             <span></span>
             <span></span>
             <span></span>
-
           </span>
 
         </button>
 
 
         <div class="desktop-dropdown">
-
 
           <a href="{{ routes.all_products_collection_url }}">
             All Products
@@ -1118,7 +1134,6 @@ body:has(.site-header--sticky) {
 
           {% endif %}
 
-
         </div>
 
       </div>
@@ -1131,12 +1146,9 @@ body:has(.site-header--sticky) {
       </a>
 
 
-      <!-- ===================================================
-           DESKTOP CATEGORIES
-           =================================================== -->
+      <!-- DESKTOP CATEGORIES -->
 
       <div class="desktop-categories">
-
 
         <button
           class="desktop-categories__trigger"
@@ -1148,31 +1160,25 @@ body:has(.site-header--sticky) {
 
         <div class="desktop-dropdown">
 
-
           <a href="{{ routes.collections_url }}/necklaces">
             Necklaces
           </a>
-
 
           <a href="{{ routes.collections_url }}/rings">
             Rings
           </a>
 
-
           <a href="{{ routes.collections_url }}/pendants">
             Pendants
           </a>
-
 
           <a href="{{ routes.collections_url }}/bracelets">
             Bracelets
           </a>
 
-
           <a href="{{ routes.collections_url }}/keychains">
             Keychains
           </a>
-
 
         </div>
 
@@ -1184,7 +1190,6 @@ body:has(.site-header--sticky) {
       <a href="{{ section.settings.contact_link }}">
         Contact Us
       </a>
-
 
     </nav>
 
@@ -1201,7 +1206,6 @@ body:has(.site-header--sticky) {
       {% if section.settings.show_search %}
 
         <details class="header-search">
-
 
           <summary
             class="header-action"
@@ -1233,13 +1237,11 @@ body:has(.site-header--sticky) {
 
           <div class="header-search__panel">
 
-
             <form
               class="header-search__form"
               action="{{ routes.search_url }}"
               method="get"
             >
-
 
               <input
                 class="header-search__input"
@@ -1278,11 +1280,9 @@ body:has(.site-header--sticky) {
 
               </button>
 
-
             </form>
 
           </div>
-
 
         </details>
 
@@ -1367,16 +1367,66 @@ body:has(.site-header--sticky) {
 
         {% endif %}
 
-
       </a>
 
-
     </div>
-
 
   </div>
 
 </header>
+
+
+<script>
+(function () {
+
+  function setupHilyaMobileMenu() {
+
+    const menu = document.querySelector('.mobile-menu');
+
+    if (!menu) return;
+
+    function lockPage() {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function unlockPage() {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+
+    menu.addEventListener('toggle', function () {
+
+      if (menu.open) {
+        lockPage();
+      } else {
+        unlockPage();
+      }
+
+    });
+
+    window.addEventListener('resize', function () {
+
+      if (window.innerWidth > 749) {
+        menu.open = false;
+        unlockPage();
+      }
+
+    });
+
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded',
+      setupHilyaMobileMenu
+    );
+  } else {
+    setupHilyaMobileMenu();
+  }
+
+})();
+</script>
 
 
 {% schema %}
@@ -1392,7 +1442,6 @@ body:has(.site-header--sticky) {
       "label": "Contact Us link"
     },
 
-
     {
       "type": "checkbox",
       "id": "show_new_arrivals",
@@ -1400,13 +1449,11 @@ body:has(.site-header--sticky) {
       "default": true
     },
 
-
     {
       "type": "url",
       "id": "new_arrivals_link",
       "label": "New Arrivals link"
     },
-
 
     {
       "type": "checkbox",
@@ -1415,13 +1462,11 @@ body:has(.site-header--sticky) {
       "default": true
     },
 
-
     {
       "type": "url",
       "id": "best_sellers_link",
       "label": "Best Sellers link"
     },
-
 
     {
       "type": "url",
@@ -1429,12 +1474,10 @@ body:has(.site-header--sticky) {
       "label": "Instagram link"
     },
 
-
     {
       "type": "header",
       "content": "Shipping"
     },
-
 
     {
       "type": "checkbox",
@@ -1443,19 +1486,16 @@ body:has(.site-header--sticky) {
       "default": false
     },
 
-
     {
       "type": "page",
       "id": "shipping_page",
       "label": "Shipping page"
     },
 
-
     {
       "type": "header",
       "content": "Returns"
     },
-
 
     {
       "type": "checkbox",
@@ -1464,19 +1504,16 @@ body:has(.site-header--sticky) {
       "default": false
     },
 
-
     {
       "type": "page",
       "id": "returns_page",
       "label": "Returns page"
     },
 
-
     {
       "type": "header",
       "content": "FAQ"
     },
-
 
     {
       "type": "checkbox",
@@ -1485,19 +1522,16 @@ body:has(.site-header--sticky) {
       "default": false
     },
 
-
     {
       "type": "page",
       "id": "faq_page",
       "label": "FAQ page"
     },
 
-
     {
       "type": "header",
       "content": "Header settings"
     },
-
 
     {
       "type": "checkbox",
@@ -1506,14 +1540,12 @@ body:has(.site-header--sticky) {
       "default": true
     },
 
-
     {
       "type": "checkbox",
       "id": "show_account",
       "label": "Show account",
       "default": true
     },
-
 
     {
       "type": "checkbox",
@@ -1522,12 +1554,10 @@ body:has(.site-header--sticky) {
       "default": true
     },
 
-
     {
       "type": "header",
       "content": "Style"
     },
-
 
     {
       "type": "color",
@@ -1536,7 +1566,6 @@ body:has(.site-header--sticky) {
       "default": "#F7F4EE"
     },
 
-
     {
       "type": "color",
       "id": "text_color",
@@ -1544,14 +1573,12 @@ body:has(.site-header--sticky) {
       "default": "#111111"
     },
 
-
     {
       "type": "color",
       "id": "border_color",
       "label": "Border",
       "default": "#E5E1D8"
     },
-
 
     {
       "type": "range",
@@ -1564,7 +1591,6 @@ body:has(.site-header--sticky) {
       "default": 72
     },
 
-
     {
       "type": "range",
       "id": "mobile_height",
@@ -1575,7 +1601,6 @@ body:has(.site-header--sticky) {
       "unit": "px",
       "default": 64
     },
-
 
     {
       "type": "range",
@@ -1590,13 +1615,11 @@ body:has(.site-header--sticky) {
 
   ],
 
-
   "presets": [
     {
       "name": "Hilya Header"
     }
   ]
-
 }
 
 {% endschema %}
