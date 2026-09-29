@@ -45,11 +45,11 @@
     data-hilya-sort
   >
 
-    {% for option in sort_options %}
+    {% for option in collection.sort_options %}
 
       <option
         value="{{ option.value }}"
-        {% if option.value == sort_by %}
+        {% if option.value == collection.sort_by %}
           selected
         {% endif %}
       >
@@ -61,6 +61,7 @@
   </select>
 
 </div>
+
 
   </div>
 
