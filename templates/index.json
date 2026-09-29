@@ -70,33 +70,13 @@
     },
     "follow_our_journey_fFyeaN": {
       "type": "follow-our-journey",
-      "blocks": {
-        "image_Pk7jr8": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_FdjDxp": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_8B4C43": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_ynd6qg": {
-          "type": "image",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "image_Pk7jr8",
-        "image_FdjDxp",
-        "image_8B4C43",
-        "image_ynd6qg"
-      ],
       "name": "Hilya Social",
       "settings": {
-        "instagram_url": ""
+        "instagram_url": "https://www.instagram.com/hilya.insta",
+        "image_1": "shopify://shop_images/4.png",
+        "image_2": "shopify://shop_images/1.png",
+        "image_3": "shopify://shop_images/8.png",
+        "image_4": "shopify://shop_images/ChatGPTImageSep16_2026_09_20_34AM_8.png"
       }
     }
   },
