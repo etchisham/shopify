@@ -5,8 +5,12 @@
       <p class="catalog-page__eyebrow">COLLECTION</p>
 
       <h1 class="catalog-page__title">
-        {{ collection.title | escape }}
-      </h1>
+  {% if collection.handle == 'all' %}
+    All Products
+  {% else %}
+    {{ collection.title | escape }}
+  {% endif %}
+</h1>
 
       {% if section.settings.show_collection_description and collection.description != blank %}
         <div class="catalog-page__description rte">
