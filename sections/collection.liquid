@@ -1,12 +1,8 @@
 <section class="catalog-page collection full-width section-spacing">
   <div class="catalog-page__inner">
 
-    <!-- COLLECTION INTRO -->
     <header class="catalog-page__header">
-
-      <p class="catalog-page__eyebrow">
-        COLLECTION
-      </p>
+      <p class="catalog-page__eyebrow">COLLECTION</p>
 
       <h1 class="catalog-page__title">
         {{ collection.title | escape }}
@@ -17,12 +13,10 @@
           {{ collection.description }}
         </div>
       {% endif %}
-
     </header>
 
     {% paginate collection.products by section.settings.products_per_page %}
 
-      <!-- FILTER / SORT -->
       <div class="catalog-page__toolbar">
         {% render 'facets-toolbar',
           filters: collection.filters,
@@ -38,9 +32,7 @@
 
       {% if collection.products_count > 0 %}
 
-        <!-- PRODUCTS -->
         <div class="catalog-grid">
-
           {% for product in collection.products %}
             {% render 'product-card',
               product: product,
@@ -48,10 +40,8 @@
               sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
             %}
           {% endfor %}
-
         </div>
 
-        <!-- PAGINATION -->
         {% if paginate.pages > 1 %}
           <nav
             class="catalog-page__pagination"
@@ -77,40 +67,36 @@
 
 {% stylesheet %}
 
-/* =========================================
-   COLLECTION PAGE
-   ========================================= */
-
-.catalog-page {
-  width: 100%;
-}
+/* ================================
+   COLLECTION
+================================ */
 
 .catalog-page__inner {
   width: 100%;
-  padding-inline: clamp(1rem, 5.2vw, 6.25rem);
+  padding-inline: clamp(1rem, 5vw, 5.5rem);
 }
 
 
-/* =========================================
-   COLLECTION INTRO
-   ========================================= */
+/* ================================
+   COLLECTION TITLE
+================================ */
 
 .catalog-page__header {
-  width: min(100%, 56rem);
+  width: 100%;
   margin-inline: auto;
-  margin-block-end: clamp(2.75rem, 5vw, 4.5rem);
+  margin-block-end: clamp(2.25rem, 4vw, 3.5rem);
   text-align: center;
 }
 
 .catalog-page__eyebrow {
-  margin: 0 0 0.9rem;
+  margin: 0 0 0.8rem;
 
   color: var(--color-muted);
 
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 
@@ -119,53 +105,52 @@
 
   color: var(--color-foreground);
 
-  font-size: clamp(2rem, 4vw, 3.7rem);
+  font-size: clamp(1.9rem, 3.5vw, 3.2rem);
   font-weight: 400;
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: 0.035em;
   text-transform: uppercase;
 }
 
 .catalog-page__description {
-  width: min(100%, 38rem);
-  margin: 1.25rem auto 0;
+  max-width: 36rem;
+  margin: 1rem auto 0;
 
   color: var(--color-muted);
 
-  font-size: clamp(0.82rem, 1vw, 0.95rem);
+  font-size: 0.85rem;
   line-height: 1.7;
-  letter-spacing: 0.015em;
 }
 
 
-/* =========================================
+/* ================================
    TOOLBAR
-   ========================================= */
+================================ */
 
 .catalog-page__toolbar {
-  margin-block-end: clamp(1.75rem, 3vw, 2.75rem);
+  margin-block-end: clamp(1.5rem, 2.5vw, 2.25rem);
 
-  border-block: 1px solid rgb(0 0 0 / 9%);
+  border-block: 1px solid rgb(0 0 0 / 8%);
 }
 
 
-/* =========================================
+/* ================================
    PRODUCT GRID
-   ========================================= */
+================================ */
 
 .catalog-grid {
   display: grid;
 
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  column-gap: clamp(0.8rem, 1.6vw, 1.75rem);
-  row-gap: clamp(2.5rem, 4vw, 4.5rem);
+  column-gap: clamp(0.7rem, 1.5vw, 1.5rem);
+  row-gap: clamp(2.5rem, 4vw, 4.25rem);
 }
 
 
-/* =========================================
+/* ================================
    PAGINATION
-   ========================================= */
+================================ */
 
 .catalog-page__pagination {
   display: flex;
@@ -174,9 +159,9 @@
   justify-content: center;
   align-items: center;
 
-  gap: 0.35rem;
+  gap: 0.3rem;
 
-  margin-block-start: clamp(3.5rem, 6vw, 5.5rem);
+  margin-block-start: 4.5rem;
 
   text-align: center;
 }
@@ -193,9 +178,9 @@
 
   color: var(--color-foreground);
 
-  border-radius: 999px;
+  border-radius: 50%;
 
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   line-height: 1;
 
   text-decoration: none;
@@ -206,31 +191,26 @@
 }
 
 
-/* =========================================
-   EMPTY COLLECTION
-   ========================================= */
+/* ================================
+   EMPTY
+================================ */
 
 .catalog-page__empty {
-  width: min(100%, 40rem);
-
+  max-width: 36rem;
   margin: 3rem auto;
-
   padding: 3rem 1.5rem;
 
-  border: 1px solid rgb(0 0 0 / 9%);
-  border-radius: 2px;
-
-  color: var(--color-muted);
+  border: 1px solid rgb(0 0 0 / 8%);
 
   text-align: center;
 
-  font-size: 0.9rem;
+  color: var(--color-muted);
 }
 
 
-/* =========================================
+/* ================================
    TABLET
-   ========================================= */
+================================ */
 
 @media (min-width: 46.875rem) {
 
@@ -241,9 +221,9 @@
 }
 
 
-/* =========================================
+/* ================================
    DESKTOP
-   ========================================= */
+================================ */
 
 @media (min-width: 64rem) {
 
@@ -254,9 +234,9 @@
 }
 
 
-/* =========================================
+/* ================================
    MOBILE
-   ========================================= */
+================================ */
 
 @media (max-width: 40rem) {
 
@@ -265,34 +245,33 @@
   }
 
   .catalog-page__header {
-    margin-block-end: 2.5rem;
+    margin-block-end: 2.25rem;
   }
 
   .catalog-page__eyebrow {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.7rem;
 
-    font-size: 0.62rem;
-    letter-spacing: 0.2em;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
   }
 
   .catalog-page__title {
-    font-size: clamp(1.8rem, 8vw, 2.35rem);
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
     letter-spacing: 0.025em;
   }
 
   .catalog-page__description {
-    margin-top: 1rem;
+    margin-top: 0.9rem;
 
-    font-size: 0.8rem;
-    line-height: 1.65;
+    font-size: 0.78rem;
   }
 
   .catalog-page__toolbar {
-    margin-block-end: 1.5rem;
+    margin-block-end: 1.35rem;
   }
 
   .catalog-grid {
-    column-gap: 0.75rem;
+    column-gap: 0.7rem;
     row-gap: 2.75rem;
   }
 
@@ -303,27 +282,26 @@
 }
 
 
-/* =========================================
+/* ================================
    VERY SMALL MOBILE
-   ========================================= */
+================================ */
 
 @media (max-width: 27rem) {
 
   .catalog-page__inner {
-    padding-inline: 0.85rem;
+    padding-inline: 0.8rem;
   }
 
   .catalog-grid {
-    column-gap: 0.65rem;
-    row-gap: 2.5rem;
+    column-gap: 0.6rem;
   }
 
 }
 
 
-/* =========================================
+/* ================================
    REDUCED MOTION
-   ========================================= */
+================================ */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -346,12 +324,11 @@
   },
 
   "settings": [
-
     {
       "type": "checkbox",
       "id": "show_collection_description",
       "label": "t:labels.show_collection_description",
-      "default": true
+      "default": false
     },
 
     {
@@ -363,7 +340,6 @@
       "label": "t:labels.products_to_show",
       "default": 24
     }
-
   ]
 }
 
