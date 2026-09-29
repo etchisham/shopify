@@ -1,101 +1,370 @@
 <section class="catalog-page collection full-width section-spacing">
   <div class="catalog-page__inner">
+
+    <!-- COLLECTION INTRO -->
     <header class="catalog-page__header">
-      <p class="eyebrow">{{ 'general.collection' | t }}</p>
-      <h1>{{ collection.title | escape }}</h1>
+
+      <p class="catalog-page__eyebrow">
+        COLLECTION
+      </p>
+
+      <h1 class="catalog-page__title">
+        {{ collection.title | escape }}
+      </h1>
+
       {% if section.settings.show_collection_description and collection.description != blank %}
-        <div class="catalog-page__description rte muted">{{ collection.description }}</div>
+        <div class="catalog-page__description rte">
+          {{ collection.description }}
+        </div>
       {% endif %}
+
     </header>
 
     {% paginate collection.products by section.settings.products_per_page %}
-      {% render 'facets-toolbar',
-        filters: collection.filters,
-        sort_options: collection.sort_options,
-        sort_by: collection.sort_by,
-        default_sort_by: collection.default_sort_by,
-        results_url: collection.url,
-        clear_url: collection.url,
-        results_count: collection.products_count,
-        section_id: section.id
-      %}
+
+      <!-- FILTER / SORT -->
+      <div class="catalog-page__toolbar">
+        {% render 'facets-toolbar',
+          filters: collection.filters,
+          sort_options: collection.sort_options,
+          sort_by: collection.sort_by,
+          default_sort_by: collection.default_sort_by,
+          results_url: collection.url,
+          clear_url: collection.url,
+          results_count: collection.products_count,
+          section_id: section.id
+        %}
+      </div>
 
       {% if collection.products_count > 0 %}
+
+        <!-- PRODUCTS -->
         <div class="catalog-grid">
+
           {% for product in collection.products %}
-            {% render 'product-card', product: product, heading_level: 'h2', sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw' %}
+            {% render 'product-card',
+              product: product,
+              heading_level: 'h2',
+              sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
+            %}
           {% endfor %}
+
         </div>
-        <div class="catalog-page__pagination">{{ paginate | default_pagination }}</div>
+
+        <!-- PAGINATION -->
+        {% if paginate.pages > 1 %}
+          <nav
+            class="catalog-page__pagination"
+            aria-label="Pagination"
+          >
+            {{ paginate | default_pagination }}
+          </nav>
+        {% endif %}
+
       {% else %}
-        <p class="catalog-page__empty">{{ 'collections.empty' | t }}</p>
+
+        <div class="catalog-page__empty">
+          <p>{{ 'collections.empty' | t }}</p>
+        </div>
+
       {% endif %}
+
     {% endpaginate %}
+
   </div>
 </section>
 
+
 {% stylesheet %}
+
+/* =========================================
+   COLLECTION PAGE
+   ========================================= */
+
+.catalog-page {
+  width: 100%;
+}
+
+.catalog-page__inner {
+  width: 100%;
+  padding-inline: clamp(1rem, 5.2vw, 6.25rem);
+}
+
+
+/* =========================================
+   COLLECTION INTRO
+   ========================================= */
+
+.catalog-page__header {
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  margin-block-end: clamp(2.75rem, 5vw, 4.5rem);
+  text-align: center;
+}
+
+.catalog-page__eyebrow {
+  margin: 0 0 0.9rem;
+
+  color: var(--color-muted);
+
+  font-size: 0.68rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.catalog-page__title {
+  margin: 0;
+
+  color: var(--color-foreground);
+
+  font-size: clamp(2rem, 4vw, 3.7rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.catalog-page__description {
+  width: min(100%, 38rem);
+  margin: 1.25rem auto 0;
+
+  color: var(--color-muted);
+
+  font-size: clamp(0.82rem, 1vw, 0.95rem);
+  line-height: 1.7;
+  letter-spacing: 0.015em;
+}
+
+
+/* =========================================
+   TOOLBAR
+   ========================================= */
+
+.catalog-page__toolbar {
+  margin-block-end: clamp(1.75rem, 3vw, 2.75rem);
+
+  border-block: 1px solid rgb(0 0 0 / 9%);
+}
+
+
+/* =========================================
+   PRODUCT GRID
+   ========================================= */
+
+.catalog-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  column-gap: clamp(0.8rem, 1.6vw, 1.75rem);
+  row-gap: clamp(2.5rem, 4vw, 4.5rem);
+}
+
+
+/* =========================================
+   PAGINATION
+   ========================================= */
+
+.catalog-page__pagination {
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 0.35rem;
+
+  margin-block-start: clamp(3.5rem, 6vw, 5.5rem);
+
+  text-align: center;
+}
+
+.catalog-page__pagination > * {
+  display: inline-grid;
+
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+
+  place-items: center;
+
+  padding: 0.5rem;
+
+  color: var(--color-foreground);
+
+  border-radius: 999px;
+
+  font-size: 0.78rem;
+  line-height: 1;
+
+  text-decoration: none;
+}
+
+.catalog-page__pagination > *:hover {
+  background: rgb(0 0 0 / 5%);
+}
+
+
+/* =========================================
+   EMPTY COLLECTION
+   ========================================= */
+
+.catalog-page__empty {
+  width: min(100%, 40rem);
+
+  margin: 3rem auto;
+
+  padding: 3rem 1.5rem;
+
+  border: 1px solid rgb(0 0 0 / 9%);
+  border-radius: 2px;
+
+  color: var(--color-muted);
+
+  text-align: center;
+
+  font-size: 0.9rem;
+}
+
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (min-width: 46.875rem) {
+
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================
+   DESKTOP
+   ========================================= */
+
+@media (min-width: 64rem) {
+
+  .catalog-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 40rem) {
+
   .catalog-page__inner {
-    width: 100%;
-    padding-inline: clamp(1rem, 5.2vw, 6.25rem);
+    padding-inline: 1rem;
   }
 
   .catalog-page__header {
-    max-width: 52rem;
-    margin-block-end: clamp(2rem, 4vw, 3.5rem);
+    margin-block-end: 2.5rem;
   }
 
-  .catalog-page__header h1 {
-    margin-block-start: var(--space-2);
+  .catalog-page__eyebrow {
+    margin-bottom: 0.75rem;
+
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+  }
+
+  .catalog-page__title {
+    font-size: clamp(1.8rem, 8vw, 2.35rem);
+    letter-spacing: 0.025em;
   }
 
   .catalog-page__description {
-    max-width: 48rem;
+    margin-top: 1rem;
+
+    font-size: 0.8rem;
+    line-height: 1.65;
+  }
+
+  .catalog-page__toolbar {
+    margin-block-end: 1.5rem;
+  }
+
+  .catalog-grid {
+    column-gap: 0.75rem;
+    row-gap: 2.75rem;
   }
 
   .catalog-page__pagination {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.35rem;
-    margin-block-start: var(--space-7);
-    text-align: center;
+    margin-block-start: 3.5rem;
   }
+
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 27rem) {
+
+  .catalog-page__inner {
+    padding-inline: 0.85rem;
+  }
+
+  .catalog-grid {
+    column-gap: 0.65rem;
+    row-gap: 2.5rem;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
 
   .catalog-page__pagination > * {
-    display: inline-grid;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-    place-items: center;
-    border-radius: 999px;
-    padding: 0.55rem;
+    transition: none;
   }
 
-  .catalog-page__empty {
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-large);
-    padding: var(--space-7);
-    text-align: center;
-  }
+}
 
-  @media (max-width: 40rem) {
-    .catalog-page__inner {
-      padding-inline: 1rem;
-    }
-
-    .catalog-page__header {
-      margin-block-end: 2rem;
-    }
-  }
 {% endstylesheet %}
 
+
 {% schema %}
+
 {
   "name": "t:general.collection",
-  "disabled_on": { "groups": ["header", "footer"] },
+
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+
   "settings": [
-    { "type": "checkbox", "id": "show_collection_description", "label": "t:labels.show_collection_description", "default": true },
-    { "type": "range", "id": "products_per_page", "min": 12, "max": 48, "step": 4, "label": "t:labels.products_to_show", "default": 24 }
+
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "t:labels.show_collection_description",
+      "default": true
+    },
+
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "label": "t:labels.products_to_show",
+      "default": 24
+    }
+
   ]
 }
+
 {% endschema %}
