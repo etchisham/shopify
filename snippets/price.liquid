@@ -41,7 +41,7 @@
     {% endif %}
 
     <span class="price__current">
-      {{ price | money_without_currency | strip }} EGB
+      EGP {{ price | money_without_currency | strip }}
     </span>
 
   {% endif %}
@@ -54,7 +54,7 @@
     </span>
 
     <s class="price__compare">
-      {{ compare_at_price | money_without_currency | strip }} EGB
+      EGP {{ compare_at_price | money_without_currency | strip }}
     </s>
 
     {% unless card_layout %}
@@ -69,7 +69,7 @@
   {% unless card_layout %}
 
     <span class="price__current">
-      {{ price | money_without_currency | strip }} EGB
+      EGP {{ price | money_without_currency | strip }}
     </span>
 
   {% endunless %}
@@ -88,7 +88,7 @@
 
     <small class="price__unit">
 
-      {{ target.unit_price | money_without_currency | strip }} EGB /
+      EGP {{ target.unit_price | money_without_currency | strip }} /
 
       {% if target.unit_price_measurement.reference_value != 1 %}
         {{ target.unit_price_measurement.reference_value }}
