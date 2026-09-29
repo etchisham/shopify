@@ -1004,9 +1004,13 @@ body:has(.site-header--sticky) {
         </a>
 
 
-        <a href="{{ section.settings.instagram_link }}">
-          Our Instagram
-        </a>
+        <a
+  href="{{ section.settings.instagram_link }}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  Our Instagram
+</a>
 
 
         {% if section.settings.show_shipping
