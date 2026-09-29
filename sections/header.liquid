@@ -975,37 +975,35 @@
 
       <!-- CATEGORIES -->
 
-      <details class="desktop-categories">
+      <div class="desktop-categories">
+  <button class="desktop-categories__trigger" type="button">
+    Categories
+  </button>
 
-        <summary>
-          Categories
-        </summary>
+  <div class="desktop-dropdown">
 
+    <a href="{{ routes.collections_url }}/necklaces">
+      Necklaces
+    </a>
 
-        <div class="desktop-dropdown">
+    <a href="{{ routes.collections_url }}/rings">
+      Rings
+    </a>
 
-          <a href="{{ routes.collections_url }}/necklaces">
-            Necklaces
-          </a>
+    <a href="{{ routes.collections_url }}/pendants">
+      Pendants
+    </a>
 
-          <a href="{{ routes.collections_url }}/rings">
-            Rings
-          </a>
+    <a href="{{ routes.collections_url }}/bracelets">
+      Bracelets
+    </a>
 
-          <a href="{{ routes.collections_url }}/pendants">
-            Pendants
-          </a>
+    <a href="{{ routes.collections_url }}/keychains">
+      Keychains
+    </a>
 
-          <a href="{{ routes.collections_url }}/bracelets">
-            Bracelets
-          </a>
-
-          <a href="{{ routes.collections_url }}/keychains">
-            Keychains
-          </a>
-
-        </div>
-
+  </div>
+</div>
       </details>
 
 
