@@ -3255,17 +3255,18 @@ input[type="range"]::-moz-range-thumb {
   top: 96px;
   width: 100%;
 
-  /* Keep the complete filter panel inside the viewport */
   max-height: calc(100vh - 112px);
   overflow-y: auto;
   overflow-x: hidden;
 
-  /* Small breathing room for the scrollbar */
-  padding-right: .35rem;
+  padding-right: .15rem;
 
-  /* Prevent layout shift when scrollbar appears */
-  scrollbar-gutter: stable;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
+
+/* Chrome / Edge / Safari */
 .hilya-filter-sidebar::-webkit-scrollbar {
   width: 2px;
 }
@@ -3275,17 +3276,24 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .hilya-filter-sidebar::-webkit-scrollbar-thumb {
-  background: rgb(0 0 0 / 12%);
+  background: transparent;
   border-radius: 999px;
 }
+
+/* Show a very subtle scrollbar when interacting */
+.hilya-filter-sidebar:hover {
+  scrollbar-color: rgb(0 0 0 / 14%) transparent;
+}
+
+.hilya-filter-sidebar:hover::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 14%);
+}
+
 .hilya-filter-sidebar::-webkit-scrollbar-thumb:hover {
   background: rgb(0 0 0 / 22%);
 }
 
-.hilya-filter-sidebar {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(0 0 0 / 12%) transparent;
-}
+
 
   /* Compact desktop sidebar without changing filter contents */
   .hilya-filter-sidebar__heading {
