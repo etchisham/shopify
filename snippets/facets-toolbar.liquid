@@ -422,11 +422,9 @@
         aria-haspopup="listbox"
       >
 
-        {% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
-
-<span data-hilya-sort-current>
+        <span data-hilya-sort-current>
   {% for option in collection.sort_options %}
-    {% if option.value == current_sort %}
+    {% if option.value == collection.sort_by %}
       {{ option.name }}
     {% endif %}
   {% endfor %}
