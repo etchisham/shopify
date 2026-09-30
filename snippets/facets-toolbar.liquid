@@ -60,15 +60,16 @@
 
       <!-- AVAILABILITY -->
 
-      <div
-        class="hilya-filter-group is-open"
+      <details
+        class="hilya-filter-group"
+        open
       >
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <summary>
           <span>Availability</span>
 
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
+        </summary>
 
 
         <div class="hilya-filter-group__content">
@@ -100,111 +101,82 @@
 
         </div>
 
-      </div>
+      </details>
 
 
       <!-- PRICE -->
 
-      <div
-        class="hilya-filter-group is-open"
+      <details
+        class="hilya-filter-group"
+        open
       >
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <summary>
           <span>Price</span>
 
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
+        </summary>
 
 
         <div class="hilya-filter-group__content">
 
-          <div class="hilya-price-slider">
+  <div class="hilya-price-slider">
+    ...
+  </div>
 
-            <div class="hilya-price-slider__track"></div>
+  <div class="hilya-price-values">
 
-            <div
-              class="hilya-price-slider__range"
-              data-price-range
-            ></div>
+    <label class="hilya-price-input">
+      <span>EGP</span>
+      <input
+        type="number"
+        min="0"
+        max="1000"
+        step="1"
+        value="0"
+        inputmode="numeric"
+        data-price-min-input
+        aria-label="Minimum price"
+      >
+    </label>
 
+    <span class="hilya-price-values__to">
+      to
+    </span>
 
-            <input
-              type="range"
-              name="price_min"
-              min="0"
-              max="1000"
-              value="0"
-              step="1"
-              data-price-min
-              aria-label="Minimum price"
-            >
+    <label class="hilya-price-input hilya-price-input--max">
+      <span>EGP</span>
+      <input
+        type="number"
+        min="0"
+        max="1000"
+        step="1"
+        value="1000"
+        inputmode="numeric"
+        data-price-max-input
+        aria-label="Maximum price"
+      >
+    </label>
 
-            <input
-              type="range"
-              name="price_max"
-              min="0"
-              max="1000"
-              value="1000"
-              step="1"
-              data-price-max
-              aria-label="Maximum price"
-            >
+  </div> <!-- .hilya-price-values -->
 
-          </div>
+</div> <!-- .hilya-filter-group__content -->
 
-
-          <div class="hilya-price-values">
-
-          <label class="hilya-price-input">
-            <span>EGP</span>
-            <input
-              type="number"
-              min="0"
-              max="1000"
-              step="1"
-              value="0"
-              inputmode="numeric"
-              data-price-min-input
-              aria-label="Minimum price"
-            >
-          </label>
-
-          <span class="hilya-price-values__to">
-            to
-          </span>
-
-          <label class="hilya-price-input hilya-price-input--max">
-            <span>EGP</span>
-            <input
-              type="number"
-              min="0"
-              max="1000"
-              step="1"
-              value="1000"
-              inputmode="numeric"
-              data-price-max-input
-              aria-label="Maximum price"
-            >
-          </label>
-
-        </div>
-
-      </div>
-      
-      </div>
+</details>
 
 
       <!-- COLOR -->
 
-      <div
-        class="hilya-filter-group is-open"
+      <details
+        class="hilya-filter-group"
+        open
       >
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <summary>
           <span>Color</span>
 
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
+        </summary>
 
 
         <div class="hilya-filter-group__content">
@@ -236,20 +208,21 @@
 
         </div>
 
-      </div>
+      </details>
 
 
       <!-- PRODUCT TYPE -->
 
-      <div
-        class="hilya-filter-group is-open"
+      <details
+        class="hilya-filter-group"
+        open
       >
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <summary>
           <span>Product Type</span>
 
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
+        </summary>
 
 
         <div class="hilya-filter-group__content">
@@ -320,7 +293,7 @@
 
         </div>
 
-      </div>
+      </details>
 
     </form>
 
@@ -2020,29 +1993,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
-     FILTER GROUP TOGGLES
-  ========================================= */
-
-  document.addEventListener('click', function (event) {
-
-    const toggle = event.target.closest('[data-filter-toggle]');
-
-    if (!toggle) {
-      return;
-    }
-
-    const group = toggle.closest('.hilya-filter-group');
-
-    if (!group) {
-      return;
-    }
-
-    group.classList.toggle('is-open');
-
-  });
-
-
-  /* =========================================
      INITIAL FILTER
   ========================================= */
 
@@ -2069,23 +2019,10 @@ document.addEventListener('DOMContentLoaded', function () {
 .hilya-filters__clear { padding: 0; border: 0; background: transparent; color: var(--color-muted); font: inherit; font-size: .55rem; letter-spacing: .02em; text-decoration: underline; text-underline-offset: .16rem; cursor: pointer; }
 .hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 10%); }
 .hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 10%); }
-.hilya-filter-group__toggle { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; color: var(--color-foreground); font-size: .78rem; font-weight: 500; letter-spacing: .01em; text-transform: none; cursor: pointer; list-style: none; }
-.hilya-filter-group__toggle::-webkit-details-marker { display: none; }
-
-.hilya-filter-group__toggle {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  text-align: left;
-}
-
-.hilya-filter-group:not(.is-open) .hilya-filter-group__content {
-  display: none;
-}
-
+.hilya-filter-group summary { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; color: var(--color-foreground); font-size: .78rem; font-weight: 500; letter-spacing: .01em; text-transform: none; cursor: pointer; list-style: none; }
+.hilya-filter-group summary::-webkit-details-marker { display: none; }
 .hilya-filter-chevron { position: relative; display: inline-block; width: .48rem; height: .48rem; margin-right: .12rem; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translateY(-.08rem); transform-origin: center; transition: transform 180ms ease; }
-.hilya-filter-group.is-open .hilya-filter-chevron { transform: rotate(225deg) translate(-.02rem, -.02rem); }
+.hilya-filter-group[open] .hilya-filter-chevron { transform: rotate(225deg) translate(-.02rem, -.02rem); }
 .hilya-filter-group__content { padding: 0 0 1rem; }
 .hilya-filter-option { display: flex; align-items: center; gap: .6rem; min-height: 2.05rem; color: var(--color-foreground); font-size: .76rem; cursor: pointer; }
 .hilya-filter-option input { width: .82rem; height: .82rem; margin: 0; accent-color: #111; cursor: pointer; }
@@ -2128,7 +2065,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .hilya-filter-drawer__content { padding: 0 1.5rem 2rem; }
 .hilya-filter-drawer .hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 9%); }
 .hilya-filter-drawer .hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 9%); }
-.hilya-filter-drawer .hilya-filter-group__toggle, .hilya-filter-drawer .hilya-filter-group__content { padding-inline: 0; }
+.hilya-filter-drawer .hilya-filter-group summary, .hilya-filter-drawer .hilya-filter-group__content { padding-inline: 0; }
 .hilya-filter-lock { overflow: hidden; }
 @media (min-width: 40.001rem) { .hilya-filter-sidebar { grid-area: sidebar; align-self: start; position: sticky; top: 96px; } .hilya-filters__products-toolbar { grid-area: toolbar; } .hilya-filters__mobile-bar, .hilya-filter-drawer, .hilya-filter-overlay { display: none !important; } }
 @media (max-width: 40rem) { .hilya-filter-sidebar { display: none; } .hilya-filters__mobile-bar { display: flex; align-items: center; justify-content: space-between; min-height: 3.2rem; border-bottom: 1px solid rgb(0 0 0 / 9%); } .hilya-filters__mobile-button { display: inline-flex; align-items: center; gap: .45rem; padding: 0; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .63rem; font-weight: 500; letter-spacing: .1em; cursor: pointer; } .hilya-filters__mobile-results { color: var(--color-muted); font-size: .58rem; letter-spacing: .07em; } .hilya-filters__products-toolbar { min-height: 3.2rem; margin-bottom: .9rem; } .hilya-filters__results { font-size: .58rem; } .hilya-filters__sort-label { display: none; } .hilya-filters__sort-trigger { min-width: 8.5rem; min-height: 2.2rem; font-size: .58rem; } .hilya-filters__sort-menu { width: 11rem; } .hilya-filter-chip { font-size: .57rem; padding: .36rem .44rem; } }
