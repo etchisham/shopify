@@ -45,8 +45,11 @@
         "image": "shopify://shop_images/ChatGPT_Image_Sep_28_2026_10_13_47_PM.png",
         "image_alt": "Hilya jewelry",
         "eyebrow": "SPECIAL OFFER",
+        "heading_line_1": "Limited Time.",
+        "heading_line_2": "Up to 30% Off",
+        "description": "<p>Discover selected pieces at special prices, made to bring timeless elegance to your everyday style.</p>",
         "button_label": "SHOP SALE",
-        "button_link": "shopify://products/keychain-copy"
+        "button_link": "shopify://collections/sales"
       }
     },
     "featured_collection_CinWF3": {
