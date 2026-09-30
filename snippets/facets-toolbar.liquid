@@ -3249,12 +3249,23 @@ input[type="range"]::-moz-range-thumb {
 @media (min-width: 40.001rem) {
 
   .hilya-filter-sidebar {
-    grid-area: sidebar;
-    align-self: start;
-    position: sticky;
-    top: 96px;
-    width: 100%;
-  }
+  grid-area: sidebar;
+  align-self: start;
+  position: sticky;
+  top: 96px;
+  width: 100%;
+
+  /* Keep the complete filter panel inside the viewport */
+  max-height: calc(100vh - 112px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Small breathing room for the scrollbar */
+  padding-right: .35rem;
+
+  /* Prevent layout shift when scrollbar appears */
+  scrollbar-gutter: stable;
+}
 
   /* Compact desktop sidebar without changing filter contents */
   .hilya-filter-sidebar__heading {
