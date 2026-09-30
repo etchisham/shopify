@@ -6,6 +6,7 @@
 <div class="hilya-filters">
 
   <!-- MOBILE FILTER BUTTON -->
+
   <div class="hilya-filters__mobile-bar">
 
     <button
@@ -16,6 +17,7 @@
       aria-controls="HilyaFilterDrawer"
     >
       FILTER
+
       <span
         class="hilya-filters__count"
         data-filter-count
@@ -23,19 +25,24 @@
       >
         0
       </span>
+
     </button>
 
     <span class="hilya-filters__mobile-results">
+
       <span data-filter-results>
         {{ collection.products_count }}
       </span>
+
       PRODUCTS
+
     </span>
 
   </div>
 
 
   <!-- DESKTOP SIDEBAR -->
+
   <aside class="hilya-filter-sidebar">
 
     <div class="hilya-filter-sidebar__heading">
@@ -60,13 +67,14 @@
 
       <!-- AVAILABILITY -->
 
-      <div
-        class="hilya-filter-group is-open"
-      >
+      <div class="hilya-filter-group is-open">
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <button
+          type="button"
+          class="hilya-filter-group__toggle"
+          data-filter-toggle
+        >
           <span>Availability</span>
-
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -105,13 +113,14 @@
 
       <!-- PRICE -->
 
-      <div
-        class="hilya-filter-group is-open"
-      >
+      <div class="hilya-filter-group is-open">
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <button
+          type="button"
+          class="hilya-filter-group__toggle"
+          data-filter-toggle
+        >
           <span>Price</span>
-
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -155,54 +164,63 @@
 
           <div class="hilya-price-values">
 
-          <label class="hilya-price-input">
-            <span>EGP</span>
-            <input
-              type="number"
-              min="0"
-              max="1000"
-              step="1"
-              value="0"
-              inputmode="numeric"
-              data-price-min-input
-              aria-label="Minimum price"
-            >
-          </label>
+            <label class="hilya-price-input">
 
-          <span class="hilya-price-values__to">
-            to
-          </span>
+              <span>EGP</span>
 
-          <label class="hilya-price-input hilya-price-input--max">
-            <span>EGP</span>
-            <input
-              type="number"
-              min="0"
-              max="1000"
-              step="1"
-              value="1000"
-              inputmode="numeric"
-              data-price-max-input
-              aria-label="Maximum price"
-            >
-          </label>
+              <input
+                type="number"
+                min="0"
+                max="1000"
+                step="1"
+                value="0"
+                inputmode="numeric"
+                data-price-min-input
+                aria-label="Minimum price"
+              >
+
+            </label>
+
+
+            <span class="hilya-price-values__to">
+              to
+            </span>
+
+
+            <label class="hilya-price-input hilya-price-input--max">
+
+              <span>EGP</span>
+
+              <input
+                type="number"
+                min="0"
+                max="1000"
+                step="1"
+                value="1000"
+                inputmode="numeric"
+                data-price-max-input
+                aria-label="Maximum price"
+              >
+
+            </label>
+
+          </div>
 
         </div>
 
-      </div>
-      
       </div>
 
 
       <!-- COLOR -->
 
-      <div
-        class="hilya-filter-group is-open"
-      >
+      <div class="hilya-filter-group is-open">
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <button
+          type="button"
+          class="hilya-filter-group__toggle"
+          data-filter-toggle
+        >
           <span>Color</span>
-
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -241,13 +259,14 @@
 
       <!-- PRODUCT TYPE -->
 
-      <div
-        class="hilya-filter-group is-open"
-      >
+      <div class="hilya-filter-group is-open">
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
+        <button
+          type="button"
+          class="hilya-filter-group__toggle"
+          data-filter-toggle
+        >
           <span>Product Type</span>
-
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -255,67 +274,52 @@
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Necklaces"
             >
-
             <span>Necklaces</span>
-
           </label>
 
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Rings"
             >
-
             <span>Rings</span>
-
           </label>
 
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Pendants"
             >
-
             <span>Pendants</span>
-
           </label>
 
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Bracelets"
             >
-
             <span>Bracelets</span>
-
           </label>
 
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Keychains"
             >
-
             <span>Keychains</span>
-
           </label>
 
         </div>
@@ -390,16 +394,25 @@
   <div class="hilya-filters__products-toolbar">
 
     <span class="hilya-filters__results">
+
       <span data-filter-results>
         {{ collection.products_count }}
       </span>
+
       PRODUCTS
+
     </span>
 
 
-    <div class="hilya-filters__sort" data-hilya-sort-wrap>
+    <div
+      class="hilya-filters__sort"
+      data-hilya-sort-wrap
+    >
 
-      <span class="hilya-filters__sort-label">SORT BY</span>
+      <span class="hilya-filters__sort-label">
+        SORT BY
+      </span>
+
 
       <button
         type="button"
@@ -408,9 +421,18 @@
         aria-expanded="false"
         aria-haspopup="listbox"
       >
-        <span data-hilya-sort-current>Featured</span>
-        <span class="hilya-filters__sort-chevron" aria-hidden="true"></span>
+
+        <span data-hilya-sort-current>
+          Featured
+        </span>
+
+        <span
+          class="hilya-filters__sort-chevron"
+          aria-hidden="true"
+        ></span>
+
       </button>
+
 
       <div
         class="hilya-filters__sort-menu"
@@ -418,7 +440,9 @@
         role="listbox"
         hidden
       >
+
         {% for option in collection.sort_options %}
+
           <button
             type="button"
             class="hilya-filters__sort-option{% if option.value == collection.sort_by %} is-selected{% endif %}"
@@ -426,10 +450,22 @@
             role="option"
             aria-selected="{% if option.value == collection.sort_by %}true{% else %}false{% endif %}"
           >
-            <span>{{ option.name }}</span>
-            <span class="hilya-filters__sort-check" aria-hidden="true">✓</span>
+
+            <span>
+              {{ option.name }}
+            </span>
+
+            <span
+              class="hilya-filters__sort-check"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+
           </button>
+
         {% endfor %}
+
       </div>
 
     </div>
@@ -1222,68 +1258,227 @@ document.addEventListener('DOMContentLoaded', function () {
      PRICE SLIDER + MANUAL INPUTS
   ========================================= */
 
-  const priceMin = form.querySelector('[data-price-min]');
-  const priceMax = form.querySelector('[data-price-max]');
-  const priceMinInput = form.querySelector('[data-price-min-input]');
-  const priceMaxInput = form.querySelector('[data-price-max-input]');
-  const priceRange = form.querySelector('[data-price-range]');
+  const priceMin =
+    form.querySelector('[data-price-min]');
+
+  const priceMax =
+    form.querySelector('[data-price-max]');
+
+  const priceMinInput =
+    form.querySelector('[data-price-min-input]');
+
+  const priceMaxInput =
+    form.querySelector('[data-price-max-input]');
+
+  const priceRange =
+    form.querySelector('[data-price-range]');
+
 
   function clampPrice(value, fallback) {
+
     const number = Number(value);
-    if (!Number.isFinite(number)) return fallback;
-    return Math.min(1000, Math.max(0, Math.round(number)));
+
+    if (!Number.isFinite(number)) {
+      return fallback;
+    }
+
+    return Math.min(
+      1000,
+      Math.max(
+        0,
+        Math.round(number)
+      )
+    );
+
   }
 
-  function updatePriceSlider(shouldApply) {
-    if (!priceMin || !priceMax) return;
 
-    let min = clampPrice(priceMin.value, 0);
-    let max = clampPrice(priceMax.value, 1000);
+  function updatePriceSlider(shouldApply) {
+
+    if (!priceMin || !priceMax) {
+      return;
+    }
+
+
+    let min =
+      clampPrice(
+        priceMin.value,
+        0
+      );
+
+    let max =
+      clampPrice(
+        priceMax.value,
+        1000
+      );
+
 
     if (min > max) {
-      if (document.activeElement === priceMin || document.activeElement === priceMinInput) max = min;
-      else min = max;
+
+      if (
+        document.activeElement === priceMin ||
+        document.activeElement === priceMinInput
+      ) {
+
+        max = min;
+
+      } else {
+
+        min = max;
+
+      }
+
     }
+
 
     priceMin.value = min;
     priceMax.value = max;
-    if (priceMinInput) priceMinInput.value = min;
-    if (priceMaxInput) priceMaxInput.value = max;
 
-    if (priceRange) {
-      priceRange.style.left = ((min / 1000) * 100) + '%';
-      priceRange.style.right = (100 - ((max / 1000) * 100)) + '%';
+
+    if (priceMinInput) {
+      priceMinInput.value = min;
     }
 
-    if (shouldApply) applyFilters();
+
+    if (priceMaxInput) {
+      priceMaxInput.value = max;
+    }
+
+
+    if (priceRange) {
+
+      priceRange.style.left =
+        ((min / 1000) * 100) + '%';
+
+      priceRange.style.right =
+        (
+          100 -
+          ((max / 1000) * 100)
+        ) + '%';
+
+    }
+
+
+    if (shouldApply) {
+      applyFilters();
+    }
+
   }
 
-  if (priceMin) priceMin.addEventListener('input', function () { updatePriceSlider(true); });
-  if (priceMax) priceMax.addEventListener('input', function () { updatePriceSlider(true); });
+
+  if (priceMin) {
+
+    priceMin.addEventListener(
+      'input',
+      function () {
+        updatePriceSlider(true);
+      }
+    );
+
+  }
+
+
+  if (priceMax) {
+
+    priceMax.addEventListener(
+      'input',
+      function () {
+        updatePriceSlider(true);
+      }
+    );
+
+  }
+
 
   if (priceMinInput) {
-    priceMinInput.addEventListener('input', function () {
-      let value = clampPrice(this.value, 0);
-      const currentMax = Number(priceMax.value);
-      if (value > currentMax) value = currentMax;
-      priceMin.value = value;
-      this.value = value;
-      updatePriceSlider(true);
-    });
-    priceMinInput.addEventListener('change', function () { updatePriceSlider(true); });
+
+    priceMinInput.addEventListener(
+      'input',
+      function () {
+
+        let value =
+          clampPrice(
+            this.value,
+            0
+          );
+
+        const currentMax =
+          Number(
+            priceMax.value
+          );
+
+
+        if (value > currentMax) {
+          value = currentMax;
+        }
+
+
+        priceMin.value =
+          value;
+
+        this.value =
+          value;
+
+        updatePriceSlider(true);
+
+      }
+    );
+
+
+    priceMinInput.addEventListener(
+      'change',
+      function () {
+        updatePriceSlider(true);
+      }
+    );
+
   }
 
+
   if (priceMaxInput) {
-    priceMaxInput.addEventListener('input', function () {
-      let value = clampPrice(this.value, 1000);
-      const currentMin = Number(priceMin.value);
-      if (value < currentMin) value = currentMin;
-      priceMax.value = value;
-      this.value = value;
-      updatePriceSlider(true);
-    });
-    priceMaxInput.addEventListener('change', function () { updatePriceSlider(true); });
+
+    priceMaxInput.addEventListener(
+      'input',
+      function () {
+
+        let value =
+          clampPrice(
+            this.value,
+            1000
+          );
+
+        const currentMin =
+          Number(
+            priceMin.value
+          );
+
+
+        if (value < currentMin) {
+          value = currentMin;
+        }
+
+
+        priceMax.value =
+          value;
+
+        this.value =
+          value;
+
+        updatePriceSlider(true);
+
+      }
+    );
+
+
+    priceMaxInput.addEventListener(
+      'change',
+      function () {
+        updatePriceSlider(true);
+      }
+    );
+
   }
+
 
   updatePriceSlider(false);
 
@@ -1401,6 +1596,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
               }
 
+
               if (
                 value === 'out_of_stock'
               ) {
@@ -1408,6 +1604,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return !itemAvailable;
 
               }
+
 
               return false;
 
@@ -1418,7 +1615,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (
           !matchesAvailability
         ) {
-          matches = false;
+
+          matches =
+            false;
+
         }
 
       }
@@ -1540,7 +1740,8 @@ document.addEventListener('DOMContentLoaded', function () {
         maxPrice
       ) {
 
-        matches = false;
+        matches =
+          false;
 
       }
 
@@ -1555,11 +1756,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         visibleCount++;
 
-
-        /*
-          Only swap the card to a specific
-          variant when ONE color is selected.
-        */
 
         if (
           colors.length === 1
@@ -1712,7 +1908,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             addChip(
               container,
-              value === 'in_stock' ? 'In stock' : 'Out of stock',
+              value === 'in_stock'
+                ? 'In stock'
+                : 'Out of stock',
               'availability',
               value
             );
@@ -1726,7 +1924,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             addChip(
               container,
-              value.charAt(0).toUpperCase() + value.slice(1),
+              value.charAt(0).toUpperCase() +
+                value.slice(1),
               'color',
               value
             );
@@ -1740,7 +1939,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             addChip(
               container,
-              value.charAt(0).toUpperCase() + value.slice(1),
+              value.charAt(0).toUpperCase() +
+                value.slice(1),
               'product_type',
               value
             );
@@ -1751,14 +1951,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (minPrice > 0) {
 
-          addChip(container, 'From EGP ' + minPrice.toLocaleString('en-US'), 'price_min', '0');
+          addChip(
+            container,
+            'From EGP ' +
+              minPrice.toLocaleString('en-US'),
+            'price_min',
+            '0'
+          );
 
         }
 
 
         if (maxPrice < 1000) {
 
-          addChip(container, 'To EGP ' + maxPrice.toLocaleString('en-US'), 'price_max', '1000');
+          addChip(
+            container,
+            'To EGP ' +
+              maxPrice.toLocaleString('en-US'),
+            'price_max',
+            '1000'
+          );
 
         }
 
@@ -1767,6 +1979,7 @@ document.addEventListener('DOMContentLoaded', function () {
           document.createElement(
             'button'
           );
+
 
         clear.type =
           'button';
@@ -1777,10 +1990,12 @@ document.addEventListener('DOMContentLoaded', function () {
         clear.textContent =
           'CLEAR ALL';
 
+
         clear.addEventListener(
           'click',
           clearFilters
         );
+
 
         container.appendChild(
           clear
@@ -1792,40 +2007,155 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  function addChip(container, label, inputName, inputValue) {
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = 'hilya-filter-chip';
-    chip.innerHTML = '<span>' + escapeAttribute(label) + '</span><span class="hilya-filter-chip__remove" aria-hidden="true">×</span>';
-    chip.setAttribute('aria-label', 'Remove ' + label);
+  function addChip(
+    container,
+    label,
+    inputName,
+    inputValue
+  ) {
 
-    chip.addEventListener('click', function () {
-      if (inputName === 'price_min') {
-        if (priceMin) priceMin.value = 0;
-        if (priceMinInput) priceMinInput.value = 0;
-      } else if (inputName === 'price_max') {
-        if (priceMax) priceMax.value = 1000;
-        if (priceMaxInput) priceMaxInput.value = 1000;
-      } else if (inputName) {
-        const inputs = form.querySelectorAll('input[name="' + inputName + '"]');
-        inputs.forEach(function (input) {
-          if (input.value.trim().toLowerCase() === String(inputValue).trim().toLowerCase()) input.checked = false;
-        });
+    const chip =
+      document.createElement(
+        'button'
+      );
+
+
+    chip.type =
+      'button';
+
+    chip.className =
+      'hilya-filter-chip';
+
+
+    chip.innerHTML =
+      '<span>' +
+        escapeAttribute(label) +
+      '</span>' +
+      '<span class="hilya-filter-chip__remove" aria-hidden="true">' +
+        '×' +
+      '</span>';
+
+
+    chip.setAttribute(
+      'aria-label',
+      'Remove ' + label
+    );
+
+
+    chip.addEventListener(
+      'click',
+      function () {
+
+        if (
+          inputName ===
+          'price_min'
+        ) {
+
+          if (priceMin) {
+            priceMin.value = 0;
+          }
+
+          if (priceMinInput) {
+            priceMinInput.value = 0;
+          }
+
+        } else if (
+          inputName ===
+          'price_max'
+        ) {
+
+          if (priceMax) {
+            priceMax.value = 1000;
+          }
+
+          if (priceMaxInput) {
+            priceMaxInput.value = 1000;
+          }
+
+        } else if (inputName) {
+
+          const inputs =
+            form.querySelectorAll(
+              'input[name="' +
+              inputName +
+              '"]'
+            );
+
+
+          inputs.forEach(
+            function (input) {
+
+              if (
+                input.value
+                  .trim()
+                  .toLowerCase() ===
+                String(inputValue)
+                  .trim()
+                  .toLowerCase()
+              ) {
+
+                input.checked =
+                  false;
+
+              }
+
+            }
+          );
+
+        }
+
+
+        updatePriceSlider(false);
+
+        syncMobileFilters();
+
+        applyFilters();
+
       }
-      updatePriceSlider(false);
-      syncMobileFilters();
-      applyFilters();
-    });
+    );
 
-    container.appendChild(chip);
+
+    container.appendChild(
+      chip
+    );
+
   }
 
+
   function syncMobileFilters() {
-    if (!mobileContent) return;
-    form.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
-      const matching = mobileContent.querySelector('input[name="' + input.name + '"][value="' + input.value + '"]');
-      if (matching) matching.checked = input.checked;
-    });
+
+    if (!mobileContent) {
+      return;
+    }
+
+
+    form
+      .querySelectorAll(
+        'input[type="checkbox"]'
+      )
+      .forEach(
+        function (input) {
+
+          const matching =
+            mobileContent.querySelector(
+              'input[name="' +
+              input.name +
+              '"][value="' +
+              input.value +
+              '"]'
+            );
+
+
+          if (matching) {
+
+            matching.checked =
+              input.checked;
+
+          }
+
+        }
+      );
+
   }
 
 
@@ -1856,11 +2186,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     if (priceMax) {
-      priceMax.value = 1000;
+      priceMax.value =
+        1000;
     }
 
-    if (priceMinInput) priceMinInput.value = 0;
-    if (priceMaxInput) priceMaxInput.value = 1000;
+
+    if (priceMinInput) {
+      priceMinInput.value =
+        0;
+    }
+
+
+    if (priceMaxInput) {
+      priceMaxInput.value =
+        1000;
+    }
 
 
     if (mobileContent) {
@@ -1881,9 +2221,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    updatePriceSlider(
-      false
-    );
+    updatePriceSlider(false);
 
     applyFilters();
 
@@ -1904,11 +2242,6 @@ document.addEventListener('DOMContentLoaded', function () {
         )
       ) {
 
-        /*
-          Keep mobile cloned controls
-          synchronized with desktop controls.
-        */
-
         if (mobileContent) {
 
           const matching =
@@ -1919,6 +2252,7 @@ document.addEventListener('DOMContentLoaded', function () {
               event.target.value +
               '"]'
             );
+
 
           if (matching) {
 
@@ -1943,103 +2277,257 @@ document.addEventListener('DOMContentLoaded', function () {
   ========================================= */
 
   const sortWrap =
-    document.querySelector('[data-hilya-sort-wrap]');
+    document.querySelector(
+      '[data-hilya-sort-wrap]'
+    );
 
   const sortTrigger =
-    document.querySelector('[data-hilya-sort-trigger]');
+    document.querySelector(
+      '[data-hilya-sort-trigger]'
+    );
 
   const sortMenu =
-    document.querySelector('[data-hilya-sort-menu]');
+    document.querySelector(
+      '[data-hilya-sort-menu]'
+    );
 
   const sortCurrent =
-    document.querySelector('[data-hilya-sort-current]');
+    document.querySelector(
+      '[data-hilya-sort-current]'
+    );
 
   const sortOptions =
-    document.querySelectorAll('[data-sort-value]');
+    document.querySelectorAll(
+      '[data-sort-value]'
+    );
+
 
   function closeSortMenu() {
-    if (!sortWrap || !sortTrigger || !sortMenu) return;
 
-    sortWrap.classList.remove('is-open');
-    sortTrigger.setAttribute('aria-expanded', 'false');
-    sortMenu.hidden = true;
+    if (
+      !sortWrap ||
+      !sortTrigger ||
+      !sortMenu
+    ) {
+      return;
+    }
+
+
+    sortWrap.classList.remove(
+      'is-open'
+    );
+
+
+    sortTrigger.setAttribute(
+      'aria-expanded',
+      'false'
+    );
+
+
+    sortMenu.hidden =
+      true;
+
   }
+
 
   function openSortMenu() {
-    if (!sortWrap || !sortTrigger || !sortMenu) return;
 
-    sortWrap.classList.add('is-open');
-    sortTrigger.setAttribute('aria-expanded', 'true');
-    sortMenu.hidden = false;
+    if (
+      !sortWrap ||
+      !sortTrigger ||
+      !sortMenu
+    ) {
+      return;
+    }
+
+
+    sortWrap.classList.add(
+      'is-open'
+    );
+
+
+    sortTrigger.setAttribute(
+      'aria-expanded',
+      'true'
+    );
+
+
+    sortMenu.hidden =
+      false;
+
   }
+
 
   if (sortTrigger) {
-    sortTrigger.addEventListener('click', function () {
-      if (sortMenu && sortMenu.hidden) {
-        openSortMenu();
-      } else {
-        closeSortMenu();
+
+    sortTrigger.addEventListener(
+      'click',
+      function () {
+
+        if (
+          sortMenu &&
+          sortMenu.hidden
+        ) {
+
+          openSortMenu();
+
+        } else {
+
+          closeSortMenu();
+
+        }
+
       }
-    });
+    );
+
   }
 
-  sortOptions.forEach(function (option) {
-    option.addEventListener('click', function () {
-      const value = option.getAttribute('data-sort-value');
-      const label = option.querySelector('span');
 
-      if (sortCurrent && label) {
-        sortCurrent.textContent = label.textContent.trim();
+  sortOptions.forEach(
+    function (option) {
+
+      option.addEventListener(
+        'click',
+        function () {
+
+          const value =
+            option.getAttribute(
+              'data-sort-value'
+            );
+
+          const label =
+            option.querySelector(
+              'span'
+            );
+
+
+          if (
+            sortCurrent &&
+            label
+          ) {
+
+            sortCurrent.textContent =
+              label.textContent.trim();
+
+          }
+
+
+          sortOptions.forEach(
+            function (other) {
+
+              const selected =
+                other === option;
+
+
+              other.classList.toggle(
+                'is-selected',
+                selected
+              );
+
+
+              other.setAttribute(
+                'aria-selected',
+                selected
+                  ? 'true'
+                  : 'false'
+              );
+
+            }
+          );
+
+
+          closeSortMenu();
+
+
+          const url =
+            new URL(
+              window.location.href
+            );
+
+
+          url.searchParams.set(
+            'sort_by',
+            value
+          );
+
+
+          window.location.href =
+            url.toString();
+
+        }
+      );
+
+    }
+  );
+
+
+  document.addEventListener(
+    'click',
+    function (event) {
+
+      if (
+        sortWrap &&
+        !sortWrap.contains(
+          event.target
+        )
+      ) {
+
+        closeSortMenu();
+
       }
 
-      sortOptions.forEach(function (other) {
-        const selected = other === option;
-        other.classList.toggle('is-selected', selected);
-        other.setAttribute('aria-selected', selected ? 'true' : 'false');
-      });
-
-      closeSortMenu();
-
-      const url = new URL(window.location.href);
-      url.searchParams.set('sort_by', value);
-      window.location.href = url.toString();
-    });
-  });
-
-  document.addEventListener('click', function (event) {
-    if (sortWrap && !sortWrap.contains(event.target)) {
-      closeSortMenu();
     }
-  });
+  );
 
-  document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') {
-      closeSortMenu();
+
+  document.addEventListener(
+    'keydown',
+    function (event) {
+
+      if (event.key === 'Escape') {
+        closeSortMenu();
+      }
+
     }
-  });
+  );
 
 
   /* =========================================
      FILTER GROUP TOGGLES
   ========================================= */
 
-  document.addEventListener('click', function (event) {
+  document.addEventListener(
+    'click',
+    function (event) {
 
-    const toggle = event.target.closest('[data-filter-toggle]');
+      const toggle =
+        event.target.closest(
+          '[data-filter-toggle]'
+        );
 
-    if (!toggle) {
-      return;
+
+      if (!toggle) {
+        return;
+      }
+
+
+      const group =
+        toggle.closest(
+          '.hilya-filter-group'
+        );
+
+
+      if (!group) {
+        return;
+      }
+
+
+      group.classList.toggle(
+        'is-open'
+      );
+
     }
-
-    const group = toggle.closest('.hilya-filter-group');
-
-    if (!group) {
-      return;
-    }
-
-    group.classList.toggle('is-open');
-
-  });
+  );
 
 
   /* =========================================
@@ -2056,82 +2544,762 @@ document.addEventListener('DOMContentLoaded', function () {
 
 {% stylesheet %}
 
-.hilya-filters { width: 100%; }
-.hilya-filters__mobile-bar { display: none; }
-.hilya-filter-sidebar { width: 100%; }
-.hilya-filter-sidebar__heading { margin: 0 0 1.05rem; }
-.hilya-filter-sidebar__heading h2 { margin: 0; color: var(--color-foreground); font-size: 1rem; font-weight: 400; letter-spacing: .01em; line-height: 1.2; text-transform: none; }
-.hilya-filters__active { display: flex; flex-wrap: wrap; align-items: center; gap: .38rem; margin: 0 0 1.05rem; }
-.hilya-filters__active-label { width: 100%; margin: 0 0 .08rem; color: var(--color-muted); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; }
-.hilya-filter-chip { display: inline-flex; align-items: center; gap: .38rem; padding: .4rem .5rem; border: 1px solid rgb(0 0 0 / 12%); background: transparent; color: var(--color-foreground); font: inherit; font-size: .61rem; line-height: 1; cursor: pointer; }
-.hilya-filter-chip:hover { background: rgb(0 0 0 / 3%); }
-.hilya-filter-chip__remove { font-size: .72rem; line-height: .8; font-weight: 300; }
-.hilya-filters__clear { padding: 0; border: 0; background: transparent; color: var(--color-muted); font: inherit; font-size: .55rem; letter-spacing: .02em; text-decoration: underline; text-underline-offset: .16rem; cursor: pointer; }
-.hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 10%); }
-.hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 10%); }
-.hilya-filter-group__toggle { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; color: var(--color-foreground); font-size: .78rem; font-weight: 500; letter-spacing: .01em; text-transform: none; cursor: pointer; list-style: none; }
-.hilya-filter-group__toggle::-webkit-details-marker { display: none; }
+/* =========================================
+   FILTER CONTAINER
+========================================= */
 
-.hilya-filter-group__toggle {
+.hilya-filters {
   width: 100%;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  text-align: left;
 }
 
-.hilya-filter-group:not(.is-open) .hilya-filter-group__content {
+.hilya-filters__mobile-bar {
   display: none;
 }
 
-.hilya-filter-chevron { position: relative; display: inline-block; width: .48rem; height: .48rem; margin-right: .12rem; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translateY(-.08rem); transform-origin: center; transition: transform 180ms ease; }
-.hilya-filter-group.is-open .hilya-filter-chevron { transform: rotate(225deg) translate(-.02rem, -.02rem); }
-.hilya-filter-group__content { padding: 0 0 1rem; }
-.hilya-filter-option { display: flex; align-items: center; gap: .6rem; min-height: 2.05rem; color: var(--color-foreground); font-size: .76rem; cursor: pointer; }
-.hilya-filter-option input { width: .82rem; height: .82rem; margin: 0; accent-color: #111; cursor: pointer; }
-.hilya-price-slider { position: relative; width: 100%; height: 1.75rem; margin: .15rem 0 .55rem; }
-.hilya-price-slider__track, .hilya-price-slider__range { position: absolute; top: 50%; height: 3px; transform: translateY(-50%); }
-.hilya-price-slider__track { right: 0; left: 0; background: rgb(0 0 0 / 24%); }
-.hilya-price-slider__range { background: var(--color-foreground); z-index: 1; }
-.hilya-price-slider input[type="range"] { position: absolute; inset: 0; width: 100%; height: 1.75rem; margin: 0; padding: 0; background: transparent; appearance: none; pointer-events: none; }
-.hilya-price-slider input[type="range"]::-webkit-slider-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: var(--color-foreground); appearance: none; cursor: pointer; pointer-events: auto; }
-.hilya-price-slider input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: var(--color-foreground); cursor: pointer; pointer-events: auto; }
-.hilya-price-values { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: .45rem; font-size: .62rem; }
-.hilya-price-input { display: flex; align-items: center; gap: .3rem; min-width: 0; height: 2rem; padding: 0 .55rem; border: 1px solid rgb(0 0 0 / 16%); background: var(--color-background); }
-.hilya-price-input--max { justify-content: flex-start; }
-.hilya-price-input span { flex: 0 0 auto; color: var(--color-muted); font-size: .56rem; }
-.hilya-price-input input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .62rem; text-align: right; }
-.hilya-price-input input::-webkit-inner-spin-button, .hilya-price-input input::-webkit-outer-spin-button { appearance: none; margin: 0; }
-.hilya-price-input input[type="number"] { appearance: textfield; }
-.hilya-price-values__to { color: var(--color-muted); font-size: .58rem; }
-.hilya-filters__products-toolbar { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 3.15rem; margin: 0 0 1.15rem; border-bottom: 1px solid rgb(0 0 0 / 10%); }
-.hilya-filters__results { color: var(--color-foreground); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
-.hilya-filters__sort { position: relative; display: flex; align-items: center; gap: .5rem; white-space: nowrap; }
-.hilya-filters__sort-label { color: var(--color-muted); font-size: .68rem; letter-spacing: .08em; white-space: nowrap; }
-.hilya-filters__sort-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-width: 9.5rem; min-height: 2.35rem; padding: .55rem .7rem; border: 1px solid rgb(0 0 0 / 16%); background: var(--color-background); color: var(--color-foreground); font: inherit; font-size: .68rem; text-align: left; cursor: pointer; }
-.hilya-filters__sort-trigger:hover { border-color: rgb(0 0 0 / 28%); }
-.hilya-filters__sort-chevron { position: relative; display: inline-block; width: .5rem; height: .5rem; flex: 0 0 auto; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translateY(-.1rem); transition: transform 180ms ease; }
-.hilya-filters__sort.is-open .hilya-filters__sort-chevron { transform: rotate(225deg) translate(-.03rem, -.03rem); }
-.hilya-filters__sort-menu { position: absolute; top: calc(100% + .35rem); right: 0; z-index: 30; width: 12rem; padding: .35rem 0; border: 1px solid rgb(0 0 0 / 14%); background: var(--color-background); box-shadow: 0 8px 22px rgb(0 0 0 / 8%); }
-.hilya-filters__sort-option { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: .62rem .75rem; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .62rem; text-align: left; cursor: pointer; }
-.hilya-filters__sort-option:hover { background: rgb(0 0 0 / 4%); }
-.hilya-filters__sort-check { visibility: hidden; font-size: .7rem; }
-.hilya-filters__sort-option.is-selected .hilya-filters__sort-check { visibility: visible; }
-.hilya-filter-overlay { position: fixed; inset: 0; z-index: 9998; background: rgb(0 0 0 / 35%); opacity: 0; visibility: hidden; transition: opacity 260ms ease, visibility 260ms ease; }
-.hilya-filter-overlay.is-visible { opacity: 1; visibility: visible; }
-.hilya-filter-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 9999; width: min(28rem, 92vw); overflow-y: auto; background: var(--color-background); transform: translateX(100%); transition: transform 320ms cubic-bezier(.22,.61,.36,1); }
-.hilya-filter-drawer.is-open { transform: translateX(0); }
-.hilya-filter-drawer__header { display: flex; align-items: flex-start; justify-content: space-between; padding: 2rem 1.5rem 1.35rem; border-bottom: 1px solid rgb(0 0 0 / 8%); }
-.hilya-filter-drawer__eyebrow { display: block; margin-bottom: .45rem; color: var(--color-muted); font-size: .56rem; letter-spacing: .18em; }
-.hilya-filter-drawer__header h2 { margin: 0; font-size: 1.2rem; font-weight: 400; letter-spacing: .08em; }
-.hilya-filter-drawer__close { padding: 0; border: 0; background: transparent; color: var(--color-foreground); font-size: 1.8rem; font-weight: 300; line-height: 1; cursor: pointer; }
-.hilya-filter-drawer__content { padding: 0 1.5rem 2rem; }
-.hilya-filter-drawer .hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 9%); }
-.hilya-filter-drawer .hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 9%); }
-.hilya-filter-drawer .hilya-filter-group__toggle, .hilya-filter-drawer .hilya-filter-group__content { padding-inline: 0; }
-.hilya-filter-lock { overflow: hidden; }
-@media (min-width: 40.001rem) { .hilya-filter-sidebar { grid-area: sidebar; align-self: start; position: sticky; top: 96px; } .hilya-filters__products-toolbar { grid-area: toolbar; } .hilya-filters__mobile-bar, .hilya-filter-drawer, .hilya-filter-overlay { display: none !important; } }
-@media (max-width: 40rem) { .hilya-filter-sidebar { display: none; } .hilya-filters__mobile-bar { display: flex; align-items: center; justify-content: space-between; min-height: 3.2rem; border-bottom: 1px solid rgb(0 0 0 / 9%); } .hilya-filters__mobile-button { display: inline-flex; align-items: center; gap: .45rem; padding: 0; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .63rem; font-weight: 500; letter-spacing: .1em; cursor: pointer; } .hilya-filters__mobile-results { color: var(--color-muted); font-size: .58rem; letter-spacing: .07em; } .hilya-filters__products-toolbar { min-height: 3.2rem; margin-bottom: .9rem; } .hilya-filters__results { font-size: .58rem; } .hilya-filters__sort-label { display: none; } .hilya-filters__sort-trigger { min-width: 8.5rem; min-height: 2.2rem; font-size: .58rem; } .hilya-filters__sort-menu { width: 11rem; } .hilya-filter-chip { font-size: .57rem; padding: .36rem .44rem; } }
-@media (prefers-reduced-motion: reduce) { .hilya-filter-overlay, .hilya-filter-drawer, .hilya-filter-chevron, .hilya-filters__sort-chevron { transition: none; } }
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.hilya-filter-sidebar {
+  width: 100%;
+}
+
+
+/* FILTERS TITLE
+   Larger and slightly higher
+========================================= */
+
+.hilya-filter-sidebar__heading {
+  margin: -.15rem 0 .65rem;
+}
+
+.hilya-filter-sidebar__heading h2 {
+  margin: 0;
+  color: var(--color-foreground);
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: .005em;
+  line-height: 1.1;
+  text-transform: none;
+}
+
+
+/* =========================================
+   ACTIVE FILTERS
+========================================= */
+
+.hilya-filters__active {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .38rem;
+  margin: 0 0 .85rem;
+}
+
+.hilya-filters__active-label {
+  width: 100%;
+  margin: 0 0 .08rem;
+  color: var(--color-muted);
+  font-size: .52rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.hilya-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .38rem;
+  padding: .4rem .5rem;
+  border: 1px solid rgb(0 0 0 / 12%);
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: .61rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.hilya-filter-chip:hover {
+  background: rgb(0 0 0 / 3%);
+}
+
+.hilya-filter-chip__remove {
+  font-size: .72rem;
+  line-height: .8;
+  font-weight: 300;
+}
+
+.hilya-filters__clear {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: .55rem;
+  letter-spacing: .02em;
+  text-decoration: underline;
+  text-underline-offset: .16rem;
+  cursor: pointer;
+}
+
+
+/* =========================================
+   FILTER GROUP
+========================================= */
+
+.hilya-filter-group {
+  border-top: 1px solid rgb(0 0 0 / 10%);
+}
+
+.hilya-filter-group:last-child {
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
+}
+
+
+/* Filter headings slightly tighter
+   to match reference
+========================================= */
+
+.hilya-filter-group__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: .82rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 1.2;
+  text-align: left;
+  text-transform: none;
+  cursor: pointer;
+  list-style: none;
+}
+
+.hilya-filter-group__toggle::-webkit-details-marker {
+  display: none;
+}
+
+
+/* =========================================
+   CHEVRON
+========================================= */
+
+.hilya-filter-chevron {
+  position: relative;
+  display: inline-block;
+  width: .46rem;
+  height: .46rem;
+  margin-right: .12rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform:
+    rotate(45deg)
+    translateY(-.08rem);
+  transform-origin: center;
+  transition:
+    transform 180ms ease;
+}
+
+.hilya-filter-group.is-open
+.hilya-filter-chevron {
+  transform:
+    rotate(225deg)
+    translate(-.02rem, -.02rem);
+}
+
+
+/* =========================================
+   FILTER CONTENT
+========================================= */
+
+.hilya-filter-group:not(.is-open)
+.hilya-filter-group__content {
+  display: none;
+}
+
+.hilya-filter-group__content {
+  padding: 0 0 .9rem;
+}
+
+
+/* =========================================
+   CHECKBOX OPTIONS
+========================================= */
+
+.hilya-filter-option {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  min-height: 1.95rem;
+  color: var(--color-foreground);
+  font-size: .76rem;
+  cursor: pointer;
+}
+
+.hilya-filter-option input {
+  width: .82rem;
+  height: .82rem;
+  margin: 0;
+  accent-color: #111;
+  cursor: pointer;
+}
+
+
+/* =========================================
+   PRICE SLIDER
+   Styled closer to reference screenshot
+========================================= */
+
+.hilya-price-slider {
+  position: relative;
+  width: 100%;
+  height: 1.55rem;
+  margin: .05rem 0 .55rem;
+}
+
+
+/* Base black/gray line */
+
+.hilya-price-slider__track,
+.hilya-price-slider__range {
+  position: absolute;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  border-radius: 0;
+}
+
+
+/* Inactive track */
+
+.hilya-price-slider__track {
+  right: 0;
+  left: 0;
+  background: rgb(0 0 0 / 22%);
+}
+
+
+/* Active selected area */
+
+.hilya-price-slider__range {
+  background: #111;
+  z-index: 1;
+}
+
+
+/* Native range */
+
+.hilya-price-slider input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 1.55rem;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  appearance: none;
+  pointer-events: none;
+  z-index: 2;
+}
+
+
+/* Chrome / Safari track */
+
+.hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  background: transparent;
+  border: 0;
+}
+
+
+/* Chrome / Safari handles */
+
+.hilya-price-slider input[type="range"]::-webkit-slider-thumb {
+  width: 10px;
+  height: 10px;
+  margin-top: -3.5px;
+  border: 0;
+  border-radius: 50%;
+  background: #111;
+  box-shadow: none;
+  appearance: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+
+/* Firefox track */
+
+.hilya-price-slider input[type="range"]::-moz-range-track {
+  height: 3px;
+  background: transparent;
+  border: 0;
+}
+
+
+/* Firefox handles */
+
+.hilya-price-slider input[type="range"]::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  border-radius: 50%;
+  background: #111;
+  box-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+
+/* =========================================
+   PRICE INPUTS
+========================================= */
+
+.hilya-price-values {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1fr);
+
+  align-items: center;
+  gap: .42rem;
+  font-size: .62rem;
+}
+
+
+.hilya-price-input {
+  display: flex;
+  align-items: center;
+  gap: .28rem;
+  min-width: 0;
+  height: 1.95rem;
+  padding: 0 .5rem;
+  border: 1px solid rgb(0 0 0 / 15%);
+  background: var(--color-background);
+}
+
+
+.hilya-price-input--max {
+  justify-content: flex-start;
+}
+
+
+.hilya-price-input span {
+  flex: 0 0 auto;
+  color: var(--color-muted);
+  font-size: .55rem;
+}
+
+
+.hilya-price-input input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: .61rem;
+  text-align: right;
+}
+
+
+.hilya-price-input input::-webkit-inner-spin-button,
+.hilya-price-input input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+
+.hilya-price-input input[type="number"] {
+  appearance: textfield;
+}
+
+
+.hilya-price-values__to {
+  color: var(--color-muted);
+  font-size: .58rem;
+}
+
+
+/* =========================================
+   PRODUCTS TOOLBAR
+   Reduced height / spacing
+========================================= */
+
+.hilya-filters__products-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 2.75rem;
+  margin: 0 0 .65rem;
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
+}
+
+
+.hilya-filters__results {
+  color: var(--color-foreground);
+  font-size: .68rem;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+
+/* =========================================
+   SORT
+========================================= */
+
+.hilya-filters__sort {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  white-space: nowrap;
+}
+
+
+.hilya-filters__sort-label {
+  color: var(--color-muted);
+  font-size: .66rem;
+  letter-spacing: .075em;
+  white-space: nowrap;
+}
+
+
+.hilya-filters__sort-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-width: 9.5rem;
+  min-height: 2.25rem;
+  padding: .5rem .7rem;
+  border: 1px solid rgb(0 0 0 / 16%);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: .67rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+
+.hilya-filters__sort-trigger:hover {
+  border-color: rgb(0 0 0 / 28%);
+}
+
+
+.hilya-filters__sort-chevron {
+  position: relative;
+  display: inline-block;
+  width: .5rem;
+  height: .5rem;
+  flex: 0 0 auto;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform:
+    rotate(45deg)
+    translateY(-.1rem);
+  transition:
+    transform 180ms ease;
+}
+
+
+.hilya-filters__sort.is-open
+.hilya-filters__sort-chevron {
+  transform:
+    rotate(225deg)
+    translate(-.03rem, -.03rem);
+}
+
+
+.hilya-filters__sort-menu {
+  position: absolute;
+  top: calc(100% + .35rem);
+  right: 0;
+  z-index: 30;
+  width: 12rem;
+  padding: .35rem 0;
+  border: 1px solid rgb(0 0 0 / 14%);
+  background: var(--color-background);
+  box-shadow:
+    0 8px 22px
+    rgb(0 0 0 / 8%);
+}
+
+
+.hilya-filters__sort-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: .62rem .75rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: .62rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+
+.hilya-filters__sort-option:hover {
+  background: rgb(0 0 0 / 4%);
+}
+
+
+.hilya-filters__sort-check {
+  visibility: hidden;
+  font-size: .7rem;
+}
+
+
+.hilya-filters__sort-option.is-selected
+.hilya-filters__sort-check {
+  visibility: visible;
+}
+
+
+/* =========================================
+   MOBILE DRAWER
+========================================= */
+
+.hilya-filter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgb(0 0 0 / 35%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 260ms ease,
+    visibility 260ms ease;
+}
+
+
+.hilya-filter-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.hilya-filter-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  width: min(28rem, 92vw);
+  overflow-y: auto;
+  background: var(--color-background);
+  transform: translateX(100%);
+  transition:
+    transform 320ms
+    cubic-bezier(.22,.61,.36,1);
+}
+
+
+.hilya-filter-drawer.is-open {
+  transform: translateX(0);
+}
+
+
+.hilya-filter-drawer__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 2rem 1.5rem 1.35rem;
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+}
+
+
+.hilya-filter-drawer__eyebrow {
+  display: block;
+  margin-bottom: .45rem;
+  color: var(--color-muted);
+  font-size: .56rem;
+  letter-spacing: .18em;
+}
+
+
+.hilya-filter-drawer__header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: .08em;
+}
+
+
+.hilya-filter-drawer__close {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+}
+
+
+.hilya-filter-drawer__content {
+  padding: 0 1.5rem 2rem;
+}
+
+
+.hilya-filter-drawer .hilya-filter-group {
+  border-top: 1px solid rgb(0 0 0 / 9%);
+}
+
+
+.hilya-filter-drawer .hilya-filter-group:last-child {
+  border-bottom: 1px solid rgb(0 0 0 / 9%);
+}
+
+
+.hilya-filter-drawer
+.hilya-filter-group__toggle,
+.hilya-filter-drawer
+.hilya-filter-group__content {
+  padding-inline: 0;
+}
+
+
+.hilya-filter-lock {
+  overflow: hidden;
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 40.001rem) {
+
+  .hilya-filter-sidebar {
+    grid-area: sidebar;
+    align-self: start;
+    position: sticky;
+    top: 96px;
+  }
+
+
+  .hilya-filters__products-toolbar {
+    grid-area: toolbar;
+  }
+
+
+  .hilya-filters__mobile-bar,
+  .hilya-filter-drawer,
+  .hilya-filter-overlay {
+    display: none !important;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 40rem) {
+
+  .hilya-filter-sidebar {
+    display: none;
+  }
+
+
+  .hilya-filters__mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3rem;
+    border-bottom: 1px solid rgb(0 0 0 / 9%);
+  }
+
+
+  .hilya-filters__mobile-button {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-foreground);
+    font: inherit;
+    font-size: .63rem;
+    font-weight: 500;
+    letter-spacing: .1em;
+    cursor: pointer;
+  }
+
+
+  .hilya-filters__mobile-results {
+    color: var(--color-muted);
+    font-size: .58rem;
+    letter-spacing: .07em;
+  }
+
+
+  .hilya-filters__products-toolbar {
+    min-height: 2.85rem;
+    margin-bottom: .65rem;
+  }
+
+
+  .hilya-filters__results {
+    font-size: .58rem;
+  }
+
+
+  .hilya-filters__sort-label {
+    display: none;
+  }
+
+
+  .hilya-filters__sort-trigger {
+    min-width: 8.5rem;
+    min-height: 2.2rem;
+    font-size: .58rem;
+  }
+
+
+  .hilya-filters__sort-menu {
+    width: 11rem;
+  }
+
+
+  .hilya-filter-chip {
+    font-size: .57rem;
+    padding: .36rem .44rem;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hilya-filter-overlay,
+  .hilya-filter-drawer,
+  .hilya-filter-chevron,
+  .hilya-filters__sort-chevron {
+    transition: none;
+  }
+
+}
 
 {% endstylesheet %}
