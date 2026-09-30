@@ -2598,8 +2598,8 @@ document.addEventListener('DOMContentLoaded', function () {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: .38rem;
-  margin: 0 0 .85rem;
+  gap: .3rem;
+  margin: 0 0 .7rem;
 }
 
 .hilya-filters__active-label {
@@ -2614,13 +2614,13 @@ document.addEventListener('DOMContentLoaded', function () {
 .hilya-filter-chip {
   display: inline-flex;
   align-items: center;
-  gap: .38rem;
-  padding: .4rem .5rem;
+  gap: .3rem;
+  padding: .34rem .44rem;
   border: 1px solid rgb(0 0 0 / 12%);
   background: transparent;
   color: var(--color-foreground);
   font: inherit;
-  font-size: .61rem;
+  font-size: .59rem;
   line-height: 1;
   cursor: pointer;
 }
@@ -3265,6 +3265,23 @@ input[type="range"]::-moz-range-thumb {
 
   /* Prevent layout shift when scrollbar appears */
   scrollbar-gutter: stable;
+}
+.hilya-filter-sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.hilya-filter-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hilya-filter-sidebar::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 18%);
+  border-radius: 10px;
+}
+
+.hilya-filter-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 0 0 / 18%) transparent;
 }
 
   /* Compact desktop sidebar without changing filter contents */
