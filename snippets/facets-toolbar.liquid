@@ -405,75 +405,85 @@
 
 
     <div
-      class="hilya-filters__sort"
-      data-hilya-sort-wrap
-    >
+  class="hilya-filters__sort"
+  data-hilya-sort-wrap
+>
 
-      <span class="hilya-filters__sort-label">
-        Sort by
-      </span>
+  <span class="hilya-filters__sort-label">
+    Sort by
+  </span>
 
+
+  {% assign current_sort = collection.sort_by | default: collection.default_sort_by | default: 'manual' %}
+
+
+  <button
+    type="button"
+    class="hilya-filters__sort-trigger"
+    data-hilya-sort-trigger
+    aria-expanded="false"
+    aria-haspopup="listbox"
+  >
+
+    <span data-hilya-sort-current>
+
+      {% for option in collection.sort_options %}
+
+        {% if option.value == current_sort %}
+
+          {{ option.name }}
+
+        {% endif %}
+
+      {% endfor %}
+
+    </span>
+
+
+    <span
+      class="hilya-filters__sort-chevron"
+      aria-hidden="true"
+    ></span>
+
+  </button>
+
+
+  <div
+    class="hilya-filters__sort-menu"
+    data-hilya-sort-menu
+    role="listbox"
+    hidden
+  >
+
+    {% for option in collection.sort_options %}
 
       <button
         type="button"
-        class="hilya-filters__sort-trigger"
-        data-hilya-sort-trigger
-        aria-expanded="false"
-        aria-haspopup="listbox"
+        class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
+        data-sort-value="{{ option.value | escape }}"
+        role="option"
+        aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
       >
 
-        <span data-hilya-sort-current>
-  {% for option in collection.sort_options %}
-    {% if option.value == collection.sort_by %}
-      {{ option.name }}
-    {% endif %}
-  {% endfor %}
-</span>
-
+        <span>
+          {{ option.name }}
+        </span>
 
         <span
-          class="hilya-filters__sort-chevron"
+          class="hilya-filters__sort-check"
           aria-hidden="true"
-        ></span>
+        >
+          ✓
+        </span>
 
       </button>
 
+    {% endfor %}
 
-      <div
-        class="hilya-filters__sort-menu"
-        data-hilya-sort-menu
-        role="listbox"
-        hidden
-      >
+  </div>
 
-        {% for option in collection.sort_options %}
+</div>
 
-          <button
-            type="button"
-            class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
-            data-sort-value="{{ option.value | escape }}"
-            role="option"
-            aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
-          >
-
-            <span>
-              {{ option.name }}
-            </span>
-
-            <span
-              class="hilya-filters__sort-check"
-              aria-hidden="true"
-            >
-              ✓
-            </span>
-
-          </button>
-
-        {% endfor %}
-
-      </div>
-
-    </div>
 
   </div>
 
