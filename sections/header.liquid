@@ -17,9 +17,9 @@
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
   --header-border: {{ section.settings.border_color }};
-
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
+  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
   width: 100vw !important;
   max-width: none !important;
@@ -64,6 +64,30 @@
   margin-right: 0 !important;
 
   z-index: 99999 !important;
+}
+
+
+/* =========================================================
+   RESERVE SPACE FOR FIXED HEADER
+   ========================================================= */
+
+/*
+  IMPORTANT:
+  We do NOT add padding to body.
+  The space is reserved inside the Shopify header section itself.
+*/
+
+.shopify-section:has(.site-header--sticky) {
+  padding-bottom: 0 !important;
+}
+
+.shopify-section:has(.site-header--sticky)::after {
+  content: "";
+  display: block;
+
+  width: 100%;
+
+  height: var(--hilya-header-height);
 }
 
 
@@ -415,7 +439,9 @@
 }
 
 
-/* Search box */
+/* =========================================================
+   SEARCH PANEL
+   ========================================================= */
 
 .header-search__panel {
   position: absolute;
@@ -524,7 +550,7 @@
 @media screen and (max-width: 749px) {
 
   .site-header {
-    --header-height: {{ section.settings.mobile_height }}px;
+    --hilya-header-height: {{ section.settings.mobile_height }}px;
 
     width: 100vw !important;
     max-width: none !important;
@@ -534,11 +560,15 @@
   }
 
 
+  /* =======================================================
+     MOBILE HEADER INNER
+     ======================================================= */
+
   .site-header__inner {
     width: 100% !important;
     max-width: none !important;
 
-    height: var(--header-height);
+    height: var(--header-mobile-height);
 
     padding-left: 16px;
     padding-right: 16px;
@@ -676,13 +706,13 @@
   .mobile-menu__panel {
     position: fixed;
 
-    top: var(--header-height);
+    top: var(--header-mobile-height);
     left: 0;
 
     width: 100vw;
 
     height:
-      calc(100vh - var(--header-height));
+      calc(100vh - var(--header-mobile-height));
 
     max-height: none;
 
@@ -777,7 +807,9 @@
   }
 
 
-  /* Categories arrow */
+  /* =======================================================
+     CATEGORIES ARROW
+     ======================================================= */
 
   .mobile-categories__arrow {
     width: 7px;
@@ -807,7 +839,9 @@
   }
 
 
-  /* Category items */
+  /* =======================================================
+     CATEGORY ITEMS
+     ======================================================= */
 
   .mobile-categories__items {
     width: 100%;
@@ -860,7 +894,7 @@
   .header-search__panel {
     position: fixed;
 
-    top: var(--header-height);
+    top: var(--header-mobile-height);
     left: 0;
 
     width: 100vw;
@@ -911,13 +945,30 @@
 
 /* =========================================================
    IMPORTANT:
-   NO PAGE SPACER / NO BODY PADDING
-   =========================================================
+   MOBILE SECTION SPACER
+   ========================================================= */
 
-   The header remains fixed.
-   We intentionally do NOT add padding to body
-   or create a spacer element here.
-*/
+@media screen and (max-width: 749px) {
+
+  .shopify-section:has(.site-header--sticky)::after {
+    height: var(--hilya-header-height);
+  }
+
+}
+
+
+/* =========================================================
+   IMPORTANT:
+   DESKTOP SECTION SPACER
+   ========================================================= */
+
+@media screen and (min-width: 750px) {
+
+  .shopify-section:has(.site-header--sticky)::after {
+    height: var(--hilya-header-height);
+  }
+
+}
 
 {% endstyle %}
 
@@ -1133,8 +1184,6 @@
 
           {% endif %}
 
-
-          <!-- INSTAGRAM -->
 
           <a
             href="{{ section.settings.instagram_link }}"
