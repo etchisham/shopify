@@ -820,28 +820,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    const priceElement =
-      card.querySelector(
-        '[data-product-price]'
-      );
+const priceElement = 
+  card.querySelector(
+    '[data-product-price]'
+  );
 
+if (
+  priceElement &&
+  variant.price !== undefined
+) {
 
-    if (
-      priceElement &&
-      variant.price !== undefined
-    ) {
+  let priceHtml =
+    '<span class="price">' +
+      '<span class="price__current">' +
+        'EGP ' +
+        Number(
+          variant.price
+        ).toLocaleString('en-US') +
+      '</span>';
 
-      priceElement.innerHTML =
-        '<span class="price">' +
-          '<span class="price__current">' +
-            'EGP ' +
-            Number(
-              variant.price
-            ).toLocaleString('en-US') +
-          '</span>' +
-        '</span>';
+  if (
+    variant.compare_at_price !== null &&
+    variant.compare_at_price !== undefined &&
+    Number(variant.compare_at_price) > Number(variant.price)
+  ) {
+    priceHtml +=
+      '<span class="price__compare">' +
+        'EGP ' +
+        Number(
+          variant.compare_at_price
+        ).toLocaleString('en-US') +
+      '</span>';
+  }
 
-    }
+  priceHtml += '</span>';
+
+  priceElement.innerHTML = priceHtml;
+}
 
 
     const productLinks =
