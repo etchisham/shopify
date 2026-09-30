@@ -17,9 +17,9 @@
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
   --header-border: {{ section.settings.border_color }};
+
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
-  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
   width: 100vw !important;
   max-width: none !important;
@@ -34,11 +34,22 @@
 
   border-bottom: 1px solid var(--header-border);
 
-  position: relative;
-  z-index: 1000;
+  /*
+   * IMPORTANT:
+   * Sticky instead of fixed.
+   * This means the header keeps its normal space in the page
+   * and cannot cover the content underneath it.
+   */
+  position: sticky !important;
+  position: -webkit-sticky !important;
+
+  top: 0 !important;
+
+  z-index: 9999 !important;
 
   box-sizing: border-box;
 }
+
 
 .site-header,
 .site-header * {
@@ -47,47 +58,17 @@
 
 
 /* =========================================================
-   FIXED HEADER
-   ========================================================= */
-
-.site-header--sticky {
-  position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-
-  width: 100vw !important;
-  max-width: none !important;
-
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-
-  z-index: 99999 !important;
-}
-
-
-/* =========================================================
-   RESERVE SPACE FOR FIXED HEADER
+   REMOVE OLD FIXED-HEADER SPACE
    ========================================================= */
 
 /*
-  IMPORTANT:
-  We do NOT add padding to body.
-  The space is reserved inside the Shopify header section itself.
-*/
+ * IMPORTANT:
+ * We DO NOT add padding-top to body.
+ * The header already occupies its natural space.
+ */
 
-.shopify-section:has(.site-header--sticky) {
-  padding-bottom: 0 !important;
-}
-
-.shopify-section:has(.site-header--sticky)::after {
-  content: "";
-  display: block;
-
-  width: 100%;
-
-  height: var(--hilya-header-height);
+body:has(.site-header) {
+  padding-top: 0 !important;
 }
 
 
@@ -168,14 +149,17 @@
   z-index: 15;
 }
 
+
 .desktop-nav > a {
   color: var(--header-text);
+
   text-decoration: none;
 
   font-size: 0.78rem;
   font-weight: 500;
 
   letter-spacing: 0.08em;
+
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -185,6 +169,7 @@
   display: flex;
   align-items: center;
 }
+
 
 .desktop-nav > a:hover {
   opacity: 0.65;
@@ -230,12 +215,14 @@
   cursor: default;
 }
 
+
 .desktop-menu__trigger {
   height: 100%;
 
   display: flex;
   align-items: center;
 }
+
 
 .desktop-categories__trigger {
   height: 100%;
@@ -247,6 +234,7 @@
   font-weight: 500;
 
   letter-spacing: 0.08em;
+
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -262,11 +250,14 @@
   height: 14px;
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: space-between;
 
   pointer-events: none;
 }
+
 
 .desktop-menu__icon span {
   width: 100%;
@@ -315,6 +306,7 @@
   z-index: 2000;
 }
 
+
 .desktop-dropdown a {
   display: block;
 
@@ -334,13 +326,14 @@
   white-space: nowrap;
 }
 
+
 .desktop-dropdown a:hover {
   background: rgba(0, 0, 0, 0.035);
 }
 
 
 /* =========================================================
-   DESKTOP HOVER ONLY
+   DESKTOP HOVER
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -379,6 +372,7 @@
   z-index: 20;
 }
 
+
 .header-action {
   color: var(--header-text);
 
@@ -391,12 +385,14 @@
   position: relative;
 }
 
+
 .header-action svg {
   width: 18px;
   height: 18px;
 
   stroke: currentColor;
 }
+
 
 .cart-count {
   position: absolute;
@@ -412,9 +408,11 @@
   border-radius: 50%;
 
   background: var(--header-text);
+
   color: var(--header-bg);
 
   font-size: 9px;
+
   line-height: 15px;
 
   text-align: center;
@@ -429,10 +427,13 @@
   position: relative;
 }
 
+
 .header-search summary {
   list-style: none;
+
   cursor: pointer;
 }
+
 
 .header-search summary::-webkit-details-marker {
   display: none;
@@ -447,6 +448,7 @@
   position: absolute;
 
   right: 0;
+
   top: calc(100% + 18px);
 
   width: 270px;
@@ -463,12 +465,15 @@
   z-index: 3000;
 }
 
+
 .header-search__form {
   display: flex;
+
   align-items: center;
 
   gap: 8px;
 }
+
 
 .header-search__input {
   flex: 1;
@@ -490,14 +495,16 @@
   font-size: 0.78rem;
 }
 
+
 .header-search__input::placeholder {
   color: var(--header-text);
+
   opacity: 0.55;
 }
 
 
 /* =========================================================
-   SEARCH SUBMIT BUTTON
+   SEARCH SUBMIT
    ========================================================= */
 
 .header-search__submit {
@@ -508,9 +515,10 @@
 
   background: transparent;
 
-  color: #000000ff;
+  color: #000000;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -518,6 +526,7 @@
 
   padding: 0;
 }
+
 
 .header-search__submit svg {
   width: 18px;
@@ -550,27 +559,42 @@
 @media screen and (max-width: 749px) {
 
   .site-header {
-    --hilya-header-height: {{ section.settings.mobile_height }}px;
+
+    --header-height: {{ section.settings.mobile_height }}px;
+
+    --header-mobile-height: {{ section.settings.mobile_height }}px;
 
     width: 100vw !important;
+
     max-width: none !important;
 
     margin-left: 0 !important;
+
     margin-right: 0 !important;
+
+    /*
+     * Keep sticky on mobile too.
+     */
+    position: sticky !important;
+
+    position: -webkit-sticky !important;
+
+    top: 0 !important;
+
+    z-index: 9999 !important;
   }
 
 
-  /* =======================================================
-     MOBILE HEADER INNER
-     ======================================================= */
-
   .site-header__inner {
+
     width: 100% !important;
+
     max-width: none !important;
 
     height: var(--header-mobile-height);
 
     padding-left: 16px;
+
     padding-right: 16px;
   }
 
@@ -580,9 +604,11 @@
      ======================================================= */
 
   .site-header__brand {
+
     position: absolute;
 
     left: 50%;
+
     top: 50%;
 
     transform:
@@ -594,6 +620,7 @@
     font-size: 2.15rem;
 
     font-style: normal;
+
     font-weight: 400;
 
     letter-spacing: 0;
@@ -614,6 +641,7 @@
      ======================================================= */
 
   .mobile-menu {
+
     display: block;
 
     position: static;
@@ -623,22 +651,28 @@
 
 
   .mobile-menu summary {
+
     list-style: none;
 
     width: 22px;
+
     height: 18px;
 
     padding: 0;
+
     margin: 0;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     cursor: pointer;
 
     position: relative;
   }
+
 
   .mobile-menu summary::-webkit-details-marker {
     display: none;
@@ -650,10 +684,13 @@
      ======================================================= */
 
   .mobile-menu__icon {
+
     width: 21px;
+
     height: 16px;
 
     display: flex;
+
     flex-direction: column;
 
     justify-content: space-between;
@@ -661,8 +698,11 @@
     position: relative;
   }
 
+
   .mobile-menu__icon span {
+
     width: 100%;
+
     height: 1px;
 
     display: block;
@@ -677,22 +717,29 @@
   }
 
 
-  /* Open = X */
+  /* =======================================================
+     OPEN = X
+     ======================================================= */
 
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(1) {
+
     transform:
       translateY(7.5px)
       rotate(45deg);
   }
 
+
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(2) {
+
     opacity: 0;
   }
 
+
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(3) {
+
     transform:
       translateY(-7.5px)
       rotate(-45deg);
@@ -700,13 +747,15 @@
 
 
   /* =======================================================
-     MOBILE MENU FULL SCREEN
+     MOBILE MENU PANEL
      ======================================================= */
 
   .mobile-menu__panel {
+
     position: fixed;
 
     top: var(--header-mobile-height);
+
     left: 0;
 
     width: 100vw;
@@ -717,6 +766,7 @@
     max-height: none;
 
     overflow-y: auto;
+
     overflow-x: hidden;
 
     padding:
@@ -730,8 +780,7 @@
     border-bottom:
       1px solid var(--header-border);
 
-    box-shadow:
-      none;
+    box-shadow: none;
 
     z-index: 99998;
 
@@ -746,6 +795,7 @@
      ======================================================= */
 
   .mobile-menu__panel > a {
+
     display: block;
 
     width: 100%;
@@ -757,6 +807,7 @@
     text-decoration: none;
 
     font-size: 0.82rem;
+
     font-weight: 500;
 
     letter-spacing: 0.08em;
@@ -773,13 +824,16 @@
      ======================================================= */
 
   .mobile-categories {
+
     width: 100%;
 
     border-bottom:
       1px solid rgba(0, 0, 0, 0.08);
   }
 
+
   .mobile-categories summary {
+
     list-style: none;
 
     width: 100%;
@@ -787,12 +841,15 @@
     min-height: 48px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
     color: var(--header-text);
 
     font-size: 0.82rem;
+
     font-weight: 500;
 
     letter-spacing: 0.08em;
@@ -801,6 +858,7 @@
 
     cursor: pointer;
   }
+
 
   .mobile-categories summary::-webkit-details-marker {
     display: none;
@@ -812,7 +870,9 @@
      ======================================================= */
 
   .mobile-categories__arrow {
+
     width: 7px;
+
     height: 7px;
 
     border-right:
@@ -824,11 +884,13 @@
     transform: rotate(45deg);
 
     margin-right: 3px;
+
     margin-top: -4px;
 
     transition:
       transform 0.2s ease;
   }
+
 
   .mobile-categories[open]
   .mobile-categories__arrow {
@@ -844,13 +906,16 @@
      ======================================================= */
 
   .mobile-categories__items {
+
     width: 100%;
 
     padding:
       0 0 5px 14px;
   }
 
+
   .mobile-categories__items a {
+
     display: block;
 
     width: 100%;
@@ -876,13 +941,17 @@
      ======================================================= */
 
   .header-actions {
+
     margin-left: auto;
 
     gap: 14px;
   }
 
+
   .header-action svg {
+
     width: 18px;
+
     height: 18px;
   }
 
@@ -892,9 +961,11 @@
      ======================================================= */
 
   .header-search__panel {
+
     position: fixed;
 
     top: var(--header-mobile-height);
+
     left: 0;
 
     width: 100vw;
@@ -907,7 +978,9 @@
     z-index: 99998;
   }
 
+
   .header-search__form {
+
     width: 100%;
   }
 
@@ -932,42 +1005,18 @@
    ========================================================= */
 
 .shopify-section:has(.site-header) {
+
   width: 100vw !important;
+
   max-width: none !important;
 
   margin-left: calc(50% - 50vw) !important;
+
   margin-right: 0 !important;
 
   padding-left: 0 !important;
+
   padding-right: 0 !important;
-}
-
-
-/* =========================================================
-   IMPORTANT:
-   MOBILE SECTION SPACER
-   ========================================================= */
-
-@media screen and (max-width: 749px) {
-
-  .shopify-section:has(.site-header--sticky)::after {
-    height: var(--hilya-header-height);
-  }
-
-}
-
-
-/* =========================================================
-   IMPORTANT:
-   DESKTOP SECTION SPACER
-   ========================================================= */
-
-@media screen and (min-width: 750px) {
-
-  .shopify-section:has(.site-header--sticky)::after {
-    height: var(--hilya-header-height);
-  }
-
 }
 
 {% endstyle %}
@@ -1075,8 +1124,6 @@
         </a>
 
 
-        <!-- INSTAGRAM -->
-
         <a
           href="{{ section.settings.instagram_link }}"
           target="_blank"
@@ -1150,9 +1197,11 @@
         >
 
           <span class="desktop-menu__icon">
+
             <span></span>
             <span></span>
             <span></span>
+
           </span>
 
         </button>
@@ -1474,36 +1523,51 @@
 
     if (!menu) return;
 
+
     function lockPage() {
+
       document.documentElement.style.overflow = 'hidden';
+
       document.body.style.overflow = 'hidden';
     }
 
+
     function unlockPage() {
+
       document.documentElement.style.overflow = '';
+
       document.body.style.overflow = '';
     }
+
 
     menu.addEventListener('toggle', function () {
 
       if (menu.open) {
+
         lockPage();
+
       } else {
+
         unlockPage();
+
       }
 
     });
 
+
     window.addEventListener('resize', function () {
 
       if (window.innerWidth > 749) {
+
         menu.open = false;
+
         unlockPage();
       }
 
     });
 
   }
+
 
   if (document.readyState === 'loading') {
 
