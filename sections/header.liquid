@@ -77,7 +77,6 @@ body:has(.site-header--sticky) {
   body:has(.site-header--sticky) {
     padding-top: {{ section.settings.mobile_height }}px !important;
   }
-  
 }
 
 
@@ -922,46 +921,6 @@ body:has(.site-header--sticky) {
 
   padding-left: 0 !important;
   padding-right: 0 !important;
-}
-
-/* =========================================================
-   MOBILE FILTERS ABOVE HEADER
-   ========================================================= */
-
-@media screen and (max-width: 749px) {
-
-  /* Shopify / Dawn mobile filter drawer */
-  .mobile-facets__wrapper,
-  .mobile-facets__disclosure,
-  .mobile-facets__disclosure > summary,
-  .mobile-facets__main,
-  .mobile-facets__inner,
-  .mobile-facets__close-button,
-  .mobile-facets__footer,
-  .mobile-facets__sort {
-    z-index: 1000000 !important;
-  }
-
-  /* Drawer itself */
-  .mobile-facets__wrapper {
-    position: relative !important;
-  }
-
-  .mobile-facets__disclosure[open] .mobile-facets__inner {
-    z-index: 1000001 !important;
-  }
-
-  /* Overlay */
-  .mobile-facets__overlay {
-    z-index: 999999 !important;
-  }
-
-  /* Make sure the drawer can visually escape surrounding containers */
-  .mobile-facets,
-  .mobile-facets__wrapper {
-    overflow: visible !important;
-  }
-
 }
 
 {% endstyle %}
