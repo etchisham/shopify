@@ -114,8 +114,8 @@
         "image_ratio": "1 / 1",
         "image_fit": "contain",
         "show_personalization": true,
-        "personalization_required": false,
-        "personalization_label_en": "",
+        "personalization_required": true,
+        "personalization_label_en": "jhjhjk",
         "personalization_label_ar": "",
         "personalization_prompt_en": "",
         "personalization_prompt_ar": ""
