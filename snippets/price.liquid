@@ -17,33 +17,34 @@
   assign price = target.price
   assign compare_at_price = target.compare_at_price
 
-  if compare_at_price == blank
-    assign compare_at_price = product.compare_at_price_max
+  if compare_at_price == blank and product.compare_at_price_min > product.price
+    assign compare_at_price = product.compare_at_price_min
   endif
 
   assign available = target.available | default: false
+
   assign discount_percent = 0
 
-  if compare_at_price > price and compare_at_price > 0
-    assign discount_amount = compare_at_price | minus: price
-    assign discount_percent = discount_amount | times: 100.0 | divided_by: compare_at_price | round
+  if compare_at_price > price
+    assign discount_percent = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round
   endif
 %}
 
 <div class="price{% unless available %} price--sold-out{% endunless %}{% if compare_at_price > price %} price--sale{% endif %}">
 
-  {% if compare_at_price > price %}
+  {% if card_layout %}
 
-    <span class="visually-hidden">
-      {{ 'products.product.sale_price' | t }}
+    {% if compare_at_price > price %}
+      <span class="visually-hidden">
+        {{ 'products.product.sale_price' | t }}
+      </span>
+    {% endif %}
+
+    <span class="price__current">
+      EGP {{ price | money_without_currency | strip }}
     </span>
 
   {% endif %}
-
-
-  <span class="price__current">
-    EGP {{ price | money_without_currency | strip }}
-  </span>
 
 
   {% if compare_at_price > price %}
@@ -56,7 +57,22 @@
       EGP {{ compare_at_price | money_without_currency | strip }}
     </s>
 
+    {% unless card_layout %}
+      <span class="visually-hidden">
+        {{ 'products.product.sale_price' | t }}
+      </span>
+    {% endunless %}
+
   {% endif %}
+
+
+  {% unless card_layout %}
+
+    <span class="price__current">
+      EGP {{ price | money_without_currency | strip }}
+    </span>
+
+  {% endunless %}
 
 
   {% if show_discount and discount_percent > 0 %}

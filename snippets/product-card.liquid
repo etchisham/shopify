@@ -174,15 +174,17 @@
 
 
     <div
-  class="product-card__price"
-  data-product-price
->
-  {% render 'price',
-    product: product,
-    card_layout: true,
-    show_discount: false
-  %}
-</div>
+      class="product-card__price"
+      data-product-price
+    >
+
+      {% render 'price',
+        product: product,
+        card_layout: true,
+        show_discount: false
+      %}
+
+    </div>
 
 
     {% if settings.card_show_vendor and product.vendor != blank %}
