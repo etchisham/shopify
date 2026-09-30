@@ -161,21 +161,37 @@
 
           <div class="hilya-price-values">
 
-            <div>
-              <span>EGP</span>
-              <strong data-price-min-value>0</strong>
-            </div>
+          <label class="hilya-price-input">
+            <span>EGP</span>
+            <input
+              type="number"
+              min="0"
+              max="1000"
+              step="1"
+              value="0"
+              inputmode="numeric"
+              data-price-min-input
+              aria-label="Minimum price"
+            >
+          </label>
 
-            <span class="hilya-price-values__to">
-              to
-            </span>
+          <span class="hilya-price-values__to">
+            to
+          </span>
 
-            <div>
-              <span>EGP</span>
-              <strong data-price-max-value>1000</strong>
-            </div>
-
-          </div>
+          <label class="hilya-price-input hilya-price-input--max">
+            <span>EGP</span>
+            <input
+              type="number"
+              min="0"
+              max="1000"
+              step="1"
+              value="1000"
+              inputmode="numeric"
+              data-price-max-input
+              aria-label="Maximum price"
+            >
+          </label>
 
         </div>
 
@@ -1204,134 +1220,71 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
-     PRICE SLIDER
+     PRICE SLIDER + MANUAL INPUTS
   ========================================= */
 
-  const priceMin =
-    form.querySelector(
-      '[data-price-min]'
-    );
+  const priceMin = form.querySelector('[data-price-min]');
+  const priceMax = form.querySelector('[data-price-max]');
+  const priceMinInput = form.querySelector('[data-price-min-input]');
+  const priceMaxInput = form.querySelector('[data-price-max-input]');
+  const priceRange = form.querySelector('[data-price-range]');
 
-  const priceMax =
-    form.querySelector(
-      '[data-price-max]'
-    );
+  function clampPrice(value, fallback) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return fallback;
+    return Math.min(1000, Math.max(0, Math.round(number)));
+  }
 
-  const priceMinValue =
-    form.querySelector(
-      '[data-price-min-value]'
-    );
+  function updatePriceSlider(shouldApply) {
+    if (!priceMin || !priceMax) return;
 
-  const priceMaxValue =
-    form.querySelector(
-      '[data-price-max-value]'
-    );
-
-  const priceRange =
-    form.querySelector(
-      '[data-price-range]'
-    );
-
-
-  function updatePriceSlider(
-    shouldApply
-  ) {
-
-    if (
-      !priceMin ||
-      !priceMax
-    ) {
-      return;
-    }
-
-
-    let min =
-      Number(priceMin.value);
-
-    let max =
-      Number(priceMax.value);
-
+    let min = clampPrice(priceMin.value, 0);
+    let max = clampPrice(priceMax.value, 1000);
 
     if (min > max) {
-
-      if (
-        document.activeElement ===
-        priceMin
-      ) {
-
-        max = min;
-        priceMax.value = max;
-
-      } else {
-
-        min = max;
-        priceMin.value = min;
-
-      }
-
+      if (document.activeElement === priceMin || document.activeElement === priceMinInput) max = min;
+      else min = max;
     }
 
-
-    if (priceMinValue) {
-      priceMinValue.textContent =
-        min.toLocaleString('en-US');
-    }
-
-
-    if (priceMaxValue) {
-      priceMaxValue.textContent =
-        max.toLocaleString('en-US');
-    }
-
+    priceMin.value = min;
+    priceMax.value = max;
+    if (priceMinInput) priceMinInput.value = min;
+    if (priceMaxInput) priceMaxInput.value = max;
 
     if (priceRange) {
-
-      const left =
-        (min / 1000) * 100;
-
-      const right =
-        100 -
-        ((max / 1000) * 100);
-
-      priceRange.style.left =
-        left + '%';
-
-      priceRange.style.right =
-        right + '%';
-
+      priceRange.style.left = ((min / 1000) * 100) + '%';
+      priceRange.style.right = (100 - ((max / 1000) * 100)) + '%';
     }
 
-
-    if (shouldApply) {
-      applyFilters();
-    }
-
+    if (shouldApply) applyFilters();
   }
 
+  if (priceMin) priceMin.addEventListener('input', function () { updatePriceSlider(true); });
+  if (priceMax) priceMax.addEventListener('input', function () { updatePriceSlider(true); });
 
-  if (priceMin) {
-
-    priceMin.addEventListener(
-      'input',
-      function () {
-        updatePriceSlider(true);
-      }
-    );
-
+  if (priceMinInput) {
+    priceMinInput.addEventListener('input', function () {
+      let value = clampPrice(this.value, 0);
+      const currentMax = Number(priceMax.value);
+      if (value > currentMax) value = currentMax;
+      priceMin.value = value;
+      this.value = value;
+      updatePriceSlider(true);
+    });
+    priceMinInput.addEventListener('change', function () { updatePriceSlider(true); });
   }
 
-
-  if (priceMax) {
-
-    priceMax.addEventListener(
-      'input',
-      function () {
-        updatePriceSlider(true);
-      }
-    );
-
+  if (priceMaxInput) {
+    priceMaxInput.addEventListener('input', function () {
+      let value = clampPrice(this.value, 1000);
+      const currentMin = Number(priceMin.value);
+      if (value < currentMin) value = currentMin;
+      priceMax.value = value;
+      this.value = value;
+      updatePriceSlider(true);
+    });
+    priceMaxInput.addEventListener('change', function () { updatePriceSlider(true); });
   }
-
 
   updatePriceSlider(false);
 
@@ -1760,9 +1713,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             addChip(
               container,
-              value === 'in_stock'
-                ? 'In stock'
-                : 'Out of stock'
+              value === 'in_stock' ? 'In stock' : 'Out of stock',
+              'availability',
+              value
             );
 
           }
@@ -1774,6 +1727,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             addChip(
               container,
+              value.charAt(0).toUpperCase() + value.slice(1),
+              'color',
               value
             );
 
@@ -1786,10 +1741,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             addChip(
               container,
+              value.charAt(0).toUpperCase() + value.slice(1),
+              'product_type',
               value
-                .charAt(0)
-                .toUpperCase() +
-              value.slice(1)
             );
 
           }
@@ -1798,26 +1752,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (minPrice > 0) {
 
-          addChip(
-            container,
-            'From EGP ' +
-            minPrice.toLocaleString(
-              'en-US'
-            )
-          );
+          addChip(container, 'From EGP ' + minPrice.toLocaleString('en-US'), 'price_min', '0');
 
         }
 
 
         if (maxPrice < 1000) {
 
-          addChip(
-            container,
-            'To EGP ' +
-            maxPrice.toLocaleString(
-              'en-US'
-            )
-          );
+          addChip(container, 'To EGP ' + maxPrice.toLocaleString('en-US'), 'price_max', '1000');
 
         }
 
@@ -1851,29 +1793,40 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  function addChip(
-    container,
-    label
-  ) {
+  function addChip(container, label, inputName, inputValue) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'hilya-filter-chip';
+    chip.innerHTML = '<span>' + escapeAttribute(label) + '</span><span class="hilya-filter-chip__remove" aria-hidden="true">×</span>';
+    chip.setAttribute('aria-label', 'Remove ' + label);
 
-    const chip =
-      document.createElement(
-        'span'
-      );
+    chip.addEventListener('click', function () {
+      if (inputName === 'price_min') {
+        if (priceMin) priceMin.value = 0;
+        if (priceMinInput) priceMinInput.value = 0;
+      } else if (inputName === 'price_max') {
+        if (priceMax) priceMax.value = 1000;
+        if (priceMaxInput) priceMaxInput.value = 1000;
+      } else if (inputName) {
+        const inputs = form.querySelectorAll('input[name="' + inputName + '"]');
+        inputs.forEach(function (input) {
+          if (input.value.trim().toLowerCase() === String(inputValue).trim().toLowerCase()) input.checked = false;
+        });
+      }
+      updatePriceSlider(false);
+      syncMobileFilters();
+      applyFilters();
+    });
 
-    chip.className =
-      'hilya-filter-chip';
+    container.appendChild(chip);
+  }
 
-    chip.innerHTML =
-      '<span>' +
-      escapeAttribute(label) +
-      '</span>';
-
-
-    container.appendChild(
-      chip
-    );
-
+  function syncMobileFilters() {
+    if (!mobileContent) return;
+    form.querySelectorAll('input[type="checkbox"]').forEach(function (input) {
+      const matching = mobileContent.querySelector('input[name="' + input.name + '"][value="' + input.value + '"]');
+      if (matching) matching.checked = input.checked;
+    });
   }
 
 
@@ -1904,9 +1857,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     if (priceMax) {
-      priceMax.value =
-        1000;
+      priceMax.value = 1000;
     }
+
+    if (priceMinInput) priceMinInput.value = 0;
+    if (priceMaxInput) priceMaxInput.value = 1000;
 
 
     if (mobileContent) {
@@ -2047,746 +2002,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
 {% stylesheet %}
 
-/* =========================================
-   MAIN
-========================================= */
-
-.hilya-filters {
-  width: 100%;
-}
-
-
-/* =========================================
-   MOBILE BAR
-========================================= */
-
-.hilya-filters__mobile-bar {
-  display: none;
-}
-
-
-/* =========================================
-   SIDEBAR
-========================================= */
-
-.hilya-filter-sidebar {
-  width: 100%;
-}
-
-
-.hilya-filter-sidebar__heading {
-  margin-bottom: 1.35rem;
-}
-
-
-.hilya-filter-sidebar__heading h2 {
-  margin: 0;
-
-  color: var(--color-foreground);
-
-  font-size: 1rem;
-  font-weight: 400;
-
-  letter-spacing: .01em;
-}
-
-
-/* =========================================
-   ACTIVE FILTERS
-========================================= */
-
-.hilya-filters__active {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  align-items: center;
-
-  gap: .5rem;
-
-  margin-bottom: 1.35rem;
-}
-
-
-.hilya-filters__active-label {
-  width: 100%;
-
-  margin-bottom: .15rem;
-
-  color: var(--color-muted);
-
-  font-size: .58rem;
-
-  letter-spacing: .12em;
-
-  text-transform: uppercase;
-}
-
-
-.hilya-filter-chip {
-  display: inline-flex;
-
-  align-items: center;
-
-  padding: .5rem .65rem;
-
-  border: 1px solid
-    rgb(0 0 0 / 10%);
-
-  background:
-    rgb(0 0 0 / 3%);
-
-  color: var(--color-foreground);
-
-  font-size: .68rem;
-
-  line-height: 1;
-}
-
-
-.hilya-filters__clear {
-  padding: 0;
-
-  border: 0;
-
-  background: transparent;
-
-  color: var(--color-muted);
-
-  font: inherit;
-
-  font-size: .66rem;
-
-  text-decoration: underline;
-
-  text-underline-offset: .22rem;
-
-  cursor: pointer;
-}
-
-
-/* =========================================
-   FILTER GROUPS
-========================================= */
-
-.hilya-filter-group {
-  border-top:
-    1px solid
-    rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filter-group:last-child {
-  border-bottom:
-    1px solid
-    rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filter-group summary {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 1rem 0;
-
-  color: var(--color-foreground);
-
-  font-size: .69rem;
-
-  font-weight: 500;
-
-  letter-spacing: .1em;
-
-  text-transform: uppercase;
-
-  cursor: pointer;
-
-  list-style: none;
-}
-
-
-.hilya-filter-group summary::-webkit-details-marker {
-  display: none;
-}
-
-
-.hilya-filter-chevron {
-  font-size: 1rem;
-
-  font-weight: 300;
-
-  line-height: 1;
-
-  transition:
-    transform 180ms ease;
-}
-
-
-.hilya-filter-group[open]
-.hilya-filter-chevron {
-  transform: rotate(45deg);
-}
-
-
-.hilya-filter-group__content {
-  padding:
-    0 0 1rem;
-}
-
-
-/* =========================================
-   OPTIONS
-========================================= */
-
-.hilya-filter-option {
-  display: flex;
-
-  align-items: center;
-
-  gap: .65rem;
-
-  min-height: 2.25rem;
-
-  color: var(--color-foreground);
-
-  font-size: .76rem;
-
-  cursor: pointer;
-}
-
-
-.hilya-filter-option input {
-  width: .95rem;
-
-  height: .95rem;
-
-  margin: 0;
-
-  accent-color: #111;
-
-  cursor: pointer;
-}
-
-
-/* =========================================
-   PRICE SLIDER
-========================================= */
-
-.hilya-price-slider {
-  position: relative;
-
-  width: 100%;
-
-  height: 1.8rem;
-
-  margin:
-    .2rem 0 .55rem;
-}
-
-
-.hilya-price-slider__track,
-.hilya-price-slider__range {
-  position: absolute;
-
-  top: 50%;
-
-  height: 2px;
-
-  transform:
-    translateY(-50%);
-}
-
-
-.hilya-price-slider__track {
-  right: 0;
-  left: 0;
-
-  background:
-    rgb(0 0 0 / 16%);
-}
-
-
-.hilya-price-slider__range {
-  background:
-    var(--color-foreground);
-
-  z-index: 1;
-}
-
-
-.hilya-price-slider input[type="range"] {
-  position: absolute;
-
-  inset: 0;
-
-  width: 100%;
-
-  height: 1.8rem;
-
-  margin: 0;
-
-  padding: 0;
-
-  background: transparent;
-
-  appearance: none;
-
-  pointer-events: none;
-}
-
-
-.hilya-price-slider
-input[type="range"]::-webkit-slider-thumb {
-  width: 13px;
-
-  height: 13px;
-
-  border: 1px solid
-    var(--color-foreground);
-
-  border-radius: 50%;
-
-  background:
-    var(--color-background);
-
-  appearance: none;
-
-  cursor: pointer;
-
-  pointer-events: auto;
-}
-
-
-.hilya-price-slider
-input[type="range"]::-moz-range-thumb {
-  width: 13px;
-
-  height: 13px;
-
-  border: 1px solid
-    var(--color-foreground);
-
-  border-radius: 50%;
-
-  background:
-    var(--color-background);
-
-  cursor: pointer;
-
-  pointer-events: auto;
-}
-
-
-.hilya-price-values {
-  display: grid;
-
-  grid-template-columns:
-    1fr auto 1fr;
-
-  align-items: center;
-
-  gap: .5rem;
-
-  font-size: .67rem;
-}
-
-
-.hilya-price-values > div {
-  display: flex;
-
-  align-items: center;
-
-  gap: .25rem;
-}
-
-
-.hilya-price-values > div:last-child {
-  justify-content: flex-end;
-}
-
-
-.hilya-price-values span {
-  color: var(--color-muted);
-}
-
-
-.hilya-price-values strong {
-  color: var(--color-foreground);
-
-  font-weight: 400;
-}
-
-
-.hilya-price-values__to {
-  color: var(--color-muted);
-
-  font-size: .62rem;
-}
-
-
-/* =========================================
-   SORT
-========================================= */
-
-.hilya-filter-sidebar__sort {
-  display: none;
-}
-
-
-.hilya-filters__products-toolbar {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  width: 100%;
-
-  min-height: 3.5rem;
-
-  margin-bottom: 1.5rem;
-
-  border-bottom:
-    1px solid
-    rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filters__results {
-  color: var(--color-foreground);
-
-  font-size: .68rem;
-
-  letter-spacing: .08em;
-
-  text-transform: uppercase;
-}
-
-
-.hilya-filters__sort {
-  display: flex;
-
-  align-items: center;
-
-  gap: .45rem;
-}
-
-
-.hilya-filters__sort label {
-  color: var(--color-muted);
-
-  font-size: .66rem;
-
-  letter-spacing: .04em;
-}
-
-
-.hilya-filters__sort select {
-  min-width: 8.5rem;
-
-  padding:
-    .35rem 1.4rem .35rem 0;
-
-  border: 0;
-
-  outline: 0;
-
-  background:
-    transparent;
-
-  color: var(--color-foreground);
-
-  font: inherit;
-
-  font-size: .68rem;
-
-  cursor: pointer;
-}
-
-
-/* =========================================
-   MOBILE DRAWER
-========================================= */
-
-.hilya-filter-overlay {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 9998;
-
-  background:
-    rgb(0 0 0 / 35%);
-
-  opacity: 0;
-
-  visibility: hidden;
-
-  transition:
-    opacity 260ms ease,
-    visibility 260ms ease;
-}
-
-
-.hilya-filter-overlay.is-visible {
-  opacity: 1;
-
-  visibility: visible;
-}
-
-
-.hilya-filter-drawer {
-  position: fixed;
-
-  top: 0;
-  right: 0;
-  bottom: 0;
-
-  z-index: 9999;
-
-  width: min(
-    28rem,
-    92vw
-  );
-
-  overflow-y: auto;
-
-  background:
-    var(--color-background);
-
-  transform:
-    translateX(100%);
-
-  transition:
-    transform 320ms
-    cubic-bezier(
-      .22,
-      .61,
-      .36,
-      1
-    );
-}
-
-
-.hilya-filter-drawer.is-open {
-  transform:
-    translateX(0);
-}
-
-
-.hilya-filter-drawer__header {
-  display: flex;
-
-  align-items: flex-start;
-
-  justify-content: space-between;
-
-  padding:
-    2rem 1.5rem 1.35rem;
-
-  border-bottom:
-    1px solid
-    rgb(0 0 0 / 8%);
-}
-
-
-.hilya-filter-drawer__eyebrow {
-  display: block;
-
-  margin-bottom: .45rem;
-
-  color: var(--color-muted);
-
-  font-size: .56rem;
-
-  letter-spacing: .18em;
-}
-
-
-.hilya-filter-drawer__header h2 {
-  margin: 0;
-
-  font-size: 1.2rem;
-
-  font-weight: 400;
-
-  letter-spacing: .08em;
-}
-
-
-.hilya-filter-drawer__close {
-  padding: 0;
-
-  border: 0;
-
-  background: transparent;
-
-  color: var(--color-foreground);
-
-  font-size: 1.8rem;
-
-  font-weight: 300;
-
-  line-height: 1;
-
-  cursor: pointer;
-}
-
-
-.hilya-filter-drawer__content {
-  padding: 0 1.5rem 2rem;
-}
-
-
-.hilya-filter-drawer
-.hilya-filter-group {
-  border-top: 1px solid
-    rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filter-drawer
-.hilya-filter-group:last-child {
-  border-bottom: 1px solid
-    rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filter-drawer
-.hilya-filter-group summary {
-  padding-inline: 0;
-}
-
-
-.hilya-filter-drawer
-.hilya-filter-group__content {
-  padding-inline: 0;
-}
-
-
-/* =========================================
-   LOCK
-========================================= */
-
-.hilya-filter-lock {
-  overflow: hidden;
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 40rem) {
-
-  .hilya-filter-sidebar {
-    display: none;
-  }
-
-
-  .hilya-filters__mobile-bar {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    min-height: 3.6rem;
-
-    border-bottom:
-      1px solid
-      rgb(0 0 0 / 9%);
-  }
-
-
-  .hilya-filters__mobile-button {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: .45rem;
-
-    padding: 0;
-
-    border: 0;
-
-    background: transparent;
-
-    color: var(--color-foreground);
-
-    font: inherit;
-
-    font-size: .67rem;
-
-    font-weight: 500;
-
-    letter-spacing: .12em;
-
-    cursor: pointer;
-  }
-
-
-  .hilya-filters__mobile-results {
-    color: var(--color-muted);
-
-    font-size: .62rem;
-
-    letter-spacing: .08em;
-  }
-
-
-  .hilya-filters__products-toolbar {
-    min-height: 3.4rem;
-
-    margin-bottom: 1.15rem;
-  }
-
-
-  .hilya-filters__results {
-    font-size: .62rem;
-  }
-
-
-  .hilya-filters__sort label {
-    display: none;
-  }
-
-
-  .hilya-filters__sort select {
-    min-width: 6.8rem;
-
-    font-size: .62rem;
-  }
-
-}
-
-
-@media (min-width: 40.001rem) {
-
-  .hilya-filter-drawer,
-  .hilya-filter-overlay,
-  .hilya-filters__mobile-bar {
-    display: none !important;
-  }
-
-}
-
-
-/* =========================================
-   REDUCED MOTION
-========================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .hilya-filter-overlay,
-  .hilya-filter-drawer,
-  .hilya-filter-chevron {
-    transition: none;
-  }
-
-}
+.hilya-filters { width: 100%; }
+.hilya-filters__mobile-bar { display: none; }
+.hilya-filter-sidebar { width: 100%; }
+.hilya-filter-sidebar__heading { margin: 0 0 1.15rem; }
+.hilya-filter-sidebar__heading h2 { margin: 0; color: var(--color-foreground); font-size: .68rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+.hilya-filters__active { display: flex; flex-wrap: wrap; align-items: center; gap: .38rem; margin: 0 0 1.1rem; }
+.hilya-filters__active-label { width: 100%; margin: 0 0 .08rem; color: var(--color-muted); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; }
+.hilya-filter-chip { display: inline-flex; align-items: center; gap: .38rem; padding: .38rem .48rem; border: 1px solid rgb(0 0 0 / 10%); background: transparent; color: var(--color-foreground); font: inherit; font-size: .59rem; line-height: 1; cursor: pointer; }
+.hilya-filter-chip:hover { background: rgb(0 0 0 / 3%); }
+.hilya-filter-chip__remove { font-size: .75rem; line-height: .8; font-weight: 300; }
+.hilya-filters__clear { padding: 0; border: 0; background: transparent; color: var(--color-muted); font: inherit; font-size: .57rem; letter-spacing: .03em; text-decoration: underline; text-underline-offset: .18rem; cursor: pointer; }
+.hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 9%); }
+.hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 9%); }
+.hilya-filter-group summary { display: flex; align-items: center; justify-content: space-between; padding: .85rem 0; color: var(--color-foreground); font-size: .62rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; list-style: none; }
+.hilya-filter-group summary::-webkit-details-marker { display: none; }
+.hilya-filter-chevron { font-size: .85rem; font-weight: 300; line-height: 1; transition: transform 180ms ease; }
+.hilya-filter-group[open] .hilya-filter-chevron { transform: rotate(45deg); }
+.hilya-filter-group__content { padding: 0 0 .8rem; }
+.hilya-filter-option { display: flex; align-items: center; gap: .55rem; min-height: 1.95rem; color: var(--color-foreground); font-size: .68rem; cursor: pointer; }
+.hilya-filter-option input { width: .82rem; height: .82rem; margin: 0; accent-color: #111; cursor: pointer; }
+.hilya-price-slider { position: relative; width: 100%; height: 1.6rem; margin: .15rem 0 .45rem; }
+.hilya-price-slider__track, .hilya-price-slider__range { position: absolute; top: 50%; height: 1px; transform: translateY(-50%); }
+.hilya-price-slider__track { right: 0; left: 0; background: rgb(0 0 0 / 18%); }
+.hilya-price-slider__range { background: var(--color-foreground); z-index: 1; }
+.hilya-price-slider input[type="range"] { position: absolute; inset: 0; width: 100%; height: 1.6rem; margin: 0; padding: 0; background: transparent; appearance: none; pointer-events: none; }
+.hilya-price-slider input[type="range"]::-webkit-slider-thumb { width: 10px; height: 10px; border: 1px solid var(--color-foreground); border-radius: 50%; background: var(--color-background); appearance: none; cursor: pointer; pointer-events: auto; }
+.hilya-price-slider input[type="range"]::-moz-range-thumb { width: 10px; height: 10px; border: 1px solid var(--color-foreground); border-radius: 50%; background: var(--color-background); cursor: pointer; pointer-events: auto; }
+.hilya-price-values { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .35rem; font-size: .57rem; }
+.hilya-price-input { display: flex; align-items: center; gap: .25rem; min-width: 0; padding: .28rem .35rem; border: 1px solid rgb(0 0 0 / 14%); background: transparent; }
+.hilya-price-input--max { justify-content: flex-end; }
+.hilya-price-input span { color: var(--color-muted); font-size: .52rem; }
+.hilya-price-input input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .59rem; }
+.hilya-price-input input::-webkit-inner-spin-button, .hilya-price-input input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.hilya-price-input input[type="number"] { appearance: textfield; }
+.hilya-price-values__to { color: var(--color-muted); font-size: .54rem; }
+.hilya-filters__products-toolbar { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 2.9rem; margin: 0 0 1rem; border-bottom: 1px solid rgb(0 0 0 / 9%); }
+.hilya-filters__results { color: var(--color-foreground); font-size: .59rem; letter-spacing: .1em; text-transform: uppercase; }
+.hilya-filters__sort { display: flex; align-items: center; gap: .45rem; white-space: nowrap; }
+.hilya-filters__sort label { color: var(--color-muted); font-size: .56rem; letter-spacing: .08em; white-space: nowrap; }
+.hilya-filters__sort select { min-width: auto; padding: .2rem 1.15rem .2rem 0; border: 0; outline: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .59rem; white-space: nowrap; cursor: pointer; }
+.hilya-filter-overlay { position: fixed; inset: 0; z-index: 9998; background: rgb(0 0 0 / 35%); opacity: 0; visibility: hidden; transition: opacity 260ms ease, visibility 260ms ease; }
+.hilya-filter-overlay.is-visible { opacity: 1; visibility: visible; }
+.hilya-filter-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 9999; width: min(28rem, 92vw); overflow-y: auto; background: var(--color-background); transform: translateX(100%); transition: transform 320ms cubic-bezier(.22,.61,.36,1); }
+.hilya-filter-drawer.is-open { transform: translateX(0); }
+.hilya-filter-drawer__header { display: flex; align-items: flex-start; justify-content: space-between; padding: 2rem 1.5rem 1.35rem; border-bottom: 1px solid rgb(0 0 0 / 8%); }
+.hilya-filter-drawer__eyebrow { display: block; margin-bottom: .45rem; color: var(--color-muted); font-size: .56rem; letter-spacing: .18em; }
+.hilya-filter-drawer__header h2 { margin: 0; font-size: 1.2rem; font-weight: 400; letter-spacing: .08em; }
+.hilya-filter-drawer__close { padding: 0; border: 0; background: transparent; color: var(--color-foreground); font-size: 1.8rem; font-weight: 300; line-height: 1; cursor: pointer; }
+.hilya-filter-drawer__content { padding: 0 1.5rem 2rem; }
+.hilya-filter-drawer .hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 9%); }
+.hilya-filter-drawer .hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 9%); }
+.hilya-filter-drawer .hilya-filter-group summary, .hilya-filter-drawer .hilya-filter-group__content { padding-inline: 0; }
+.hilya-filter-lock { overflow: hidden; }
+@media (min-width: 40.001rem) { .hilya-filter-sidebar { grid-area: sidebar; align-self: start; position: sticky; top: 96px; } .hilya-filters__products-toolbar { grid-area: toolbar; } .hilya-filters__mobile-bar, .hilya-filter-drawer, .hilya-filter-overlay { display: none !important; } }
+@media (max-width: 40rem) { .hilya-filter-sidebar { display: none; } .hilya-filters__mobile-bar { display: flex; align-items: center; justify-content: space-between; min-height: 3.2rem; border-bottom: 1px solid rgb(0 0 0 / 9%); } .hilya-filters__mobile-button { display: inline-flex; align-items: center; gap: .45rem; padding: 0; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .63rem; font-weight: 500; letter-spacing: .1em; cursor: pointer; } .hilya-filters__mobile-results { color: var(--color-muted); font-size: .58rem; letter-spacing: .07em; } .hilya-filters__products-toolbar { min-height: 3.2rem; margin-bottom: .9rem; } .hilya-filters__results { font-size: .58rem; } .hilya-filters__sort label { display: inline; font-size: .54rem; } .hilya-filters__sort select { min-width: auto; font-size: .58rem; } .hilya-filter-chip { font-size: .57rem; padding: .36rem .44rem; } }
+@media (prefers-reduced-motion: reduce) { .hilya-filter-overlay, .hilya-filter-drawer, .hilya-filter-chevron { transition: none; } }
 
 {% endstylesheet %}
