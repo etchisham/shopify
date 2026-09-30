@@ -277,7 +277,16 @@
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: .015em;
-  text-transform: uppercase;
+  text-transform: none;
+}
+
+.catalog-page__title::after {
+  content: "";
+  display: block;
+  width: 2.1rem;
+  height: 1px;
+  margin: .65rem auto 0;
+  background: #b18a51;
 }
 
 
@@ -374,7 +383,7 @@
   .catalog-page__inner {
     display: grid;
     grid-template-columns:
-      minmax(12.5rem, 15rem)
+      minmax(10rem, 11.25rem)
       minmax(0, 1fr);
 
     grid-template-areas:
@@ -383,7 +392,7 @@
       "sidebar products"
       "sidebar pagination";
 
-    column-gap: clamp(2rem, 4vw, 4.5rem);
+    column-gap: clamp(1.5rem, 3vw, 3rem);
     align-items: start;
   }
 
