@@ -4105,6 +4105,24 @@ input[type="range"]::-moz-range-thumb {
 
 }
 
+@media screen and (max-width: 749px) {
+  .price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .price__current,
+  .price__compare {
+    display: block;
+  }
+
+  .price__compare {
+    text-decoration: line-through;
+  }
+}
+
 
 /* =========================================
    VERY SMALL MOBILE
