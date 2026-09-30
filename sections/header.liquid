@@ -1022,6 +1022,15 @@ body:has(.site-header--sticky) {
 
         {% endif %}
 
+        {% if section.settings.show_sales
+          and section.settings.sales_link != blank %}
+
+          <a href="{{ section.settings.sales_link }}">
+          Sales
+          </a>
+
+        {% endif %}
+
 
         <a href="{{ section.settings.contact_link }}">
           Contact Us
@@ -1136,6 +1145,16 @@ body:has(.site-header--sticky) {
             </a>
 
           {% endif %}
+
+          {% if section.settings.show_sales
+            and section.settings.sales_link != blank %}
+
+            <a href="{{ section.settings.sales_link }}">
+            Sales
+            </a>
+
+          {% endif %}
+
 
 
           <!-- INSTAGRAM - NEW TAB -->
@@ -1514,6 +1533,12 @@ body:has(.site-header--sticky) {
       "type": "url",
       "id": "best_sellers_link",
       "label": "Best Sellers link"
+    },
+
+    {
+      "type": "url",
+      "id": "sales_link",
+      "label": "Sales link"
     },
 
     {
