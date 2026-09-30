@@ -7,6 +7,8 @@
   font-style: normal;
   font-display: swap;
 }
+
+
 /* =========================================================
    HILYA HEADER
    ========================================================= */
@@ -15,9 +17,9 @@
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
   --header-border: {{ section.settings.border_color }};
+
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
-  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
   width: 100vw !important;
   max-width: none !important;
@@ -65,13 +67,6 @@
 }
 
 
-/* Reserve header space */
-
-body:has(.site-header--sticky) {
-  padding-top: var(--hilya-header-height);
-}
-
-
 /* =========================================================
    HEADER INNER
    ========================================================= */
@@ -97,7 +92,6 @@ body:has(.site-header--sticky) {
 
 /* =========================================================
    HILYA BRAND
-   Elegant Script / Luxury Wordmark
    ========================================================= */
 
 .site-header__brand {
@@ -175,7 +169,6 @@ body:has(.site-header--sticky) {
 
 /* =========================================================
    DESKTOP MENU + CATEGORIES
-   HOVER ONLY
    ========================================================= */
 
 .desktop-menu,
@@ -531,7 +524,7 @@ body:has(.site-header--sticky) {
 @media screen and (max-width: 749px) {
 
   .site-header {
-    --hilya-header-height: {{ section.settings.mobile_height }}px;
+    --header-height: {{ section.settings.mobile_height }}px;
 
     width: 100vw !important;
     max-width: none !important;
@@ -545,7 +538,7 @@ body:has(.site-header--sticky) {
     width: 100% !important;
     max-width: none !important;
 
-    height: var(--header-mobile-height);
+    height: var(--header-height);
 
     padding-left: 16px;
     padding-right: 16px;
@@ -557,24 +550,24 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .site-header__brand {
-  position: absolute;
+    position: absolute;
 
-  left: 50%;
-  top: 50%;
+    left: 50%;
+    top: 50%;
 
-  transform:
-    translate(-50%, -50%)
-    translateY(-1px);
+    transform:
+      translate(-50%, -50%)
+      translateY(-1px);
 
-  font-family: "Hilya Script", cursive;
+    font-family: "Hilya Script", cursive;
 
-  font-size: 2.15rem;
+    font-size: 2.15rem;
 
-  font-style: normal;
-  font-weight: 400;
+    font-style: normal;
+    font-weight: 400;
 
-  letter-spacing: 0;
-}
+    letter-spacing: 0;
+  }
 
 
   /* =======================================================
@@ -683,13 +676,13 @@ body:has(.site-header--sticky) {
   .mobile-menu__panel {
     position: fixed;
 
-    top: var(--header-mobile-height);
+    top: var(--header-height);
     left: 0;
 
     width: 100vw;
 
     height:
-      calc(100vh - var(--header-mobile-height));
+      calc(100vh - var(--header-height));
 
     max-height: none;
 
@@ -867,7 +860,7 @@ body:has(.site-header--sticky) {
   .header-search__panel {
     position: fixed;
 
-    top: var(--header-mobile-height);
+    top: var(--header-height);
     left: 0;
 
     width: 100vw;
@@ -914,6 +907,17 @@ body:has(.site-header--sticky) {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+
+/* =========================================================
+   IMPORTANT:
+   NO PAGE SPACER / NO BODY PADDING
+   =========================================================
+
+   The header remains fixed.
+   We intentionally do NOT add padding to body
+   or create a spacer element here.
+*/
 
 {% endstyle %}
 
@@ -1020,7 +1024,7 @@ body:has(.site-header--sticky) {
         </a>
 
 
-        <!-- INSTAGRAM - NEW TAB -->
+        <!-- INSTAGRAM -->
 
         <a
           href="{{ section.settings.instagram_link }}"
@@ -1130,7 +1134,7 @@ body:has(.site-header--sticky) {
           {% endif %}
 
 
-          <!-- INSTAGRAM - NEW TAB -->
+          <!-- INSTAGRAM -->
 
           <a
             href="{{ section.settings.instagram_link }}"
