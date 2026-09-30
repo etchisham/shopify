@@ -3372,12 +3372,15 @@ input[type="range"]::-moz-range-thumb {
   }
 
   /* =========================================
-     MOBILE FILTER / PRODUCTS / SORT ROW
+     MOBILE FILTER / PRODUCTS / SORT
+     ALL IN ONE ROW
   ========================================= */
 
   .hilya-filters {
     position: relative;
   }
+
+  /* FILTER — LEFT */
 
   .hilya-filters__mobile-bar {
     position: relative;
@@ -3394,9 +3397,6 @@ input[type="range"]::-moz-range-thumb {
     border-top: 1px solid rgb(0 0 0 / 9%);
     border-bottom: 1px solid rgb(0 0 0 / 9%);
   }
-
-
-  /* FILTER — LEFT */
 
   .hilya-filters__mobile-button {
     position: absolute;
@@ -3420,7 +3420,6 @@ input[type="range"]::-moz-range-thumb {
     font-size: .63rem;
     font-weight: 500;
     letter-spacing: .1em;
-
     line-height: 1;
 
     transform: translateY(-50%);
@@ -3432,6 +3431,42 @@ input[type="range"]::-moz-range-thumb {
   /* PRODUCTS — CENTER */
 
   .hilya-filters__mobile-results {
+    display: none;
+  }
+
+
+  /* =========================================
+     EXISTING TOOLBAR BECOMES THE SAME ROW
+  ========================================= */
+
+  .hilya-filters__products-toolbar {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 3rem;
+    min-height: 3rem;
+
+    margin-top: -3rem;
+    margin-bottom: 0;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    z-index: 2;
+  }
+
+
+  /* PRODUCTS — TRUE CENTER */
+
+  .hilya-filters__results {
     position: absolute;
 
     left: 50%;
@@ -3439,12 +3474,14 @@ input[type="range"]::-moz-range-thumb {
 
     display: block;
 
+    margin: 0;
+
     color: var(--color-foreground);
 
     font-size: .58rem;
     letter-spacing: .075em;
-
     line-height: 1;
+
     text-align: center;
     text-transform: uppercase;
 
@@ -3454,7 +3491,9 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  /* SORT — RIGHT */
+  /* =========================================
+     SORT — RIGHT
+  ========================================= */
 
   .hilya-filters__sort {
     position: absolute;
@@ -3468,6 +3507,8 @@ input[type="range"]::-moz-range-thumb {
     gap: .45rem;
 
     height: auto;
+
+    margin: 0;
 
     white-space: nowrap;
 
@@ -3501,10 +3542,12 @@ input[type="range"]::-moz-range-thumb {
     min-width: auto;
     min-height: auto;
 
+    margin: 0;
     padding: 0;
 
     border: 0 !important;
     border-bottom: 0 !important;
+
     border-radius: 0;
 
     background: transparent;
@@ -3527,7 +3570,6 @@ input[type="range"]::-moz-range-thumb {
 
   .hilya-filters__sort-trigger:hover {
     border: 0 !important;
-    border-bottom: 0 !important;
     background: transparent;
   }
 
@@ -3551,22 +3593,11 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  /* SORT DROPDOWN */
-
   .hilya-filters__sort-menu {
     top: calc(100% + .55rem);
     right: 0;
 
     width: 11rem;
-  }
-
-
-  /* =========================================
-     HIDE OLD SECOND PRODUCTS ROW ON MOBILE
-  ========================================= */
-
-  .hilya-filters__products-toolbar {
-    display: none;
   }
 
 
@@ -3630,23 +3661,6 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  .hilya-filter-drawer__close {
-    padding: 0;
-
-    border: 0;
-
-    background: transparent;
-
-    color: var(--color-foreground);
-
-    font-size: 1.8rem;
-    font-weight: 300;
-    line-height: 1;
-
-    cursor: pointer;
-  }
-
-
   .hilya-filter-drawer__content {
     padding: 0 1.5rem 2rem;
   }
@@ -3659,14 +3673,6 @@ input[type="range"]::-moz-range-thumb {
 
   .hilya-filter-drawer .hilya-filter-group:last-child {
     border-bottom: 1px solid rgb(0 0 0 / 9%);
-  }
-
-
-  .hilya-filter-drawer
-  .hilya-filter-group__toggle,
-  .hilya-filter-drawer
-  .hilya-filter-group__content {
-    padding-inline: 0;
   }
 
 
