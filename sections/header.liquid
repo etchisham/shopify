@@ -65,6 +65,11 @@
 }
 
 
+/* Reserve header space */
+
+body:has(.site-header--sticky) {
+  padding-top: var(--hilya-header-height);
+}
 
 
 /* =========================================================
@@ -909,21 +914,6 @@
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-/* =========================================================
-   FIXED HEADER PAGE SPACER
-   ========================================================= */
-
-.hilya-header-spacer {
-  display: block;
-  width: 100%;
-  height: {{ section.settings.desktop_height }}px;
-}
-
-@media screen and (max-width: 749px) {
-  .hilya-header-spacer {
-    height: {{ section.settings.mobile_height }}px;
-  }
-}
 
 {% endstyle %}
 
@@ -1420,10 +1410,6 @@
   </div>
 
 </header>
-
-{% if section.settings.sticky_header %}
-  <div class="hilya-header-spacer" aria-hidden="true"></div>
-{% endif %}
 
 
 <script>
