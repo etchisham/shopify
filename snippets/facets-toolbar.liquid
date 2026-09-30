@@ -5,17 +5,17 @@
 
 <div class="hilya-filters">
 
-  <div class="hilya-filters__top">
+  <!-- MOBILE FILTER BUTTON -->
+  <div class="hilya-filters__mobile-bar">
 
     <button
       type="button"
-      class="hilya-filters__button"
+      class="hilya-filters__mobile-button"
       data-filter-open
       aria-expanded="false"
       aria-controls="HilyaFilterDrawer"
     >
-      <span>FILTER</span>
-
+      FILTER
       <span
         class="hilya-filters__count"
         data-filter-count
@@ -25,6 +25,394 @@
       </span>
     </button>
 
+    <span class="hilya-filters__mobile-results">
+      <span data-filter-results>
+        {{ collection.products_count }}
+      </span>
+      PRODUCTS
+    </span>
+
+  </div>
+
+
+  <!-- DESKTOP SIDEBAR -->
+  <aside class="hilya-filter-sidebar">
+
+    <div class="hilya-filter-sidebar__heading">
+      <h2>Filters</h2>
+    </div>
+
+
+    <!-- ACTIVE FILTERS -->
+
+    <div
+      class="hilya-filters__active"
+      data-active-filters
+      hidden
+    >
+    </div>
+
+
+    <form
+      class="hilya-filter-form"
+      data-hilya-filter-form
+    >
+
+      <!-- AVAILABILITY -->
+
+      <details
+        class="hilya-filter-group"
+        open
+      >
+
+        <summary>
+          <span>Availability</span>
+
+          <span class="hilya-filter-chevron">
+            +
+          </span>
+        </summary>
+
+
+        <div class="hilya-filter-group__content">
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="availability"
+              value="in_stock"
+            >
+
+            <span>In stock</span>
+
+          </label>
+
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="availability"
+              value="out_of_stock"
+            >
+
+            <span>Out of stock</span>
+
+          </label>
+
+        </div>
+
+      </details>
+
+
+      <!-- PRICE -->
+
+      <details
+        class="hilya-filter-group"
+        open
+      >
+
+        <summary>
+          <span>Price</span>
+
+          <span class="hilya-filter-chevron">
+            +
+          </span>
+        </summary>
+
+
+        <div class="hilya-filter-group__content">
+
+          <div class="hilya-price-slider">
+
+            <div class="hilya-price-slider__track"></div>
+
+            <div
+              class="hilya-price-slider__range"
+              data-price-range
+            ></div>
+
+
+            <input
+              type="range"
+              name="price_min"
+              min="0"
+              max="1000"
+              value="0"
+              step="1"
+              data-price-min
+              aria-label="Minimum price"
+            >
+
+            <input
+              type="range"
+              name="price_max"
+              min="0"
+              max="1000"
+              value="1000"
+              step="1"
+              data-price-max
+              aria-label="Maximum price"
+            >
+
+          </div>
+
+
+          <div class="hilya-price-values">
+
+            <div>
+              <span>EGP</span>
+              <strong data-price-min-value>0</strong>
+            </div>
+
+            <span class="hilya-price-values__to">
+              to
+            </span>
+
+            <div>
+              <span>EGP</span>
+              <strong data-price-max-value>1000</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </details>
+
+
+      <!-- COLOR -->
+
+      <details
+        class="hilya-filter-group"
+        open
+      >
+
+        <summary>
+          <span>Color</span>
+
+          <span class="hilya-filter-chevron">
+            +
+          </span>
+        </summary>
+
+
+        <div class="hilya-filter-group__content">
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="color"
+              value="Gold Plated"
+            >
+
+            <span>Gold Plated</span>
+
+          </label>
+
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="color"
+              value="Silver Plated"
+            >
+
+            <span>Silver Plated</span>
+
+          </label>
+
+        </div>
+
+      </details>
+
+
+      <!-- PRODUCT TYPE -->
+
+      <details
+        class="hilya-filter-group"
+        open
+      >
+
+        <summary>
+          <span>Product Type</span>
+
+          <span class="hilya-filter-chevron">
+            +
+          </span>
+        </summary>
+
+
+        <div class="hilya-filter-group__content">
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="product_type"
+              value="Necklaces"
+            >
+
+            <span>Necklaces</span>
+
+          </label>
+
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="product_type"
+              value="Rings"
+            >
+
+            <span>Rings</span>
+
+          </label>
+
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="product_type"
+              value="Pendants"
+            >
+
+            <span>Pendants</span>
+
+          </label>
+
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="product_type"
+              value="Bracelets"
+            >
+
+            <span>Bracelets</span>
+
+          </label>
+
+
+          <label class="hilya-filter-option">
+
+            <input
+              type="checkbox"
+              name="product_type"
+              value="Keychains"
+            >
+
+            <span>Keychains</span>
+
+          </label>
+
+        </div>
+
+      </details>
+
+    </form>
+
+
+    <!-- DESKTOP SORT -->
+
+    <div class="hilya-filter-sidebar__sort">
+
+      <label for="HilyaSort">
+        SORT BY
+      </label>
+
+      <select
+        id="HilyaSort"
+        data-hilya-sort
+      >
+
+        {% for option in collection.sort_options %}
+
+          <option
+            value="{{ option.value }}"
+            {% if option.value == collection.sort_by %}
+              selected
+            {% endif %}
+          >
+            {{ option.name }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MOBILE DRAWER -->
+
+  <div
+    class="hilya-filter-overlay"
+    data-filter-overlay
+  ></div>
+
+
+  <aside
+    id="HilyaFilterDrawer"
+    class="hilya-filter-drawer"
+    data-filter-drawer
+    aria-hidden="true"
+  >
+
+    <div class="hilya-filter-drawer__header">
+
+      <div>
+
+        <span class="hilya-filter-drawer__eyebrow">
+          COLLECTION
+        </span>
+
+        <h2>
+          FILTERS
+        </h2>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="hilya-filter-drawer__close"
+        data-filter-close
+        aria-label="Close filters"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="hilya-filter-drawer__content">
+
+      <div
+        class="hilya-filters__active"
+        data-active-filters-mobile
+        hidden
+      >
+      </div>
+
+      <div data-mobile-filter-content></div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- TOP PRODUCTS / SORT -->
+
+  <div class="hilya-filters__products-toolbar">
 
     <span class="hilya-filters__results">
       <span data-filter-results>
@@ -36,493 +424,91 @@
 
     <div class="hilya-filters__sort">
 
-  <label for="HilyaSort">
-    SORT
-  </label>
+      <label for="HilyaSortMobile">
+        SORT BY
+      </label>
 
-  <select
-    id="HilyaSort"
-    data-hilya-sort
-  >
-
-    {% for option in collection.sort_options %}
-
-      <option
-        value="{{ option.value }}"
-        {% if option.value == collection.sort_by %}
-          selected
-        {% endif %}
+      <select
+        id="HilyaSortMobile"
+        data-hilya-sort
       >
-        {{ option.name }}
-      </option>
 
-    {% endfor %}
+        {% for option in collection.sort_options %}
 
-  </select>
+          <option
+            value="{{ option.value }}"
+            {% if option.value == collection.sort_by %}
+              selected
+            {% endif %}
+          >
+            {{ option.name }}
+          </option>
 
-</div>
+        {% endfor %}
 
+      </select>
 
-  </div>
-
-
-  <div
-    class="hilya-filters__active"
-    data-active-filters
-    hidden
-  >
-
-    <span class="hilya-filters__active-label">
-      FILTERED BY
-    </span>
+    </div>
 
   </div>
 
 </div>
-
-
-<div
-  class="hilya-filter-overlay"
-  data-filter-overlay
-></div>
-
-
-<aside
-  id="HilyaFilterDrawer"
-  class="hilya-filter-drawer"
-  data-filter-drawer
-  aria-hidden="true"
->
-
-  <div class="hilya-filter-drawer__header">
-
-    <div>
-
-      <span class="hilya-filter-drawer__eyebrow">
-        COLLECTION
-      </span>
-
-      <h2>
-        FILTER
-      </h2>
-
-    </div>
-
-
-    <button
-      type="button"
-      class="hilya-filter-drawer__close"
-      data-filter-close
-      aria-label="Close filters"
-    >
-      ×
-    </button>
-
-  </div>
-
-
-  <form
-    class="hilya-filter-form"
-    data-hilya-filter-form
-  >
-
-    <!-- AVAILABILITY -->
-
-    <details
-      class="hilya-filter-group"
-      open
-    >
-
-      <summary>
-
-        <span>
-          Availability
-        </span>
-
-        <span class="hilya-filter-chevron">
-          +
-        </span>
-
-      </summary>
-
-
-      <div class="hilya-filter-group__content">
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="availability"
-            value="all"
-            checked
-          >
-
-          <span>
-            All
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="availability"
-            value="in_stock"
-          >
-
-          <span>
-            In stock
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="availability"
-            value="out_of_stock"
-          >
-
-          <span>
-            Out of stock
-          </span>
-
-        </label>
-
-      </div>
-
-    </details>
-
-
-    <!-- PRICE -->
-
-    <details
-      class="hilya-filter-group"
-      open
-    >
-
-      <summary>
-
-        <span>
-          Price
-        </span>
-
-        <span class="hilya-filter-chevron">
-          +
-        </span>
-
-      </summary>
-
-
-      <div class="hilya-filter-group__content">
-
-        <div class="hilya-price-fields">
-
-          <label>
-
-            <span>
-              From
-            </span>
-
-            <div class="hilya-price-input">
-
-              <span>
-                EGP
-              </span>
-
-              <input
-                type="number"
-                name="price_from"
-                min="0"
-                step="1"
-                placeholder="0"
-              >
-
-            </div>
-
-          </label>
-
-
-          <label>
-
-            <span>
-              To
-            </span>
-
-            <div class="hilya-price-input">
-
-              <span>
-                EGP
-              </span>
-
-              <input
-                type="number"
-                name="price_to"
-                min="0"
-                step="1"
-                placeholder="5000"
-              >
-
-            </div>
-
-          </label>
-
-        </div>
-
-      </div>
-
-    </details>
-
-
-    <!-- COLOR -->
-
-    <details
-      class="hilya-filter-group"
-      open
-    >
-
-      <summary>
-
-        <span>
-          Color
-        </span>
-
-        <span class="hilya-filter-chevron">
-          +
-        </span>
-
-      </summary>
-
-
-      <div class="hilya-filter-group__content">
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="color"
-            value="all"
-            checked
-          >
-
-          <span>
-            All
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="color"
-            value="Gold Plated"
-          >
-
-          <span>
-            Gold Plated
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="color"
-            value="Silver Plated"
-          >
-
-          <span>
-            Silver Plated
-          </span>
-
-        </label>
-
-      </div>
-
-    </details>
-
-
-    <!-- PRODUCT TYPE -->
-
-    <details
-      class="hilya-filter-group"
-      open
-    >
-
-      <summary>
-
-        <span>
-          Product Type
-        </span>
-
-        <span class="hilya-filter-chevron">
-          +
-        </span>
-
-      </summary>
-
-
-      <div class="hilya-filter-group__content">
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="product_type"
-            value="all"
-            checked
-          >
-
-          <span>
-            All
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="product_type"
-            value="Necklaces"
-          >
-
-          <span>
-            Necklaces
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="product_type"
-            value="Rings"
-          >
-
-          <span>
-            Rings
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="product_type"
-            value="Pendants"
-          >
-
-          <span>
-            Pendants
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="product_type"
-            value="Bracelets"
-          >
-
-          <span>
-            Bracelets
-          </span>
-
-        </label>
-
-
-        <label class="hilya-filter-option">
-
-          <input
-            type="radio"
-            name="product_type"
-            value="Keychains"
-          >
-
-          <span>
-            Keychains
-          </span>
-
-        </label>
-
-      </div>
-
-    </details>
-
-
-    <div class="hilya-filter-actions">
-
-      <button
-        type="submit"
-        class="hilya-filter-actions__apply"
-      >
-        APPLY FILTERS
-      </button>
-
-
-      <button
-        type="button"
-        class="hilya-filter-actions__clear"
-        data-clear-filters
-      >
-        CLEAR ALL
-      </button>
-
-    </div>
-
-
-  </form>
-
-</aside>
 
 
 {% javascript %}
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  const openButton = document.querySelector('[data-filter-open]');
-  const closeButton = document.querySelector('[data-filter-close]');
-  const drawer = document.querySelector('[data-filter-drawer]');
-  const overlay = document.querySelector('[data-filter-overlay]');
-  const form = document.querySelector('[data-hilya-filter-form]');
-  const clearButton = document.querySelector('[data-clear-filters]');
+  const openButton =
+    document.querySelector('[data-filter-open]');
 
-  const items = Array.from(
-    document.querySelectorAll('[data-product-item]')
-  );
+  const closeButton =
+    document.querySelector('[data-filter-close]');
 
-  const results = document.querySelector('[data-filter-results]');
-  const countBadge = document.querySelector('[data-filter-count]');
-  const activeFilters = document.querySelector('[data-active-filters]');
+  const drawer =
+    document.querySelector('[data-filter-drawer]');
+
+  const overlay =
+    document.querySelector('[data-filter-overlay]');
+
+  const form =
+    document.querySelector('[data-hilya-filter-form]');
+
+  const items =
+    Array.from(
+      document.querySelectorAll('[data-product-item]')
+    );
+
+  const resultsElements =
+    document.querySelectorAll('[data-filter-results]');
+
+  const countBadge =
+    document.querySelector('[data-filter-count]');
+
+  const activeFilters =
+    document.querySelector('[data-active-filters]');
+
+  const activeFiltersMobile =
+    document.querySelector('[data-active-filters-mobile]');
+
+  const mobileContent =
+    document.querySelector('[data-mobile-filter-content]');
 
 
-  if (!drawer || !form) {
+  if (!form) {
     return;
   }
 
 
   /* =========================================
-     DRAWER
+     MOBILE DRAWER
   ========================================= */
 
   function openDrawer() {
+
+    if (!drawer) {
+      return;
+    }
 
     drawer.classList.add('is-open');
 
@@ -551,6 +537,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function closeDrawer() {
 
+    if (!drawer) {
+      return;
+    }
+
     drawer.classList.remove('is-open');
 
     if (overlay) {
@@ -577,32 +567,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   if (openButton) {
-
     openButton.addEventListener(
       'click',
       openDrawer
     );
-
   }
 
 
   if (closeButton) {
-
     closeButton.addEventListener(
       'click',
       closeDrawer
     );
-
   }
 
 
   if (overlay) {
-
     overlay.addEventListener(
       'click',
       closeDrawer
     );
-
   }
 
 
@@ -619,16 +603,80 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
+     MOVE FILTER CONTENT TO MOBILE
+  ========================================= */
+
+  if (mobileContent) {
+
+    const filterGroups =
+      form.querySelectorAll(
+        '.hilya-filter-group'
+      );
+
+    filterGroups.forEach(function (group) {
+
+      mobileContent.appendChild(
+        group.cloneNode(true)
+      );
+
+    });
+
+
+    mobileContent.addEventListener(
+      'change',
+      function (event) {
+
+        if (
+          event.target.matches(
+            'input[type="checkbox"]'
+          )
+        ) {
+
+          const name =
+            event.target.name;
+
+          const value =
+            event.target.value;
+
+          const desktopInput =
+            form.querySelector(
+              'input[name="' +
+              name +
+              '"][value="' +
+              value +
+              '"]'
+            );
+
+          if (desktopInput) {
+            desktopInput.checked =
+              event.target.checked;
+          }
+
+          applyFilters();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
      VARIANT IMAGE + PRICE
   ========================================= */
 
   function updateProductCard(item, color) {
 
     const dataElement =
-      item.querySelector('[data-variant-data]');
+      item.querySelector(
+        '[data-variant-data]'
+      );
 
     const card =
-      item.querySelector('[data-product-card]');
+      item.querySelector(
+        '[data-product-card]'
+      );
 
     if (!dataElement || !card) {
       return;
@@ -670,7 +718,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return (
           String(entry.color || '')
             .trim()
-            .toLowerCase() === wantedColor
+            .toLowerCase() ===
+          wantedColor
         );
 
       });
@@ -685,30 +734,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* =========================================
-       PRICE
-    ========================================= */
+    /* PRICE */
 
     const priceElement =
-      card.querySelector('[data-product-price]');
+      card.querySelector(
+        '[data-product-price]'
+      );
 
 
-    if (priceElement && variant.price !== undefined) {
+    if (
+      priceElement &&
+      variant.price !== undefined
+    ) {
 
       priceElement.innerHTML =
         '<span class="price">' +
           '<span class="price__current">' +
             'EGP ' +
-            Number(variant.price).toLocaleString('en-US') +
+            Number(
+              variant.price
+            ).toLocaleString('en-US') +
           '</span>' +
         '</span>';
 
     }
 
 
-    /* =========================================
-       PRODUCT URL
-    ========================================= */
+    /* PRODUCT URL */
 
     const productLinks =
       card.querySelectorAll(
@@ -730,9 +782,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    /* =========================================
-       IMAGES
-    ========================================= */
+    /* IMAGES */
 
     const primaryLayer =
       card.querySelector(
@@ -754,17 +804,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let primaryImage =
       null;
 
-
     let secondaryImage =
       null;
 
 
-    /*
-      Prefer the Variant's own Shopify image
-      as the primary image.
-    */
-
-    if (variant.image && variant.image.src) {
+    if (
+      variant.image &&
+      variant.image.src
+    ) {
 
       primaryImage =
         variant.image;
@@ -772,22 +819,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /*
-      If the Variant image is not found inside
-      the Alt Text group, use it anyway as primary.
-    */
-
-    if (!primaryImage && colorImages.length > 0) {
+    if (
+      !primaryImage &&
+      colorImages.length > 0
+    ) {
 
       primaryImage =
         colorImages[0];
 
     }
 
-
-    /*
-      Find the second image from the same color.
-    */
 
     if (colorImages.length > 1) {
 
@@ -809,11 +850,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
-    /*
-      If the Variant image itself is the first
-      matching image, use the second matching image.
-    */
 
     if (
       !secondaryImage &&
@@ -868,10 +904,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /*
-      Update availability badge.
-    */
-
     updateAvailabilityBadge(
       card,
       variant.available
@@ -886,19 +918,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setLayerImage(layer, image) {
 
-    if (!layer || !image || !image.src) {
+    if (
+      !layer ||
+      !image ||
+      !image.src
+    ) {
       return;
     }
 
 
     layer.innerHTML =
       '<img' +
-      ' src="' + escapeAttribute(image.src) + '"' +
-      ' alt="' + escapeAttribute(image.alt || '') + '"' +
+      ' src="' +
+      escapeAttribute(image.src) +
+      '"' +
+      ' alt="' +
+      escapeAttribute(
+        image.alt || ''
+      ) +
+      '"' +
       ' loading="lazy"' +
       ' width="1200"' +
       ' height="960"' +
-      '>' ;
+      '>';
 
   }
 
@@ -907,10 +949,15 @@ document.addEventListener('DOMContentLoaded', function () {
      AVAILABILITY
   ========================================= */
 
-  function updateAvailabilityBadge(card, available) {
+  function updateAvailabilityBadge(
+    card,
+    available
+  ) {
 
     const media =
-      card.querySelector('[data-product-media]');
+      card.querySelector(
+        '[data-product-media]'
+      );
 
     if (!media) {
       return;
@@ -937,7 +984,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!badge) {
 
       badge =
-        document.createElement('span');
+        document.createElement(
+          'span'
+        );
 
       badge.className =
         'product-card__badge';
@@ -964,7 +1013,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function resetProductCard(item) {
 
     const card =
-      item.querySelector('[data-product-card]');
+      item.querySelector(
+        '[data-product-card]'
+      );
 
     if (!card) {
       return;
@@ -976,7 +1027,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const priceElement =
-      card.querySelector('[data-product-price]');
+      card.querySelector(
+        '[data-product-price]'
+      );
 
 
     if (
@@ -988,17 +1041,14 @@ document.addEventListener('DOMContentLoaded', function () {
         '<span class="price">' +
           '<span class="price__current">' +
             'EGP ' +
-            Number(productPrice).toLocaleString('en-US') +
+            Number(
+              productPrice
+            ).toLocaleString('en-US') +
           '</span>' +
         '</span>';
 
     }
 
-
-    /*
-      Restore the original product links.
-      They are stored the first time reset runs.
-    */
 
     const links =
       card.querySelectorAll(
@@ -1022,11 +1072,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
-    /*
-      Restore original images from the
-      server-rendered card.
-    */
 
     const primaryLayer =
       card.querySelector(
@@ -1059,7 +1104,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const originalImage =
         secondaryLayer.dataset.originalHtml;
 
-
       if (originalImage) {
 
         secondaryLayer.innerHTML =
@@ -1073,7 +1117,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    if (secondaryLayer && !secondaryLayer.innerHTML.trim()) {
+    if (
+      secondaryLayer &&
+      !secondaryLayer.innerHTML.trim()
+    ) {
 
       card.classList.remove(
         'product-card--has-secondary'
@@ -1108,10 +1155,22 @@ document.addEventListener('DOMContentLoaded', function () {
   function escapeAttribute(value) {
 
     return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+      .replace(
+        /&/g,
+        '&amp;'
+      )
+      .replace(
+        /"/g,
+        '&quot;'
+      )
+      .replace(
+        /</g,
+        '&lt;'
+      )
+      .replace(
+        />/g,
+        '&gt;'
+      );
 
   }
 
@@ -1123,7 +1182,9 @@ document.addEventListener('DOMContentLoaded', function () {
   items.forEach(function (item) {
 
     const card =
-      item.querySelector('[data-product-card]');
+      item.querySelector(
+        '[data-product-card]'
+      );
 
     if (!card) {
       return;
@@ -1174,67 +1235,188 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
+     PRICE SLIDER
+  ========================================= */
+
+  const priceMin =
+    form.querySelector(
+      '[data-price-min]'
+    );
+
+  const priceMax =
+    form.querySelector(
+      '[data-price-max]'
+    );
+
+  const priceMinValue =
+    form.querySelector(
+      '[data-price-min-value]'
+    );
+
+  const priceMaxValue =
+    form.querySelector(
+      '[data-price-max-value]'
+    );
+
+  const priceRange =
+    form.querySelector(
+      '[data-price-range]'
+    );
+
+
+  function updatePriceSlider(
+    shouldApply
+  ) {
+
+    if (
+      !priceMin ||
+      !priceMax
+    ) {
+      return;
+    }
+
+
+    let min =
+      Number(priceMin.value);
+
+    let max =
+      Number(priceMax.value);
+
+
+    if (min > max) {
+
+      if (
+        document.activeElement ===
+        priceMin
+      ) {
+
+        max = min;
+        priceMax.value = max;
+
+      } else {
+
+        min = max;
+        priceMin.value = min;
+
+      }
+
+    }
+
+
+    if (priceMinValue) {
+      priceMinValue.textContent =
+        min.toLocaleString('en-US');
+    }
+
+
+    if (priceMaxValue) {
+      priceMaxValue.textContent =
+        max.toLocaleString('en-US');
+    }
+
+
+    if (priceRange) {
+
+      const left =
+        (min / 1000) * 100;
+
+      const right =
+        100 -
+        ((max / 1000) * 100);
+
+      priceRange.style.left =
+        left + '%';
+
+      priceRange.style.right =
+        right + '%';
+
+    }
+
+
+    if (shouldApply) {
+      applyFilters();
+    }
+
+  }
+
+
+  if (priceMin) {
+
+    priceMin.addEventListener(
+      'input',
+      function () {
+        updatePriceSlider(true);
+      }
+    );
+
+  }
+
+
+  if (priceMax) {
+
+    priceMax.addEventListener(
+      'input',
+      function () {
+        updatePriceSlider(true);
+      }
+    );
+
+  }
+
+
+  updatePriceSlider(false);
+
+
+  /* =========================================
      FILTER
   ========================================= */
 
+  function getCheckedValues(name) {
+
+    return Array.from(
+      form.querySelectorAll(
+        'input[name="' +
+        name +
+        '"]:checked'
+      )
+    ).map(function (input) {
+
+      return input.value
+        .trim()
+        .toLowerCase();
+
+    });
+
+  }
+
+
   function applyFilters() {
 
-    const availabilityInput =
-      form.querySelector(
-        'input[name="availability"]:checked'
-      );
-
-    const colorInput =
-      form.querySelector(
-        'input[name="color"]:checked'
-      );
-
-    const productTypeInput =
-      form.querySelector(
-        'input[name="product_type"]:checked'
-      );
-
-    const priceFromInput =
-      form.querySelector(
-        'input[name="price_from"]'
-      );
-
-    const priceToInput =
-      form.querySelector(
-        'input[name="price_to"]'
-      );
-
-
     const availability =
-      availabilityInput
-        ? availabilityInput.value
-        : 'all';
+      getCheckedValues(
+        'availability'
+      );
+
+    const colors =
+      getCheckedValues(
+        'color'
+      );
+
+    const productTypes =
+      getCheckedValues(
+        'product_type'
+      );
 
 
-    const color =
-      colorInput
-        ? colorInput.value
-        : 'all';
+    const minPrice =
+      priceMin
+        ? Number(priceMin.value)
+        : 0;
 
-
-    const productType =
-      productTypeInput
-        ? productTypeInput.value
-        : 'all';
-
-
-    const priceFrom =
-      priceFromInput &&
-      priceFromInput.value !== ''
-        ? Number(priceFromInput.value)
-        : null;
-
-
-    const priceTo =
-      priceToInput &&
-      priceToInput.value !== ''
-        ? Number(priceToInput.value)
-        : null;
+    const maxPrice =
+      priceMax
+        ? Number(priceMax.value)
+        : 1000;
 
 
     let visibleCount = 0;
@@ -1243,21 +1425,31 @@ document.addEventListener('DOMContentLoaded', function () {
     items.forEach(function (item) {
 
       const itemType =
-        (item.dataset.productType || '')
+        (
+          item.dataset.productType ||
+          ''
+        )
           .trim()
           .toLowerCase();
 
 
       const itemPrice =
-        Number(item.dataset.productPrice || 0);
+        Number(
+          item.dataset.productPrice ||
+          0
+        );
 
 
       const itemAvailable =
-        item.dataset.productAvailable === 'true';
+        item.dataset.productAvailable ===
+        'true';
 
 
       const itemColors =
-        (item.dataset.productColors || '')
+        (
+          item.dataset.productColors ||
+          ''
+        )
           .toLowerCase()
           .split('|')
           .map(function (value) {
@@ -1266,39 +1458,111 @@ document.addEventListener('DOMContentLoaded', function () {
           .filter(Boolean);
 
 
-      let matches = true;
+      let matches =
+        true;
 
 
-      /* Availability */
+      /* AVAILABILITY */
 
-      if (availability === 'in_stock') {
+      if (
+        availability.length > 0
+      ) {
 
-        if (!itemAvailable) {
+        const matchesAvailability =
+          availability.some(
+            function (value) {
+
+              if (
+                value === 'in_stock'
+              ) {
+
+                return itemAvailable;
+
+              }
+
+              if (
+                value === 'out_of_stock'
+              ) {
+
+                return !itemAvailable;
+
+              }
+
+              return false;
+
+            }
+          );
+
+
+        if (
+          !matchesAvailability
+        ) {
           matches = false;
         }
 
       }
 
 
-      if (availability === 'out_of_stock') {
+      /* COLOR */
 
-        if (itemAvailable) {
+      if (
+        matches &&
+        colors.length > 0
+      ) {
+
+        const matchesColor =
+          colors.some(
+            function (color) {
+
+              return itemColors.includes(
+                color
+              );
+
+            }
+          );
+
+
+        if (!matchesColor) {
           matches = false;
         }
 
       }
 
 
-      /* Price */
+      /* PRODUCT TYPE */
+
+      if (
+        matches &&
+        productTypes.length > 0
+      ) {
+
+        const matchesType =
+          productTypes.includes(
+            itemType
+          );
+
+
+        if (!matchesType) {
+          matches = false;
+        }
+
+      }
+
+
+      /* PRICE */
 
       let effectivePrice =
         itemPrice;
 
 
-      if (color !== 'all') {
+      if (
+        colors.length === 1
+      ) {
 
         const dataElement =
-          item.querySelector('[data-variant-data]');
+          item.querySelector(
+            '[data-variant-data]'
+          );
 
 
         if (dataElement) {
@@ -1312,19 +1576,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             const selectedVariant =
-              variants.find(function (variant) {
+              variants.find(
+                function (variant) {
 
-                return (
-                  String(variant.color || '')
-                    .trim()
-                    .toLowerCase() ===
-                  color.trim().toLowerCase()
-                );
+                  return (
+                    String(
+                      variant.color || ''
+                    )
+                      .trim()
+                      .toLowerCase() ===
+                    colors[0]
+                  );
 
-              });
+                }
+              );
 
 
-            if (selectedVariant) {
+            if (
+              selectedVariant &&
+              selectedVariant.price !==
+              undefined
+            ) {
 
               effectivePrice =
                 Number(
@@ -1341,42 +1613,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
       if (
-        priceFrom !== null &&
-        effectivePrice < priceFrom
+        effectivePrice <
+        minPrice ||
+        effectivePrice >
+        maxPrice
       ) {
+
         matches = false;
+
       }
 
 
-      if (
-        priceTo !== null &&
-        effectivePrice > priceTo
-      ) {
-        matches = false;
-      }
-
-
-      /* Color */
-
-      if (
-        color !== 'all' &&
-        !itemColors.includes(
-          color.toLowerCase()
-        )
-      ) {
-        matches = false;
-      }
-
-
-      /* Product Type */
-
-      if (
-        productType !== 'all' &&
-        itemType !== productType.toLowerCase()
-      ) {
-        matches = false;
-      }
-
+      /* DISPLAY */
 
       if (matches) {
 
@@ -1387,11 +1635,18 @@ document.addEventListener('DOMContentLoaded', function () {
         visibleCount++;
 
 
-        if (color !== 'all') {
+        /*
+          Only swap the card to a specific
+          variant when ONE color is selected.
+        */
+
+        if (
+          colors.length === 1
+        ) {
 
           updateProductCard(
             item,
-            color
+            colors[0]
           );
 
         } else {
@@ -1413,44 +1668,34 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    /* Results */
+    /* RESULTS */
 
-    if (results) {
+    resultsElements.forEach(
+      function (element) {
 
-      results.textContent =
-        visibleCount;
+        element.textContent =
+          visibleCount;
 
-    }
-
-
-    /* Active count */
-
-    let activeCount = 0;
+      }
+    );
 
 
-    if (availability !== 'all') {
-      activeCount++;
-    }
+    /* ACTIVE FILTER COUNT */
 
-
-    if (color !== 'all') {
-      activeCount++;
-    }
-
-
-    if (productType !== 'all') {
-      activeCount++;
-    }
-
-
-    if (priceFrom !== null) {
-      activeCount++;
-    }
-
-
-    if (priceTo !== null) {
-      activeCount++;
-    }
+    const activeCount =
+      availability.length +
+      colors.length +
+      productTypes.length +
+      (
+        minPrice > 0
+          ? 1
+          : 0
+      ) +
+      (
+        maxPrice < 1000
+          ? 1
+          : 0
+      );
 
 
     if (countBadge) {
@@ -1464,129 +1709,200 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* Active filter chips */
+    /* ACTIVE CHIPS */
 
-    if (activeFilters) {
-
-      activeFilters.innerHTML = '';
-
-
-      if (activeCount > 0) {
-
-        activeFilters.hidden = false;
-
-
-        const label =
-          document.createElement('span');
-
-        label.className =
-          'hilya-filters__active-label';
-
-        label.textContent =
-          'FILTERED BY';
-
-        activeFilters.appendChild(
-          label
-        );
-
-
-        if (availability !== 'all') {
-
-          addChip(
-            availability === 'in_stock'
-              ? 'In stock'
-              : 'Out of stock'
-          );
-
-        }
-
-
-        if (color !== 'all') {
-
-          addChip(color);
-
-        }
-
-
-        if (productType !== 'all') {
-
-          addChip(productType);
-
-        }
-
-
-        if (priceFrom !== null) {
-
-          addChip(
-            'From EGP ' + priceFrom
-          );
-
-        }
-
-
-        if (priceTo !== null) {
-
-          addChip(
-            'To EGP ' + priceTo
-          );
-
-        }
-
-
-        const clearLink =
-          document.createElement('button');
-
-        clearLink.type =
-          'button';
-
-        clearLink.className =
-          'hilya-filters__clear';
-
-        clearLink.textContent =
-          'CLEAR ALL';
-
-        clearLink.addEventListener(
-          'click',
-          clearFilters
-        );
-
-        activeFilters.appendChild(
-          clearLink
-        );
-
-      } else {
-
-        activeFilters.hidden =
-          true;
-
-      }
-
-    }
-
-
-    closeDrawer();
+    renderActiveFilters(
+      availability,
+      colors,
+      productTypes,
+      minPrice,
+      maxPrice
+    );
 
   }
 
 
   /* =========================================
-     CHIP
+     ACTIVE FILTER CHIPS
   ========================================= */
 
-  function addChip(label) {
+  function renderActiveFilters(
+    availability,
+    colors,
+    productTypes,
+    minPrice,
+    maxPrice
+  ) {
+
+    const containers =
+      [
+        activeFilters,
+        activeFiltersMobile
+      ].filter(Boolean);
+
+
+    containers.forEach(
+      function (container) {
+
+        container.innerHTML =
+          '';
+
+
+        const hasFilters =
+          availability.length > 0 ||
+          colors.length > 0 ||
+          productTypes.length > 0 ||
+          minPrice > 0 ||
+          maxPrice < 1000;
+
+
+        if (!hasFilters) {
+
+          container.hidden =
+            true;
+
+          return;
+
+        }
+
+
+        container.hidden =
+          false;
+
+
+        const title =
+          document.createElement(
+            'span'
+          );
+
+        title.className =
+          'hilya-filters__active-label';
+
+        title.textContent =
+          'FILTERED BY';
+
+        container.appendChild(
+          title
+        );
+
+
+        availability.forEach(
+          function (value) {
+
+            addChip(
+              container,
+              value === 'in_stock'
+                ? 'In stock'
+                : 'Out of stock'
+            );
+
+          }
+        );
+
+
+        colors.forEach(
+          function (value) {
+
+            addChip(
+              container,
+              value
+            );
+
+          }
+        );
+
+
+        productTypes.forEach(
+          function (value) {
+
+            addChip(
+              container,
+              value
+                .charAt(0)
+                .toUpperCase() +
+              value.slice(1)
+            );
+
+          }
+        );
+
+
+        if (minPrice > 0) {
+
+          addChip(
+            container,
+            'From EGP ' +
+            minPrice.toLocaleString(
+              'en-US'
+            )
+          );
+
+        }
+
+
+        if (maxPrice < 1000) {
+
+          addChip(
+            container,
+            'To EGP ' +
+            maxPrice.toLocaleString(
+              'en-US'
+            )
+          );
+
+        }
+
+
+        const clear =
+          document.createElement(
+            'button'
+          );
+
+        clear.type =
+          'button';
+
+        clear.className =
+          'hilya-filters__clear';
+
+        clear.textContent =
+          'CLEAR ALL';
+
+        clear.addEventListener(
+          'click',
+          clearFilters
+        );
+
+        container.appendChild(
+          clear
+        );
+
+      }
+    );
+
+  }
+
+
+  function addChip(
+    container,
+    label
+  ) {
 
     const chip =
-      document.createElement('span');
+      document.createElement(
+        'span'
+      );
 
     chip.className =
       'hilya-filter-chip';
 
-    chip.textContent =
-      label;
+    chip.innerHTML =
+      '<span>' +
+      escapeAttribute(label) +
+      '</span>';
 
-    activeFilters.appendChild(
+
+    container.appendChild(
       chip
-
     );
 
   }
@@ -1598,41 +1914,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function clearFilters() {
 
-    form.reset();
+    form
+      .querySelectorAll(
+        'input[type="checkbox"]'
+      )
+      .forEach(
+        function (input) {
 
+          input.checked =
+            false;
 
-    const allAvailability =
-      form.querySelector(
-        'input[name="availability"][value="all"]'
+        }
       );
 
 
-    const allColor =
-      form.querySelector(
-        'input[name="color"][value="all"]'
-      );
-
-
-    const allProductType =
-      form.querySelector(
-        'input[name="product_type"][value="all"]'
-      );
-
-
-    if (allAvailability) {
-      allAvailability.checked = true;
+    if (priceMin) {
+      priceMin.value =
+        0;
     }
 
 
-    if (allColor) {
-      allColor.checked = true;
+    if (priceMax) {
+      priceMax.value =
+        1000;
     }
 
 
-    if (allProductType) {
-      allProductType.checked = true;
+    if (mobileContent) {
+
+      mobileContent
+        .querySelectorAll(
+          'input[type="checkbox"]'
+        )
+        .forEach(
+          function (input) {
+
+            input.checked =
+              false;
+
+          }
+        );
+
     }
 
+
+    updatePriceSlider(
+      false
+    );
 
     applyFilters();
 
@@ -1640,66 +1968,107 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
-     SUBMIT
+     CHECKBOX EVENTS
   ========================================= */
 
   form.addEventListener(
-    'submit',
+    'change',
     function (event) {
 
-      event.preventDefault();
+      if (
+        event.target.matches(
+          'input[type="checkbox"]'
+        )
+      ) {
 
-      applyFilters();
+        /*
+          Keep mobile cloned controls
+          synchronized with desktop controls.
+        */
+
+        if (mobileContent) {
+
+          const matching =
+            mobileContent.querySelector(
+              'input[name="' +
+              event.target.name +
+              '"][value="' +
+              event.target.value +
+              '"]'
+            );
+
+          if (matching) {
+
+            matching.checked =
+              event.target.checked;
+
+          }
+
+        }
+
+
+        applyFilters();
+
+      }
 
     }
   );
-
-
-  if (clearButton) {
-
-    clearButton.addEventListener(
-      'click',
-      clearFilters
-    );
-
-  }
 
 
   /* =========================================
      SORT
   ========================================= */
 
-  const sortSelect =
-    document.querySelector(
+  const sortSelects =
+    document.querySelectorAll(
       '[data-hilya-sort]'
     );
 
 
-  if (sortSelect) {
+  sortSelects.forEach(
+    function (sortSelect) {
 
-    sortSelect.addEventListener(
-      'change',
-      function () {
+      sortSelect.addEventListener(
+        'change',
+        function () {
 
-        const url =
-          new URL(
-            window.location.href
+          sortSelects.forEach(
+            function (otherSelect) {
+
+              otherSelect.value =
+                sortSelect.value;
+
+            }
           );
 
 
-        url.searchParams.set(
-          'sort_by',
-          this.value
-        );
+          const url =
+            new URL(
+              window.location.href
+            );
 
 
-        window.location.href =
-          url.toString();
+          url.searchParams.set(
+            'sort_by',
+            this.value
+          );
 
-      }
-    );
 
-  }
+          window.location.href =
+            url.toString();
+
+        }
+      );
+
+    }
+  );
+
+
+  /* =========================================
+     INITIAL FILTER
+  ========================================= */
+
+  applyFilters();
 
 });
 
@@ -1710,80 +2079,46 @@ document.addEventListener('DOMContentLoaded', function () {
 {% stylesheet %}
 
 /* =========================================
-   FILTER BAR
+   MAIN
 ========================================= */
 
 .hilya-filters {
   width: 100%;
 }
 
-.hilya-filters__top {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  min-height: 4.25rem;
+
+/* =========================================
+   MOBILE BAR
+========================================= */
+
+.hilya-filters__mobile-bar {
+  display: none;
 }
 
-.hilya-filters__button {
-  display: inline-flex;
-  align-items: center;
-  justify-self: start;
-  gap: .55rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.hilya-filter-sidebar {
+  width: 100%;
+}
+
+
+.hilya-filter-sidebar__heading {
+  margin-bottom: 1.35rem;
+}
+
+
+.hilya-filter-sidebar__heading h2 {
+  margin: 0;
+
   color: var(--color-foreground);
-  font: inherit;
-  font-size: .68rem;
-  font-weight: 500;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
 
-.hilya-filters__count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-size: .58rem;
-  letter-spacing: 0;
-}
+  font-size: 1rem;
+  font-weight: 400;
 
-.hilya-filters__results {
-  justify-self: center;
-  color: var(--color-muted);
-  font-size: .62rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
-.hilya-filters__sort {
-  display: flex;
-  align-items: center;
-  justify-self: end;
-  gap: .6rem;
-}
-
-.hilya-filters__sort label {
-  color: var(--color-muted);
-  font-size: .62rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
-.hilya-filters__sort select {
-  min-width: 8rem;
-  padding: .35rem 1.5rem .35rem 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .68rem;
-  cursor: pointer;
+  letter-spacing: .01em;
 }
 
 
@@ -1793,155 +2128,143 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .hilya-filters__active {
   display: flex;
+
   flex-wrap: wrap;
+
   align-items: center;
+
   gap: .5rem;
-  padding: 0 0 1rem;
+
+  margin-bottom: 1.35rem;
 }
 
+
 .hilya-filters__active-label {
-  margin-right: .25rem;
+  width: 100%;
+
+  margin-bottom: .15rem;
+
   color: var(--color-muted);
+
   font-size: .58rem;
+
   letter-spacing: .12em;
+
+  text-transform: uppercase;
 }
+
 
 .hilya-filter-chip {
   display: inline-flex;
+
   align-items: center;
-  padding: .45rem .7rem;
-  border: 1px solid rgb(0 0 0 / 12%);
+
+  padding: .5rem .65rem;
+
+  border: 1px solid
+    rgb(0 0 0 / 10%);
+
+  background:
+    rgb(0 0 0 / 3%);
+
   color: var(--color-foreground);
-  font-size: .65rem;
-}
 
+  font-size: .68rem;
 
-/* =========================================
-   OVERLAY
-========================================= */
-
-.hilya-filter-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  background: rgb(0 0 0 / 35%);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 260ms ease,
-    visibility 260ms ease;
-}
-
-.hilya-filter-overlay.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-
-/* =========================================
-   DRAWER
-========================================= */
-
-.hilya-filter-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
-  width: min(28rem, 92vw);
-  background: var(--color-background);
-  transform: translateX(100%);
-  transition:
-    transform 320ms
-    cubic-bezier(.22, .61, .36, 1);
-  overflow-y: auto;
-  box-shadow:
-    -12px 0 35px
-    rgb(0 0 0 / 8%);
-}
-
-.hilya-filter-drawer.is-open {
-  transform: translateX(0);
-}
-
-.hilya-filter-drawer__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 2rem 1.75rem 1.5rem;
-  border-bottom:
-    1px solid
-    rgb(0 0 0 / 8%);
-}
-
-.hilya-filter-drawer__eyebrow {
-  display: block;
-  margin-bottom: .55rem;
-  color: var(--color-muted);
-  font-size: .58rem;
-  letter-spacing: .2em;
-}
-
-.hilya-filter-drawer__header h2 {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 400;
-  letter-spacing: .08em;
-}
-
-.hilya-filter-drawer__close {
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font-size: 1.8rem;
-  font-weight: 300;
   line-height: 1;
+}
+
+
+.hilya-filters__clear {
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--color-muted);
+
+  font: inherit;
+
+  font-size: .66rem;
+
+  text-decoration: underline;
+
+  text-underline-offset: .22rem;
+
   cursor: pointer;
 }
 
 
 /* =========================================
-   GROUPS
+   FILTER GROUPS
 ========================================= */
 
 .hilya-filter-group {
+  border-top:
+    1px solid
+    rgb(0 0 0 / 9%);
+}
+
+
+.hilya-filter-group:last-child {
   border-bottom:
     1px solid
-    rgb(0 0 0 / 8%);
+    rgb(0 0 0 / 9%);
 }
+
 
 .hilya-filter-group summary {
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
-  padding: 1.25rem 1.75rem;
+
+  padding: 1rem 0;
+
   color: var(--color-foreground);
-  font-size: .7rem;
+
+  font-size: .69rem;
+
   font-weight: 500;
-  letter-spacing: .12em;
+
+  letter-spacing: .1em;
+
   text-transform: uppercase;
+
   cursor: pointer;
+
   list-style: none;
 }
+
 
 .hilya-filter-group summary::-webkit-details-marker {
   display: none;
 }
 
+
 .hilya-filter-chevron {
   font-size: 1rem;
+
   font-weight: 300;
+
+  line-height: 1;
+
+  transition:
+    transform 180ms ease;
 }
+
 
 .hilya-filter-group[open]
 .hilya-filter-chevron {
   transform: rotate(45deg);
 }
 
+
 .hilya-filter-group__content {
   padding:
-    0 1.75rem 1.4rem;
+    0 0 1rem;
 }
 
 
@@ -1951,101 +2274,427 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .hilya-filter-option {
   display: flex;
+
   align-items: center;
-  gap: .75rem;
-  min-height: 2.4rem;
+
+  gap: .65rem;
+
+  min-height: 2.25rem;
+
   color: var(--color-foreground);
-  font-size: .78rem;
+
+  font-size: .76rem;
+
   cursor: pointer;
 }
 
+
 .hilya-filter-option input {
-  width: 1rem;
-  height: 1rem;
+  width: .95rem;
+
+  height: .95rem;
+
   margin: 0;
+
   accent-color: #111;
+
   cursor: pointer;
 }
 
 
 /* =========================================
-   PRICE
+   PRICE SLIDER
 ========================================= */
 
-.hilya-price-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .7rem;
+.hilya-price-slider {
+  position: relative;
+
+  width: 100%;
+
+  height: 1.8rem;
+
+  margin:
+    .2rem 0 .55rem;
 }
 
-.hilya-price-fields label {
-  display: block;
+
+.hilya-price-slider__track,
+.hilya-price-slider__range {
+  position: absolute;
+
+  top: 50%;
+
+  height: 2px;
+
+  transform:
+    translateY(-50%);
+}
+
+
+.hilya-price-slider__track {
+  right: 0;
+  left: 0;
+
+  background:
+    rgb(0 0 0 / 16%);
+}
+
+
+.hilya-price-slider__range {
+  background:
+    var(--color-foreground);
+
+  z-index: 1;
+}
+
+
+.hilya-price-slider input[type="range"] {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+
+  height: 1.8rem;
+
+  margin: 0;
+
+  padding: 0;
+
+  background: transparent;
+
+  appearance: none;
+
+  pointer-events: none;
+}
+
+
+.hilya-price-slider
+input[type="range"]::-webkit-slider-thumb {
+  width: 13px;
+
+  height: 13px;
+
+  border: 1px solid
+    var(--color-foreground);
+
+  border-radius: 50%;
+
+  background:
+    var(--color-background);
+
+  appearance: none;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+}
+
+
+.hilya-price-slider
+input[type="range"]::-moz-range-thumb {
+  width: 13px;
+
+  height: 13px;
+
+  border: 1px solid
+    var(--color-foreground);
+
+  border-radius: 50%;
+
+  background:
+    var(--color-background);
+
+  cursor: pointer;
+
+  pointer-events: auto;
+}
+
+
+.hilya-price-values {
+  display: grid;
+
+  grid-template-columns:
+    1fr auto 1fr;
+
+  align-items: center;
+
+  gap: .5rem;
+
+  font-size: .67rem;
+}
+
+
+.hilya-price-values > div {
+  display: flex;
+
+  align-items: center;
+
+  gap: .25rem;
+}
+
+
+.hilya-price-values > div:last-child {
+  justify-content: flex-end;
+}
+
+
+.hilya-price-values span {
   color: var(--color-muted);
+}
+
+
+.hilya-price-values strong {
+  color: var(--color-foreground);
+
+  font-weight: 400;
+}
+
+
+.hilya-price-values__to {
+  color: var(--color-muted);
+
   font-size: .62rem;
+}
+
+
+/* =========================================
+   SORT
+========================================= */
+
+.hilya-filter-sidebar__sort {
+  display: none;
+}
+
+
+.hilya-filters__products-toolbar {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  width: 100%;
+
+  min-height: 3.5rem;
+
+  margin-bottom: 1.5rem;
+
+  border-bottom:
+    1px solid
+    rgb(0 0 0 / 9%);
+}
+
+
+.hilya-filters__results {
+  color: var(--color-foreground);
+
+  font-size: .68rem;
+
   letter-spacing: .08em;
+
   text-transform: uppercase;
 }
 
-.hilya-price-input {
+
+.hilya-filters__sort {
   display: flex;
+
   align-items: center;
-  margin-top: .45rem;
-  border-bottom:
-    1px solid
-    rgb(0 0 0 / 22%);
+
+  gap: .45rem;
 }
 
-.hilya-price-input span {
+
+.hilya-filters__sort label {
   color: var(--color-muted);
-  font-size: .65rem;
+
+  font-size: .66rem;
+
+  letter-spacing: .04em;
 }
 
-.hilya-price-input input {
-  width: 100%;
-  padding: .55rem .25rem;
+
+.hilya-filters__sort select {
+  min-width: 8.5rem;
+
+  padding:
+    .35rem 1.4rem .35rem 0;
+
   border: 0;
+
   outline: 0;
-  background: transparent;
+
+  background:
+    transparent;
+
   color: var(--color-foreground);
+
   font: inherit;
-  font-size: .78rem;
+
+  font-size: .68rem;
+
+  cursor: pointer;
 }
 
 
 /* =========================================
-   ACTIONS
+   MOBILE DRAWER
 ========================================= */
 
-.hilya-filter-actions {
-  display: grid;
-  gap: .7rem;
-  padding: 1.75rem;
+.hilya-filter-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9998;
+
+  background:
+    rgb(0 0 0 / 35%);
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transition:
+    opacity 260ms ease,
+    visibility 260ms ease;
 }
 
-.hilya-filter-actions__apply {
-  width: 100%;
-  padding: .95rem 1rem;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-  font: inherit;
-  font-size: .68rem;
-  font-weight: 500;
-  letter-spacing: .13em;
-  cursor: pointer;
+
+.hilya-filter-overlay.is-visible {
+  opacity: 1;
+
+  visibility: visible;
 }
 
-.hilya-filter-actions__clear {
-  padding: .65rem;
-  border: 0;
-  background: transparent;
+
+.hilya-filter-drawer {
+  position: fixed;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 9999;
+
+  width: min(
+    28rem,
+    92vw
+  );
+
+  overflow-y: auto;
+
+  background:
+    var(--color-background);
+
+  transform:
+    translateX(100%);
+
+  transition:
+    transform 320ms
+    cubic-bezier(
+      .22,
+      .61,
+      .36,
+      1
+    );
+}
+
+
+.hilya-filter-drawer.is-open {
+  transform:
+    translateX(0);
+}
+
+
+.hilya-filter-drawer__header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  padding:
+    2rem 1.5rem 1.35rem;
+
+  border-bottom:
+    1px solid
+    rgb(0 0 0 / 8%);
+}
+
+
+.hilya-filter-drawer__eyebrow {
+  display: block;
+
+  margin-bottom: .45rem;
+
   color: var(--color-muted);
-  font: inherit;
-  font-size: .65rem;
-  text-align: center;
-  text-decoration: underline;
-  text-underline-offset: .25rem;
+
+  font-size: .56rem;
+
+  letter-spacing: .18em;
+}
+
+
+.hilya-filter-drawer__header h2 {
+  margin: 0;
+
+  font-size: 1.2rem;
+
+  font-weight: 400;
+
+  letter-spacing: .08em;
+}
+
+
+.hilya-filter-drawer__close {
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--color-foreground);
+
+  font-size: 1.8rem;
+
+  font-weight: 300;
+
+  line-height: 1;
+
   cursor: pointer;
+}
+
+
+.hilya-filter-drawer__content {
+  padding: 0 1.5rem 2rem;
+}
+
+
+.hilya-filter-drawer
+.hilya-filter-group {
+  border-top: 1px solid
+    rgb(0 0 0 / 9%);
+}
+
+
+.hilya-filter-drawer
+.hilya-filter-group:last-child {
+  border-bottom: 1px solid
+    rgb(0 0 0 / 9%);
+}
+
+
+.hilya-filter-drawer
+.hilya-filter-group summary {
+  padding-inline: 0;
+}
+
+
+.hilya-filter-drawer
+.hilya-filter-group__content {
+  padding-inline: 0;
 }
 
 
@@ -2064,51 +2713,108 @@ document.addEventListener('DOMContentLoaded', function () {
 
 @media (max-width: 40rem) {
 
-  .hilya-filters__top {
-    grid-template-columns: 1fr auto;
-    min-height: 3.75rem;
-  }
-
-  .hilya-filters__results {
+  .hilya-filter-sidebar {
     display: none;
   }
+
+
+  .hilya-filters__mobile-bar {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    min-height: 3.6rem;
+
+    border-bottom:
+      1px solid
+      rgb(0 0 0 / 9%);
+  }
+
+
+  .hilya-filters__mobile-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: .45rem;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--color-foreground);
+
+    font: inherit;
+
+    font-size: .67rem;
+
+    font-weight: 500;
+
+    letter-spacing: .12em;
+
+    cursor: pointer;
+  }
+
+
+  .hilya-filters__mobile-results {
+    color: var(--color-muted);
+
+    font-size: .62rem;
+
+    letter-spacing: .08em;
+  }
+
+
+  .hilya-filters__products-toolbar {
+    min-height: 3.4rem;
+
+    margin-bottom: 1.15rem;
+  }
+
+
+  .hilya-filters__results {
+    font-size: .62rem;
+  }
+
 
   .hilya-filters__sort label {
     display: none;
   }
 
+
   .hilya-filters__sort select {
-    min-width: 6.5rem;
+    min-width: 6.8rem;
+
     font-size: .62rem;
-  }
-
-  .hilya-filter-drawer {
-    width: 100%;
-  }
-
-  .hilya-filter-drawer__header {
-    padding-inline: 1.25rem;
-  }
-
-  .hilya-filter-group summary {
-    padding-inline: 1.25rem;
-  }
-
-  .hilya-filter-group__content {
-    padding-inline: 1.25rem;
-  }
-
-  .hilya-filter-actions {
-    padding-inline: 1.25rem;
   }
 
 }
 
 
+@media (min-width: 40.001rem) {
+
+  .hilya-filter-drawer,
+  .hilya-filter-overlay,
+  .hilya-filters__mobile-bar {
+    display: none !important;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
 @media (prefers-reduced-motion: reduce) {
 
   .hilya-filter-overlay,
-  .hilya-filter-drawer {
+  .hilya-filter-drawer,
+  .hilya-filter-chevron {
     transition: none;
   }
 
