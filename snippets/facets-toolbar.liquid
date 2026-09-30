@@ -318,37 +318,6 @@
 
     </form>
 
-
-    <!-- DESKTOP SORT -->
-
-    <div class="hilya-filter-sidebar__sort">
-
-      <label for="HilyaSort">
-        SORT BY
-      </label>
-
-      <select
-        id="HilyaSort"
-        data-hilya-sort
-      >
-
-        {% for option in collection.sort_options %}
-
-          <option
-            value="{{ option.value }}"
-            {% if option.value == collection.sort_by %}
-              selected
-            {% endif %}
-          >
-            {{ option.name }}
-          </option>
-
-        {% endfor %}
-
-      </select>
-
-    </div>
-
   </aside>
 
 
