@@ -15,11 +15,11 @@
   endif
 
   assign price = target.price
-assign compare_at_price = target.compare_at_price
+  assign compare_at_price = target.compare_at_price
 
-if compare_at_price == blank
-  assign compare_at_price = product.compare_at_price_max
-endif
+  if compare_at_price == blank and product.compare_at_price_min > product.price
+    assign compare_at_price = product.compare_at_price_min
+  endif
 
   assign available = target.available | default: false
 
