@@ -450,10 +450,10 @@
 
           <button
             type="button"
-            class="hilya-filters__sort-option{% if option.value == collection.sort_by %} is-selected{% endif %}"
+            class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
             data-sort-value="{{ option.value | escape }}"
             role="option"
-            aria-selected="{% if option.value == collection.sort_by %}true{% else %}false{% endif %}"
+            aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
           >
 
             <span>
