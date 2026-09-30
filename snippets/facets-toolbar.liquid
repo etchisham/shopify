@@ -658,44 +658,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
-    mobileContent.addEventListener(
-      'change',
-      function (event) {
-
-        if (
-          event.target.matches(
-            'input[type="checkbox"]'
-          )
-        ) {
-
-          const name =
-            event.target.name;
-
-          const value =
-            event.target.value;
-
-          const desktopInput =
-            form.querySelector(
-              'input[name="' +
-              name +
-              '"][value="' +
-              value +
-              '"]'
-            );
-
-          if (desktopInput) {
-            desktopInput.checked =
-              event.target.checked;
-          }
-
-          applyFilters();
-
-        }
-
-      }
-    );
-
   }
 
 
@@ -1272,28 +1234,80 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
-     PRICE SLIDER + MANUAL INPUTS
+     PRICE CONTROLS
+     
+     IMPORTANT:
+     Desktop and mobile controls are now
+     treated as one shared price filter.
   ========================================= */
 
-  const priceMin =
+  const desktopPriceMin =
     form.querySelector('[data-price-min]');
 
-  const priceMax =
+  const desktopPriceMax =
     form.querySelector('[data-price-max]');
 
-  const priceMinInput =
+  const desktopPriceMinInput =
     form.querySelector('[data-price-min-input]');
 
-  const priceMaxInput =
+  const desktopPriceMaxInput =
     form.querySelector('[data-price-max-input]');
 
-  const priceRange =
+  const desktopPriceRange =
     form.querySelector('[data-price-range]');
 
 
-  function clampPrice(value, fallback) {
+  const mobilePriceMin =
+    mobileContent
+      ? mobileContent.querySelector(
+          '[data-price-min]'
+        )
+      : null;
 
-    const number = Number(value);
+  const mobilePriceMax =
+    mobileContent
+      ? mobileContent.querySelector(
+          '[data-price-max]'
+        )
+      : null;
+
+  const mobilePriceMinInput =
+    mobileContent
+      ? mobileContent.querySelector(
+          '[data-price-min-input]'
+        )
+      : null;
+
+  const mobilePriceMaxInput =
+    mobileContent
+      ? mobileContent.querySelector(
+          '[data-price-max-input]'
+        )
+      : null;
+
+  const mobilePriceRange =
+    mobileContent
+      ? mobileContent.querySelector(
+          '[data-price-range]'
+        )
+      : null;
+
+
+  /* =========================================
+     PRICE STATE
+  ========================================= */
+
+  let currentMinPrice = 0;
+  let currentMaxPrice = 1000;
+
+
+  function clampPrice(
+    value,
+    fallback
+  ) {
+
+    const number =
+      Number(value);
 
     if (!Number.isFinite(number)) {
       return fallback;
@@ -1310,198 +1324,438 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  function updatePriceSlider(shouldApply) {
+  function setPriceState(
+    min,
+    max,
+    source
+  ) {
 
-    if (!priceMin || !priceMax) {
-      return;
-    }
-
-
-    let min =
+    min =
       clampPrice(
-        priceMin.value,
+        min,
         0
       );
 
-    let max =
+    max =
       clampPrice(
-        priceMax.value,
+        max,
         1000
       );
 
 
     if (min > max) {
 
-      if (
-        document.activeElement === priceMin ||
-        document.activeElement === priceMinInput
-      ) {
-
+      if (source === 'min') {
         max = min;
-
       } else {
-
         min = max;
-
       }
 
     }
 
 
-    priceMin.value = min;
-    priceMax.value = max;
+    currentMinPrice =
+      min;
+
+    currentMaxPrice =
+      max;
 
 
-    if (priceMinInput) {
-      priceMinInput.value = min;
+    syncPriceControls();
+
+  }
+
+
+  function syncPriceControls() {
+
+    /* DESKTOP SLIDER */
+
+    if (desktopPriceMin) {
+      desktopPriceMin.value =
+        currentMinPrice;
+    }
+
+    if (desktopPriceMax) {
+      desktopPriceMax.value =
+        currentMaxPrice;
     }
 
 
-    if (priceMaxInput) {
-      priceMaxInput.value = max;
+    /* DESKTOP INPUTS */
+
+    if (desktopPriceMinInput) {
+      desktopPriceMinInput.value =
+        currentMinPrice;
+    }
+
+    if (desktopPriceMaxInput) {
+      desktopPriceMaxInput.value =
+        currentMaxPrice;
     }
 
 
-    if (priceRange) {
+    /* MOBILE SLIDER */
 
-      priceRange.style.left =
-        ((min / 1000) * 100) + '%';
+    if (mobilePriceMin) {
+      mobilePriceMin.value =
+        currentMinPrice;
+    }
 
-      priceRange.style.right =
-        (
-          100 -
-          ((max / 1000) * 100)
-        ) + '%';
+    if (mobilePriceMax) {
+      mobilePriceMax.value =
+        currentMaxPrice;
+    }
+
+
+    /* MOBILE INPUTS */
+
+    if (mobilePriceMinInput) {
+      mobilePriceMinInput.value =
+        currentMinPrice;
+    }
+
+    if (mobilePriceMaxInput) {
+      mobilePriceMaxInput.value =
+        currentMaxPrice;
+    }
+
+
+    /* RANGE LINES */
+
+    const minPercent =
+      (currentMinPrice / 1000) * 100;
+
+    const maxPercent =
+      (currentMaxPrice / 1000) * 100;
+
+
+    if (desktopPriceRange) {
+
+      desktopPriceRange.style.left =
+        minPercent + '%';
+
+      desktopPriceRange.style.right =
+        (100 - maxPercent) + '%';
 
     }
 
 
-    if (shouldApply) {
-      applyFilters();
+    if (mobilePriceRange) {
+
+      mobilePriceRange.style.left =
+        minPercent + '%';
+
+      mobilePriceRange.style.right =
+        (100 - maxPercent) + '%';
+
     }
 
   }
-
-
-  if (priceMin) {
-
-    priceMin.addEventListener(
-      'input',
-      function () {
-        updatePriceSlider(true);
-      }
-    );
-
-  }
-
-
-  if (priceMax) {
-
-    priceMax.addEventListener(
-      'input',
-      function () {
-        updatePriceSlider(true);
-      }
-    );
-
-  }
-
-
-  if (priceMinInput) {
-
-    priceMinInput.addEventListener(
-      'input',
-      function () {
-
-        let value =
-          clampPrice(
-            this.value,
-            0
-          );
-
-        const currentMax =
-          Number(
-            priceMax.value
-          );
-
-
-        if (value > currentMax) {
-          value = currentMax;
-        }
-
-
-        priceMin.value =
-          value;
-
-        this.value =
-          value;
-
-        updatePriceSlider(true);
-
-      }
-    );
-
-
-    priceMinInput.addEventListener(
-      'change',
-      function () {
-        updatePriceSlider(true);
-      }
-    );
-
-  }
-
-
-  if (priceMaxInput) {
-
-    priceMaxInput.addEventListener(
-      'input',
-      function () {
-
-        let value =
-          clampPrice(
-            this.value,
-            1000
-          );
-
-        const currentMin =
-          Number(
-            priceMin.value
-          );
-
-
-        if (value < currentMin) {
-          value = currentMin;
-        }
-
-
-        priceMax.value =
-          value;
-
-        this.value =
-          value;
-
-        updatePriceSlider(true);
-
-      }
-    );
-
-
-    priceMaxInput.addEventListener(
-      'change',
-      function () {
-        updatePriceSlider(true);
-      }
-    );
-
-  }
-
-
-  updatePriceSlider(false);
 
 
   /* =========================================
-     FILTER
+     PRICE CHANGE HANDLER
+  ========================================= */
+
+  function handlePriceSliderChange(
+    type,
+    value
+  ) {
+
+    if (type === 'min') {
+
+      setPriceState(
+        value,
+        currentMaxPrice,
+        'min'
+      );
+
+    } else {
+
+      setPriceState(
+        currentMinPrice,
+        value,
+        'max'
+      );
+
+    }
+
+
+    applyFilters();
+
+  }
+
+
+  function handlePriceInputChange(
+    type,
+    value
+  ) {
+
+    if (type === 'min') {
+
+      let min =
+        clampPrice(
+          value,
+          0
+        );
+
+
+      if (min > currentMaxPrice) {
+        min = currentMaxPrice;
+      }
+
+
+      setPriceState(
+        min,
+        currentMaxPrice,
+        'min'
+      );
+
+    } else {
+
+      let max =
+        clampPrice(
+          value,
+          1000
+        );
+
+
+      if (max < currentMinPrice) {
+        max = currentMinPrice;
+      }
+
+
+      setPriceState(
+        currentMinPrice,
+        max,
+        'max'
+      );
+
+    }
+
+
+    applyFilters();
+
+  }
+
+
+  /* =========================================
+     DESKTOP PRICE EVENTS
+  ========================================= */
+
+  if (desktopPriceMin) {
+
+    desktopPriceMin.addEventListener(
+      'input',
+      function () {
+
+        handlePriceSliderChange(
+          'min',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  if (desktopPriceMax) {
+
+    desktopPriceMax.addEventListener(
+      'input',
+      function () {
+
+        handlePriceSliderChange(
+          'max',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  if (desktopPriceMinInput) {
+
+    desktopPriceMinInput.addEventListener(
+      'input',
+      function () {
+
+        handlePriceInputChange(
+          'min',
+          this.value
+        );
+
+      }
+    );
+
+
+    desktopPriceMinInput.addEventListener(
+      'change',
+      function () {
+
+        handlePriceInputChange(
+          'min',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  if (desktopPriceMaxInput) {
+
+    desktopPriceMaxInput.addEventListener(
+      'input',
+      function () {
+
+        handlePriceInputChange(
+          'max',
+          this.value
+        );
+
+      }
+    );
+
+
+    desktopPriceMaxInput.addEventListener(
+      'change',
+      function () {
+
+        handlePriceInputChange(
+          'max',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     MOBILE PRICE EVENTS
+     
+     This is the important fix.
+  ========================================= */
+
+  if (mobilePriceMin) {
+
+    mobilePriceMin.addEventListener(
+      'input',
+      function () {
+
+        handlePriceSliderChange(
+          'min',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  if (mobilePriceMax) {
+
+    mobilePriceMax.addEventListener(
+      'input',
+      function () {
+
+        handlePriceSliderChange(
+          'max',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  if (mobilePriceMinInput) {
+
+    mobilePriceMinInput.addEventListener(
+      'input',
+      function () {
+
+        handlePriceInputChange(
+          'min',
+          this.value
+        );
+
+      }
+    );
+
+
+    mobilePriceMinInput.addEventListener(
+      'change',
+      function () {
+
+        handlePriceInputChange(
+          'min',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  if (mobilePriceMaxInput) {
+
+    mobilePriceMaxInput.addEventListener(
+      'input',
+      function () {
+
+        handlePriceInputChange(
+          'max',
+          this.value
+        );
+
+      }
+    );
+
+
+    mobilePriceMaxInput.addEventListener(
+      'change',
+      function () {
+
+        handlePriceInputChange(
+          'max',
+          this.value
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     INITIAL PRICE STATE
+  ========================================= */
+
+  setPriceState(
+    desktopPriceMin
+      ? desktopPriceMin.value
+      : 0,
+
+    desktopPriceMax
+      ? desktopPriceMax.value
+      : 1000,
+
+    'initial'
+  );
+
+
+  /* =========================================
+     CHECKED VALUES
   ========================================= */
 
   function getCheckedValues(name) {
@@ -1523,6 +1777,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
+  /* =========================================
+     FILTER
+  ========================================= */
+
   function applyFilters() {
 
     const availability =
@@ -1542,14 +1800,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const minPrice =
-      priceMin
-        ? Number(priceMin.value)
-        : 0;
+      currentMinPrice;
 
     const maxPrice =
-      priceMax
-        ? Number(priceMax.value)
-        : 1000;
+      currentMaxPrice;
 
 
     let visibleCount = 0;
@@ -1687,7 +1941,12 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
 
-      /* PRICE */
+      /* =====================================
+         EFFECTIVE PRICE
+         
+         If one color is selected,
+         use that variant's price.
+      ===================================== */
 
       let effectivePrice =
         itemPrice;
@@ -1749,6 +2008,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       }
 
+
+      /* PRICE */
 
       if (
         effectivePrice <
@@ -2063,33 +2324,41 @@ document.addEventListener('DOMContentLoaded', function () {
       'click',
       function () {
 
+        /* PRICE MIN */
+
         if (
           inputName ===
           'price_min'
         ) {
 
-          if (priceMin) {
-            priceMin.value = 0;
-          }
+          setPriceState(
+            0,
+            currentMaxPrice,
+            'min'
+          );
 
-          if (priceMinInput) {
-            priceMinInput.value = 0;
-          }
+        }
 
-        } else if (
+
+        /* PRICE MAX */
+
+        else if (
           inputName ===
           'price_max'
         ) {
 
-          if (priceMax) {
-            priceMax.value = 1000;
-          }
+          setPriceState(
+            currentMinPrice,
+            1000,
+            'max'
+          );
 
-          if (priceMaxInput) {
-            priceMaxInput.value = 1000;
-          }
+        }
 
-        } else if (inputName) {
+
+        /* CHECKBOX */
+
+        else if (inputName) {
 
           const inputs =
             form.querySelectorAll(
@@ -2122,8 +2391,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-        updatePriceSlider(false);
-
         syncMobileFilters();
 
         applyFilters();
@@ -2138,6 +2405,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }
 
+
+  /* =========================================
+     SYNC MOBILE CHECKBOXES
+  ========================================= */
 
   function syncMobileFilters() {
 
@@ -2173,6 +2444,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       );
 
+
+    /* PRICE IS SYNCHRONIZED
+       THROUGH THE SHARED STATE */
+
+    syncPriceControls();
+
   }
 
 
@@ -2196,28 +2473,11 @@ document.addEventListener('DOMContentLoaded', function () {
       );
 
 
-    if (priceMin) {
-      priceMin.value =
-        0;
-    }
-
-
-    if (priceMax) {
-      priceMax.value =
-        1000;
-    }
-
-
-    if (priceMinInput) {
-      priceMinInput.value =
-        0;
-    }
-
-
-    if (priceMaxInput) {
-      priceMaxInput.value =
-        1000;
-    }
+    setPriceState(
+      0,
+      1000,
+      'initial'
+    );
 
 
     if (mobileContent) {
@@ -2237,8 +2497,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
-    updatePriceSlider(false);
 
     applyFilters();
 
@@ -2287,6 +2545,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
   );
+
+
+  /* =========================================
+     MOBILE CHECKBOX EVENTS
+  ========================================= */
+
+  if (mobileContent) {
+
+    mobileContent.addEventListener(
+      'change',
+      function (event) {
+
+        if (
+          !event.target.matches(
+            'input[type="checkbox"]'
+          )
+        ) {
+          return;
+        }
+
+
+        const name =
+          event.target.name;
+
+        const value =
+          event.target.value;
+
+
+        const desktopInput =
+          form.querySelector(
+            'input[name="' +
+            name +
+            '"][value="' +
+            value +
+            '"]'
+          );
+
+
+        if (desktopInput) {
+
+          desktopInput.checked =
+            event.target.checked;
+
+        }
+
+
+        applyFilters();
+
+      }
+    );
+
+  }
 
 
   /* =========================================
@@ -2551,12 +2861,15 @@ document.addEventListener('DOMContentLoaded', function () {
      INITIAL FILTER
   ========================================= */
 
+  syncPriceControls();
+
   applyFilters();
 
 });
 
 
 {% endjavascript %}
+
 
 
 {% stylesheet %}
