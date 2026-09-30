@@ -3981,14 +3981,14 @@ input[type="range"]::-moz-range-thumb {
   flex-direction: column;
   justify-content: space-between;
 
-  width: 1.35rem;
-  height: 1.05rem;
+  width: .95rem;
+  height: .72rem;
 
-  flex: 0 0 auto;
+  flex: 0 0 .95rem;
 }
 
 
-/* horizontal lines */
+/* lines */
 
 .hilya-filters__filter-icon span {
   position: relative;
@@ -4002,7 +4002,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 
-/* slider knobs */
+/* knobs */
 
 .hilya-filters__filter-icon span::after {
   content: "";
@@ -4011,10 +4011,10 @@ input[type="range"]::-moz-range-thumb {
 
   top: 50%;
 
-  width: .42rem;
-  height: .42rem;
+  width: .27rem;
+  height: .27rem;
 
-  border: 1.5px solid currentColor;
+  border: 1px solid currentColor;
   border-radius: 50%;
 
   background: var(--color-background);
@@ -4023,17 +4023,14 @@ input[type="range"]::-moz-range-thumb {
 }
 
 
-/* first knob — left */
+/* knob positions */
 
 .hilya-filters__filter-icon span:first-child::after {
-  left: 20%;
+  left: 18%;
 }
 
-
-/* second knob — right */
-
 .hilya-filters__filter-icon span:last-child::after {
-  left: 62%;
+  left: 58%;
 }
 
 
