@@ -3371,33 +3371,42 @@ input[type="range"]::-moz-range-thumb {
     display: none;
   }
 
-
   /* =========================================
-     MOBILE TOP BAR
-     FILTER LEFT / SORT RIGHT
+     MOBILE FILTER / PRODUCTS / SORT ROW
   ========================================= */
 
   .hilya-filters {
     position: relative;
   }
 
-
   .hilya-filters__mobile-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
     position: relative;
 
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 3rem;
     min-height: 3rem;
 
+    padding: 0;
+
+    border-top: 1px solid rgb(0 0 0 / 9%);
     border-bottom: 1px solid rgb(0 0 0 / 9%);
   }
 
 
+  /* FILTER — LEFT */
+
   .hilya-filters__mobile-button {
+    position: absolute;
+
+    left: 0;
+    top: 50%;
+
     display: inline-flex;
     align-items: center;
+
     gap: .45rem;
 
     padding: 0;
@@ -3412,37 +3421,57 @@ input[type="range"]::-moz-range-thumb {
     font-weight: 500;
     letter-spacing: .1em;
 
+    line-height: 1;
+
+    transform: translateY(-50%);
+
     cursor: pointer;
   }
 
 
-  /* Hide the duplicate PRODUCTS count
-     from the first mobile row */
+  /* PRODUCTS — CENTER */
 
   .hilya-filters__mobile-results {
-    display: none;
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    display: block;
+
+    color: var(--color-foreground);
+
+    font-size: .58rem;
+    letter-spacing: .075em;
+
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    transform: translate(-50%, -50%);
   }
 
 
-  /* =========================================
-     SORT
-     MOVE IT TO THE SAME ROW AS FILTER
-  ========================================= */
+  /* SORT — RIGHT */
 
   .hilya-filters__sort {
     position: absolute;
 
-    top: 0;
     right: 0;
-
-    height: 3rem;
+    top: 50%;
 
     display: flex;
     align-items: center;
 
     gap: .45rem;
 
+    height: auto;
+
     white-space: nowrap;
+
+    transform: translateY(-50%);
   }
 
 
@@ -3454,6 +3483,8 @@ input[type="range"]::-moz-range-thumb {
     font-size: .58rem;
     font-weight: 400;
     letter-spacing: .02em;
+
+    line-height: 1;
 
     white-space: nowrap;
     text-transform: none;
@@ -3470,11 +3501,10 @@ input[type="range"]::-moz-range-thumb {
     min-width: auto;
     min-height: auto;
 
-    padding: .15rem 0 .18rem;
+    padding: 0;
 
     border: 0 !important;
     border-bottom: 0 !important;
-
     border-radius: 0;
 
     background: transparent;
@@ -3484,6 +3514,8 @@ input[type="range"]::-moz-range-thumb {
     font: inherit;
     font-size: .58rem;
     font-weight: 400;
+
+    line-height: 1;
 
     text-align: left;
 
@@ -3504,7 +3536,7 @@ input[type="range"]::-moz-range-thumb {
     width: .38rem;
     height: .38rem;
 
-    margin-top: -.15rem;
+    margin-top: -.12rem;
 
     border-right: 1px solid currentColor;
     border-bottom: 1px solid currentColor;
@@ -3519,47 +3551,27 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
+  /* SORT DROPDOWN */
+
   .hilya-filters__sort-menu {
+    top: calc(100% + .55rem);
+    right: 0;
+
     width: 11rem;
   }
 
 
   /* =========================================
-     PRODUCTS COUNT
-     ONLY ONE COUNT, CENTERED
+     HIDE OLD SECOND PRODUCTS ROW ON MOBILE
   ========================================= */
 
   .hilya-filters__products-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    min-height: 2.6rem;
-
-    margin-bottom: .4rem;
-
-    border-bottom: 1px solid rgb(0 0 0 / 9%);
-  }
-
-
-  .hilya-filters__results {
-    display: block;
-
-    color: var(--color-foreground);
-
-    font-size: .58rem;
-    letter-spacing: .075em;
-
-    text-align: center;
-    text-transform: uppercase;
+    display: none;
   }
 
 
   /* =========================================
      MOBILE DRAWER
-     OPEN FROM LEFT
   ========================================= */
 
   .hilya-filter-drawer {
@@ -3590,12 +3602,6 @@ input[type="range"]::-moz-range-thumb {
     transform: translateX(0);
   }
 
-
-  /* =========================================
-     DRAWER HEADER
-     REMOVE COLLECTION
-     REMOVE BIG HEADER LINE
-  ========================================= */
 
   .hilya-filter-drawer__header {
     display: flex;
@@ -3646,9 +3652,6 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  /* Keep ONLY the small line
-     directly under FILTERS */
-
   .hilya-filter-drawer .hilya-filter-group {
     border-top: 1px solid rgb(0 0 0 / 9%);
   }
@@ -3667,16 +3670,13 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  /* =========================================
-     FILTER CHIPS
-  ========================================= */
-
   .hilya-filter-chip {
     font-size: .57rem;
     padding: .36rem .44rem;
   }
 
 }
+
 
 
 
