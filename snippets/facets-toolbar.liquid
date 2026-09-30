@@ -2962,100 +2962,94 @@ document.addEventListener('DOMContentLoaded', function () {
   position: relative;
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: .55rem;
   white-space: nowrap;
 }
-
 
 .hilya-filters__sort-label {
   color: var(--color-muted);
   font-size: .66rem;
-  letter-spacing: .075em;
+  font-weight: 400;
+  letter-spacing: .035em;
   white-space: nowrap;
+  text-transform: none;
 }
-
 
 .hilya-filters__sort-trigger {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  min-width: 9.5rem;
-  min-height: 2.25rem;
-  padding: .5rem .7rem;
-  border: 1px solid rgb(0 0 0 / 16%);
-  background: var(--color-background);
+  gap: .9rem;
+  min-width: auto;
+  min-height: auto;
+  padding: .15rem 0 .18rem;
+  border: 0;
+  border-bottom: 1px solid rgb(0 0 0 / 20%);
+  border-radius: 0;
+  background: transparent;
   color: var(--color-foreground);
   font: inherit;
-  font-size: .67rem;
+  font-size: .68rem;
+  font-weight: 400;
   text-align: left;
   cursor: pointer;
+  box-shadow: none;
 }
-
 
 .hilya-filters__sort-trigger:hover {
-  border-color: rgb(0 0 0 / 28%);
+  border-color: rgb(0 0 0 / 45%);
+  background: transparent;
 }
-
 
 .hilya-filters__sort-chevron {
   position: relative;
   display: inline-block;
-  width: .5rem;
-  height: .5rem;
+  width: .42rem;
+  height: .42rem;
   flex: 0 0 auto;
+  margin-top: -.18rem;
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
-  transform:
-    rotate(45deg)
-    translateY(-.1rem);
-  transition:
-    transform 180ms ease;
+  transform: rotate(45deg);
+  transition: transform 180ms ease;
 }
 
-
-.hilya-filters__sort.is-open
-.hilya-filters__sort-chevron {
-  transform:
-    rotate(225deg)
-    translate(-.03rem, -.03rem);
+.hilya-filters__sort.is-open .hilya-filters__sort-chevron {
+  transform: rotate(225deg);
 }
-
 
 .hilya-filters__sort-menu {
   position: absolute;
-  top: calc(100% + .35rem);
+  top: calc(100% + .45rem);
   right: 0;
   z-index: 30;
-  width: 12rem;
-  padding: .35rem 0;
-  border: 1px solid rgb(0 0 0 / 14%);
+  width: 11rem;
+  padding: .3rem 0;
+  border: 1px solid rgb(0 0 0 / 12%);
+  border-radius: 0;
   background: var(--color-background);
-  box-shadow:
-    0 8px 22px
-    rgb(0 0 0 / 8%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
 }
-
 
 .hilya-filters__sort-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: .62rem .75rem;
+  padding: .6rem .7rem;
   border: 0;
   background: transparent;
   color: var(--color-foreground);
   font: inherit;
-  font-size: .62rem;
+  font-size: .64rem;
   text-align: left;
   cursor: pointer;
 }
 
-
 .hilya-filters__sort-option:hover {
   background: rgb(0 0 0 / 4%);
 }
+
 
 
 .hilya-filters__sort-check {
