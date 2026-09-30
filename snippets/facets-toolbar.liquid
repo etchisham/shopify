@@ -3151,7 +3151,7 @@ input[type="range"]::-moz-range-thumb {
 .hilya-filter-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  z-index: 100000;
   background: rgb(0 0 0 / 35%);
   opacity: 0;
   visibility: hidden;
@@ -3172,11 +3172,16 @@ input[type="range"]::-moz-range-thumb {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999;
+
+  z-index: 100001;
+
   width: min(28rem, 92vw);
   overflow-y: auto;
+
   background: var(--color-background);
+
   transform: translateX(100%);
+
   transition:
     transform 320ms
     cubic-bezier(.22,.61,.36,1);
@@ -3248,10 +3253,6 @@ input[type="range"]::-moz-range-thumb {
   padding-inline: 0;
 }
 
-
-.hilya-filter-lock {
-  overflow: hidden;
-}
 
 
 /* =========================================
