@@ -19,6 +19,7 @@
         "new_arrivals_link": "shopify://collections/new-arrivals",
         "show_best_sellers": true,
         "best_sellers_link": "shopify://collections/best-sellers",
+        "sales_link": "shopify://collections/sales",
         "instagram_link": "https://www.instagram.com/hilya.insta/",
         "show_shipping": true,
         "shipping_page": "contact",
