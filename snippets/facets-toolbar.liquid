@@ -1128,21 +1128,37 @@ if (
 
 
     if (
-      priceElement &&
-      productPrice !== undefined
-    ) {
+  priceElement &&
+  productPrice !== undefined
+) {
 
-      priceElement.innerHTML =
-        '<span class="price">' +
-          '<span class="price__current">' +
-            'EGP ' +
-            Number(
-              productPrice
-            ).toLocaleString('en-US') +
-          '</span>' +
-        '</span>';
+  let priceHtml =
+    '<span class="price">' +
+      '<span class="price__current">' +
+        'EGP ' +
+        Number(
+          productPrice
+        ).toLocaleString('en-US') +
+      '</span>';
 
-    }
+  if (
+    productCompareAtPrice !== undefined &&
+    productCompareAtPrice !== '' &&
+    Number(productCompareAtPrice) > Number(productPrice)
+  ) {
+    priceHtml +=
+      '<span class="price__compare">' +
+        'EGP ' +
+        Number(
+          productCompareAtPrice
+        ).toLocaleString('en-US') +
+      '</span>';
+  }
+
+  priceHtml += '</span>';
+
+  priceElement.innerHTML = priceHtml;
+}
 
 
     const links =
