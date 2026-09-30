@@ -77,19 +77,7 @@ body:has(.site-header--sticky) {
   body:has(.site-header--sticky) {
     padding-top: {{ section.settings.mobile_height }}px !important;
   }
-  .mobile-facets,
-  .mobile-facets__wrapper,
-  .mobile-facets__disclosure,
-  .mobile-facets__close-button,
-  .facets-drawer,
-  .facets-container {
-    position: relative;
-    z-index: 100000 !important;
-  }
-
-  .mobile-facets {
-    z-index: 100001 !important;
-  }
+  
 }
 
 
@@ -934,6 +922,23 @@ body:has(.site-header--sticky) {
 
   padding-left: 0 !important;
   padding-right: 0 !important;
+}
+
+/* =========================================================
+   MOBILE FILTERS ABOVE HEADER
+   ========================================================= */
+
+@media screen and (max-width: 749px) {
+
+  .mobile-facets,
+  .mobile-facets__wrapper,
+  .mobile-facets__disclosure,
+  .facets-drawer,
+  .facets__form,
+  .facets-container {
+    z-index: 100000 !important;
+  }
+
 }
 
 {% endstyle %}
