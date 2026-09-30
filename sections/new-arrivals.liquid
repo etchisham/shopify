@@ -210,10 +210,10 @@
 
 .new-arrivals-banner__button {
   display: inline-flex;
-
   align-items: center;
+  justify-content: center;
 
-  gap: 12px;
+  gap: 5px;
 
   margin-top: 20px;
 
@@ -248,16 +248,19 @@
 
 .new-arrivals-banner__button:hover {
   background: #fff;
-
   color: #111;
-
   border-color: #fff;
 }
 
-
 .new-arrivals-banner__arrow {
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
+  position: relative;
+  top: -1px;
+
+  font-size: 12px;
   line-height: 1;
 
   transition: transform .3s ease;
@@ -265,7 +268,7 @@
 
 .new-arrivals-banner__button:hover
 .new-arrivals-banner__arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 
