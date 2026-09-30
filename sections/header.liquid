@@ -65,10 +65,18 @@
 }
 
 
-/* Reserve header space */
+/* =========================================================
+   RESERVE SPACE FOR FIXED HEADER
+   ========================================================= */
 
 body:has(.site-header--sticky) {
-  padding-top: var(--hilya-header-height);
+  padding-top: {{ section.settings.desktop_height }}px !important;
+}
+
+@media screen and (max-width: 749px) {
+  body:has(.site-header--sticky) {
+    padding-top: {{ section.settings.mobile_height }}px !important;
+  }
 }
 
 
