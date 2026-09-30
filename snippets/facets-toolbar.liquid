@@ -3372,11 +3372,25 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
+  /* =========================================
+     MOBILE TOP BAR
+     FILTER LEFT / SORT RIGHT
+  ========================================= */
+
+  .hilya-filters {
+    position: relative;
+  }
+
+
   .hilya-filters__mobile-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+
+    position: relative;
+
     min-height: 3rem;
+
     border-bottom: 1px solid rgb(0 0 0 / 9%);
   }
 
@@ -3385,62 +3399,124 @@ input[type="range"]::-moz-range-thumb {
     display: inline-flex;
     align-items: center;
     gap: .45rem;
+
     padding: 0;
+
     border: 0;
     background: transparent;
+
     color: var(--color-foreground);
+
     font: inherit;
     font-size: .63rem;
     font-weight: 500;
     letter-spacing: .1em;
+
     cursor: pointer;
   }
 
 
+  /* Hide the duplicate PRODUCTS count
+     from the first mobile row */
+
   .hilya-filters__mobile-results {
-    color: var(--color-muted);
-    font-size: .58rem;
-    letter-spacing: .07em;
-  }
-
-
-  .hilya-filters__products-toolbar {
-    min-height: 2.85rem;
-    margin-bottom: .65rem;
-  }
-
-
-  .hilya-filters__results {
-    font-size: .58rem;
-  }
-
-
-  .hilya-filters__sort-label {
     display: none;
   }
 
 
-  @media (max-width: 40rem) {
-  .hilya-filters__sort-trigger {
-    min-width: auto;
-    min-height: auto;
-    padding: .15rem 0 .18rem;
-    border: 0;
-    border-bottom: 1px solid rgb(0 0 0 / 20%);
-    background: transparent;
-    font-size: .58rem;
+  /* =========================================
+     SORT
+     MOVE IT TO THE SAME ROW AS FILTER
+  ========================================= */
+
+  .hilya-filters__sort {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    height: 3rem;
+
+    display: flex;
+    align-items: center;
+
+    gap: .45rem;
+
+    white-space: nowrap;
   }
 
+
   .hilya-filters__sort-label {
+    display: inline;
+
+    color: var(--color-muted);
+
     font-size: .58rem;
+    font-weight: 400;
+    letter-spacing: .02em;
+
+    white-space: nowrap;
     text-transform: none;
   }
 
-  .hilya-filters__products-toolbar {
-    min-height: 2.6rem;
-    margin-bottom: .4rem;
+
+  .hilya-filters__sort-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: .7rem;
+
+    min-width: auto;
+    min-height: auto;
+
+    padding: .15rem 0 .18rem;
+
+    border: 0 !important;
+    border-bottom: 0 !important;
+
+    border-radius: 0;
+
+    background: transparent;
+
+    color: var(--color-foreground);
+
+    font: inherit;
+    font-size: .58rem;
+    font-weight: 400;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    box-shadow: none;
   }
-}
+
+
+  .hilya-filters__sort-trigger:hover {
+    border: 0 !important;
+    border-bottom: 0 !important;
+    background: transparent;
+  }
+
+
+  .hilya-filters__sort-chevron {
+    width: .38rem;
+    height: .38rem;
+
+    margin-top: -.15rem;
+
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+
+    transform: rotate(45deg);
+  }
+
+
+  .hilya-filters__sort.is-open
+  .hilya-filters__sort-chevron {
+    transform: rotate(225deg);
+  }
 
 
   .hilya-filters__sort-menu {
@@ -3448,12 +3524,160 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
+  /* =========================================
+     PRODUCTS COUNT
+     ONLY ONE COUNT, CENTERED
+  ========================================= */
+
+  .hilya-filters__products-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    min-height: 2.6rem;
+
+    margin-bottom: .4rem;
+
+    border-bottom: 1px solid rgb(0 0 0 / 9%);
+  }
+
+
+  .hilya-filters__results {
+    display: block;
+
+    color: var(--color-foreground);
+
+    font-size: .58rem;
+    letter-spacing: .075em;
+
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+
+  /* =========================================
+     MOBILE DRAWER
+     OPEN FROM LEFT
+  ========================================= */
+
+  .hilya-filter-drawer {
+    position: fixed;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+
+    z-index: 100001;
+
+    width: min(28rem, 92vw);
+
+    overflow-y: auto;
+
+    background: var(--color-background);
+
+    transform: translateX(-100%);
+
+    transition:
+      transform 320ms
+      cubic-bezier(.22,.61,.36,1);
+  }
+
+
+  .hilya-filter-drawer.is-open {
+    transform: translateX(0);
+  }
+
+
+  /* =========================================
+     DRAWER HEADER
+     REMOVE COLLECTION
+     REMOVE BIG HEADER LINE
+  ========================================= */
+
+  .hilya-filter-drawer__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 2rem 1.5rem 1.35rem;
+
+    border-bottom: 0;
+  }
+
+
+  .hilya-filter-drawer__eyebrow {
+    display: none;
+  }
+
+
+  .hilya-filter-drawer__header h2 {
+    margin: 0;
+
+    color: var(--color-foreground);
+
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: .08em;
+  }
+
+
+  .hilya-filter-drawer__close {
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--color-foreground);
+
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+  }
+
+
+  .hilya-filter-drawer__content {
+    padding: 0 1.5rem 2rem;
+  }
+
+
+  /* Keep ONLY the small line
+     directly under FILTERS */
+
+  .hilya-filter-drawer .hilya-filter-group {
+    border-top: 1px solid rgb(0 0 0 / 9%);
+  }
+
+
+  .hilya-filter-drawer .hilya-filter-group:last-child {
+    border-bottom: 1px solid rgb(0 0 0 / 9%);
+  }
+
+
+  .hilya-filter-drawer
+  .hilya-filter-group__toggle,
+  .hilya-filter-drawer
+  .hilya-filter-group__content {
+    padding-inline: 0;
+  }
+
+
+  /* =========================================
+     FILTER CHIPS
+  ========================================= */
+
   .hilya-filter-chip {
     font-size: .57rem;
     padding: .36rem .44rem;
   }
 
 }
+
 
 
 /* =========================================
