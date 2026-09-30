@@ -1,3 +1,4 @@
+```liquid
 <section class="story-section">
 
   <div class="story-section__inner">
@@ -26,16 +27,25 @@
         </p>
       {% endif %}
 
-      <h2 class="story-section__heading">
-        <span>More Than Jewelry.</span>
-        <span>It’s a Feeling.</span>
-      </h2>
+      {% if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank %}
+        <h2 class="story-section__heading">
+          {% if section.settings.heading_line_1 != blank %}
+            <span>{{ section.settings.heading_line_1 | escape }}</span>
+          {% endif %}
 
-      <div class="story-section__text">
-        <p>
-          <strong>Hilya</strong> is where timeless elegance meets everyday life, We create modern jewelry and accessories that help you express your unique style — with pieces made to last.
-        </p>
-      </div>
+          {% if section.settings.heading_line_2 != blank %}
+            <span>{{ section.settings.heading_line_2 | escape }}</span>
+          {% endif %}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="story-section__text">
+          <p>
+            {{ section.settings.description }}
+          </p>
+        </div>
+      {% endif %}
 
       {% if section.settings.button_label != blank %}
         <a
@@ -63,6 +73,7 @@
   box-sizing: border-box;
   background: #F7F4EE;
 }
+
 .story-section__inner {
   display: grid;
   grid-template-columns: 50% minmax(0, 1fr);
@@ -192,7 +203,7 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .story-section {
-    padding: 25px 28px 0; 
+    padding: 25px 28px 0;
   }
 
   .story-section__inner {
@@ -202,12 +213,12 @@
 
   .story-section__media img,
   .story-section__placeholder {
-  display: block;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 2 / 1;
-  object-fit: cover;
-}
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+  }
 
   .story-section__heading {
     font-size: 46px;
@@ -301,7 +312,7 @@
 
 {% schema %}
 {
-  "name": "Discover Our Story",
+  "name": "Special Offers",
   "enabled_on": {
     "templates": ["index"]
   },
@@ -309,25 +320,43 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Story image"
+      "label": "Offer image"
     },
     {
       "type": "text",
       "id": "image_alt",
       "label": "Image alt text",
-      "default": "Hilya jewelry"
+      "default": "Hilya special offers"
     },
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Discover Our Story"
+      "default": "Special Offers"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading - Line 1",
+      "default": "Special Offers."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading - Line 2",
+      "default": "Made for You."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover selected pieces at special prices, made to bring timeless elegance to your everyday style.</p>"
     },
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Discover More"
+      "default": "Shop Offers"
     },
     {
       "type": "url",
@@ -337,8 +366,9 @@
   ],
   "presets": [
     {
-      "name": "Discover Our Story"
+      "name": "Special Offers"
     }
   ]
 }
 {% endschema %}
+```
