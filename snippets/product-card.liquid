@@ -174,17 +174,31 @@
 
 
     <div
-      class="product-card__price"
-      data-product-price
-    >
+  class="product-card__price"
+  data-product-price
+>
+  <div class="price">
 
-      {% render 'price',
-        product: product,
-        card_layout: true,
-        show_discount: false
-      %}
+    {% if product.compare_at_price_max > product.price %}
 
-    </div>
+      <span class="price__current">
+        {{ product.price | money }}
+      </span>
+
+      <span class="price__compare">
+        {{ product.compare_at_price_max | money }}
+      </span>
+
+    {% else %}
+
+      <span class="price__current">
+        {{ product.price | money }}
+      </span>
+
+    {% endif %}
+
+  </div>
+</div>
 
 
     {% if settings.card_show_vendor and product.vendor != blank %}
