@@ -3261,11 +3261,27 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
+  @media (max-width: 40rem) {
   .hilya-filters__sort-trigger {
-    min-width: 8.5rem;
-    min-height: 2.2rem;
+    min-width: auto;
+    min-height: auto;
+    padding: .15rem 0 .18rem;
+    border: 0;
+    border-bottom: 1px solid rgb(0 0 0 / 20%);
+    background: transparent;
     font-size: .58rem;
   }
+
+  .hilya-filters__sort-label {
+    font-size: .58rem;
+    text-transform: none;
+  }
+
+  .hilya-filters__products-toolbar {
+    min-height: 2.6rem;
+    margin-bottom: .4rem;
+  }
+}
 
 
   .hilya-filters__sort-menu {
