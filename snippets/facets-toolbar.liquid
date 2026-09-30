@@ -11,8 +11,6 @@
 
   <div class="hilya-filters__mobile-bar">
 
-    <!-- FILTERS -->
-
     <button
       type="button"
       class="hilya-filters__mobile-button"
@@ -41,21 +39,12 @@
       </span>
     </button>
 
-
-    <!-- PRODUCTS COUNT -->
-
     <span class="hilya-filters__mobile-results">
-
       <span data-filter-results>
         {{ collection.products_count }}
       </span>
-
       PRODUCTS
-
     </span>
-
-
-    <!-- MOBILE SORT -->
 
     <div
       class="hilya-filters__sort hilya-filters__sort--mobile"
@@ -66,9 +55,7 @@
         Sort by
       </span>
 
-
       {% assign current_sort = collection.sort_by | default: 'manual' %}
-
 
       <button
         type="button"
@@ -77,29 +64,19 @@
         aria-expanded="false"
         aria-haspopup="listbox"
       >
-
         <span data-hilya-sort-current>
-
           {% for option in collection.sort_options %}
-
             {% if option.value == current_sort %}
-
               {{ option.name }}
-
             {% endif %}
-
           {% endfor %}
-
         </span>
-
 
         <span
           class="hilya-filters__sort-chevron"
           aria-hidden="true"
         ></span>
-
       </button>
-
 
       <div
         class="hilya-filters__sort-menu"
@@ -107,9 +84,7 @@
         role="listbox"
         hidden
       >
-
         {% for option in collection.sort_options %}
-
           <button
             type="button"
             class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
@@ -117,7 +92,6 @@
             role="option"
             aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
           >
-
             <span>
               {{ option.name }}
             </span>
@@ -128,11 +102,8 @@
             >
               ✓
             </span>
-
           </button>
-
         {% endfor %}
-
       </div>
 
     </div>
@@ -150,25 +121,18 @@
       <h2>Filters</h2>
     </div>
 
-
-    <!-- ACTIVE FILTERS -->
-
     <div
       class="hilya-filters__active"
       data-active-filters
       hidden
-    >
-    </div>
-
+    ></div>
 
     <form
       class="hilya-filter-form"
       data-hilya-filter-form
     >
 
-      <!-- =====================================
-           AVAILABILITY
-      ====================================== -->
+      <!-- AVAILABILITY -->
 
       <div class="hilya-filter-group is-open">
 
@@ -185,32 +149,24 @@
           ></span>
         </button>
 
-
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="availability"
               value="in_stock"
             >
-
             <span>In stock</span>
-
           </label>
 
-
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="availability"
               value="out_of_stock"
             >
-
             <span>Out of stock</span>
-
           </label>
 
         </div>
@@ -218,9 +174,7 @@
       </div>
 
 
-      <!-- =====================================
-           PRICE
-      ====================================== -->
+      <!-- PRICE -->
 
       <div class="hilya-filter-group is-open">
 
@@ -237,7 +191,6 @@
           ></span>
         </button>
 
-
         <div class="hilya-filter-group__content">
 
           <div class="hilya-price-slider">
@@ -248,7 +201,6 @@
               class="hilya-price-slider__range"
               data-price-range
             ></div>
-
 
             <input
               type="range"
@@ -274,11 +226,9 @@
 
           </div>
 
-
           <div class="hilya-price-values">
 
             <label class="hilya-price-input">
-
               <span>EGP</span>
 
               <input
@@ -291,17 +241,13 @@
                 data-price-min-input
                 aria-label="Minimum price"
               >
-
             </label>
-
 
             <span class="hilya-price-values__to">
               to
             </span>
 
-
             <label class="hilya-price-input hilya-price-input--max">
-
               <span>EGP</span>
 
               <input
@@ -314,7 +260,6 @@
                 data-price-max-input
                 aria-label="Maximum price"
               >
-
             </label>
 
           </div>
@@ -324,9 +269,7 @@
       </div>
 
 
-      <!-- =====================================
-           COLOR
-      ====================================== -->
+      <!-- COLOR -->
 
       <div class="hilya-filter-group is-open">
 
@@ -343,32 +286,24 @@
           ></span>
         </button>
 
-
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="color"
               value="Gold Plated"
             >
-
             <span>Gold Plated</span>
-
           </label>
 
-
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="color"
               value="Silver Plated"
             >
-
             <span>Silver Plated</span>
-
           </label>
 
         </div>
@@ -376,9 +311,7 @@
       </div>
 
 
-      <!-- =====================================
-           PRODUCT TYPE
-      ====================================== -->
+      <!-- PRODUCT TYPE -->
 
       <div class="hilya-filter-group is-open">
 
@@ -395,71 +328,51 @@
           ></span>
         </button>
 
-
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Necklaces"
             >
-
             <span>Necklaces</span>
-
           </label>
 
-
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Rings"
             >
-
             <span>Rings</span>
-
           </label>
 
-
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Pendants"
             >
-
             <span>Pendants</span>
-
           </label>
 
-
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Bracelets"
             >
-
             <span>Bracelets</span>
-
           </label>
 
-
           <label class="hilya-filter-option">
-
             <input
               type="checkbox"
               name="product_type"
               value="Keychains"
             >
-
             <span>Keychains</span>
-
           </label>
 
         </div>
@@ -488,25 +401,25 @@
     aria-hidden="true"
   >
 
-    <!-- =======================================
-         FIXED DRAWER HEADER
-         FILTERS + X
-    ======================================== -->
+    <!-- MOBILE HEADER -->
 
     <div class="hilya-filter-drawer__header">
 
-      <div>
+      <div class="hilya-filter-drawer__header-main">
 
-        <span class="hilya-filter-drawer__eyebrow">
-          COLLECTION
-        </span>
+        <div class="hilya-filter-drawer__title">
 
-        <h2>
-          FILTERS
-        </h2>
+          <span class="hilya-filter-drawer__eyebrow">
+            COLLECTION
+          </span>
+
+          <h2>
+            FILTERS
+          </h2>
+
+        </div>
 
       </div>
-
 
       <button
         type="button"
@@ -520,9 +433,7 @@
     </div>
 
 
-    <!-- =======================================
-         ONLY THIS AREA SCROLLS
-    ======================================== -->
+    <!-- ONLY THIS AREA SCROLLS -->
 
     <div class="hilya-filter-drawer__content">
 
@@ -530,8 +441,7 @@
         class="hilya-filters__active"
         data-active-filters-mobile
         hidden
-      >
-      </div>
+      ></div>
 
       <div data-mobile-filter-content></div>
 
@@ -556,7 +466,6 @@
 
     </span>
 
-
     <div
       class="hilya-filters__sort hilya-filters__sort--desktop"
       data-hilya-sort-wrap
@@ -566,9 +475,7 @@
         Sort by
       </span>
 
-
       {% assign current_sort = collection.sort_by | default: 'manual' %}
-
 
       <button
         type="button"
@@ -583,15 +490,12 @@
           {% for option in collection.sort_options %}
 
             {% if option.value == current_sort %}
-
               {{ option.name }}
-
             {% endif %}
 
           {% endfor %}
 
         </span>
-
 
         <span
           class="hilya-filters__sort-chevron"
@@ -599,7 +503,6 @@
         ></span>
 
       </button>
-
 
       <div
         class="hilya-filters__sort-menu"
@@ -681,6 +584,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const mobileContent =
     document.querySelector('[data-mobile-filter-content]');
 
+  const mobileHeaderMain =
+    document.querySelector(
+      '.hilya-filter-drawer__header-main'
+    );
+
 
   if (!form) {
     return;
@@ -714,10 +622,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'true'
       );
     }
-
-    /*
-      LOCK THE WEBSITE BEHIND THE DRAWER
-    */
 
     document.documentElement.classList.add(
       'hilya-filter-lock'
@@ -754,10 +658,6 @@ document.addEventListener('DOMContentLoaded', function () {
       );
     }
 
-    /*
-      UNLOCK THE WEBSITE
-    */
-
     document.documentElement.classList.remove(
       'hilya-filter-lock'
     );
@@ -770,32 +670,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   if (openButton) {
-
     openButton.addEventListener(
       'click',
       openDrawer
     );
-
   }
 
 
   if (closeButton) {
-
     closeButton.addEventListener(
       'click',
       closeDrawer
     );
-
   }
 
 
   if (overlay) {
-
     overlay.addEventListener(
       'click',
       closeDrawer
     );
-
   }
 
 
@@ -809,6 +703,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
   );
+
+
+  /* =========================================
+     MOBILE FILTERED BY
+     
+     MOBILE ONLY:
+     Move FILTERED BY into the fixed
+     drawer header.
+  ========================================= */
+
+  if (
+    mobileHeaderMain &&
+    activeFiltersMobile &&
+    window.matchMedia('(max-width: 40rem)').matches
+  ) {
+
+    mobileHeaderMain.appendChild(
+      activeFiltersMobile
+    );
+
+  }
 
 
   /* =========================================
@@ -905,8 +820,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* PRICE */
-
     const priceElement =
       card.querySelector(
         '[data-product-price]'
@@ -931,8 +844,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* PRODUCT URL */
-
     const productLinks =
       card.querySelectorAll(
         '[data-product-link], [data-product-media]'
@@ -952,8 +863,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-
-    /* IMAGES */
 
     const primaryLayer =
       card.querySelector(
@@ -1326,22 +1235,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function escapeAttribute(value) {
 
     return String(value)
-      .replace(
-        /&/g,
-        '&amp;'
-      )
-      .replace(
-        /"/g,
-        '&quot;'
-      )
-      .replace(
-        /</g,
-        '&lt;'
-      )
-      .replace(
-        />/g,
-        '&gt;'
-      );
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
 
   }
 
@@ -1427,37 +1324,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const mobilePriceMin =
     mobileContent
-      ? mobileContent.querySelector(
-          '[data-price-min]'
-        )
+      ? mobileContent.querySelector('[data-price-min]')
       : null;
 
   const mobilePriceMax =
     mobileContent
-      ? mobileContent.querySelector(
-          '[data-price-max]'
-        )
+      ? mobileContent.querySelector('[data-price-max]')
       : null;
 
   const mobilePriceMinInput =
     mobileContent
-      ? mobileContent.querySelector(
-          '[data-price-min-input]'
-        )
+      ? mobileContent.querySelector('[data-price-min-input]')
       : null;
 
   const mobilePriceMaxInput =
     mobileContent
-      ? mobileContent.querySelector(
-          '[data-price-max-input]'
-        )
+      ? mobileContent.querySelector('[data-price-max-input]')
       : null;
 
   const mobilePriceRange =
     mobileContent
-      ? mobileContent.querySelector(
-          '[data-price-range]'
-        )
+      ? mobileContent.querySelector('[data-price-range]')
       : null;
 
 
@@ -1469,10 +1356,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let currentMaxPrice = 1000;
 
 
-  function clampPrice(
-    value,
-    fallback
-  ) {
+  function clampPrice(value, fallback) {
 
     const number =
       Number(value);
@@ -1499,16 +1383,10 @@ document.addEventListener('DOMContentLoaded', function () {
   ) {
 
     min =
-      clampPrice(
-        min,
-        0
-      );
+      clampPrice(min, 0);
 
     max =
-      clampPrice(
-        max,
-        1000
-      );
+      clampPrice(max, 1000);
 
 
     if (min > max) {
@@ -1522,12 +1400,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    currentMinPrice =
-      min;
-
-    currentMaxPrice =
-      max;
-
+    currentMinPrice = min;
+    currentMaxPrice = max;
 
     syncPriceControls();
 
@@ -1535,8 +1409,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   function syncPriceControls() {
-
-    /* DESKTOP SLIDER */
 
     if (desktopPriceMin) {
       desktopPriceMin.value =
@@ -1548,9 +1420,6 @@ document.addEventListener('DOMContentLoaded', function () {
         currentMaxPrice;
     }
 
-
-    /* DESKTOP INPUTS */
-
     if (desktopPriceMinInput) {
       desktopPriceMinInput.value =
         currentMinPrice;
@@ -1560,9 +1429,6 @@ document.addEventListener('DOMContentLoaded', function () {
       desktopPriceMaxInput.value =
         currentMaxPrice;
     }
-
-
-    /* MOBILE SLIDER */
 
     if (mobilePriceMin) {
       mobilePriceMin.value =
@@ -1574,9 +1440,6 @@ document.addEventListener('DOMContentLoaded', function () {
         currentMaxPrice;
     }
 
-
-    /* MOBILE INPUTS */
-
     if (mobilePriceMinInput) {
       mobilePriceMinInput.value =
         currentMinPrice;
@@ -1587,8 +1450,6 @@ document.addEventListener('DOMContentLoaded', function () {
         currentMaxPrice;
     }
 
-
-    /* RANGE LINES */
 
     const minPercent =
       (currentMinPrice / 1000) * 100;
@@ -1621,10 +1482,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  /* =========================================
-     PRICE CHANGE HANDLER
-  ========================================= */
-
   function handlePriceSliderChange(
     type,
     value
@@ -1648,7 +1505,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
     applyFilters();
 
   }
@@ -1662,16 +1518,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (type === 'min') {
 
       let min =
-        clampPrice(
-          value,
-          0
-        );
-
+        clampPrice(value, 0);
 
       if (min > currentMaxPrice) {
         min = currentMaxPrice;
       }
-
 
       setPriceState(
         min,
@@ -1682,16 +1533,11 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
 
       let max =
-        clampPrice(
-          value,
-          1000
-        );
-
+        clampPrice(value, 1000);
 
       if (max < currentMinPrice) {
         max = currentMinPrice;
       }
-
 
       setPriceState(
         currentMinPrice,
@@ -1700,7 +1546,6 @@ document.addEventListener('DOMContentLoaded', function () {
       );
 
     }
-
 
     applyFilters();
 
@@ -1759,7 +1604,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     );
 
-
     desktopPriceMinInput.addEventListener(
       'change',
       function () {
@@ -1788,7 +1632,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       }
     );
-
 
     desktopPriceMaxInput.addEventListener(
       'change',
@@ -1857,7 +1700,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     );
 
-
     mobilePriceMinInput.addEventListener(
       'change',
       function () {
@@ -1887,7 +1729,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     );
 
-
     mobilePriceMaxInput.addEventListener(
       'change',
       function () {
@@ -1904,8 +1745,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
-     MOBILE PRICE INPUT
-     CLOSE KEYBOARD ON ENTER
+     MOBILE PRICE ENTER
   ========================================= */
 
   function closeMobileKeyboardOnEnter(input) {
@@ -2061,9 +1901,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       /* AVAILABILITY */
 
-      if (
-        availability.length > 0
-      ) {
+      if (availability.length > 0) {
 
         const matchesAvailability =
           availability.some(
@@ -2072,20 +1910,14 @@ document.addEventListener('DOMContentLoaded', function () {
               if (
                 value === 'in_stock'
               ) {
-
                 return itemAvailable;
-
               }
-
 
               if (
                 value === 'out_of_stock'
               ) {
-
                 return !itemAvailable;
-
               }
-
 
               return false;
 
@@ -2093,13 +1925,8 @@ document.addEventListener('DOMContentLoaded', function () {
           );
 
 
-        if (
-          !matchesAvailability
-        ) {
-
-          matches =
-            false;
-
+        if (!matchesAvailability) {
+          matches = false;
         }
 
       }
@@ -2151,12 +1978,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
 
-      /* =====================================
-         EFFECTIVE PRICE
-
-         If one color is selected,
-         use that variant's price.
-      ===================================== */
+      /* EFFECTIVE PRICE */
 
       let effectivePrice =
         itemPrice;
@@ -2222,14 +2044,11 @@ document.addEventListener('DOMContentLoaded', function () {
       /* PRICE */
 
       if (
-        effectivePrice <
-        minPrice ||
-        effectivePrice >
-        maxPrice
+        effectivePrice < minPrice ||
+        effectivePrice > maxPrice
       ) {
 
-        matches =
-          false;
+        matches = false;
 
       }
 
@@ -2245,9 +2064,7 @@ document.addEventListener('DOMContentLoaded', function () {
         visibleCount++;
 
 
-        if (
-          colors.length === 1
-        ) {
+        if (colors.length === 1) {
 
           updateProductCard(
             item,
@@ -2313,8 +2130,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
-    /* ACTIVE CHIPS */
 
     renderActiveFilters(
       availability,
@@ -2534,8 +2349,6 @@ document.addEventListener('DOMContentLoaded', function () {
       'click',
       function () {
 
-        /* PRICE MIN */
-
         if (
           inputName ===
           'price_min'
@@ -2549,9 +2362,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
-
-        /* PRICE MAX */
-
         else if (
           inputName ===
           'price_max'
@@ -2564,9 +2374,6 @@ document.addEventListener('DOMContentLoaded', function () {
           );
 
         }
-
-
-        /* CHECKBOX */
 
         else if (inputName) {
 
@@ -3093,7 +2900,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* =========================================
    LOCK WEBSITE SCROLL
-   WHEN MOBILE FILTER IS OPEN
 ========================================= */
 
 html.hilya-filter-lock,
@@ -3359,29 +3165,19 @@ body.hilya-filter-lock {
   right: 0 !important;
   bottom: 0 !important;
   left: 0 !important;
-
   width: 100% !important;
   height: 1.4rem !important;
-
   margin: 0 !important;
   padding: 0 !important;
-
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-
   appearance: none !important;
   -webkit-appearance: none !important;
-
   pointer-events: none;
   z-index: 4;
 }
-
-
-/* =========================================
-   CHROME / EDGE
-========================================= */
 
 .hilya-price-slider
 input[type="range"]::-webkit-slider-runnable-track {
@@ -3396,27 +3192,16 @@ input[type="range"]::-webkit-slider-runnable-track {
 input[type="range"]::-webkit-slider-thumb {
   width: 11px;
   height: 11px;
-
   margin-top: -4.5px;
-
   border: 0 !important;
   border-radius: 50%;
-
   background: #111 !important;
-
   appearance: none !important;
   -webkit-appearance: none !important;
-
   box-shadow: none !important;
-
   cursor: pointer;
   pointer-events: auto;
 }
-
-
-/* =========================================
-   FIREFOX
-========================================= */
 
 .hilya-price-slider
 input[type="range"]::-moz-range-track {
@@ -3436,14 +3221,10 @@ input[type="range"]::-moz-range-progress {
 input[type="range"]::-moz-range-thumb {
   width: 11px;
   height: 11px;
-
   border: 0 !important;
   border-radius: 50%;
-
   background: #111 !important;
-
   box-shadow: none !important;
-
   cursor: pointer;
   pointer-events: auto;
 }
@@ -3459,40 +3240,31 @@ input[type="range"]::-moz-range-thumb {
     minmax(0, 1fr)
     auto
     minmax(0, 1fr);
-
   align-items: center;
   gap: .4rem;
-
   width: 100%;
   margin: 0;
   padding: 0;
-
   font-size: .6rem;
 }
 
 .hilya-price-input {
   display: flex;
   align-items: center;
-
   width: 100%;
   min-width: 0;
   height: 1.85rem;
-
   margin: 0;
   padding: 0 .5rem;
-
   border: 1px solid rgb(0 0 0 / 16%) !important;
   border-radius: 0;
-
   background: var(--color-background) !important;
-
   box-shadow: none !important;
   outline: none;
 }
 
 .hilya-price-input span {
   flex: 0 0 auto;
-
   color: var(--color-muted);
   font-size: .52rem;
   line-height: 1;
@@ -3500,27 +3272,19 @@ input[type="range"]::-moz-range-thumb {
 
 .hilya-price-input input {
   display: block;
-
   width: 100%;
   min-width: 0;
   height: 100%;
-
   margin: 0;
   padding: 0;
-
   border: 0 !important;
   outline: 0 !important;
-
   background: transparent !important;
-
   color: var(--color-foreground);
-
   font: inherit;
   font-size: .6rem;
   line-height: 1;
-
   text-align: right;
-
   box-shadow: none !important;
 }
 
@@ -3558,12 +3322,9 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
   min-height: 2.55rem;
-
   margin: 0 0 .4rem;
-
   border-bottom: 1px solid rgb(0 0 0 / 9%);
 }
 
@@ -3600,30 +3361,20 @@ input[type="range"]::-moz-range-thumb {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-
   gap: .9rem;
-
   min-width: auto;
   min-height: auto;
-
   padding: .15rem 0 .18rem;
-
   border: 0;
   border-bottom: 0 !important;
   border-radius: 0;
-
   background: transparent;
-
   color: var(--color-foreground);
-
   font: inherit;
   font-size: .68rem;
   font-weight: 400;
-
   text-align: left;
-
   cursor: pointer;
-
   box-shadow: none;
 }
 
@@ -3636,21 +3387,14 @@ input[type="range"]::-moz-range-thumb {
 .hilya-filters__sort-chevron {
   position: relative;
   display: inline-block;
-
   width: .42rem;
   height: .42rem;
-
   flex: 0 0 auto;
-
   margin-top: -.18rem;
-
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
-
   transform: rotate(45deg);
-
-  transition:
-    transform 180ms ease;
+  transition: transform 180ms ease;
 }
 
 .hilya-filters__sort.is-open
@@ -3660,45 +3404,29 @@ input[type="range"]::-moz-range-thumb {
 
 .hilya-filters__sort-menu {
   position: absolute;
-
   top: calc(100% + .45rem);
   right: 0;
-
   z-index: 30;
-
   width: 11rem;
-
   padding: .3rem 0;
-
   border: 1px solid rgb(0 0 0 / 12%);
   border-radius: 0;
-
   background: var(--color-background);
-
-  box-shadow:
-    0 8px 24px rgb(0 0 0 / 8%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
 }
 
 .hilya-filters__sort-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   width: 100%;
-
   padding: .6rem .7rem;
-
   border: 0;
-
   background: transparent;
-
   color: var(--color-foreground);
-
   font: inherit;
   font-size: .64rem;
-
   text-align: left;
-
   cursor: pointer;
 }
 
@@ -3724,14 +3452,10 @@ input[type="range"]::-moz-range-thumb {
 .hilya-filter-overlay {
   position: fixed;
   inset: 0;
-
   z-index: 100000;
-
   background: rgb(0 0 0 / 35%);
-
   opacity: 0;
   visibility: hidden;
-
   transition:
     opacity 260ms ease,
     visibility 260ms ease;
@@ -3749,21 +3473,14 @@ input[type="range"]::-moz-range-thumb {
 
 .hilya-filter-drawer {
   position: fixed;
-
   top: 0;
   right: 0;
   bottom: 0;
-
   z-index: 100001;
-
   width: min(28rem, 92vw);
-
   overflow-y: auto;
-
   background: var(--color-background);
-
   transform: translateX(100%);
-
   transition:
     transform 320ms
     cubic-bezier(.22,.61,.36,1);
@@ -3782,26 +3499,20 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-
   padding: 2rem 1.5rem 1.35rem;
-
   border-bottom: 1px solid rgb(0 0 0 / 8%);
 }
 
 .hilya-filter-drawer__eyebrow {
   display: block;
-
   margin-bottom: .45rem;
-
   color: var(--color-muted);
-
   font-size: .56rem;
   letter-spacing: .18em;
 }
 
 .hilya-filter-drawer__header h2 {
   margin: 0;
-
   font-size: 1.2rem;
   font-weight: 400;
   letter-spacing: .08em;
@@ -3809,17 +3520,12 @@ input[type="range"]::-moz-range-thumb {
 
 .hilya-filter-drawer__close {
   padding: 0;
-
   border: 0;
-
   background: transparent;
-
   color: var(--color-foreground);
-
   font-size: 1.8rem;
   font-weight: 300;
   line-height: 1;
-
   cursor: pointer;
 }
 
@@ -3845,6 +3551,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* =========================================
    DESKTOP
+   UNCHANGED
 ========================================= */
 
 @media (min-width: 40.001rem) {
@@ -3852,23 +3559,16 @@ input[type="range"]::-moz-range-thumb {
   .hilya-filter-sidebar {
     grid-area: sidebar;
     align-self: start;
-
     position: sticky;
     top: 96px;
-
     width: 100%;
-
     max-height: calc(100vh - 112px);
-
     overflow-y: auto;
     overflow-x: hidden;
-
     padding-right: .15rem;
-
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
   }
-
 
   .hilya-filter-sidebar::-webkit-scrollbar {
     width: 2px;
@@ -3896,7 +3596,6 @@ input[type="range"]::-moz-range-thumb {
   .hilya-filter-sidebar::-webkit-scrollbar-thumb:hover {
     background: rgb(0 0 0 / 22%);
   }
-
 
   .hilya-filter-sidebar__heading {
     margin: 0 0 .55rem;
@@ -3931,9 +3630,7 @@ input[type="range"]::-moz-range-thumb {
 
   .hilya-filters__products-toolbar {
     grid-area: toolbar;
-
     min-height: 2.35rem;
-
     margin-bottom: .35rem;
   }
 
@@ -3965,115 +3662,78 @@ input[type="range"]::-moz-range-thumb {
 
   /* =======================================
      MOBILE TOP BAR
-
-     FILTERS | PRODUCTS | SORT
   ======================================= */
 
   .hilya-filters {
     position: relative;
   }
 
-
   .hilya-filters__mobile-bar {
     display: grid;
-
     grid-template-columns:
       minmax(0, 1fr)
       auto
       minmax(0, 1fr);
-
     align-items: center;
-
     width: 100%;
-
     min-height: 3rem;
-
     border-top:
       1px solid rgb(0 0 0 / 9%);
-
     border-bottom:
       1px solid rgb(0 0 0 / 9%);
   }
 
 
-  /* =======================================
-     FILTERS LEFT
-  ======================================= */
+  /* FILTERS LEFT */
 
   .hilya-filters__mobile-button {
     display: inline-flex;
     align-items: center;
-
     justify-self: start;
-
     gap: .55rem;
-
     padding: 0;
-
     border: 0;
-
     background: transparent;
-
     color: var(--color-foreground);
-
     font: inherit;
-
     font-size: .63rem;
     font-weight: 500;
-
     letter-spacing: .1em;
-
     cursor: pointer;
   }
 
 
-  /* =========================================
-     FILTER ICON
-  ========================================= */
+  /* FILTER ICON */
 
   .hilya-filters__filter-icon {
     position: relative;
-
     display: inline-flex;
     flex-direction: column;
     justify-content: space-between;
-
     width: .7rem;
     height: .40rem;
     flex-basis: .7rem;
   }
 
-
   .hilya-filters__filter-icon span {
     position: relative;
-
     display: block;
-
     width: 100%;
     height: 1px;
-
     background: currentColor;
   }
 
-
   .hilya-filters__filter-icon span::after {
     content: "";
-
     position: absolute;
-
     top: 50%;
-
     width: .23rem;
     height: .23rem;
-
     border: 1px solid currentColor;
     border-radius: 50%;
-
     background: var(--color-background);
-
     transform: translateY(-50%);
   }
-
 
   .hilya-filters__filter-icon span:first-child::after {
     left: 18%;
@@ -4083,132 +3743,88 @@ input[type="range"]::-moz-range-thumb {
     left: 58%;
   }
 
-
   .hilya-filters__filter-text {
     display: inline-block;
   }
 
 
-  /* =======================================
-     PRODUCTS CENTER
-  ======================================= */
+  /* PRODUCTS CENTER */
 
   .hilya-filters__mobile-results {
     display: block;
-
     justify-self: center;
-
     color: var(--color-foreground);
-
     font-size: .58rem;
-
     letter-spacing: .075em;
-
     text-align: center;
-
     white-space: nowrap;
-
     text-transform: uppercase;
   }
 
 
-  /* =======================================
-     SORT RIGHT
-  ======================================= */
+  /* SORT RIGHT */
 
   .hilya-filters__sort--mobile {
     position: relative;
-
     display: flex;
     align-items: center;
-
     justify-self: end;
-
     gap: .45rem;
-
     white-space: nowrap;
   }
-
 
   .hilya-filters__sort--mobile
   .hilya-filters__sort-label {
     display: inline;
-
     color: var(--color-muted);
-
     font-size: .58rem;
-
     font-weight: 400;
-
     letter-spacing: .02em;
-
     white-space: nowrap;
-
     text-transform: none;
   }
-
 
   .hilya-filters__sort--mobile
   .hilya-filters__sort-trigger {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-
     gap: .55rem;
-
     min-width: auto;
     min-height: auto;
-
     padding: .15rem 0 .18rem;
-
     border: 0 !important;
     border-bottom: 0 !important;
-
     border-radius: 0;
-
     background: transparent;
-
     color: var(--color-foreground);
-
     font: inherit;
-
     font-size: .58rem;
     font-weight: 400;
-
     text-align: left;
-
     cursor: pointer;
-
     box-shadow: none;
   }
-
 
   .hilya-filters__sort--mobile
   .hilya-filters__sort-trigger:hover {
     border: 0 !important;
     border-bottom: 0 !important;
-
     background: transparent;
   }
-
 
   .hilya-filters__sort--mobile
   .hilya-filters__sort-chevron {
     width: .38rem;
     height: .38rem;
-
     margin-top: -.15rem;
-
     border-right:
       1px solid currentColor;
-
     border-bottom:
       1px solid currentColor;
-
     transform:
       rotate(45deg);
   }
-
 
   .hilya-filters__sort--mobile.is-open
   .hilya-filters__sort-chevron {
@@ -4216,19 +3832,15 @@ input[type="range"]::-moz-range-thumb {
       rotate(225deg);
   }
 
-
   .hilya-filters__sort--mobile
   .hilya-filters__sort-menu {
     top: calc(100% + .45rem);
     right: 0;
-
     width: 11rem;
   }
 
 
-  /* =======================================
-     HIDE OLD MOBILE PRODUCTS TOOLBAR
-  ======================================= */
+  /* HIDE OLD MOBILE TOOLBAR */
 
   .hilya-filters__products-toolbar {
     display: none;
@@ -4237,18 +3849,12 @@ input[type="range"]::-moz-range-thumb {
 
   /* =======================================
      MOBILE DRAWER
-     
-     IMPORTANT:
-     DRAWER ITSELF DOES NOT SCROLL.
-     ONLY CONTENT SCROLLS.
   ======================================= */
 
   .hilya-filter-drawer {
     position: fixed;
-
     top: 0;
     bottom: 0;
-
     left: 0;
     right: auto;
 
@@ -4256,20 +3862,11 @@ input[type="range"]::-moz-range-thumb {
 
     width: min(28rem, 92vw);
 
-    /*
-      Use the real mobile viewport height.
-    */
     height: 100dvh;
     max-height: 100dvh;
 
-    /*
-      Drawer itself NEVER scrolls.
-    */
     overflow: hidden;
 
-    /*
-      Header + content become flex children.
-    */
     display: flex;
     flex-direction: column;
 
@@ -4282,12 +3879,8 @@ input[type="range"]::-moz-range-thumb {
       transform 320ms
       cubic-bezier(.22,.61,.36,1);
 
-    /*
-      Stop scroll chaining.
-    */
     overscroll-behavior: none;
   }
-
 
   .hilya-filter-drawer.is-open {
     transform:
@@ -4296,22 +3889,17 @@ input[type="range"]::-moz-range-thumb {
 
 
   /* =======================================
-     DRAWER HEADER
+     MOBILE DRAWER HEADER
      
-     ALWAYS FIXED/VISIBLE
+     FILTERS + FILTERED BY
+     STAY TOGETHER
   ======================================= */
 
   .hilya-filter-drawer__header {
     display: flex;
-
-    align-items: center;
-
+    align-items: flex-start;
     justify-content: space-between;
 
-    /*
-      NEVER shrink.
-      NEVER scroll.
-    */
     flex: 0 0 auto;
 
     padding:
@@ -4321,12 +3909,26 @@ input[type="range"]::-moz-range-thumb {
 
     background: var(--color-background);
 
-    border-bottom:
-      1px solid rgb(0 0 0 / 8%);
+    /*
+      IMPORTANT:
+      No line under FILTERS.
+      The line will start at Availability.
+    */
+    border-bottom: 0;
 
     position: relative;
-
     z-index: 2;
+  }
+
+
+  .hilya-filter-drawer__header-main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+
+  .hilya-filter-drawer__title {
+    display: block;
   }
 
 
@@ -4337,77 +3939,114 @@ input[type="range"]::-moz-range-thumb {
 
   .hilya-filter-drawer__header h2 {
     margin: 0;
-
     color: var(--color-foreground);
-
     font-size: 1.2rem;
-
     font-weight: 400;
-
     letter-spacing: .08em;
   }
 
 
+  /* =======================================
+     FILTERED BY
+     INSIDE FIXED HEADER
+  ======================================= */
+
+  .hilya-filter-drawer__header
+  .hilya-filters__active {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    width: 100%;
+
+    margin-top: .7rem;
+    margin-bottom: 0;
+
+    gap: .3rem;
+  }
+
+
+  .hilya-filter-drawer__header
+  .hilya-filters__active-label {
+    width: 100%;
+    margin: 0 0 .08rem;
+
+    color: var(--color-muted);
+    font-size: .52rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+
+  .hilya-filter-drawer__header
+  .hilya-filter-chip {
+    font-size: .57rem;
+    padding:
+      .36rem
+      .44rem;
+  }
+
+
+  .hilya-filter-drawer__header
+  .hilya-filters__clear {
+    font-size: .55rem;
+  }
+
+
+  /* CLOSE */
+
   .hilya-filter-drawer__close {
     padding: 0;
-
     border: 0;
-
     background: transparent;
-
     color: var(--color-foreground);
-
     font-size: 1.8rem;
-
     font-weight: 300;
-
     line-height: 1;
-
     cursor: pointer;
-
     flex: 0 0 auto;
+    margin-left: 1rem;
   }
 
 
   /* =======================================
      DRAWER CONTENT
      
-     THIS IS THE ONLY SCROLLABLE PART
+     ONLY THIS AREA SCROLLS
   ======================================= */
 
   .hilya-filter-drawer__content {
-    /*
-      Allow flex child to shrink.
-      This is extremely important.
-    */
+
     flex: 1 1 auto;
 
     min-height: 0;
 
     width: 100%;
 
-    /*
-      ONLY THIS ELEMENT SCROLLS.
-    */
     overflow-y: auto;
-
     overflow-x: hidden;
 
-    /*
-      Prevent the scroll from escaping
-      into the website underneath.
-    */
     overscroll-behavior-y: contain;
 
-    /*
-      Smooth native touch scrolling.
-    */
     -webkit-overflow-scrolling: touch;
 
     padding:
       0
       1.5rem
       2rem;
+  }
+
+
+  /* =======================================
+     FIRST FILTER LINE
+     
+     Starts UNDER FILTERED BY.
+  ======================================= */
+
+  .hilya-filter-drawer__content
+  .hilya-filter-group:first-child {
+    border-top:
+      1px solid rgb(0 0 0 / 9%);
   }
 
 
@@ -4421,32 +4060,17 @@ input[type="range"]::-moz-range-thumb {
       1px solid rgb(0 0 0 / 9%);
   }
 
-
   .hilya-filter-drawer
   .hilya-filter-group:last-child {
     border-bottom:
       1px solid rgb(0 0 0 / 9%);
   }
 
-
   .hilya-filter-drawer
   .hilya-filter-group__toggle,
   .hilya-filter-drawer
   .hilya-filter-group__content {
     padding-inline: 0;
-  }
-
-
-  /* =======================================
-     FILTER CHIPS
-  ======================================= */
-
-  .hilya-filter-chip {
-    font-size: .57rem;
-
-    padding:
-      .36rem
-      .44rem;
   }
 
 }
@@ -4465,28 +4089,23 @@ input[type="range"]::-moz-range-thumb {
       minmax(0, 1fr);
   }
 
-
   .hilya-filters__mobile-button {
     font-size: .58rem;
     letter-spacing: .07em;
   }
 
-
   .hilya-filters__mobile-results {
     font-size: .54rem;
   }
-
 
   .hilya-filters__sort--mobile {
     gap: .3rem;
   }
 
-
   .hilya-filters__sort--mobile
   .hilya-filters__sort-label {
     font-size: .52rem;
   }
-
 
   .hilya-filters__sort--mobile
   .hilya-filters__sort-trigger {
