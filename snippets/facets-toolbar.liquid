@@ -5,9 +5,13 @@
 
 <div class="hilya-filters">
 
-  <!-- MOBILE FILTER BUTTON -->
+  <!-- =========================================
+       MOBILE FILTER / PRODUCTS / SORT BAR
+  ========================================== -->
 
   <div class="hilya-filters__mobile-bar">
+
+    <!-- FILTERS -->
 
     <button
       type="button"
@@ -16,7 +20,7 @@
       aria-expanded="false"
       aria-controls="HilyaFilterDrawer"
     >
-      FILTER
+      FILTERS
 
       <span
         class="hilya-filters__count"
@@ -25,8 +29,10 @@
       >
         0
       </span>
-
     </button>
+
+
+    <!-- PRODUCTS COUNT -->
 
     <span class="hilya-filters__mobile-results">
 
@@ -38,10 +44,95 @@
 
     </span>
 
+
+    <!-- MOBILE SORT -->
+
+    <div
+      class="hilya-filters__sort hilya-filters__sort--mobile"
+      data-hilya-sort-wrap
+    >
+
+      <span class="hilya-filters__sort-label">
+        Sort by
+      </span>
+
+
+      {% assign current_sort = collection.sort_by | default: 'manual' %}
+
+
+      <button
+        type="button"
+        class="hilya-filters__sort-trigger"
+        data-hilya-sort-trigger
+        aria-expanded="false"
+        aria-haspopup="listbox"
+      >
+
+        <span data-hilya-sort-current>
+
+          {% for option in collection.sort_options %}
+
+            {% if option.value == current_sort %}
+
+              {{ option.name }}
+
+            {% endif %}
+
+          {% endfor %}
+
+        </span>
+
+
+        <span
+          class="hilya-filters__sort-chevron"
+          aria-hidden="true"
+        ></span>
+
+      </button>
+
+
+      <div
+        class="hilya-filters__sort-menu"
+        data-hilya-sort-menu
+        role="listbox"
+        hidden
+      >
+
+        {% for option in collection.sort_options %}
+
+          <button
+            type="button"
+            class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
+            data-sort-value="{{ option.value | escape }}"
+            role="option"
+            aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
+          >
+
+            <span>
+              {{ option.name }}
+            </span>
+
+            <span
+              class="hilya-filters__sort-check"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+
+          </button>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
   </div>
 
 
-  <!-- DESKTOP SIDEBAR -->
+  <!-- =========================================
+       DESKTOP SIDEBAR
+  ========================================== -->
 
   <aside class="hilya-filter-sidebar">
 
@@ -65,7 +156,9 @@
       data-hilya-filter-form
     >
 
-      <!-- AVAILABILITY -->
+      <!-- =====================================
+           AVAILABILITY
+      ====================================== -->
 
       <div class="hilya-filter-group is-open">
 
@@ -75,7 +168,10 @@
           data-filter-toggle
         >
           <span>Availability</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
+          <span
+            class="hilya-filter-chevron"
+            aria-hidden="true"
+          ></span>
         </button>
 
 
@@ -111,7 +207,9 @@
       </div>
 
 
-      <!-- PRICE -->
+      <!-- =====================================
+           PRICE
+      ====================================== -->
 
       <div class="hilya-filter-group is-open">
 
@@ -121,7 +219,11 @@
           data-filter-toggle
         >
           <span>Price</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
+
+          <span
+            class="hilya-filter-chevron"
+            aria-hidden="true"
+          ></span>
         </button>
 
 
@@ -211,7 +313,9 @@
       </div>
 
 
-      <!-- COLOR -->
+      <!-- =====================================
+           COLOR
+      ====================================== -->
 
       <div class="hilya-filter-group is-open">
 
@@ -221,7 +325,11 @@
           data-filter-toggle
         >
           <span>Color</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
+
+          <span
+            class="hilya-filter-chevron"
+            aria-hidden="true"
+          ></span>
         </button>
 
 
@@ -257,7 +365,9 @@
       </div>
 
 
-      <!-- PRODUCT TYPE -->
+      <!-- =====================================
+           PRODUCT TYPE
+      ====================================== -->
 
       <div class="hilya-filter-group is-open">
 
@@ -267,59 +377,78 @@
           data-filter-toggle
         >
           <span>Product Type</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
+
+          <span
+            class="hilya-filter-chevron"
+            aria-hidden="true"
+          ></span>
         </button>
 
 
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
+
             <input
               type="checkbox"
               name="product_type"
               value="Necklaces"
             >
+
             <span>Necklaces</span>
+
           </label>
 
 
           <label class="hilya-filter-option">
+
             <input
               type="checkbox"
               name="product_type"
               value="Rings"
             >
+
             <span>Rings</span>
+
           </label>
 
 
           <label class="hilya-filter-option">
+
             <input
               type="checkbox"
               name="product_type"
               value="Pendants"
             >
+
             <span>Pendants</span>
+
           </label>
 
 
           <label class="hilya-filter-option">
+
             <input
               type="checkbox"
               name="product_type"
               value="Bracelets"
             >
+
             <span>Bracelets</span>
+
           </label>
 
 
           <label class="hilya-filter-option">
+
             <input
               type="checkbox"
               name="product_type"
               value="Keychains"
             >
+
             <span>Keychains</span>
+
           </label>
 
         </div>
@@ -331,7 +460,9 @@
   </aside>
 
 
-  <!-- MOBILE DRAWER -->
+  <!-- =========================================
+       MOBILE DRAWER
+  ========================================== -->
 
   <div
     class="hilya-filter-overlay"
@@ -389,7 +520,9 @@
   </aside>
 
 
-  <!-- TOP PRODUCTS / SORT -->
+  <!-- =========================================
+       DESKTOP PRODUCTS / SORT TOOLBAR
+  ========================================== -->
 
   <div class="hilya-filters__products-toolbar">
 
@@ -405,87 +538,84 @@
 
 
     <div
-  class="hilya-filters__sort"
-  data-hilya-sort-wrap
->
+      class="hilya-filters__sort hilya-filters__sort--desktop"
+      data-hilya-sort-wrap
+    >
 
-  <span class="hilya-filters__sort-label">
-    Sort by
-  </span>
-
-
-  {% assign current_sort = collection.sort_by | default: 'manual' %}
+      <span class="hilya-filters__sort-label">
+        Sort by
+      </span>
 
 
+      {% assign current_sort = collection.sort_by | default: 'manual' %}
 
-
-  <button
-    type="button"
-    class="hilya-filters__sort-trigger"
-    data-hilya-sort-trigger
-    aria-expanded="false"
-    aria-haspopup="listbox"
-  >
-
-    <span data-hilya-sort-current>
-
-      {% for option in collection.sort_options %}
-
-        {% if option.value == current_sort %}
-
-          {{ option.name }}
-
-        {% endif %}
-
-      {% endfor %}
-
-    </span>
-
-
-    <span
-      class="hilya-filters__sort-chevron"
-      aria-hidden="true"
-    ></span>
-
-  </button>
-
-
-  <div
-    class="hilya-filters__sort-menu"
-    data-hilya-sort-menu
-    role="listbox"
-    hidden
-  >
-
-    {% for option in collection.sort_options %}
 
       <button
         type="button"
-        class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
-        data-sort-value="{{ option.value | escape }}"
-        role="option"
-        aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
+        class="hilya-filters__sort-trigger"
+        data-hilya-sort-trigger
+        aria-expanded="false"
+        aria-haspopup="listbox"
       >
 
-        <span>
-          {{ option.name }}
+        <span data-hilya-sort-current>
+
+          {% for option in collection.sort_options %}
+
+            {% if option.value == current_sort %}
+
+              {{ option.name }}
+
+            {% endif %}
+
+          {% endfor %}
+
         </span>
 
+
         <span
-          class="hilya-filters__sort-check"
+          class="hilya-filters__sort-chevron"
           aria-hidden="true"
-        >
-          ✓
-        </span>
+        ></span>
 
       </button>
 
-    {% endfor %}
 
-  </div>
+      <div
+        class="hilya-filters__sort-menu"
+        data-hilya-sort-menu
+        role="listbox"
+        hidden
+      >
 
-</div>
+        {% for option in collection.sort_options %}
 
+          <button
+            type="button"
+            class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
+            data-sort-value="{{ option.value | escape }}"
+            role="option"
+            aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
+          >
+
+            <span>
+              {{ option.name }}
+            </span>
+
+            <span
+              class="hilya-filters__sort-check"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+
+          </button>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
 
   </div>
 
@@ -604,26 +734,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   if (openButton) {
+
     openButton.addEventListener(
       'click',
       openDrawer
     );
+
   }
 
 
   if (closeButton) {
+
     closeButton.addEventListener(
       'click',
       closeDrawer
     );
+
   }
 
 
   if (overlay) {
+
     overlay.addEventListener(
       'click',
       closeDrawer
     );
+
   }
 
 
@@ -1235,10 +1371,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* =========================================
      PRICE CONTROLS
-     
-     IMPORTANT:
-     Desktop and mobile controls are now
-     treated as one shared price filter.
   ========================================= */
 
   const desktopPriceMin =
@@ -1734,58 +1866,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }
 
+
   /* =========================================
-   MOBILE PRICE INPUT
-   CLOSE KEYBOARD ON ENTER
-========================================= */
+     MOBILE PRICE INPUT
+     CLOSE KEYBOARD ON ENTER
+  ========================================= */
 
-function closeMobileKeyboardOnEnter(input) {
+  function closeMobileKeyboardOnEnter(input) {
 
-  if (!input) {
-    return;
+    if (!input) {
+      return;
+    }
+
+    input.addEventListener(
+      'keydown',
+      function (event) {
+
+        if (event.key !== 'Enter') {
+          return;
+        }
+
+        event.preventDefault();
+
+        input.dispatchEvent(
+          new Event('change', {
+            bubbles: true
+          })
+        );
+
+        input.blur();
+
+      }
+    );
+
   }
 
-  input.addEventListener(
-    'keydown',
-    function (event) {
 
-      if (event.key !== 'Enter') {
-        return;
-      }
-
-      event.preventDefault();
-
-      /*
-       * Make sure the value is applied first
-       */
-      input.dispatchEvent(
-        new Event('change', {
-          bubbles: true
-        })
-      );
-
-      /*
-       * Remove focus from the input.
-       * This closes the mobile keyboard.
-       */
-      input.blur();
-
-    }
+  closeMobileKeyboardOnEnter(
+    mobilePriceMinInput
   );
 
-}
-
-
-closeMobileKeyboardOnEnter(
-  mobilePriceMinInput
-);
-
-closeMobileKeyboardOnEnter(
-  mobilePriceMaxInput
-);
-
-
-  
+  closeMobileKeyboardOnEnter(
+    mobilePriceMaxInput
+  );
 
 
   /* =========================================
@@ -1994,7 +2117,7 @@ closeMobileKeyboardOnEnter(
 
       /* =====================================
          EFFECTIVE PRICE
-         
+
          If one color is selected,
          use that variant's price.
       ===================================== */
@@ -2496,9 +2619,6 @@ closeMobileKeyboardOnEnter(
       );
 
 
-    /* PRICE IS SYNCHRONIZED
-       THROUGH THE SHARED STATE */
-
     syncPriceControls();
 
   }
@@ -2654,24 +2774,19 @@ closeMobileKeyboardOnEnter(
      SORT
   ========================================= */
 
-  const sortWrap =
-    document.querySelector(
+  const sortWraps =
+    document.querySelectorAll(
       '[data-hilya-sort-wrap]'
     );
 
-  const sortTrigger =
-    document.querySelector(
+  const sortTriggers =
+    document.querySelectorAll(
       '[data-hilya-sort-trigger]'
     );
 
-  const sortMenu =
-    document.querySelector(
+  const sortMenus =
+    document.querySelectorAll(
       '[data-hilya-sort-menu]'
-    );
-
-  const sortCurrent =
-    document.querySelector(
-      '[data-hilya-sort-current]'
     );
 
   const sortOptions =
@@ -2680,85 +2795,132 @@ closeMobileKeyboardOnEnter(
     );
 
 
-  function closeSortMenu() {
+  function closeSortMenus() {
 
-    if (
-      !sortWrap ||
-      !sortTrigger ||
-      !sortMenu
-    ) {
-      return;
-    }
+    sortWraps.forEach(
+      function (wrap) {
 
+        wrap.classList.remove(
+          'is-open'
+        );
 
-    sortWrap.classList.remove(
-      'is-open'
+      }
     );
 
 
-    sortTrigger.setAttribute(
-      'aria-expanded',
-      'false'
+    sortTriggers.forEach(
+      function (trigger) {
+
+        trigger.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+
+      }
     );
 
 
-    sortMenu.hidden =
-      true;
+    sortMenus.forEach(
+      function (menu) {
 
-  }
-
-
-  function openSortMenu() {
-
-    if (
-      !sortWrap ||
-      !sortTrigger ||
-      !sortMenu
-    ) {
-      return;
-    }
-
-
-    sortWrap.classList.add(
-      'is-open'
-    );
-
-
-    sortTrigger.setAttribute(
-      'aria-expanded',
-      'true'
-    );
-
-
-    sortMenu.hidden =
-      false;
-
-  }
-
-
-  if (sortTrigger) {
-
-    sortTrigger.addEventListener(
-      'click',
-      function () {
-
-        if (
-          sortMenu &&
-          sortMenu.hidden
-        ) {
-
-          openSortMenu();
-
-        } else {
-
-          closeSortMenu();
-
-        }
+        menu.hidden =
+          true;
 
       }
     );
 
   }
+
+
+  function openSortMenu(
+    targetWrap
+  ) {
+
+    closeSortMenus();
+
+
+    const trigger =
+      targetWrap.querySelector(
+        '[data-hilya-sort-trigger]'
+      );
+
+    const menu =
+      targetWrap.querySelector(
+        '[data-hilya-sort-menu]'
+      );
+
+
+    if (
+      !trigger ||
+      !menu
+    ) {
+      return;
+    }
+
+
+    targetWrap.classList.add(
+      'is-open'
+    );
+
+
+    trigger.setAttribute(
+      'aria-expanded',
+      'true'
+    );
+
+
+    menu.hidden =
+      false;
+
+  }
+
+
+  sortTriggers.forEach(
+    function (trigger) {
+
+      trigger.addEventListener(
+        'click',
+        function (event) {
+
+          event.stopPropagation();
+
+
+          const wrap =
+            trigger.closest(
+              '[data-hilya-sort-wrap]'
+            );
+
+
+          const menu =
+            wrap
+              ? wrap.querySelector(
+                  '[data-hilya-sort-menu]'
+                )
+              : null;
+
+
+          if (!wrap || !menu) {
+            return;
+          }
+
+
+          if (menu.hidden) {
+
+            openSortMenu(
+              wrap
+            );
+
+          } else {
+
+            closeSortMenus();
+
+          }
+
+        }
+      );
+
+    }
+  );
 
 
   sortOptions.forEach(
@@ -2772,49 +2934,6 @@ closeMobileKeyboardOnEnter(
             option.getAttribute(
               'data-sort-value'
             );
-
-          const label =
-            option.querySelector(
-              'span'
-            );
-
-
-          if (
-            sortCurrent &&
-            label
-          ) {
-
-            sortCurrent.textContent =
-              label.textContent.trim();
-
-          }
-
-
-          sortOptions.forEach(
-            function (other) {
-
-              const selected =
-                other === option;
-
-
-              other.classList.toggle(
-                'is-selected',
-                selected
-              );
-
-
-              other.setAttribute(
-                'aria-selected',
-                selected
-                  ? 'true'
-                  : 'false'
-              );
-
-            }
-          );
-
-
-          closeSortMenu();
 
 
           const url =
@@ -2843,14 +2962,15 @@ closeMobileKeyboardOnEnter(
     'click',
     function (event) {
 
-      if (
-        sortWrap &&
-        !sortWrap.contains(
-          event.target
-        )
-      ) {
+      const clickedSort =
+        event.target.closest(
+          '[data-hilya-sort-wrap]'
+        );
 
-        closeSortMenu();
+
+      if (!clickedSort) {
+
+        closeSortMenus();
 
       }
 
@@ -2863,7 +2983,9 @@ closeMobileKeyboardOnEnter(
     function (event) {
 
       if (event.key === 'Escape') {
-        closeSortMenu();
+
+        closeSortMenus();
+
       }
 
     }
@@ -2922,7 +3044,6 @@ closeMobileKeyboardOnEnter(
 {% endjavascript %}
 
 
-
 {% stylesheet %}
 
 /* =========================================
@@ -2947,8 +3068,8 @@ closeMobileKeyboardOnEnter(
 }
 
 
-/* FILTERS TITLE
-   Larger and slightly higher
+/* =========================================
+   FILTERS TITLE
 ========================================= */
 
 .hilya-filter-sidebar__heading {
@@ -3038,8 +3159,8 @@ closeMobileKeyboardOnEnter(
 }
 
 
-/* Filter headings slightly tighter
-   to match reference
+/* =========================================
+   FILTER HEADINGS
 ========================================= */
 
 .hilya-filter-group__toggle {
@@ -3144,8 +3265,6 @@ closeMobileKeyboardOnEnter(
   overflow: visible;
 }
 
-/* BACKGROUND LINE */
-
 .hilya-price-slider__track {
   position: absolute;
   top: 50%;
@@ -3160,8 +3279,6 @@ closeMobileKeyboardOnEnter(
   border-radius: 0;
   box-shadow: none !important;
 }
-
-/* ACTIVE LINE */
 
 .hilya-price-slider__range {
   position: absolute;
@@ -3178,7 +3295,9 @@ closeMobileKeyboardOnEnter(
 }
 
 
-/* INVISIBLE RANGE CONTROLS */
+/* =========================================
+   RANGE CONTROLS
+========================================= */
 
 .hilya-price-slider input[type="range"] {
   position: absolute !important;
@@ -3278,7 +3397,11 @@ input[type="range"]::-moz-range-thumb {
 
 .hilya-price-values {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1fr);
+
   align-items: center;
   gap: .4rem;
 
@@ -3369,10 +3492,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 
-
 /* =========================================
    PRODUCTS TOOLBAR
-   Reduced height / spacing
 ========================================= */
 
 .hilya-filters__products-toolbar {
@@ -3387,7 +3508,6 @@ input[type="range"]::-moz-range-thumb {
 
   border-bottom: 1px solid rgb(0 0 0 / 9%);
 }
-
 
 .hilya-filters__results {
   color: var(--color-foreground);
@@ -3422,20 +3542,30 @@ input[type="range"]::-moz-range-thumb {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
+
   gap: .9rem;
+
   min-width: auto;
   min-height: auto;
+
   padding: .15rem 0 .18rem;
+
   border: 0;
   border-bottom: 0 !important;
   border-radius: 0;
+
   background: transparent;
+
   color: var(--color-foreground);
+
   font: inherit;
   font-size: .68rem;
   font-weight: 400;
+
   text-align: left;
+
   cursor: pointer;
+
   box-shadow: none;
 }
 
@@ -3448,45 +3578,69 @@ input[type="range"]::-moz-range-thumb {
 .hilya-filters__sort-chevron {
   position: relative;
   display: inline-block;
+
   width: .42rem;
   height: .42rem;
+
   flex: 0 0 auto;
+
   margin-top: -.18rem;
+
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
+
   transform: rotate(45deg);
-  transition: transform 180ms ease;
+
+  transition:
+    transform 180ms ease;
 }
 
-.hilya-filters__sort.is-open .hilya-filters__sort-chevron {
+.hilya-filters__sort.is-open
+.hilya-filters__sort-chevron {
   transform: rotate(225deg);
 }
 
 .hilya-filters__sort-menu {
   position: absolute;
+
   top: calc(100% + .45rem);
   right: 0;
+
   z-index: 30;
+
   width: 11rem;
+
   padding: .3rem 0;
+
   border: 1px solid rgb(0 0 0 / 12%);
   border-radius: 0;
+
   background: var(--color-background);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
+
+  box-shadow:
+    0 8px 24px rgb(0 0 0 / 8%);
 }
 
 .hilya-filters__sort-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   width: 100%;
+
   padding: .6rem .7rem;
+
   border: 0;
+
   background: transparent;
+
   color: var(--color-foreground);
+
   font: inherit;
   font-size: .64rem;
+
   text-align: left;
+
   cursor: pointer;
 }
 
@@ -3494,13 +3648,10 @@ input[type="range"]::-moz-range-thumb {
   background: rgb(0 0 0 / 4%);
 }
 
-
-
 .hilya-filters__sort-check {
   visibility: hidden;
   font-size: .7rem;
 }
-
 
 .hilya-filters__sort-option.is-selected
 .hilya-filters__sort-check {
@@ -3515,24 +3666,27 @@ input[type="range"]::-moz-range-thumb {
 .hilya-filter-overlay {
   position: fixed;
   inset: 0;
+
   z-index: 100000;
+
   background: rgb(0 0 0 / 35%);
+
   opacity: 0;
   visibility: hidden;
+
   transition:
     opacity 260ms ease,
     visibility 260ms ease;
 }
-
 
 .hilya-filter-overlay.is-visible {
   opacity: 1;
   visibility: visible;
 }
 
-
 .hilya-filter-drawer {
   position: fixed;
+
   top: 0;
   right: 0;
   bottom: 0;
@@ -3540,6 +3694,7 @@ input[type="range"]::-moz-range-thumb {
   z-index: 100001;
 
   width: min(28rem, 92vw);
+
   overflow-y: auto;
 
   background: var(--color-background);
@@ -3551,64 +3706,66 @@ input[type="range"]::-moz-range-thumb {
     cubic-bezier(.22,.61,.36,1);
 }
 
-
 .hilya-filter-drawer.is-open {
   transform: translateX(0);
 }
-
 
 .hilya-filter-drawer__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+
   padding: 2rem 1.5rem 1.35rem;
+
   border-bottom: 1px solid rgb(0 0 0 / 8%);
 }
 
-
 .hilya-filter-drawer__eyebrow {
   display: block;
+
   margin-bottom: .45rem;
+
   color: var(--color-muted);
+
   font-size: .56rem;
   letter-spacing: .18em;
 }
 
-
 .hilya-filter-drawer__header h2 {
   margin: 0;
+
   font-size: 1.2rem;
   font-weight: 400;
   letter-spacing: .08em;
 }
 
-
 .hilya-filter-drawer__close {
   padding: 0;
+
   border: 0;
+
   background: transparent;
+
   color: var(--color-foreground);
+
   font-size: 1.8rem;
   font-weight: 300;
   line-height: 1;
+
   cursor: pointer;
 }
-
 
 .hilya-filter-drawer__content {
   padding: 0 1.5rem 2rem;
 }
 
-
 .hilya-filter-drawer .hilya-filter-group {
   border-top: 1px solid rgb(0 0 0 / 9%);
 }
 
-
 .hilya-filter-drawer .hilya-filter-group:last-child {
   border-bottom: 1px solid rgb(0 0 0 / 9%);
 }
-
 
 .hilya-filter-drawer
 .hilya-filter-group__toggle,
@@ -3618,7 +3775,6 @@ input[type="range"]::-moz-range-thumb {
 }
 
 
-
 /* =========================================
    DESKTOP
 ========================================= */
@@ -3626,53 +3782,54 @@ input[type="range"]::-moz-range-thumb {
 @media (min-width: 40.001rem) {
 
   .hilya-filter-sidebar {
-  grid-area: sidebar;
-  align-self: start;
-  position: sticky;
-  top: 96px;
-  width: 100%;
+    grid-area: sidebar;
+    align-self: start;
 
-  max-height: calc(100vh - 112px);
-  overflow-y: auto;
-  overflow-x: hidden;
+    position: sticky;
+    top: 96px;
 
-  padding-right: .15rem;
+    width: 100%;
 
-  /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
+    max-height: calc(100vh - 112px);
 
-/* Chrome / Edge / Safari */
-.hilya-filter-sidebar::-webkit-scrollbar {
-  width: 2px;
-}
+    overflow-y: auto;
+    overflow-x: hidden;
 
-.hilya-filter-sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
+    padding-right: .15rem;
 
-.hilya-filter-sidebar::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 999px;
-}
-
-/* Show a very subtle scrollbar when interacting */
-.hilya-filter-sidebar:hover {
-  scrollbar-color: rgb(0 0 0 / 14%) transparent;
-}
-
-.hilya-filter-sidebar:hover::-webkit-scrollbar-thumb {
-  background: rgb(0 0 0 / 14%);
-}
-
-.hilya-filter-sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgb(0 0 0 / 22%);
-}
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
 
 
+  .hilya-filter-sidebar::-webkit-scrollbar {
+    width: 2px;
+  }
 
-  /* Compact desktop sidebar without changing filter contents */
+  .hilya-filter-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .hilya-filter-sidebar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+  }
+
+  .hilya-filter-sidebar:hover {
+    scrollbar-color:
+      rgb(0 0 0 / 14%)
+      transparent;
+  }
+
+  .hilya-filter-sidebar:hover::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 14%);
+  }
+
+  .hilya-filter-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgb(0 0 0 / 22%);
+  }
+
+
   .hilya-filter-sidebar__heading {
     margin: 0 0 .55rem;
   }
@@ -3706,7 +3863,9 @@ input[type="range"]::-moz-range-thumb {
 
   .hilya-filters__products-toolbar {
     grid-area: toolbar;
+
     min-height: 2.35rem;
+
     margin-bottom: .35rem;
   }
 
@@ -3736,10 +3895,11 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  /* =========================================
+  /* =======================================
      MOBILE TOP BAR
-     FILTER LEFT / SORT RIGHT
-  ========================================= */
+
+     FILTERS | PRODUCTS | SORT
+  ======================================= */
 
   .hilya-filters {
     position: relative;
@@ -3747,62 +3907,92 @@ input[type="range"]::-moz-range-thumb {
 
 
   .hilya-filters__mobile-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    display: grid;
 
-    position: relative;
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto
+      minmax(0, 1fr);
+
+    align-items: center;
+
+    width: 100%;
 
     min-height: 3rem;
 
-    border-bottom: 1px solid rgb(0 0 0 / 9%);
+    border-top:
+      1px solid rgb(0 0 0 / 9%);
+
+    border-bottom:
+      1px solid rgb(0 0 0 / 9%);
   }
 
+
+  /* =======================================
+     FILTERS LEFT
+  ======================================= */
 
   .hilya-filters__mobile-button {
     display: inline-flex;
     align-items: center;
+
+    justify-self: start;
+
     gap: .45rem;
 
     padding: 0;
 
     border: 0;
+
     background: transparent;
 
     color: var(--color-foreground);
 
     font: inherit;
+
     font-size: .63rem;
     font-weight: 500;
+
     letter-spacing: .1em;
 
     cursor: pointer;
   }
 
 
-  /* Hide the duplicate PRODUCTS count
-     from the first mobile row */
+  /* =======================================
+     PRODUCTS CENTER
+  ======================================= */
 
   .hilya-filters__mobile-results {
-    display: none;
+    display: block;
+
+    justify-self: center;
+
+    color: var(--color-foreground);
+
+    font-size: .58rem;
+
+    letter-spacing: .075em;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    text-transform: uppercase;
   }
 
 
-  /* =========================================
-     SORT
-     MOVE IT TO THE SAME ROW AS FILTER
-  ========================================= */
+  /* =======================================
+     SORT RIGHT
+  ======================================= */
 
-  .hilya-filters__sort {
-    position: absolute;
-
-    top: 0;
-    right: 0;
-
-    height: 3rem;
+  .hilya-filters__sort--mobile {
+    position: relative;
 
     display: flex;
     align-items: center;
+
+    justify-self: end;
 
     gap: .45rem;
 
@@ -3810,26 +4000,31 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
+  .hilya-filters__sort--mobile
   .hilya-filters__sort-label {
     display: inline;
 
     color: var(--color-muted);
 
     font-size: .58rem;
+
     font-weight: 400;
+
     letter-spacing: .02em;
 
     white-space: nowrap;
+
     text-transform: none;
   }
 
 
+  .hilya-filters__sort--mobile
   .hilya-filters__sort-trigger {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
 
-    gap: .7rem;
+    gap: .55rem;
 
     min-width: auto;
     min-height: auto;
@@ -3846,6 +4041,7 @@ input[type="range"]::-moz-range-thumb {
     color: var(--color-foreground);
 
     font: inherit;
+
     font-size: .58rem;
     font-weight: 400;
 
@@ -3857,80 +4053,72 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
+  .hilya-filters__sort--mobile
   .hilya-filters__sort-trigger:hover {
     border: 0 !important;
     border-bottom: 0 !important;
+
     background: transparent;
   }
 
 
+  .hilya-filters__sort--mobile
   .hilya-filters__sort-chevron {
     width: .38rem;
     height: .38rem;
 
     margin-top: -.15rem;
 
-    border-right: 1px solid currentColor;
-    border-bottom: 1px solid currentColor;
+    border-right:
+      1px solid currentColor;
 
-    transform: rotate(45deg);
+    border-bottom:
+      1px solid currentColor;
+
+    transform:
+      rotate(45deg);
   }
 
 
-  .hilya-filters__sort.is-open
+  .hilya-filters__sort--mobile.is-open
   .hilya-filters__sort-chevron {
-    transform: rotate(225deg);
+    transform:
+      rotate(225deg);
   }
 
 
+  .hilya-filters__sort--mobile
   .hilya-filters__sort-menu {
+    top: calc(100% + .45rem);
+    right: 0;
+
     width: 11rem;
   }
 
 
-  /* =========================================
-     PRODUCTS COUNT
-     ONLY ONE COUNT, CENTERED
-  ========================================= */
+  /* =======================================
+     HIDE OLD MOBILE PRODUCTS TOOLBAR
+
+     The mobile bar above now contains
+     FILTERS + PRODUCTS + SORT.
+  ======================================= */
 
   .hilya-filters__products-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-
-    min-height: 2.6rem;
-
-    margin-bottom: .4rem;
-
-    border-bottom: 1px solid rgb(0 0 0 / 9%);
+    display: none;
   }
 
 
-  .hilya-filters__results {
-    display: block;
-
-    color: var(--color-foreground);
-
-    font-size: .58rem;
-    letter-spacing: .075em;
-
-    text-align: center;
-    text-transform: uppercase;
-  }
-
-
-  /* =========================================
+  /* =======================================
      MOBILE DRAWER
      OPEN FROM LEFT
-  ========================================= */
+  ======================================= */
 
   .hilya-filter-drawer {
     position: fixed;
 
     top: 0;
     bottom: 0;
+
     left: 0;
     right: auto;
 
@@ -3942,7 +4130,8 @@ input[type="range"]::-moz-range-thumb {
 
     background: var(--color-background);
 
-    transform: translateX(-100%);
+    transform:
+      translateX(-100%);
 
     transition:
       transform 320ms
@@ -3951,25 +4140,29 @@ input[type="range"]::-moz-range-thumb {
 
 
   .hilya-filter-drawer.is-open {
-    transform: translateX(0);
+    transform:
+      translateX(0);
   }
 
 
-  /* =========================================
+  /* =======================================
      DRAWER HEADER
-     REMOVE COLLECTION
-     REMOVE BIG HEADER LINE
-  ========================================= */
+  ======================================= */
 
   .hilya-filter-drawer__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
 
-  padding: 2rem 1.5rem 1.35rem;
+    align-items: center;
 
-  border-bottom: 0;
-}
+    justify-content: space-between;
+
+    padding:
+      2rem
+      1.5rem
+      1.35rem;
+
+    border-bottom: 0;
+  }
 
 
   .hilya-filter-drawer__eyebrow {
@@ -3983,9 +4176,10 @@ input[type="range"]::-moz-range-thumb {
     color: var(--color-foreground);
 
     font-size: 1.2rem;
-    font-weight: 400;
-    letter-spacing: .08em;
 
+    font-weight: 400;
+
+    letter-spacing: .08em;
   }
 
 
@@ -3999,7 +4193,9 @@ input[type="range"]::-moz-range-thumb {
     color: var(--color-foreground);
 
     font-size: 1.8rem;
+
     font-weight: 300;
+
     line-height: 1;
 
     cursor: pointer;
@@ -4007,20 +4203,24 @@ input[type="range"]::-moz-range-thumb {
 
 
   .hilya-filter-drawer__content {
-    padding: 0 1.5rem 2rem;
+    padding:
+      0
+      1.5rem
+      2rem;
   }
 
 
-  /* Keep ONLY the small line
-     directly under FILTERS */
-
-  .hilya-filter-drawer .hilya-filter-group {
-    border-top: 1px solid rgb(0 0 0 / 9%);
+  .hilya-filter-drawer
+  .hilya-filter-group {
+    border-top:
+      1px solid rgb(0 0 0 / 9%);
   }
 
 
-  .hilya-filter-drawer .hilya-filter-group:last-child {
-    border-bottom: 1px solid rgb(0 0 0 / 9%);
+  .hilya-filter-drawer
+  .hilya-filter-group:last-child {
+    border-bottom:
+      1px solid rgb(0 0 0 / 9%);
   }
 
 
@@ -4032,17 +4232,64 @@ input[type="range"]::-moz-range-thumb {
   }
 
 
-  /* =========================================
+  /* =======================================
      FILTER CHIPS
-  ========================================= */
+  ======================================= */
 
   .hilya-filter-chip {
     font-size: .57rem;
-    padding: .36rem .44rem;
+
+    padding:
+      .36rem
+      .44rem;
   }
 
 }
 
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 27rem) {
+
+  .hilya-filters__mobile-bar {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto
+      minmax(0, 1fr);
+  }
+
+
+  .hilya-filters__mobile-button {
+    font-size: .58rem;
+    letter-spacing: .07em;
+  }
+
+
+  .hilya-filters__mobile-results {
+    font-size: .54rem;
+  }
+
+
+  .hilya-filters__sort--mobile {
+    gap: .3rem;
+  }
+
+
+  .hilya-filters__sort--mobile
+  .hilya-filters__sort-label {
+    font-size: .52rem;
+  }
+
+
+  .hilya-filters__sort--mobile
+  .hilya-filters__sort-trigger {
+    gap: .4rem;
+    font-size: .52rem;
+  }
+
+}
 
 
 /* =========================================
