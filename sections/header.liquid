@@ -930,11 +930,36 @@ body:has(.site-header--sticky) {
 
 @media screen and (max-width: 749px) {
 
-  .mobile-facets,
+  /* Shopify / Dawn mobile filter drawer */
   .mobile-facets__wrapper,
-  .facets-drawer {
-    position: relative;
-    z-index: 100001 !important;
+  .mobile-facets__disclosure,
+  .mobile-facets__disclosure > summary,
+  .mobile-facets__main,
+  .mobile-facets__inner,
+  .mobile-facets__close-button,
+  .mobile-facets__footer,
+  .mobile-facets__sort {
+    z-index: 1000000 !important;
+  }
+
+  /* Drawer itself */
+  .mobile-facets__wrapper {
+    position: relative !important;
+  }
+
+  .mobile-facets__disclosure[open] .mobile-facets__inner {
+    z-index: 1000001 !important;
+  }
+
+  /* Overlay */
+  .mobile-facets__overlay {
+    z-index: 999999 !important;
+  }
+
+  /* Make sure the drawer can visually escape surrounding containers */
+  .mobile-facets,
+  .mobile-facets__wrapper {
+    overflow: visible !important;
   }
 
 }
