@@ -1107,58 +1107,58 @@ if (
 
   function resetProductCard(item) {
 
-    const card =
-      item.querySelector(
-        '[data-product-card]'
-      );
+  const card =
+    item.querySelector(
+      '[data-product-card]'
+    );
 
-    if (!card) {
-      return;
-    }
-
-
-    const productPrice =
-      item.dataset.productPrice;
-
-
-    const priceElement =
-      card.querySelector(
-        '[data-product-price]'
-      );
-
-
-    if (
-  priceElement &&
-  productPrice !== undefined
-) {
-
-  let priceHtml =
-    '<span class="price">' +
-      '<span class="price__current">' +
-        'EGP ' +
-        Number(
-          productPrice
-        ).toLocaleString('en-US') +
-      '</span>';
-
-  if (
-    productCompareAtPrice !== undefined &&
-    productCompareAtPrice !== '' &&
-    Number(productCompareAtPrice) > Number(productPrice)
-  ) {
-    priceHtml +=
-      '<span class="price__compare">' +
-        'EGP ' +
-        Number(
-          productCompareAtPrice
-        ).toLocaleString('en-US') +
-      '</span>';
+  if (!card) {
+    return;
   }
 
-  priceHtml += '</span>';
+  const productPrice =
+    item.dataset.productPrice;
 
-  priceElement.innerHTML = priceHtml;
-}
+  const productCompareAtPrice =
+    item.dataset.productCompareAtPrice;
+
+  const priceElement =
+    card.querySelector(
+      '[data-product-price]'
+    );
+
+  if (
+    priceElement &&
+    productPrice !== undefined
+  ) {
+
+    let priceHtml =
+      '<span class="price">' +
+        '<span class="price__current">' +
+          'EGP ' +
+          Number(
+            productPrice
+          ).toLocaleString('en-US') +
+        '</span>';
+
+    if (
+      productCompareAtPrice !== undefined &&
+      productCompareAtPrice !== '' &&
+      Number(productCompareAtPrice) > Number(productPrice)
+    ) {
+      priceHtml +=
+        '<span class="price__compare">' +
+          'EGP ' +
+          Number(
+            productCompareAtPrice
+          ).toLocaleString('en-US') +
+          '</span>';
+    }
+
+    priceHtml += '</span>';
+
+    priceElement.innerHTML = priceHtml;
+  }
 
 
     const links =
