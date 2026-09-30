@@ -11,13 +11,6 @@
   "sections": {
     "main": {
       "type": "product",
-      "settings": {
-        "show_product_vendor": false,
-        "show_inventory": true,
-        "show_dynamic_checkout": true,
-        "show_buy_now": true,
-        "media_position": "left"
-      },
       "blocks": {
         "details_item_details": {
           "type": "accordion",
@@ -27,6 +20,7 @@
             "source": "description",
             "metafield_namespace": "custom",
             "metafield_key": "item_details",
+            "metafield_key_ar": "",
             "content_en": "<p>Explore the product photos and available options. Contact us if you need more details or help choosing before placing your order.</p>",
             "content_ar": "<p>تصفح صور المنتج والخيارات المتاحة. تواصل معنا إذا كنت بحاجة إلى تفاصيل إضافية أو مساعدة في الاختيار قبل إتمام طلبك.</p>",
             "open_by_default": true,
@@ -42,6 +36,7 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "shipping_returns",
+            "metafield_key_ar": "",
             "content_en": "<p>Shipping options and costs are shown at checkout. For delivery estimates or return questions, contact us before placing your order.</p>",
             "content_ar": "<p>تظهر خيارات الشحن وتكلفته عند إتمام الشراء. للاستفسار عن موعد التوصيل المتوقع أو الإرجاع، تواصل معنا قبل إتمام طلبك.</p>",
             "open_by_default": true,
@@ -57,6 +52,7 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "material_care",
+            "metafield_key_ar": "",
             "content_en": "<p>Care requirements vary by material. Contact us for guidance before cleaning or storing your product.</p>",
             "content_ar": "<p>تختلف متطلبات العناية حسب الخامة. تواصل معنا للحصول على إرشادات قبل تنظيف المنتج أو تخزينه.</p>",
             "open_by_default": false,
@@ -72,6 +68,7 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "did_you_know",
+            "metafield_key_ar": "",
             "content_en": "<p>Product options may change the price and availability. Select your preferred options to see the current details.</p>",
             "content_ar": "<p>قد تتغير الأسعار وتوافر المنتج حسب الخيارات. حدد خياراتك المفضلة للاطلاع على التفاصيل الحالية.</p>",
             "open_by_default": false,
@@ -87,6 +84,7 @@
             "source": "metafield",
             "metafield_namespace": "custom",
             "metafield_key": "about_seller",
+            "metafield_key_ar": "",
             "content_en": "<p>Have a question about this product? Contact our team for help before placing your order.</p>",
             "content_ar": "<p>هل لديك سؤال عن هذا المنتج؟ تواصل مع فريقنا للحصول على المساعدة قبل إتمام طلبك.</p>",
             "open_by_default": false,
@@ -101,7 +99,35 @@
         "details_material_care",
         "details_did_you_know",
         "details_about_seller"
-      ]
+      ],
+      "settings": {
+        "show_breadcrumbs": true,
+        "show_product_vendor": false,
+        "show_rating": true,
+        "show_inventory": true,
+        "show_tax_note": true,
+        "show_quantity": true,
+        "show_buy_now": true,
+        "show_dynamic_checkout": true,
+        "show_save_button": true,
+        "media_position": "left",
+        "image_ratio": "1 / 1",
+        "image_fit": "contain",
+        "show_personalization": true,
+        "personalization_required": false,
+        "personalization_label_en": "",
+        "personalization_label_ar": "",
+        "personalization_prompt_en": "",
+        "personalization_prompt_ar": ""
+      }
+    },
+    "bought_together": {
+      "type": "bought-together",
+      "settings": {
+        "heading_en": "",
+        "heading_ar": "",
+        "products": []
+      }
     },
     "feature_ready_to_hang": {
       "type": "product-feature-showcase",
@@ -148,8 +174,13 @@
       "settings": {
         "heading_en": "READY TO HANG",
         "subheading_en": "NO HASSLE. STRAIGHT ON THE WALL.",
+        "text_en": "",
+        "button_label_en": "",
         "heading_ar": "جاهزة للتعليق",
         "subheading_ar": "بدون عناء. مباشرة على الحائط.",
+        "text_ar": "",
+        "button_label_ar": "",
+        "button_link": "",
         "media_position": "start",
         "mobile_order": "media-first",
         "content_alignment": "center",
@@ -165,10 +196,10 @@
         "uppercase_subheading": true,
         "uppercase_features": true,
         "show_top_border": false,
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "text_color": "#202020",
         "muted_color": "#343434",
-        "accent_color": "#F7941D",
+        "accent_color": "#f7941d",
         "heading_size": 48,
         "body_size": 24,
         "padding_top": 40,
@@ -222,8 +253,13 @@
       "settings": {
         "heading_en": "MUSEUM QUALITY",
         "subheading_en": "PREMIUM MATERIALS. GALLERY LEVEL EXECUTION.",
+        "text_en": "",
+        "button_label_en": "",
         "heading_ar": "جودة تليق بالمتاحف",
         "subheading_ar": "خامات فاخرة. تنفيذ بمستوى المعارض.",
+        "text_ar": "",
+        "button_label_ar": "",
+        "button_link": "",
         "media_position": "end",
         "mobile_order": "media-first",
         "content_alignment": "center",
@@ -239,10 +275,10 @@
         "uppercase_subheading": true,
         "uppercase_features": true,
         "show_top_border": true,
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "text_color": "#202020",
         "muted_color": "#343434",
-        "accent_color": "#F7941D",
+        "accent_color": "#f7941d",
         "heading_size": 48,
         "body_size": 24,
         "padding_top": 40,
@@ -314,8 +350,13 @@
       "settings": {
         "heading_en": "WHY IKONICK?",
         "subheading_en": "TRUSTED BY THE BIGGEST NAMES IN THE WORLD.",
+        "text_en": "",
+        "button_label_en": "",
         "heading_ar": "لماذا IKONICK؟",
         "subheading_ar": "موثوقة من أكبر الأسماء في العالم.",
+        "text_ar": "",
+        "button_label_ar": "",
+        "button_link": "",
         "media_position": "start",
         "mobile_order": "media-first",
         "content_alignment": "center",
@@ -331,10 +372,10 @@
         "uppercase_subheading": true,
         "uppercase_features": true,
         "show_top_border": false,
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "text_color": "#202020",
         "muted_color": "#343434",
-        "accent_color": "#F7941D",
+        "accent_color": "#f7941d",
         "heading_size": 48,
         "body_size": 24,
         "padding_top": 40,
@@ -393,10 +434,6 @@
       "block_order": [
         "judge_me_reviews_review_widget_LxYaQx"
       ],
-      "settings": {}
-    },
-    "bought_together": {
-      "type": "bought-together",
       "settings": {}
     }
   },
