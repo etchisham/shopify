@@ -7,25 +7,24 @@
   font-style: normal;
   font-display: swap;
 }
-
-
 /* =========================================================
    HILYA HEADER
    ========================================================= */
 
 .site-header {
-
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
   --header-border: {{ section.settings.border_color }};
-
   --header-height: {{ section.settings.desktop_height }}px;
   --header-mobile-height: {{ section.settings.mobile_height }}px;
+  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
-  width: 100% !important;
+  width: 100vw !important;
   max-width: none !important;
 
-  margin: 0 !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
+
   padding: 0 !important;
 
   background: var(--header-bg);
@@ -39,7 +38,6 @@
   box-sizing: border-box;
 }
 
-
 .site-header,
 .site-header * {
   box-sizing: border-box;
@@ -47,20 +45,30 @@
 
 
 /* =========================================================
-   IMPORTANT
-   Header is NOT fixed / sticky
+   FIXED HEADER
    ========================================================= */
 
 .site-header--sticky {
-  position: relative !important;
+  position: fixed !important;
 
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
 
-  width: 100% !important;
+  width: 100vw !important;
+  max-width: none !important;
 
-  margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+
+  z-index: 99999 !important;
+}
+
+
+/* Reserve header space */
+
+body:has(.site-header--sticky) {
+  padding-top: var(--hilya-header-height);
 }
 
 
@@ -69,7 +77,6 @@
    ========================================================= */
 
 .site-header__inner {
-
   width: 100% !important;
   max-width: none !important;
 
@@ -89,11 +96,11 @@
 
 
 /* =========================================================
-   BRAND
+   HILYA BRAND
+   Elegant Script / Luxury Wordmark
    ========================================================= */
 
 .site-header__brand {
-
   position: relative;
   z-index: 20;
 
@@ -116,7 +123,6 @@
   transform: translateY(-1px);
 }
 
-
 .site-header__brand:hover {
   color: var(--header-text);
 }
@@ -127,7 +133,6 @@
    ========================================================= */
 
 .desktop-nav {
-
   position: absolute;
 
   left: 50%;
@@ -145,9 +150,7 @@
   z-index: 15;
 }
 
-
 .desktop-nav > a {
-
   color: var(--header-text);
   text-decoration: none;
 
@@ -165,7 +168,6 @@
   align-items: center;
 }
 
-
 .desktop-nav > a:hover {
   opacity: 0.65;
 }
@@ -173,11 +175,11 @@
 
 /* =========================================================
    DESKTOP MENU + CATEGORIES
+   HOVER ONLY
    ========================================================= */
 
 .desktop-menu,
 .desktop-categories {
-
   position: relative;
 
   height: 100%;
@@ -193,7 +195,6 @@
 
 .desktop-menu__trigger,
 .desktop-categories__trigger {
-
   appearance: none;
   -webkit-appearance: none;
 
@@ -212,18 +213,14 @@
   cursor: default;
 }
 
-
 .desktop-menu__trigger {
-
   height: 100%;
 
   display: flex;
   align-items: center;
 }
 
-
 .desktop-categories__trigger {
-
   height: 100%;
 
   display: flex;
@@ -244,7 +241,6 @@
    ========================================================= */
 
 .desktop-menu__icon {
-
   width: 18px;
   height: 14px;
 
@@ -255,9 +251,7 @@
   pointer-events: none;
 }
 
-
 .desktop-menu__icon span {
-
   width: 100%;
   height: 1px;
 
@@ -272,7 +266,6 @@
    ========================================================= */
 
 .desktop-dropdown {
-
   position: absolute;
 
   top: 100%;
@@ -305,9 +298,7 @@
   z-index: 2000;
 }
 
-
 .desktop-dropdown a {
-
   display: block;
 
   padding: 9px 20px;
@@ -326,14 +317,13 @@
   white-space: nowrap;
 }
 
-
 .desktop-dropdown a:hover {
   background: rgba(0, 0, 0, 0.035);
 }
 
 
 /* =========================================================
-   DESKTOP HOVER
+   DESKTOP HOVER ONLY
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -360,7 +350,6 @@
    ========================================================= */
 
 .header-actions {
-
   margin-left: auto;
 
   display: flex;
@@ -373,9 +362,7 @@
   z-index: 20;
 }
 
-
 .header-action {
-
   color: var(--header-text);
 
   text-decoration: none;
@@ -387,18 +374,14 @@
   position: relative;
 }
 
-
 .header-action svg {
-
   width: 18px;
   height: 18px;
 
   stroke: currentColor;
 }
 
-
 .cart-count {
-
   position: absolute;
 
   top: -8px;
@@ -429,21 +412,19 @@
   position: relative;
 }
 
-
 .header-search summary {
-
   list-style: none;
   cursor: pointer;
 }
-
 
 .header-search summary::-webkit-details-marker {
   display: none;
 }
 
 
-.header-search__panel {
+/* Search box */
 
+.header-search__panel {
   position: absolute;
 
   right: 0;
@@ -463,18 +444,14 @@
   z-index: 3000;
 }
 
-
 .header-search__form {
-
   display: flex;
   align-items: center;
 
   gap: 8px;
 }
 
-
 .header-search__input {
-
   flex: 1;
 
   min-width: 0;
@@ -494,16 +471,17 @@
   font-size: 0.78rem;
 }
 
-
 .header-search__input::placeholder {
-
   color: var(--header-text);
   opacity: 0.55;
 }
 
 
-.header-search__submit {
+/* =========================================================
+   SEARCH SUBMIT BUTTON
+   ========================================================= */
 
+.header-search__submit {
   width: 38px;
   height: 38px;
 
@@ -511,7 +489,7 @@
 
   background: transparent;
 
-  color: #000000;
+  color: #000000ff;
 
   display: flex;
   align-items: center;
@@ -522,9 +500,7 @@
   padding: 0;
 }
 
-
 .header-search__submit svg {
-
   width: 18px;
   height: 18px;
 
@@ -555,20 +531,17 @@
 @media screen and (max-width: 749px) {
 
   .site-header {
+    --hilya-header-height: {{ section.settings.mobile_height }}px;
 
-    width: 100% !important;
+    width: 100vw !important;
     max-width: none !important;
 
-    margin: 0 !important;
-
-    position: relative !important;
-
-    z-index: 1000;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
 
   .site-header__inner {
-
     width: 100% !important;
     max-width: none !important;
 
@@ -584,25 +557,24 @@
      ======================================================= */
 
   .site-header__brand {
+  position: absolute;
 
-    position: absolute;
+  left: 50%;
+  top: 50%;
 
-    left: 50%;
-    top: 50%;
+  transform:
+    translate(-50%, -50%)
+    translateY(-1px);
 
-    transform:
-      translate(-50%, -50%)
-      translateY(-1px);
+  font-family: "Hilya Script", cursive;
 
-    font-family: "Hilya Script", cursive;
+  font-size: 2.15rem;
 
-    font-size: 2.15rem;
+  font-style: normal;
+  font-weight: 400;
 
-    font-style: normal;
-    font-weight: 400;
-
-    letter-spacing: 0;
-  }
+  letter-spacing: 0;
+}
 
 
   /* =======================================================
@@ -619,7 +591,6 @@
      ======================================================= */
 
   .mobile-menu {
-
     display: block;
 
     position: static;
@@ -629,7 +600,6 @@
 
 
   .mobile-menu summary {
-
     list-style: none;
 
     width: 22px;
@@ -647,18 +617,16 @@
     position: relative;
   }
 
-
   .mobile-menu summary::-webkit-details-marker {
     display: none;
   }
 
 
   /* =======================================================
-     MOBILE HAMBURGER
+     MOBILE HAMBURGER / X
      ======================================================= */
 
   .mobile-menu__icon {
-
     width: 21px;
     height: 16px;
 
@@ -670,9 +638,7 @@
     position: relative;
   }
 
-
   .mobile-menu__icon span {
-
     width: 100%;
     height: 1px;
 
@@ -688,27 +654,22 @@
   }
 
 
-  /* OPEN = X */
+  /* Open = X */
 
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(1) {
-
     transform:
       translateY(7.5px)
       rotate(45deg);
   }
 
-
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(2) {
-
     opacity: 0;
   }
 
-
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(3) {
-
     transform:
       translateY(-7.5px)
       rotate(-45deg);
@@ -716,11 +677,10 @@
 
 
   /* =======================================================
-     MOBILE MENU PANEL
+     MOBILE MENU FULL SCREEN
      ======================================================= */
 
   .mobile-menu__panel {
-
     position: fixed;
 
     top: var(--header-mobile-height);
@@ -747,7 +707,8 @@
     border-bottom:
       1px solid var(--header-border);
 
-    box-shadow: none;
+    box-shadow:
+      none;
 
     z-index: 99998;
 
@@ -762,7 +723,6 @@
      ======================================================= */
 
   .mobile-menu__panel > a {
-
     display: block;
 
     width: 100%;
@@ -790,16 +750,13 @@
      ======================================================= */
 
   .mobile-categories {
-
     width: 100%;
 
     border-bottom:
       1px solid rgba(0, 0, 0, 0.08);
   }
 
-
   .mobile-categories summary {
-
     list-style: none;
 
     width: 100%;
@@ -822,18 +779,14 @@
     cursor: pointer;
   }
 
-
   .mobile-categories summary::-webkit-details-marker {
     display: none;
   }
 
 
-  /* =======================================================
-     CATEGORIES ARROW
-     ======================================================= */
+  /* Categories arrow */
 
   .mobile-categories__arrow {
-
     width: 7px;
     height: 7px;
 
@@ -852,7 +805,6 @@
       transform 0.2s ease;
   }
 
-
   .mobile-categories[open]
   .mobile-categories__arrow {
 
@@ -862,21 +814,16 @@
   }
 
 
-  /* =======================================================
-     CATEGORY ITEMS
-     ======================================================= */
+  /* Category items */
 
   .mobile-categories__items {
-
     width: 100%;
 
     padding:
       0 0 5px 14px;
   }
 
-
   .mobile-categories__items a {
-
     display: block;
 
     width: 100%;
@@ -902,15 +849,12 @@
      ======================================================= */
 
   .header-actions {
-
     margin-left: auto;
 
     gap: 14px;
   }
 
-
   .header-action svg {
-
     width: 18px;
     height: 18px;
   }
@@ -921,7 +865,6 @@
      ======================================================= */
 
   .header-search__panel {
-
     position: fixed;
 
     top: var(--header-mobile-height);
@@ -936,7 +879,6 @@
 
     z-index: 99998;
   }
-
 
   .header-search__form {
     width: 100%;
@@ -963,7 +905,6 @@
    ========================================================= */
 
 .shopify-section:has(.site-header) {
-
   width: 100vw !important;
   max-width: none !important;
 
@@ -973,18 +914,6 @@
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
-
-
-/* =========================================================
-   IMPORTANT:
-   NO BODY PADDING
-   ========================================================= */
-
-/*
-body:has(.site-header--sticky) {
-  padding-top: 0;
-}
-*/
 
 {% endstyle %}
 
@@ -1005,11 +934,9 @@ body:has(.site-header--sticky) {
       <summary aria-label="Open menu">
 
         <span class="mobile-menu__icon">
-
           <span></span>
           <span></span>
           <span></span>
-
         </span>
 
       </summary>
@@ -1025,6 +952,8 @@ body:has(.site-header--sticky) {
           All Products
         </a>
 
+
+        <!-- MOBILE CATEGORIES -->
 
         <details class="mobile-categories">
 
@@ -1091,6 +1020,8 @@ body:has(.site-header--sticky) {
         </a>
 
 
+        <!-- INSTAGRAM - NEW TAB -->
+
         <a
           href="{{ section.settings.instagram_link }}"
           target="_blank"
@@ -1152,6 +1083,9 @@ body:has(.site-header--sticky) {
 
     <nav class="desktop-nav">
 
+
+      <!-- DESKTOP MENU -->
+
       <div class="desktop-menu">
 
         <button
@@ -1161,11 +1095,9 @@ body:has(.site-header--sticky) {
         >
 
           <span class="desktop-menu__icon">
-
             <span></span>
             <span></span>
             <span></span>
-
           </span>
 
         </button>
@@ -1197,6 +1129,8 @@ body:has(.site-header--sticky) {
 
           {% endif %}
 
+
+          <!-- INSTAGRAM - NEW TAB -->
 
           <a
             href="{{ section.settings.instagram_link }}"
@@ -1241,10 +1175,14 @@ body:has(.site-header--sticky) {
       </div>
 
 
+      <!-- HOME -->
+
       <a href="{{ routes.root_url }}">
         Home
       </a>
 
+
+      <!-- DESKTOP CATEGORIES -->
 
       <div class="desktop-categories">
 
@@ -1283,6 +1221,8 @@ body:has(.site-header--sticky) {
       </div>
 
 
+      <!-- CONTACT -->
+
       <a href="{{ section.settings.contact_link }}">
         Contact Us
       </a>
@@ -1296,6 +1236,8 @@ body:has(.site-header--sticky) {
 
     <div class="header-actions">
 
+
+      <!-- SEARCH -->
 
       {% if section.settings.show_search %}
 
@@ -1383,6 +1325,8 @@ body:has(.site-header--sticky) {
       {% endif %}
 
 
+      <!-- ACCOUNT -->
+
       {% if section.settings.show_account %}
 
         <a
@@ -1415,6 +1359,8 @@ body:has(.site-header--sticky) {
 
       {% endif %}
 
+
+      <!-- CART -->
 
       <a
         href="{{ routes.cart_url }}"
@@ -1467,7 +1413,6 @@ body:has(.site-header--sticky) {
 
 
 <script>
-
 (function () {
 
   function setupHilyaMobileMenu() {
@@ -1476,52 +1421,36 @@ body:has(.site-header--sticky) {
 
     if (!menu) return;
 
-
     function lockPage() {
-
       document.documentElement.style.overflow = 'hidden';
-
       document.body.style.overflow = 'hidden';
     }
 
-
     function unlockPage() {
-
       document.documentElement.style.overflow = '';
-
       document.body.style.overflow = '';
     }
-
 
     menu.addEventListener('toggle', function () {
 
       if (menu.open) {
-
         lockPage();
-
       } else {
-
         unlockPage();
-
       }
 
     });
 
-
     window.addEventListener('resize', function () {
 
       if (window.innerWidth > 749) {
-
         menu.open = false;
-
         unlockPage();
-
       }
 
     });
 
   }
-
 
   if (document.readyState === 'loading') {
 
@@ -1537,7 +1466,6 @@ body:has(.site-header--sticky) {
   }
 
 })();
-
 </script>
 
 
@@ -1663,7 +1591,7 @@ body:has(.site-header--sticky) {
       "type": "checkbox",
       "id": "sticky_header",
       "label": "Sticky header",
-      "default": false
+      "default": true
     },
 
     {
