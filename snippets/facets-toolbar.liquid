@@ -68,9 +68,7 @@
         <summary>
           <span>Availability</span>
 
-          <span class="hilya-filter-chevron">
-            +
-          </span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </summary>
 
 
@@ -116,9 +114,7 @@
         <summary>
           <span>Price</span>
 
-          <span class="hilya-filter-chevron">
-            +
-          </span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </summary>
 
 
@@ -208,9 +204,7 @@
         <summary>
           <span>Color</span>
 
-          <span class="hilya-filter-chevron">
-            +
-          </span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </summary>
 
 
@@ -256,9 +250,7 @@
         <summary>
           <span>Product Type</span>
 
-          <span class="hilya-filter-chevron">
-            +
-          </span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </summary>
 
 
@@ -407,31 +399,40 @@
     </span>
 
 
-    <div class="hilya-filters__sort">
+    <div class="hilya-filters__sort" data-hilya-sort-wrap>
 
-      <label for="HilyaSortMobile">
-        SORT BY
-      </label>
+      <span class="hilya-filters__sort-label">SORT BY</span>
 
-      <select
-        id="HilyaSortMobile"
-        data-hilya-sort
+      <button
+        type="button"
+        class="hilya-filters__sort-trigger"
+        data-hilya-sort-trigger
+        aria-expanded="false"
+        aria-haspopup="listbox"
       >
+        <span data-hilya-sort-current>Featured</span>
+        <span class="hilya-filters__sort-chevron" aria-hidden="true"></span>
+      </button>
 
+      <div
+        class="hilya-filters__sort-menu"
+        data-hilya-sort-menu
+        role="listbox"
+        hidden
+      >
         {% for option in collection.sort_options %}
-
-          <option
-            value="{{ option.value }}"
-            {% if option.value == collection.sort_by %}
-              selected
-            {% endif %}
+          <button
+            type="button"
+            class="hilya-filters__sort-option{% if option.value == collection.sort_by %} is-selected{% endif %}"
+            data-sort-value="{{ option.value | escape }}"
+            role="option"
+            aria-selected="{% if option.value == collection.sort_by %}true{% else %}false{% endif %}"
           >
-            {{ option.name }}
-          </option>
-
+            <span>{{ option.name }}</span>
+            <span class="hilya-filters__sort-check" aria-hidden="true">✓</span>
+          </button>
         {% endfor %}
-
-      </select>
+      </div>
 
     </div>
 
@@ -1943,49 +1944,81 @@ document.addEventListener('DOMContentLoaded', function () {
      SORT
   ========================================= */
 
-  const sortSelects =
-    document.querySelectorAll(
-      '[data-hilya-sort]'
-    );
+  const sortWrap =
+    document.querySelector('[data-hilya-sort-wrap]');
 
+  const sortTrigger =
+    document.querySelector('[data-hilya-sort-trigger]');
 
-  sortSelects.forEach(
-    function (sortSelect) {
+  const sortMenu =
+    document.querySelector('[data-hilya-sort-menu]');
 
-      sortSelect.addEventListener(
-        'change',
-        function () {
+  const sortCurrent =
+    document.querySelector('[data-hilya-sort-current]');
 
-          sortSelects.forEach(
-            function (otherSelect) {
+  const sortOptions =
+    document.querySelectorAll('[data-sort-value]');
 
-              otherSelect.value =
-                sortSelect.value;
+  function closeSortMenu() {
+    if (!sortWrap || !sortTrigger || !sortMenu) return;
 
-            }
-          );
+    sortWrap.classList.remove('is-open');
+    sortTrigger.setAttribute('aria-expanded', 'false');
+    sortMenu.hidden = true;
+  }
 
+  function openSortMenu() {
+    if (!sortWrap || !sortTrigger || !sortMenu) return;
 
-          const url =
-            new URL(
-              window.location.href
-            );
+    sortWrap.classList.add('is-open');
+    sortTrigger.setAttribute('aria-expanded', 'true');
+    sortMenu.hidden = false;
+  }
 
+  if (sortTrigger) {
+    sortTrigger.addEventListener('click', function () {
+      if (sortMenu && sortMenu.hidden) {
+        openSortMenu();
+      } else {
+        closeSortMenu();
+      }
+    });
+  }
 
-          url.searchParams.set(
-            'sort_by',
-            this.value
-          );
+  sortOptions.forEach(function (option) {
+    option.addEventListener('click', function () {
+      const value = option.getAttribute('data-sort-value');
+      const label = option.querySelector('span');
 
+      if (sortCurrent && label) {
+        sortCurrent.textContent = label.textContent.trim();
+      }
 
-          window.location.href =
-            url.toString();
+      sortOptions.forEach(function (other) {
+        const selected = other === option;
+        other.classList.toggle('is-selected', selected);
+        other.setAttribute('aria-selected', selected ? 'true' : 'false');
+      });
 
-        }
-      );
+      closeSortMenu();
 
+      const url = new URL(window.location.href);
+      url.searchParams.set('sort_by', value);
+      window.location.href = url.toString();
+    });
+  });
+
+  document.addEventListener('click', function (event) {
+    if (sortWrap && !sortWrap.contains(event.target)) {
+      closeSortMenu();
     }
-  );
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeSortMenu();
+    }
+  });
 
 
   /* =========================================
@@ -2005,43 +2038,51 @@ document.addEventListener('DOMContentLoaded', function () {
 .hilya-filters { width: 100%; }
 .hilya-filters__mobile-bar { display: none; }
 .hilya-filter-sidebar { width: 100%; }
-.hilya-filter-sidebar__heading { margin: 0 0 1.15rem; }
-.hilya-filter-sidebar__heading h2 { margin: 0; color: var(--color-foreground); font-size: .68rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
-.hilya-filters__active { display: flex; flex-wrap: wrap; align-items: center; gap: .38rem; margin: 0 0 1.1rem; }
+.hilya-filter-sidebar__heading { margin: 0 0 1.05rem; }
+.hilya-filter-sidebar__heading h2 { margin: 0; color: var(--color-foreground); font-size: 1rem; font-weight: 400; letter-spacing: .01em; line-height: 1.2; text-transform: none; }
+.hilya-filters__active { display: flex; flex-wrap: wrap; align-items: center; gap: .38rem; margin: 0 0 1.05rem; }
 .hilya-filters__active-label { width: 100%; margin: 0 0 .08rem; color: var(--color-muted); font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; }
-.hilya-filter-chip { display: inline-flex; align-items: center; gap: .38rem; padding: .38rem .48rem; border: 1px solid rgb(0 0 0 / 10%); background: transparent; color: var(--color-foreground); font: inherit; font-size: .59rem; line-height: 1; cursor: pointer; }
+.hilya-filter-chip { display: inline-flex; align-items: center; gap: .38rem; padding: .4rem .5rem; border: 1px solid rgb(0 0 0 / 12%); background: transparent; color: var(--color-foreground); font: inherit; font-size: .61rem; line-height: 1; cursor: pointer; }
 .hilya-filter-chip:hover { background: rgb(0 0 0 / 3%); }
-.hilya-filter-chip__remove { font-size: .75rem; line-height: .8; font-weight: 300; }
-.hilya-filters__clear { padding: 0; border: 0; background: transparent; color: var(--color-muted); font: inherit; font-size: .57rem; letter-spacing: .03em; text-decoration: underline; text-underline-offset: .18rem; cursor: pointer; }
-.hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 9%); }
-.hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 9%); }
-.hilya-filter-group summary { display: flex; align-items: center; justify-content: space-between; padding: .85rem 0; color: var(--color-foreground); font-size: .62rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; list-style: none; }
+.hilya-filter-chip__remove { font-size: .72rem; line-height: .8; font-weight: 300; }
+.hilya-filters__clear { padding: 0; border: 0; background: transparent; color: var(--color-muted); font: inherit; font-size: .55rem; letter-spacing: .02em; text-decoration: underline; text-underline-offset: .16rem; cursor: pointer; }
+.hilya-filter-group { border-top: 1px solid rgb(0 0 0 / 10%); }
+.hilya-filter-group:last-child { border-bottom: 1px solid rgb(0 0 0 / 10%); }
+.hilya-filter-group summary { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; color: var(--color-foreground); font-size: .78rem; font-weight: 500; letter-spacing: .01em; text-transform: none; cursor: pointer; list-style: none; }
 .hilya-filter-group summary::-webkit-details-marker { display: none; }
-.hilya-filter-chevron { font-size: .85rem; font-weight: 300; line-height: 1; transition: transform 180ms ease; }
-.hilya-filter-group[open] .hilya-filter-chevron { transform: rotate(45deg); }
-.hilya-filter-group__content { padding: 0 0 .8rem; }
-.hilya-filter-option { display: flex; align-items: center; gap: .55rem; min-height: 1.95rem; color: var(--color-foreground); font-size: .68rem; cursor: pointer; }
+.hilya-filter-chevron { position: relative; display: inline-block; width: .48rem; height: .48rem; margin-right: .12rem; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translateY(-.08rem); transform-origin: center; transition: transform 180ms ease; }
+.hilya-filter-group[open] .hilya-filter-chevron { transform: rotate(225deg) translate(-.02rem, -.02rem); }
+.hilya-filter-group__content { padding: 0 0 1rem; }
+.hilya-filter-option { display: flex; align-items: center; gap: .6rem; min-height: 2.05rem; color: var(--color-foreground); font-size: .76rem; cursor: pointer; }
 .hilya-filter-option input { width: .82rem; height: .82rem; margin: 0; accent-color: #111; cursor: pointer; }
-.hilya-price-slider { position: relative; width: 100%; height: 1.6rem; margin: .15rem 0 .45rem; }
-.hilya-price-slider__track, .hilya-price-slider__range { position: absolute; top: 50%; height: 1px; transform: translateY(-50%); }
-.hilya-price-slider__track { right: 0; left: 0; background: rgb(0 0 0 / 18%); }
+.hilya-price-slider { position: relative; width: 100%; height: 1.75rem; margin: .15rem 0 .55rem; }
+.hilya-price-slider__track, .hilya-price-slider__range { position: absolute; top: 50%; height: 3px; transform: translateY(-50%); }
+.hilya-price-slider__track { right: 0; left: 0; background: rgb(0 0 0 / 24%); }
 .hilya-price-slider__range { background: var(--color-foreground); z-index: 1; }
-.hilya-price-slider input[type="range"] { position: absolute; inset: 0; width: 100%; height: 1.6rem; margin: 0; padding: 0; background: transparent; appearance: none; pointer-events: none; }
-.hilya-price-slider input[type="range"]::-webkit-slider-thumb { width: 10px; height: 10px; border: 1px solid var(--color-foreground); border-radius: 50%; background: var(--color-background); appearance: none; cursor: pointer; pointer-events: auto; }
-.hilya-price-slider input[type="range"]::-moz-range-thumb { width: 10px; height: 10px; border: 1px solid var(--color-foreground); border-radius: 50%; background: var(--color-background); cursor: pointer; pointer-events: auto; }
-.hilya-price-values { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .35rem; font-size: .57rem; }
-.hilya-price-input { display: flex; align-items: center; gap: .25rem; min-width: 0; padding: .28rem .35rem; border: 1px solid rgb(0 0 0 / 14%); background: transparent; }
-.hilya-price-input--max { justify-content: flex-end; }
-.hilya-price-input span { color: var(--color-muted); font-size: .52rem; }
-.hilya-price-input input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .59rem; }
+.hilya-price-slider input[type="range"] { position: absolute; inset: 0; width: 100%; height: 1.75rem; margin: 0; padding: 0; background: transparent; appearance: none; pointer-events: none; }
+.hilya-price-slider input[type="range"]::-webkit-slider-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: var(--color-foreground); appearance: none; cursor: pointer; pointer-events: auto; }
+.hilya-price-slider input[type="range"]::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: var(--color-foreground); cursor: pointer; pointer-events: auto; }
+.hilya-price-values { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: .45rem; font-size: .62rem; }
+.hilya-price-input { display: flex; align-items: center; gap: .3rem; min-width: 0; height: 2rem; padding: 0 .55rem; border: 1px solid rgb(0 0 0 / 16%); background: var(--color-background); }
+.hilya-price-input--max { justify-content: flex-start; }
+.hilya-price-input span { flex: 0 0 auto; color: var(--color-muted); font-size: .56rem; }
+.hilya-price-input input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .62rem; text-align: right; }
 .hilya-price-input input::-webkit-inner-spin-button, .hilya-price-input input::-webkit-outer-spin-button { appearance: none; margin: 0; }
 .hilya-price-input input[type="number"] { appearance: textfield; }
-.hilya-price-values__to { color: var(--color-muted); font-size: .54rem; }
-.hilya-filters__products-toolbar { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 2.9rem; margin: 0 0 1rem; border-bottom: 1px solid rgb(0 0 0 / 9%); }
-.hilya-filters__results { color: var(--color-foreground); font-size: .59rem; letter-spacing: .1em; text-transform: uppercase; }
-.hilya-filters__sort { display: flex; align-items: center; gap: .45rem; white-space: nowrap; }
-.hilya-filters__sort label { color: var(--color-muted); font-size: .56rem; letter-spacing: .08em; white-space: nowrap; }
-.hilya-filters__sort select { min-width: auto; padding: .2rem 1.15rem .2rem 0; border: 0; outline: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .59rem; white-space: nowrap; cursor: pointer; }
+.hilya-price-values__to { color: var(--color-muted); font-size: .58rem; }
+.hilya-filters__products-toolbar { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 3.15rem; margin: 0 0 1.15rem; border-bottom: 1px solid rgb(0 0 0 / 10%); }
+.hilya-filters__results { color: var(--color-foreground); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.hilya-filters__sort { position: relative; display: flex; align-items: center; gap: .5rem; white-space: nowrap; }
+.hilya-filters__sort-label { color: var(--color-muted); font-size: .68rem; letter-spacing: .08em; white-space: nowrap; }
+.hilya-filters__sort-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-width: 9.5rem; min-height: 2.35rem; padding: .55rem .7rem; border: 1px solid rgb(0 0 0 / 16%); background: var(--color-background); color: var(--color-foreground); font: inherit; font-size: .68rem; text-align: left; cursor: pointer; }
+.hilya-filters__sort-trigger:hover { border-color: rgb(0 0 0 / 28%); }
+.hilya-filters__sort-chevron { position: relative; display: inline-block; width: .5rem; height: .5rem; flex: 0 0 auto; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translateY(-.1rem); transition: transform 180ms ease; }
+.hilya-filters__sort.is-open .hilya-filters__sort-chevron { transform: rotate(225deg) translate(-.03rem, -.03rem); }
+.hilya-filters__sort-menu { position: absolute; top: calc(100% + .35rem); right: 0; z-index: 30; width: 12rem; padding: .35rem 0; border: 1px solid rgb(0 0 0 / 14%); background: var(--color-background); box-shadow: 0 8px 22px rgb(0 0 0 / 8%); }
+.hilya-filters__sort-option { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: .62rem .75rem; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .62rem; text-align: left; cursor: pointer; }
+.hilya-filters__sort-option:hover { background: rgb(0 0 0 / 4%); }
+.hilya-filters__sort-check { visibility: hidden; font-size: .7rem; }
+.hilya-filters__sort-option.is-selected .hilya-filters__sort-check { visibility: visible; }
 .hilya-filter-overlay { position: fixed; inset: 0; z-index: 9998; background: rgb(0 0 0 / 35%); opacity: 0; visibility: hidden; transition: opacity 260ms ease, visibility 260ms ease; }
 .hilya-filter-overlay.is-visible { opacity: 1; visibility: visible; }
 .hilya-filter-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 9999; width: min(28rem, 92vw); overflow-y: auto; background: var(--color-background); transform: translateX(100%); transition: transform 320ms cubic-bezier(.22,.61,.36,1); }
@@ -2056,7 +2097,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .hilya-filter-drawer .hilya-filter-group summary, .hilya-filter-drawer .hilya-filter-group__content { padding-inline: 0; }
 .hilya-filter-lock { overflow: hidden; }
 @media (min-width: 40.001rem) { .hilya-filter-sidebar { grid-area: sidebar; align-self: start; position: sticky; top: 96px; } .hilya-filters__products-toolbar { grid-area: toolbar; } .hilya-filters__mobile-bar, .hilya-filter-drawer, .hilya-filter-overlay { display: none !important; } }
-@media (max-width: 40rem) { .hilya-filter-sidebar { display: none; } .hilya-filters__mobile-bar { display: flex; align-items: center; justify-content: space-between; min-height: 3.2rem; border-bottom: 1px solid rgb(0 0 0 / 9%); } .hilya-filters__mobile-button { display: inline-flex; align-items: center; gap: .45rem; padding: 0; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .63rem; font-weight: 500; letter-spacing: .1em; cursor: pointer; } .hilya-filters__mobile-results { color: var(--color-muted); font-size: .58rem; letter-spacing: .07em; } .hilya-filters__products-toolbar { min-height: 3.2rem; margin-bottom: .9rem; } .hilya-filters__results { font-size: .58rem; } .hilya-filters__sort label { display: inline; font-size: .54rem; } .hilya-filters__sort select { min-width: auto; font-size: .58rem; } .hilya-filter-chip { font-size: .57rem; padding: .36rem .44rem; } }
-@media (prefers-reduced-motion: reduce) { .hilya-filter-overlay, .hilya-filter-drawer, .hilya-filter-chevron { transition: none; } }
+@media (max-width: 40rem) { .hilya-filter-sidebar { display: none; } .hilya-filters__mobile-bar { display: flex; align-items: center; justify-content: space-between; min-height: 3.2rem; border-bottom: 1px solid rgb(0 0 0 / 9%); } .hilya-filters__mobile-button { display: inline-flex; align-items: center; gap: .45rem; padding: 0; border: 0; background: transparent; color: var(--color-foreground); font: inherit; font-size: .63rem; font-weight: 500; letter-spacing: .1em; cursor: pointer; } .hilya-filters__mobile-results { color: var(--color-muted); font-size: .58rem; letter-spacing: .07em; } .hilya-filters__products-toolbar { min-height: 3.2rem; margin-bottom: .9rem; } .hilya-filters__results { font-size: .58rem; } .hilya-filters__sort-label { display: none; } .hilya-filters__sort-trigger { min-width: 8.5rem; min-height: 2.2rem; font-size: .58rem; } .hilya-filters__sort-menu { width: 11rem; } .hilya-filter-chip { font-size: .57rem; padding: .36rem .44rem; } }
+@media (prefers-reduced-motion: reduce) { .hilya-filter-overlay, .hilya-filter-drawer, .hilya-filter-chevron, .hilya-filters__sort-chevron { transition: none; } }
 
 {% endstylesheet %}
