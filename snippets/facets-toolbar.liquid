@@ -611,10 +611,7 @@ document.addEventListener('DOMContentLoaded', function () {
       overlay.classList.add('is-visible');
     }
 
-    drawer.setAttribute(
-      'aria-hidden',
-      'false'
-    );
+    drawer.setAttribute('aria-hidden', 'false');
 
     if (openButton) {
       openButton.setAttribute(
@@ -646,10 +643,7 @@ document.addEventListener('DOMContentLoaded', function () {
       overlay.classList.remove('is-visible');
     }
 
-    drawer.setAttribute(
-      'aria-hidden',
-      'true'
-    );
+    drawer.setAttribute('aria-hidden', 'true');
 
     if (openButton) {
       openButton.setAttribute(
@@ -707,10 +701,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* =========================================
      MOBILE FILTERED BY
-     
-     MOBILE ONLY:
-     Move FILTERED BY into the fixed
-     drawer header.
   ========================================= */
 
   if (
@@ -749,134 +739,101 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
-     VARIANT IMAGE + PRICE
+     HELPERS
   ========================================= */
 
-  function updateProductCard(item, color) {
+  function normalize(value) {
+
+    return String(value || '')
+      .trim()
+      .toLowerCase();
+
+  }
+
+
+  function escapeAttribute(value) {
+
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+  }
+
+
+  function getVariantData(item) {
 
     const dataElement =
       item.querySelector(
         '[data-variant-data]'
       );
 
+    if (!dataElement) {
+      return [];
+    }
+
+    try {
+
+      const parsed =
+        JSON.parse(
+          dataElement.textContent
+        );
+
+      return Array.isArray(parsed)
+        ? parsed
+        : [];
+
+    } catch (error) {
+
+      return [];
+
+    }
+
+  }
+
+
+  function getVariantByColor(
+    item,
+    color
+  ) {
+
+    const wantedColor =
+      normalize(color);
+
+    return getVariantData(item).find(
+      function (variant) {
+
+        return normalize(
+          variant.color
+        ) === wantedColor;
+
+      }
+    ) || null;
+
+  }
+
+
+  /* =========================================
+     ORIGINAL CARD STATE
+  ========================================= */
+
+  items.forEach(function (item) {
+
     const card =
       item.querySelector(
         '[data-product-card]'
       );
 
-    if (!dataElement || !card) {
+    if (!card) {
       return;
     }
 
 
-    let variants = [];
-
-    try {
-
-      variants =
-        JSON.parse(
-          dataElement.textContent
-        );
-
-    } catch (error) {
-
-      return;
-
-    }
-
-
-    if (!color || color === 'all') {
-
-      resetProductCard(item);
-
-      return;
-
-    }
-
-
-    const wantedColor =
-      color.trim().toLowerCase();
-
-
-    const variant =
-      variants.find(function (entry) {
-
-        return (
-          String(entry.color || '')
-            .trim()
-            .toLowerCase() ===
-          wantedColor
-        );
-
-      });
-
-
-    if (!variant) {
-
-      resetProductCard(item);
-
-      return;
-
-    }
-
-
-const priceElement = 
-  card.querySelector(
-    '[data-product-price]'
-  );
-
-if (
-  priceElement &&
-  variant.price !== undefined
-) {
-
-  let priceHtml =
-    '<span class="price">' +
-      '<span class="price__current">' +
-        'EGP ' +
-        Number(
-          variant.price
-        ).toLocaleString('en-US') +
-      '</span>';
-
-  if (
-    variant.compare_at_price !== null &&
-    variant.compare_at_price !== undefined &&
-    Number(variant.compare_at_price) > Number(variant.price)
-  ) {
-    priceHtml +=
-      '<span class="price__compare">' +
-        'EGP ' +
-        Number(
-          variant.compare_at_price
-        ).toLocaleString('en-US') +
-      '</span>';
-  }
-
-  priceHtml += '</span>';
-
-  priceElement.innerHTML = priceHtml;
-}
-
-
-    const productLinks =
-      card.querySelectorAll(
-        '[data-product-link], [data-product-media]'
+    const priceElement =
+      card.querySelector(
+        '[data-product-price]'
       );
-
-
-    productLinks.forEach(function (link) {
-
-      if (variant.url) {
-
-        link.setAttribute(
-          'href',
-          variant.url
-        );
-
-      }
-
-    });
 
 
     const primaryLayer =
@@ -884,26 +841,198 @@ if (
         '[data-product-image-primary]'
       );
 
+
     const secondaryLayer =
       card.querySelector(
         '[data-product-image-secondary]'
       );
 
 
-    const colorImages =
+    const links =
+      card.querySelectorAll(
+        '[data-product-link], [data-product-media]'
+      );
+
+
+    /* ORIGINAL PRICE */
+
+    if (priceElement) {
+
+      priceElement.dataset.originalHtml =
+        priceElement.innerHTML;
+
+    }
+
+
+    /* ORIGINAL LINKS */
+
+    links.forEach(function (link) {
+
+      link.dataset.originalUrl =
+        link.getAttribute('href') || '';
+
+    });
+
+
+    /* ORIGINAL IMAGES */
+
+    if (primaryLayer) {
+
+      primaryLayer.dataset.originalHtml =
+        primaryLayer.innerHTML;
+
+    }
+
+
+    if (secondaryLayer) {
+
+      secondaryLayer.dataset.originalHtml =
+        secondaryLayer.innerHTML;
+
+    }
+
+
+    /* ORIGINAL SECONDARY STATE */
+
+    card.dataset.originalHasSecondary =
+      card.classList.contains(
+        'product-card--has-secondary'
+      )
+        ? 'true'
+        : 'false';
+
+  });
+
+
+  /* =========================================
+     IMAGE SELECTION BY ALT TEXT
+     
+     GOLD:
+     Gold Plated Front
+     Gold Plated Detail
+     Gold Plated Lifestyle
+
+     SILVER:
+     Silver Plated Front
+     Silver Plated Detail
+     Silver Plated Lifestyle
+  ========================================= */
+
+  function getColorImage(
+    images,
+    color,
+    type
+  ) {
+
+    if (!Array.isArray(images)) {
+      return null;
+    }
+
+    const wantedColor =
+      normalize(color);
+
+    const wantedType =
+      normalize(type);
+
+
+    return images.find(
+      function (image) {
+
+        const alt =
+          normalize(
+            image && image.alt
+          );
+
+        return (
+          alt.includes(wantedColor) &&
+          alt.includes(wantedType)
+        );
+
+      }
+    ) || null;
+
+  }
+
+
+  function getImagesForColor(
+    variant,
+    color
+  ) {
+
+    const images =
       Array.isArray(variant.images)
         ? variant.images
         : [];
 
 
+    /*
+      IMPORTANT:
+      Image selection is based on ALT TEXT,
+      not on image order.
+    */
+
     let primaryImage =
-      null;
+      getColorImage(
+        images,
+        color,
+        'front'
+      );
+
 
     let secondaryImage =
-      null;
+      getColorImage(
+        images,
+        color,
+        'detail'
+      );
 
+
+    /*
+      If there is no Detail image,
+      use Lifestyle.
+    */
+
+    if (!secondaryImage) {
+
+      secondaryImage =
+        getColorImage(
+          images,
+          color,
+          'lifestyle'
+        );
+
+    }
+
+
+    /*
+      Fallback if the exact ALT naming
+      is missing.
+    */
+
+    if (!primaryImage) {
+
+      primaryImage =
+        images.find(
+          function (image) {
+
+            return normalize(
+              image && image.alt
+            ).includes(
+              normalize(color)
+            );
+
+          }
+        ) || null;
+
+    }
+
+
+    /*
+      Last fallback: variant.image.
+    */
 
     if (
+      !primaryImage &&
       variant.image &&
       variant.image.src
     ) {
@@ -914,95 +1043,49 @@ if (
     }
 
 
-    if (
-      !primaryImage &&
-      colorImages.length > 0
-    ) {
+    /*
+      If there is still no secondary image,
+      use another image of the same color.
+    */
 
-      primaryImage =
-        colorImages[0];
+    if (!secondaryImage) {
 
-    }
-
-
-    if (colorImages.length > 1) {
-
-      const firstImageSrc =
+      const primarySrc =
         primaryImage
           ? primaryImage.src
           : null;
 
 
       secondaryImage =
-        colorImages.find(function (image) {
+        images.find(
+          function (image) {
 
-          return (
-            !firstImageSrc ||
-            image.src !== firstImageSrc
-          );
+            if (!image || !image.src) {
+              return false;
+            }
 
-        });
+            const alt =
+              normalize(
+                image.alt
+              );
 
-    }
+            return (
+              image.src !== primarySrc &&
+              alt.includes(
+                normalize(color)
+              )
+            );
 
-
-    if (
-      !secondaryImage &&
-      colorImages.length > 1
-    ) {
-
-      secondaryImage =
-        colorImages[1];
-
-    }
-
-
-    if (primaryImage) {
-
-      setLayerImage(
-        primaryLayer,
-        primaryImage
-      );
+          }
+        ) || null;
 
     }
 
 
-    if (secondaryImage) {
-
-      setLayerImage(
-        secondaryLayer,
-        secondaryImage
-      );
-
-      if (secondaryLayer) {
-        secondaryLayer.hidden = false;
-      }
-
-      card.classList.add(
-        'product-card--has-secondary'
-      );
-
-    } else {
-
-      if (secondaryLayer) {
-
-        secondaryLayer.hidden = true;
-
-        secondaryLayer.innerHTML = '';
-
-      }
-
-      card.classList.remove(
-        'product-card--has-secondary'
-      );
-
-    }
-
-
-    updateAvailabilityBadge(
-      card,
-      variant.available
-    );
+    return {
+      primary: primaryImage,
+      secondary: secondaryImage
+    };
 
   }
 
@@ -1011,7 +1094,10 @@ if (
      SET IMAGE
   ========================================= */
 
-  function setLayerImage(layer, image) {
+  function setLayerImage(
+    layer,
+    image
+  ) {
 
     if (
       !layer ||
@@ -1024,18 +1110,189 @@ if (
 
     layer.innerHTML =
       '<img' +
-      ' src="' +
-      escapeAttribute(image.src) +
-      '"' +
-      ' alt="' +
-      escapeAttribute(
-        image.alt || ''
-      ) +
-      '"' +
-      ' loading="lazy"' +
-      ' width="1200"' +
-      ' height="960"' +
+        ' src="' +
+          escapeAttribute(image.src) +
+        '"' +
+        ' alt="' +
+          escapeAttribute(image.alt || '') +
+        '"' +
+        ' loading="lazy"' +
+        ' width="1200"' +
+        ' height="960"' +
       '>';
+
+  }
+
+
+  /* =========================================
+     PRICE HTML FOR SELECTED VARIANT
+  ========================================= */
+
+  function buildVariantPriceHtml(
+    variant
+  ) {
+
+    if (
+      !variant ||
+      variant.price === undefined ||
+      variant.price === null
+    ) {
+      return '';
+    }
+
+
+    const price =
+      Number(variant.price);
+
+
+    if (!Number.isFinite(price)) {
+      return '';
+    }
+
+
+    const compareAt =
+      Number(
+        variant.compare_at_price
+      );
+
+
+    const hasSale =
+      Number.isFinite(compareAt) &&
+      compareAt > price;
+
+
+    let html =
+      '<div class="price' +
+        (
+          variant.available === false
+            ? ' price--sold-out'
+            : ''
+        ) +
+        (
+          hasSale
+            ? ' price--sale'
+            : ''
+        ) +
+      '">';
+
+
+    html +=
+      '<span class="price__current">' +
+        'EGP ' +
+        price.toLocaleString('en-US') +
+      '</span>';
+
+
+    if (hasSale) {
+
+      html +=
+        '<span class="visually-hidden">' +
+          'Regular price' +
+        '</span>' +
+
+        '<s class="price__compare">' +
+          'EGP ' +
+          compareAt.toLocaleString('en-US') +
+        '</s>';
+
+    }
+
+
+    html += '</div>';
+
+
+    return html;
+
+  }
+
+
+  /* =========================================
+     DISCOUNT BADGE
+  ========================================= */
+
+  function updateDiscountBadge(
+    card,
+    variant
+  ) {
+
+    const media =
+      card.querySelector(
+        '[data-product-media]'
+      );
+
+    if (!media) {
+      return;
+    }
+
+
+    const existing =
+      media.querySelector(
+        '[data-variant-discount]'
+      );
+
+
+    if (existing) {
+      existing.remove();
+    }
+
+
+    if (
+      !variant ||
+      variant.price === undefined ||
+      variant.compare_at_price === undefined ||
+      variant.compare_at_price === null
+    ) {
+      return;
+    }
+
+
+    const price =
+      Number(variant.price);
+
+    const compareAt =
+      Number(variant.compare_at_price);
+
+
+    if (
+      !Number.isFinite(price) ||
+      !Number.isFinite(compareAt) ||
+      compareAt <= price
+    ) {
+      return;
+    }
+
+
+    const percentage =
+      Math.round(
+        (
+          (compareAt - price) /
+          compareAt
+        ) * 100
+      );
+
+
+    if (percentage <= 0) {
+      return;
+    }
+
+
+    const badge =
+      document.createElement('span');
+
+
+    badge.className =
+      'product-card__discount';
+
+
+    badge.dataset.variantDiscount =
+      '';
+
+
+    badge.textContent =
+      percentage + '% OFF';
+
+
+    media.appendChild(badge);
 
   }
 
@@ -1059,7 +1316,7 @@ if (
     }
 
 
-    let badge =
+    const existingVariantBadge =
       media.querySelector(
         '[data-variant-sold-out]'
       );
@@ -1067,8 +1324,8 @@ if (
 
     if (available) {
 
-      if (badge) {
-        badge.remove();
+      if (existingVariantBadge) {
+        existingVariantBadge.remove();
       }
 
       return;
@@ -1076,27 +1333,199 @@ if (
     }
 
 
-    if (!badge) {
+    if (!existingVariantBadge) {
 
-      badge =
-        document.createElement(
-          'span'
-        );
+      const badge =
+        document.createElement('span');
+
 
       badge.className =
         'product-card__badge';
 
+
       badge.dataset.variantSoldOut =
         '';
+
 
       badge.textContent =
         'Sold out';
 
-      media.appendChild(
-        badge
+
+      media.appendChild(badge);
+
+    }
+
+  }
+
+
+  /* =========================================
+     UPDATE CARD FOR COLOR
+  ========================================= */
+
+  function updateProductCard(
+    item,
+    color
+  ) {
+
+    const card =
+      item.querySelector(
+        '[data-product-card]'
+      );
+
+    if (!card) {
+      return;
+    }
+
+
+    const variant =
+      getVariantByColor(
+        item,
+        color
+      );
+
+
+    if (!variant) {
+
+      resetProductCard(item);
+
+      return;
+
+    }
+
+
+    /* PRICE */
+
+    const priceElement =
+      card.querySelector(
+        '[data-product-price]'
+      );
+
+
+    if (priceElement) {
+
+      const priceHtml =
+        buildVariantPriceHtml(
+          variant
+        );
+
+
+      if (priceHtml) {
+
+        priceElement.innerHTML =
+          priceHtml;
+
+      }
+
+    }
+
+
+    /* LINKS */
+
+    const productLinks =
+      card.querySelectorAll(
+        '[data-product-link], [data-product-media]'
+      );
+
+
+    productLinks.forEach(function (link) {
+
+      if (variant.url) {
+
+        link.setAttribute(
+          'href',
+          variant.url
+        );
+
+      }
+
+    });
+
+
+    /* IMAGES */
+
+    const primaryLayer =
+      card.querySelector(
+        '[data-product-image-primary]'
+      );
+
+
+    const secondaryLayer =
+      card.querySelector(
+        '[data-product-image-secondary]'
+      );
+
+
+    const selectedImages =
+      getImagesForColor(
+        variant,
+        color
+      );
+
+
+    if (selectedImages.primary) {
+
+      setLayerImage(
+        primaryLayer,
+        selectedImages.primary
       );
 
     }
+
+
+    if (selectedImages.secondary) {
+
+      setLayerImage(
+        secondaryLayer,
+        selectedImages.secondary
+      );
+
+
+      if (secondaryLayer) {
+
+        secondaryLayer.hidden =
+          false;
+
+      }
+
+
+      card.classList.add(
+        'product-card--has-secondary'
+      );
+
+    } else {
+
+      if (secondaryLayer) {
+
+        secondaryLayer.hidden =
+          true;
+
+        secondaryLayer.innerHTML =
+          '';
+
+      }
+
+
+      card.classList.remove(
+        'product-card--has-secondary'
+      );
+
+    }
+
+
+    /* AVAILABILITY */
+
+    updateAvailabilityBadge(
+      card,
+      variant.available !== false
+    );
+
+
+    /* DISCOUNT */
+
+    updateDiscountBadge(
+      card,
+      variant
+    );
 
   }
 
@@ -1107,59 +1536,43 @@ if (
 
   function resetProductCard(item) {
 
-  const card =
-    item.querySelector(
-      '[data-product-card]'
-    );
+    const card =
+      item.querySelector(
+        '[data-product-card]'
+      );
 
-  if (!card) {
-    return;
-  }
-
-  const productPrice =
-    item.dataset.productPrice;
-
-  const productCompareAtPrice =
-    item.dataset.productCompareAtPrice;
-
-  const priceElement =
-    card.querySelector(
-      '[data-product-price]'
-    );
-
-  if (
-    priceElement &&
-    productPrice !== undefined
-  ) {
-
-    let priceHtml =
-      '<span class="price">' +
-        '<span class="price__current">' +
-          'EGP ' +
-          Number(
-            productPrice
-          ).toLocaleString('en-US') +
-        '</span>';
-
-    if (
-      productCompareAtPrice !== undefined &&
-      productCompareAtPrice !== '' &&
-      Number(productCompareAtPrice) > Number(productPrice)
-    ) {
-      priceHtml +=
-        '<span class="price__compare">' +
-          'EGP ' +
-          Number(
-            productCompareAtPrice
-          ).toLocaleString('en-US') +
-          '</span>';
+    if (!card) {
+      return;
     }
 
-    priceHtml += '</span>';
 
-    priceElement.innerHTML = priceHtml;
-  }
+    /* RESTORE ORIGINAL PRICE HTML */
 
+    const priceElement =
+      card.querySelector(
+        '[data-product-price]'
+      );
+
+
+    if (priceElement) {
+
+      const originalPrice =
+        priceElement.dataset.originalHtml;
+
+
+      if (
+        originalPrice !== undefined
+      ) {
+
+        priceElement.innerHTML =
+          originalPrice;
+
+      }
+
+    }
+
+
+    /* RESTORE ORIGINAL LINKS */
 
     const links =
       card.querySelectorAll(
@@ -1172,7 +1585,10 @@ if (
       const originalUrl =
         link.dataset.originalUrl;
 
-      if (originalUrl) {
+
+      if (
+        originalUrl !== undefined
+      ) {
 
         link.setAttribute(
           'href',
@@ -1184,14 +1600,11 @@ if (
     });
 
 
+    /* RESTORE PRIMARY IMAGE */
+
     const primaryLayer =
       card.querySelector(
         '[data-product-image-primary]'
-      );
-
-    const secondaryLayer =
-      card.querySelector(
-        '[data-product-image-secondary]'
       );
 
 
@@ -1200,7 +1613,10 @@ if (
       const originalImage =
         primaryLayer.dataset.originalHtml;
 
-      if (originalImage) {
+
+      if (
+        originalImage !== undefined
+      ) {
 
         primaryLayer.innerHTML =
           originalImage;
@@ -1210,12 +1626,23 @@ if (
     }
 
 
+    /* RESTORE SECONDARY IMAGE */
+
+    const secondaryLayer =
+      card.querySelector(
+        '[data-product-image-secondary]'
+      );
+
+
     if (secondaryLayer) {
 
       const originalImage =
         secondaryLayer.dataset.originalHtml;
 
-      if (originalImage) {
+
+      if (
+        originalImage !== undefined
+      ) {
 
         secondaryLayer.innerHTML =
           originalImage;
@@ -1228,23 +1655,27 @@ if (
     }
 
 
+    /* RESTORE SECONDARY CLASS */
+
     if (
-      secondaryLayer &&
-      !secondaryLayer.innerHTML.trim()
+      card.dataset.originalHasSecondary ===
+      'true'
     ) {
-
-      card.classList.remove(
-        'product-card--has-secondary'
-      );
-
-    } else {
 
       card.classList.add(
         'product-card--has-secondary'
       );
 
+    } else {
+
+      card.classList.remove(
+        'product-card--has-secondary'
+      );
+
     }
 
+
+    /* REMOVE VARIANT SOLD OUT */
 
     const variantBadge =
       card.querySelector(
@@ -1256,81 +1687,20 @@ if (
       variantBadge.remove();
     }
 
-  }
+
+    /* REMOVE VARIANT DISCOUNT */
+
+    const variantDiscount =
+      card.querySelector(
+        '[data-variant-discount]'
+      );
 
 
-  /* =========================================
-     ESCAPE
-  ========================================= */
-
-  function escapeAttribute(value) {
-
-    return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+    if (variantDiscount) {
+      variantDiscount.remove();
+    }
 
   }
-
-
-  /* =========================================
-     STORE ORIGINAL CARD STATE
-  ========================================= */
-
-  items.forEach(function (item) {
-
-    const card =
-      item.querySelector(
-        '[data-product-card]'
-      );
-
-    if (!card) {
-      return;
-    }
-
-
-    const primaryLayer =
-      card.querySelector(
-        '[data-product-image-primary]'
-      );
-
-    const secondaryLayer =
-      card.querySelector(
-        '[data-product-image-secondary]'
-      );
-
-
-    const links =
-      card.querySelectorAll(
-        '[data-product-link], [data-product-media]'
-      );
-
-
-    links.forEach(function (link) {
-
-      link.dataset.originalUrl =
-        link.getAttribute('href') || '';
-
-    });
-
-
-    if (primaryLayer) {
-
-      primaryLayer.dataset.originalHtml =
-        primaryLayer.innerHTML;
-
-    }
-
-
-    if (secondaryLayer) {
-
-      secondaryLayer.dataset.originalHtml =
-        secondaryLayer.innerHTML;
-
-    }
-
-  });
 
 
   /* =========================================
@@ -1380,24 +1750,156 @@ if (
 
 
   /* =========================================
+     CALCULATE REAL PRICE MAX
+  ========================================= */
+
+  let filterPriceMax = 1000;
+
+
+  function calculatePriceMaximum() {
+
+    let highest =
+      0;
+
+
+    items.forEach(function (item) {
+
+      const productPrice =
+        Number(
+          item.dataset.productPrice || 0
+        );
+
+
+      if (
+        Number.isFinite(productPrice)
+      ) {
+
+        highest =
+          Math.max(
+            highest,
+            productPrice
+          );
+
+      }
+
+
+      getVariantData(item)
+        .forEach(function (variant) {
+
+          const price =
+            Number(
+              variant.price
+            );
+
+
+          if (
+            Number.isFinite(price)
+          ) {
+
+            highest =
+              Math.max(
+                highest,
+                price
+              );
+
+          }
+
+        });
+
+    });
+
+
+    if (highest <= 0) {
+      return 1000;
+    }
+
+
+    /*
+      Keep the slider visually clean by
+      rounding the maximum upward.
+    */
+
+    const rounded =
+      Math.ceil(
+        highest / 100
+      ) * 100;
+
+
+    return Math.max(
+      1000,
+      rounded
+    );
+
+  }
+
+
+  filterPriceMax =
+    calculatePriceMaximum();
+
+
+  /* =========================================
+     UPDATE PRICE INPUT LIMITS
+  ========================================= */
+
+  function updatePriceInputLimits() {
+
+    const controls =
+      [
+        desktopPriceMin,
+        desktopPriceMax,
+        desktopPriceMinInput,
+        desktopPriceMaxInput,
+        mobilePriceMin,
+        mobilePriceMax,
+        mobilePriceMinInput,
+        mobilePriceMaxInput
+      ];
+
+
+    controls.forEach(function (input) {
+
+      if (!input) {
+        return;
+      }
+
+      input.max =
+        filterPriceMax;
+
+    });
+
+  }
+
+
+  updatePriceInputLimits();
+
+
+  /* =========================================
      PRICE STATE
   ========================================= */
 
-  let currentMinPrice = 0;
-  let currentMaxPrice = 1000;
+  let currentMinPrice =
+    0;
+
+  let currentMaxPrice =
+    filterPriceMax;
 
 
-  function clampPrice(value, fallback) {
+  function clampPrice(
+    value,
+    fallback
+  ) {
 
     const number =
       Number(value);
+
 
     if (!Number.isFinite(number)) {
       return fallback;
     }
 
+
     return Math.min(
-      1000,
+      filterPriceMax,
       Math.max(
         0,
         Math.round(number)
@@ -1414,25 +1916,42 @@ if (
   ) {
 
     min =
-      clampPrice(min, 0);
+      clampPrice(
+        min,
+        0
+      );
+
 
     max =
-      clampPrice(max, 1000);
+      clampPrice(
+        max,
+        filterPriceMax
+      );
 
 
     if (min > max) {
 
       if (source === 'min') {
-        max = min;
+
+        max =
+          min;
+
       } else {
-        min = max;
+
+        min =
+          max;
+
       }
 
     }
 
 
-    currentMinPrice = min;
-    currentMaxPrice = max;
+    currentMinPrice =
+      min;
+
+    currentMaxPrice =
+      max;
+
 
     syncPriceControls();
 
@@ -1483,10 +2002,21 @@ if (
 
 
     const minPercent =
-      (currentMinPrice / 1000) * 100;
+      filterPriceMax > 0
+        ? (
+            currentMinPrice /
+            filterPriceMax
+          ) * 100
+        : 0;
+
 
     const maxPercent =
-      (currentMaxPrice / 1000) * 100;
+      filterPriceMax > 0
+        ? (
+            currentMaxPrice /
+            filterPriceMax
+          ) * 100
+        : 100;
 
 
     if (desktopPriceRange) {
@@ -1536,6 +2066,7 @@ if (
 
     }
 
+
     applyFilters();
 
   }
@@ -1549,11 +2080,22 @@ if (
     if (type === 'min') {
 
       let min =
-        clampPrice(value, 0);
+        clampPrice(
+          value,
+          0
+        );
 
-      if (min > currentMaxPrice) {
-        min = currentMaxPrice;
+
+      if (
+        min >
+        currentMaxPrice
+      ) {
+
+        min =
+          currentMaxPrice;
+
       }
+
 
       setPriceState(
         min,
@@ -1564,11 +2106,22 @@ if (
     } else {
 
       let max =
-        clampPrice(value, 1000);
+        clampPrice(
+          value,
+          filterPriceMax
+        );
 
-      if (max < currentMinPrice) {
-        max = currentMinPrice;
+
+      if (
+        max <
+        currentMinPrice
+      ) {
+
+        max =
+          currentMinPrice;
+
       }
+
 
       setPriceState(
         currentMinPrice,
@@ -1578,13 +2131,14 @@ if (
 
     }
 
+
     applyFilters();
 
   }
 
 
   /* =========================================
-     DESKTOP PRICE EVENTS
+     PRICE EVENTS
   ========================================= */
 
   if (desktopPriceMin) {
@@ -1678,10 +2232,6 @@ if (
 
   }
 
-
-  /* =========================================
-     MOBILE PRICE EVENTS
-  ========================================= */
 
   if (mobilePriceMin) {
 
@@ -1779,11 +2329,14 @@ if (
      MOBILE PRICE ENTER
   ========================================= */
 
-  function closeMobileKeyboardOnEnter(input) {
+  function closeMobileKeyboardOnEnter(
+    input
+  ) {
 
     if (!input) {
       return;
     }
+
 
     input.addEventListener(
       'keydown',
@@ -1793,13 +2346,19 @@ if (
           return;
         }
 
+
         event.preventDefault();
 
+
         input.dispatchEvent(
-          new Event('change', {
-            bubbles: true
-          })
+          new Event(
+            'change',
+            {
+              bubbles: true
+            }
+          )
         );
+
 
         input.blur();
 
@@ -1823,14 +2382,8 @@ if (
   ========================================= */
 
   setPriceState(
-    desktopPriceMin
-      ? desktopPriceMin.value
-      : 0,
-
-    desktopPriceMax
-      ? desktopPriceMax.value
-      : 1000,
-
+    0,
+    filterPriceMax,
     'initial'
   );
 
@@ -1839,21 +2392,235 @@ if (
      CHECKED VALUES
   ========================================= */
 
-  function getCheckedValues(name) {
+  function getCheckedValues(
+    name
+  ) {
 
     return Array.from(
       form.querySelectorAll(
         'input[name="' +
-        name +
+          name +
         '"]:checked'
       )
     ).map(function (input) {
 
-      return input.value
-        .trim()
-        .toLowerCase();
+      return normalize(
+        input.value
+      );
 
     });
+
+  }
+
+
+  /* =========================================
+     GET VARIANTS MATCHING COLORS
+  ========================================= */
+
+  function getSelectedVariants(
+    item,
+    colors
+  ) {
+
+    if (!colors.length) {
+      return [];
+    }
+
+
+    const variants =
+      getVariantData(item);
+
+
+    return variants.filter(
+      function (variant) {
+
+        return colors.includes(
+          normalize(
+            variant.color
+          )
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     AVAILABILITY MATCH
+  ========================================= */
+
+  function matchesAvailability(
+    item,
+    availability,
+    colors
+  ) {
+
+    if (!availability.length) {
+      return true;
+    }
+
+
+    /*
+      If a color is selected, availability
+      is checked against those variants.
+    */
+
+    if (colors.length > 0) {
+
+      const selectedVariants =
+        getSelectedVariants(
+          item,
+          colors
+        );
+
+
+      return selectedVariants.some(
+        function (variant) {
+
+          const available =
+            variant.available !== false;
+
+
+          return availability.some(
+            function (value) {
+
+              if (
+                value === 'in_stock'
+              ) {
+
+                return available;
+
+              }
+
+
+              if (
+                value === 'out_of_stock'
+              ) {
+
+                return !available;
+
+              }
+
+
+              return false;
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+
+    /*
+      No color selected:
+      use product-level availability.
+    */
+
+    const itemAvailable =
+      item.dataset.productAvailable ===
+      'true';
+
+
+    return availability.some(
+      function (value) {
+
+        if (
+          value === 'in_stock'
+        ) {
+
+          return itemAvailable;
+
+        }
+
+
+        if (
+          value === 'out_of_stock'
+        ) {
+
+          return !itemAvailable;
+
+        }
+
+
+        return false;
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     PRICE MATCH
+  ========================================= */
+
+  function matchesPrice(
+    item,
+    colors,
+    minPrice,
+    maxPrice
+  ) {
+
+    /*
+      With selected colors:
+      product matches if at least one
+      selected-color variant is in range.
+    */
+
+    if (colors.length > 0) {
+
+      const selectedVariants =
+        getSelectedVariants(
+          item,
+          colors
+        );
+
+
+      if (!selectedVariants.length) {
+        return false;
+      }
+
+
+      return selectedVariants.some(
+        function (variant) {
+
+          const price =
+            Number(
+              variant.price
+            );
+
+
+          return (
+            Number.isFinite(price) &&
+            price >= minPrice &&
+            price <= maxPrice
+          );
+
+        }
+      );
+
+    }
+
+
+    /*
+      No color selected:
+      use product price.
+    */
+
+    const itemPrice =
+      Number(
+        item.dataset.productPrice || 0
+      );
+
+
+    return (
+      Number.isFinite(itemPrice) &&
+      itemPrice >= minPrice &&
+      itemPrice <= maxPrice
+    );
 
   }
 
@@ -1869,10 +2636,12 @@ if (
         'availability'
       );
 
+
     const colors =
       getCheckedValues(
         'color'
       );
+
 
     const productTypes =
       getCheckedValues(
@@ -1883,45 +2652,32 @@ if (
     const minPrice =
       currentMinPrice;
 
+
     const maxPrice =
       currentMaxPrice;
 
 
-    let visibleCount = 0;
+    let visibleCount =
+      0;
 
 
     items.forEach(function (item) {
 
       const itemType =
-        (
-          item.dataset.productType ||
-          ''
-        )
-          .trim()
-          .toLowerCase();
-
-
-      const itemPrice =
-        Number(
-          item.dataset.productPrice ||
-          0
+        normalize(
+          item.dataset.productType
         );
 
 
-      const itemAvailable =
-        item.dataset.productAvailable ===
-        'true';
-
-
       const itemColors =
-        (
-          item.dataset.productColors ||
-          ''
+        normalize(
+          item.dataset.productColors
         )
-          .toLowerCase()
           .split('|')
           .map(function (value) {
+
             return value.trim();
+
           })
           .filter(Boolean);
 
@@ -1930,34 +2686,22 @@ if (
         true;
 
 
-      /* AVAILABILITY */
+      /* PRODUCT TYPE */
 
-      if (availability.length > 0) {
+      if (
+        matches &&
+        productTypes.length > 0
+      ) {
 
-        const matchesAvailability =
-          availability.some(
-            function (value) {
+        if (
+          !productTypes.includes(
+            itemType
+          )
+        ) {
 
-              if (
-                value === 'in_stock'
-              ) {
-                return itemAvailable;
-              }
+          matches =
+            false;
 
-              if (
-                value === 'out_of_stock'
-              ) {
-                return !itemAvailable;
-              }
-
-              return false;
-
-            }
-          );
-
-
-        if (!matchesAvailability) {
-          matches = false;
         }
 
       }
@@ -1982,92 +2726,53 @@ if (
           );
 
 
+        /*
+          If data-product-colors is not
+          available/reliable, also inspect
+          the actual variant data.
+        */
+
         if (!matchesColor) {
-          matches = false;
+
+          const hasVariantColor =
+            getVariantData(item).some(
+              function (variant) {
+
+                return colors.includes(
+                  normalize(
+                    variant.color
+                  )
+                );
+
+              }
+            );
+
+
+          if (!hasVariantColor) {
+
+            matches =
+              false;
+
+          }
+
         }
 
       }
 
 
-      /* PRODUCT TYPE */
+      /* AVAILABILITY */
 
       if (
         matches &&
-        productTypes.length > 0
+        !matchesAvailability(
+          item,
+          availability,
+          colors
+        )
       ) {
 
-        const matchesType =
-          productTypes.includes(
-            itemType
-          );
-
-
-        if (!matchesType) {
-          matches = false;
-        }
-
-      }
-
-
-      /* EFFECTIVE PRICE */
-
-      let effectivePrice =
-        itemPrice;
-
-
-      if (
-        colors.length === 1
-      ) {
-
-        const dataElement =
-          item.querySelector(
-            '[data-variant-data]'
-          );
-
-
-        if (dataElement) {
-
-          try {
-
-            const variants =
-              JSON.parse(
-                dataElement.textContent
-              );
-
-
-            const selectedVariant =
-              variants.find(
-                function (variant) {
-
-                  return (
-                    String(
-                      variant.color || ''
-                    )
-                      .trim()
-                      .toLowerCase() ===
-                    colors[0]
-                  );
-
-                }
-              );
-
-
-            if (
-              selectedVariant &&
-              selectedVariant.price !==
-              undefined
-            ) {
-
-              effectivePrice =
-                Number(
-                  selectedVariant.price
-                );
-
-            }
-
-          } catch (error) {}
-
-        }
+        matches =
+          false;
 
       }
 
@@ -2075,11 +2780,17 @@ if (
       /* PRICE */
 
       if (
-        effectivePrice < minPrice ||
-        effectivePrice > maxPrice
+        matches &&
+        !matchesPrice(
+          item,
+          colors,
+          minPrice,
+          maxPrice
+        )
       ) {
 
-        matches = false;
+        matches =
+          false;
 
       }
 
@@ -2092,10 +2803,18 @@ if (
           'is-filtered-out'
         );
 
+
         visibleCount++;
 
 
-        if (colors.length === 1) {
+        /*
+          Only one color means there is
+          one clear variant to display.
+        */
+
+        if (
+          colors.length === 1
+        ) {
 
           updateProductCard(
             item,
@@ -2145,7 +2864,7 @@ if (
           : 0
       ) +
       (
-        maxPrice < 1000
+        maxPrice < filterPriceMax
           ? 1
           : 0
       );
@@ -2155,6 +2874,7 @@ if (
 
       countBadge.textContent =
         activeCount;
+
 
       countBadge.hidden =
         activeCount === 0;
@@ -2204,7 +2924,7 @@ if (
           colors.length > 0 ||
           productTypes.length > 0 ||
           minPrice > 0 ||
-          maxPrice < 1000;
+          maxPrice < filterPriceMax;
 
 
         if (!hasFilters) {
@@ -2226,11 +2946,14 @@ if (
             'span'
           );
 
+
         title.className =
           'hilya-filters__active-label';
 
+
         title.textContent =
           'FILTERED BY';
+
 
         container.appendChild(
           title
@@ -2258,8 +2981,9 @@ if (
 
             addChip(
               container,
-              value.charAt(0).toUpperCase() +
-                value.slice(1),
+              value === 'gold plated'
+                ? 'Gold Plated'
+                : 'Silver Plated',
               'color',
               value
             );
@@ -2288,7 +3012,9 @@ if (
           addChip(
             container,
             'From EGP ' +
-              minPrice.toLocaleString('en-US'),
+              minPrice.toLocaleString(
+                'en-US'
+              ),
             'price_min',
             '0'
           );
@@ -2296,14 +3022,21 @@ if (
         }
 
 
-        if (maxPrice < 1000) {
+        if (
+          maxPrice <
+          filterPriceMax
+        ) {
 
           addChip(
             container,
             'To EGP ' +
-              maxPrice.toLocaleString('en-US'),
+              maxPrice.toLocaleString(
+                'en-US'
+              ),
             'price_max',
-            '1000'
+            String(
+              filterPriceMax
+            )
           );
 
         }
@@ -2318,8 +3051,10 @@ if (
         clear.type =
           'button';
 
+
         clear.className =
           'hilya-filters__clear';
+
 
         clear.textContent =
           'CLEAR ALL';
@@ -2357,17 +3092,49 @@ if (
     chip.type =
       'button';
 
+
     chip.className =
       'hilya-filter-chip';
 
 
-    chip.innerHTML =
-      '<span>' +
-        escapeAttribute(label) +
-      '</span>' +
-      '<span class="hilya-filter-chip__remove" aria-hidden="true">' +
-        '×' +
-      '</span>';
+    const labelSpan =
+      document.createElement(
+        'span'
+      );
+
+
+    labelSpan.textContent =
+      label;
+
+
+    const removeSpan =
+      document.createElement(
+        'span'
+      );
+
+
+    removeSpan.className =
+      'hilya-filter-chip__remove';
+
+
+    removeSpan.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+
+    removeSpan.textContent =
+      '×';
+
+
+    chip.appendChild(
+      labelSpan
+    );
+
+
+    chip.appendChild(
+      removeSpan
+    );
 
 
     chip.setAttribute(
@@ -2400,18 +3167,18 @@ if (
 
           setPriceState(
             currentMinPrice,
-            1000,
+            filterPriceMax,
             'max'
           );
 
         }
 
-        else if (inputName) {
+        else {
 
           const inputs =
             form.querySelectorAll(
               'input[name="' +
-              inputName +
+                inputName +
               '"]'
             );
 
@@ -2420,12 +3187,12 @@ if (
             function (input) {
 
               if (
-                input.value
-                  .trim()
-                  .toLowerCase() ===
-                String(inputValue)
-                  .trim()
-                  .toLowerCase()
+                normalize(
+                  input.value
+                ) ===
+                normalize(
+                  inputValue
+                )
               ) {
 
                 input.checked =
@@ -2455,7 +3222,7 @@ if (
 
 
   /* =========================================
-     SYNC MOBILE CHECKBOXES
+     SYNC MOBILE FILTERS
   ========================================= */
 
   function syncMobileFilters() {
@@ -2473,12 +3240,21 @@ if (
         function (input) {
 
           const matching =
-            mobileContent.querySelector(
-              'input[name="' +
-              input.name +
-              '"][value="' +
-              input.value +
-              '"]'
+            Array.from(
+              mobileContent.querySelectorAll(
+                'input[type="checkbox"]'
+              )
+            ).find(
+              function (mobileInput) {
+
+                return (
+                  mobileInput.name ===
+                    input.name &&
+                  mobileInput.value ===
+                    input.value
+                );
+
+              }
             );
 
 
@@ -2518,13 +3294,6 @@ if (
       );
 
 
-    setPriceState(
-      0,
-      1000,
-      'initial'
-    );
-
-
     if (mobileContent) {
 
       mobileContent
@@ -2543,6 +3312,13 @@ if (
     }
 
 
+    setPriceState(
+      0,
+      filterPriceMax,
+      'initial'
+    );
+
+
     applyFilters();
 
   }
@@ -2557,36 +3333,46 @@ if (
     function (event) {
 
       if (
-        event.target.matches(
+        !event.target.matches(
           'input[type="checkbox"]'
         )
       ) {
-
-        if (mobileContent) {
-
-          const matching =
-            mobileContent.querySelector(
-              'input[name="' +
-              event.target.name +
-              '"][value="' +
-              event.target.value +
-              '"]'
-            );
+        return;
+      }
 
 
-          if (matching) {
+      if (mobileContent) {
 
-            matching.checked =
-              event.target.checked;
+        const matching =
+          Array.from(
+            mobileContent.querySelectorAll(
+              'input[type="checkbox"]'
+            )
+          ).find(
+            function (mobileInput) {
 
-          }
+              return (
+                mobileInput.name ===
+                  event.target.name &&
+                mobileInput.value ===
+                  event.target.value
+              );
+
+            }
+          );
+
+
+        if (matching) {
+
+          matching.checked =
+            event.target.checked;
 
         }
 
-
-        applyFilters();
-
       }
+
+
+      applyFilters();
 
     }
   );
@@ -2614,17 +3400,25 @@ if (
         const name =
           event.target.name;
 
+
         const value =
           event.target.value;
 
 
         const desktopInput =
-          form.querySelector(
-            'input[name="' +
-            name +
-            '"][value="' +
-            value +
-            '"]'
+          Array.from(
+            form.querySelectorAll(
+              'input[type="checkbox"]'
+            )
+          ).find(
+            function (input) {
+
+              return (
+                input.name === name &&
+                input.value === value
+              );
+
+            }
           );
 
 
@@ -2653,15 +3447,18 @@ if (
       '[data-hilya-sort-wrap]'
     );
 
+
   const sortTriggers =
     document.querySelectorAll(
       '[data-hilya-sort-trigger]'
     );
 
+
   const sortMenus =
     document.querySelectorAll(
       '[data-hilya-sort-menu]'
     );
+
 
   const sortOptions =
     document.querySelectorAll(
@@ -2718,6 +3515,7 @@ if (
         '[data-hilya-sort-trigger]'
       );
 
+
     const menu =
       targetWrap.querySelector(
         '[data-hilya-sort-menu]'
@@ -2773,7 +3571,10 @@ if (
               : null;
 
 
-          if (!wrap || !menu) {
+          if (
+            !wrap ||
+            !menu
+          ) {
             return;
           }
 
