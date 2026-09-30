@@ -42,11 +42,11 @@
       "type": "custom-section",
       "name": "Sales",
       "settings": {
+        "eyebrow": "SPECIAL OFFER",
+        "button_label": "SHOP SALE",
+        "button_link": "shopify://products/keychain-copy",
         "image": "shopify://shop_images/ChatGPT_Image_Sep_28_2026_10_13_47_PM.png",
-        "image_alt": "Hilya jewelry",
-        "eyebrow": "Our Story",
-        "button_label": "Discover Our Story",
-        "button_link": ""
+        "image_alt": "Hilya jewelry"
       }
     },
     "featured_collection_CinWF3": {

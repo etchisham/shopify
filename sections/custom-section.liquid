@@ -1,8 +1,9 @@
-<section class="story-section">
+<section class="sale-section">
 
-  <div class="story-section__inner">
+  <div class="sale-section__inner">
 
-    <div class="story-section__media">
+    <!-- IMAGE -->
+    <div class="sale-section__media">
       {% if section.settings.image != blank %}
         {{
           section.settings.image
@@ -14,36 +15,64 @@
             alt: section.settings.image_alt
         }}
       {% else %}
-        {{ 'lifestyle-1' | placeholder_svg_tag: 'story-section__placeholder' }}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'sale-section__placeholder' }}
       {% endif %}
     </div>
 
-    <div class="story-section__content">
+
+    <!-- CONTENT -->
+    <div class="sale-section__content">
 
       {% if section.settings.eyebrow != blank %}
-        <p class="story-section__eyebrow">
+        <p class="sale-section__eyebrow">
           {{ section.settings.eyebrow | escape }}
         </p>
       {% endif %}
 
-      <h2 class="story-section__heading">
-        <span>More Than Jewelry.</span>
-        <span>It’s a Feeling.</span>
-      </h2>
 
-      <div class="story-section__text">
-        <p>
-          <strong>Hilya</strong> is where timeless elegance meets everyday life, We create modern jewelry and accessories that help you express your unique style — with pieces made to last.
-        </p>
-      </div>
+      {% if section.settings.heading != blank %}
+        <h2 class="sale-section__heading">
+
+          {% if section.settings.heading_line_1 != blank %}
+            <span>
+              {{ section.settings.heading_line_1 | escape }}
+            </span>
+          {% endif %}
+
+          {% if section.settings.heading_line_2 != blank %}
+            <span>
+              {{ section.settings.heading_line_2 | escape }}
+            </span>
+          {% endif %}
+
+        </h2>
+      {% endif %}
+
+
+      {% if section.settings.description != blank %}
+        <div class="sale-section__text">
+          <p>
+            {{ section.settings.description }}
+          </p>
+        </div>
+      {% endif %}
+
 
       {% if section.settings.button_label != blank %}
         <a
-          class="story-section__link"
+          class="sale-section__link"
           href="{{ section.settings.button_link | default: '#' }}"
         >
-          <span>{{ section.settings.button_label | escape }}</span>
-          <span class="story-section__arrow" aria-hidden="true">→</span>
+          <span>
+            {{ section.settings.button_label | escape }}
+          </span>
+
+          <span
+            class="sale-section__arrow"
+            aria-hidden="true"
+          >
+            →
+          </span>
         </a>
       {% endif %}
 
@@ -53,292 +82,495 @@
 
 </section>
 
+
 {% stylesheet %}
 
-.story-section {
+/* =========================================
+   SALE SECTION
+========================================= */
+
+.sale-section {
   width: 100vw;
   max-width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: 35px max(24px, calc((100vw - 1400px) / 2)) 45px;
+
+  padding: 35px
+    max(24px, calc((100vw - 1400px) / 2))
+    45px;
+
   box-sizing: border-box;
+
   background: #F7F4EE;
 }
-.story-section__inner {
+
+
+/* =========================================
+   INNER
+========================================= */
+
+.sale-section__inner {
   display: grid;
-  grid-template-columns: 50% minmax(0, 1fr);
+
+  grid-template-columns:
+    50%
+    minmax(0, 1fr);
+
   align-items: center;
+
   gap: clamp(40px, 4vw, 65px);
 }
 
-/* IMAGE */
 
-.story-section__media {
+/* =========================================
+   IMAGE
+========================================= */
+
+.sale-section__media {
   position: relative;
+
   width: 100%;
+
   overflow: hidden;
+
   background: #f4f1eb;
 }
 
-.story-section__media img,
-.story-section__placeholder {
+
+.sale-section__media img,
+.sale-section__placeholder {
   display: block;
+
   width: 100%;
   height: 100%;
+
   aspect-ratio: 2.15 / 1;
+
   object-fit: cover;
 }
 
-/* CONTENT */
 
-.story-section__content {
+/* =========================================
+   CONTENT
+========================================= */
+
+.sale-section__content {
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
+
   max-width: 520px;
+
   padding: 20px 0;
 }
 
-/* EYEBROW */
 
-.story-section__eyebrow {
+/* =========================================
+   EYEBROW
+========================================= */
+
+.sale-section__eyebrow {
   margin: 0 0 20px;
+
   color: #C8B28A;
+
   font-size: 10px;
+
   line-height: 1;
+
   font-weight: 500;
+
   letter-spacing: .18em;
+
   text-transform: uppercase;
 }
 
-/* HEADING */
 
-.story-section__heading {
+/* =========================================
+   HEADING
+========================================= */
+
+.sale-section__heading {
   display: flex;
+
   flex-direction: column;
+
   margin: 0 0 28px;
 
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-family:
+    "Cormorant Garamond",
+    "Times New Roman",
+    serif;
+
   font-size: clamp(42px, 4.3vw, 64px);
+
   font-weight: 400;
+
   font-style: normal;
+
   line-height: .92;
+
   letter-spacing: -.025em;
 }
 
-.story-section__heading span {
+
+.sale-section__heading span {
   display: block;
 }
 
-/* TEXT */
 
-.story-section__text {
+/* =========================================
+   DESCRIPTION
+========================================= */
+
+.sale-section__text {
   max-width: 380px;
+
   margin: 0 0 32px;
 }
 
-.story-section__text p {
+
+.sale-section__text p {
   margin: 0;
+
   color: #8b8b8b;
+
   font-size: 13px;
+
   line-height: 1.8;
+
   font-weight: 400;
+
   letter-spacing: .01em;
 }
 
-.story-section__text strong {
-  color: #111111;
-  font-weight: 600;
-}
 
-/* LINK */
+/* =========================================
+   BUTTON / LINK
+========================================= */
 
-.story-section__link {
+.sale-section__link {
   display: inline-flex;
+
   align-items: center;
+
   align-self: flex-start;
+
   gap: 12px;
 
   color: #111111;
+
   text-decoration: none;
 
   font-size: 10px;
+
   line-height: 1;
+
   font-weight: 500;
+
   letter-spacing: .14em;
+
   text-transform: uppercase;
 }
 
-.story-section__arrow {
+
+.sale-section__arrow {
   display: inline-block;
+
   font-size: 17px;
+
   line-height: 1;
-  transition: transform .3s ease;
+
+  transition:
+    transform .3s ease;
 }
 
-.story-section__link:hover .story-section__arrow {
+
+.sale-section__link:hover
+.sale-section__arrow {
   transform: translateX(5px);
 }
 
-/* LARGE DESKTOP */
+
+/* =========================================
+   LARGE DESKTOP
+========================================= */
 
 @media (min-width: 1500px) {
-  .story-section {
-    padding-left: max(32px, calc((100vw - 1500px) / 2));
-    padding-right: max(32px, calc((100vw - 1500px) / 2));
+
+  .sale-section {
+
+    padding-left:
+      max(32px, calc((100vw - 1500px) / 2));
+
+    padding-right:
+      max(32px, calc((100vw - 1500px) / 2));
   }
+
 }
 
-/* TABLET */
 
-@media (min-width: 750px) and (max-width: 1100px) {
-  .story-section {
-    padding: 25px 28px 0; 
+/* =========================================
+   TABLET
+========================================= */
+
+@media (min-width: 750px)
+and (max-width: 1100px) {
+
+  .sale-section {
+
+    padding: 25px 28px 0;
   }
 
-  .story-section__inner {
+
+  .sale-section__inner {
+
     gap: 45px;
-    grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+
+    grid-template-columns:
+      minmax(0, 1.3fr)
+      minmax(280px, .7fr);
   }
 
-  .story-section__media img,
-  .story-section__placeholder {
-  display: block;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 2 / 1;
-  object-fit: cover;
-}
 
-  .story-section__heading {
-    font-size: 46px;
-  }
+  .sale-section__media img,
+  .sale-section__placeholder {
 
-  .story-section__content {
-    padding: 15px 0;
-  }
-}
+    display: block;
 
-/* MOBILE */
-
-@media (max-width: 749px) {
-  .story-section {
     width: 100%;
-    max-width: none;
-    margin-left: 0;
-    padding: 25px 5px 35px;
-    background: #F7F4EE;
-  }
+    height: 100%;
 
-  .story-section__inner {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
+    aspect-ratio: 2 / 1;
 
-  /* RECTANGULAR IMAGE */
-
-  .story-section__media {
-    width: 100%;
-  }
-
-  .story-section__media img,
-  .story-section__placeholder {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2.05 / 1;
     object-fit: cover;
   }
 
-  .story-section__content {
+
+  .sale-section__heading {
+
+    font-size: 46px;
+  }
+
+
+  .sale-section__content {
+
+    padding: 15px 0;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 749px) {
+
+  .sale-section {
+
+    width: 100%;
+
     max-width: none;
+
+    margin-left: 0;
+
+    padding: 25px 5px 35px;
+
+    background: #F7F4EE;
+  }
+
+
+  .sale-section__inner {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+  }
+
+
+  .sale-section__media {
+
+    width: 100%;
+  }
+
+
+  .sale-section__media img,
+  .sale-section__placeholder {
+
+    width: 100%;
+
+    height: auto;
+
+    aspect-ratio: 2.05 / 1;
+
+    object-fit: cover;
+  }
+
+
+  .sale-section__content {
+
+    max-width: none;
+
     padding: 0 10px 10px;
   }
 
-  .story-section__eyebrow {
+
+  .sale-section__eyebrow {
+
     margin-bottom: 16px;
+
     font-size: 9px;
   }
 
-  .story-section__heading {
+
+  .sale-section__heading {
+
     margin-bottom: 22px;
+
     font-size: 42px;
+
     line-height: .92;
+
     letter-spacing: -.025em;
   }
 
-  .story-section__text {
+
+  .sale-section__text {
+
     max-width: 340px;
+
     margin-bottom: 28px;
   }
 
-  .story-section__text p {
+
+  .sale-section__text p {
+
     font-size: 12px;
+
     line-height: 1.75;
   }
 
-  .story-section__link {
+
+  .sale-section__link {
+
     font-size: 9px;
   }
 
-  .story-section__arrow {
+
+  .sale-section__arrow {
+
     font-size: 15px;
   }
+
 }
 
-/* REDUCED MOTION */
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .story-section__media img {
-    transition: none;
-  }
 
-  .story-section__link:hover .story-section__arrow {
+  .sale-section__link:hover
+  .sale-section__arrow {
+
     transform: none;
   }
+
 }
 
 {% endstylesheet %}
 
+
 {% schema %}
+
 {
-  "name": "Discover Our Story",
+  "name": "Sales Section",
+
   "enabled_on": {
     "templates": ["index"]
   },
+
   "settings": [
+
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Story image"
+      "type": "header",
+      "content": "Sale Content"
     },
-    {
-      "type": "text",
-      "id": "image_alt",
-      "label": "Image alt text",
-      "default": "Hilya jewelry"
-    },
+
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Discover Our Story"
+      "label": "Small heading",
+      "default": "Special Offer"
     },
+
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading - line 1",
+      "default": "Up to 30% Off"
+    },
+
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading - line 2",
+      "default": "Selected Pieces"
+    },
+
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Discover timeless pieces at a special price. Limited time only.</p>"
+    },
+
     {
       "type": "text",
       "id": "button_label",
-      "label": "Button label",
-      "default": "Discover More"
+      "label": "Button text",
+      "default": "Shop Sale"
     },
+
     {
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+
+
+    {
+      "type": "header",
+      "content": "Image"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Sale image"
+    },
+
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Hilya jewelry sale"
     }
+
   ],
+
+
   "presets": [
     {
-      "name": "Discover Our Story"
+      "name": "Sales Section"
     }
   ]
+
 }
+
 {% endschema %}
