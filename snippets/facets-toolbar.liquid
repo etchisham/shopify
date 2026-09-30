@@ -423,8 +423,13 @@
       >
 
         <span data-hilya-sort-current>
-          Featured
-        </span>
+  {% for option in collection.sort_options %}
+    {% if option.value == collection.sort_by %}
+      {{ option.name }}
+    {% endif %}
+  {% endfor %}
+</span>
+
 
         <span
           class="hilya-filters__sort-chevron"
