@@ -17,58 +17,27 @@
   assign price = target.price
   assign compare_at_price = target.compare_at_price
 
-  comment
-    Fallback for products where the card is using product-level pricing.
-  endcomment
-
-  if compare_at_price == blank
-    if product.compare_at_price_max > price
-      assign compare_at_price = product.compare_at_price_max
-    endif
+  if compare_at_price == blank and product.compare_at_price_min > product.price
+    assign compare_at_price = product.compare_at_price_min
   endif
 
   assign available = target.available | default: false
 
   assign discount_percent = 0
 
-  if compare_at_price > price and compare_at_price > 0
-    assign discount_amount = compare_at_price | minus: price
-    assign discount_percent = discount_amount | times: 100.0 | divided_by: compare_at_price | round
+  if compare_at_price > price
+    assign discount_percent = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round
   endif
 %}
 
-<div
-  class="price{% unless available %} price--sold-out{% endunless %}{% if compare_at_price > price %} price--sale{% endif %}"
->
+<div class="price{% unless available %} price--sold-out{% endunless %}{% if compare_at_price > price %} price--sale{% endif %}">
 
   {% if card_layout %}
 
     {% if compare_at_price > price %}
-
-      <span class="price__current">
-        EGP {{ price | money_without_currency | strip }}
+      <span class="visually-hidden">
+        {{ 'products.product.sale_price' | t }}
       </span>
-
-      <s class="price__compare">
-        EGP {{ compare_at_price | money_without_currency | strip }}
-      </s>
-
-    {% else %}
-
-      <span class="price__current">
-        EGP {{ price | money_without_currency | strip }}
-      </span>
-
-    {% endif %}
-
-  {% else %}
-
-    {% if compare_at_price > price %}
-
-      <span class="price__compare">
-        EGP {{ compare_at_price | money_without_currency | strip }}
-      </span>
-
     {% endif %}
 
     <span class="price__current">
@@ -78,10 +47,38 @@
   {% endif %}
 
 
+  {% if compare_at_price > price %}
+
+    <span class="visually-hidden">
+      {{ 'products.product.regular_price' | t }}
+    </span>
+
+    <s class="price__compare">
+      EGP {{ compare_at_price | money_without_currency | strip }}
+    </s>
+
+    {% unless card_layout %}
+      <span class="visually-hidden">
+        {{ 'products.product.sale_price' | t }}
+      </span>
+    {% endunless %}
+
+  {% endif %}
+
+
+  {% unless card_layout %}
+
+    <span class="price__current">
+      EGP {{ price | money_without_currency | strip }}
+    </span>
+
+  {% endunless %}
+
+
   {% if show_discount and discount_percent > 0 %}
 
     <span class="price__discount">
-      {{ discount_percent }}% OFF
+      {{ 'products.product.discount' | t: percent: discount_percent }}
     </span>
 
   {% endif %}
@@ -112,13 +109,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: center;
-  gap: 7px;
-
-  width: 100%;
+  gap: var(--space-2);
 
   font-weight: 400;
-  line-height: 1.25;
 }
 
 .price__current {
@@ -136,8 +129,6 @@
   font-weight: 400;
 
   text-decoration: line-through;
-  text-decoration-thickness: 1px;
-  text-decoration-color: currentColor;
 }
 
 .price__discount {
@@ -154,18 +145,6 @@
 
   font-size: 0.72rem;
   font-weight: 400;
-}
-
-@media (max-width: 27rem) {
-
-  .price__current {
-    font-size: 0.82rem;
-  }
-
-  .price__compare {
-    font-size: 0.68rem;
-  }
-
 }
 
 {% endstylesheet %}
