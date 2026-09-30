@@ -77,6 +77,19 @@ body:has(.site-header--sticky) {
   body:has(.site-header--sticky) {
     padding-top: {{ section.settings.mobile_height }}px !important;
   }
+  .mobile-facets,
+  .mobile-facets__wrapper,
+  .mobile-facets__disclosure,
+  .mobile-facets__close-button,
+  .facets-drawer,
+  .facets-container {
+    position: relative;
+    z-index: 100000 !important;
+  }
+
+  .mobile-facets {
+    z-index: 100001 !important;
+  }
 }
 
 
