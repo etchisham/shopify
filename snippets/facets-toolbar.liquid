@@ -14,33 +14,32 @@
     <!-- FILTERS -->
 
     <button
-  type="button"
-  class="hilya-filters__mobile-button"
-  data-filter-open
-  aria-expanded="false"
-  aria-controls="HilyaFilterDrawer"
->
-  <span
-    class="hilya-filters__filter-icon"
-    aria-hidden="true"
-  >
-    <span></span>
-    <span></span>
-  </span>
+      type="button"
+      class="hilya-filters__mobile-button"
+      data-filter-open
+      aria-expanded="false"
+      aria-controls="HilyaFilterDrawer"
+    >
+      <span
+        class="hilya-filters__filter-icon"
+        aria-hidden="true"
+      >
+        <span></span>
+        <span></span>
+      </span>
 
-  <span class="hilya-filters__filter-text">
-    FILTERS
-  </span>
+      <span class="hilya-filters__filter-text">
+        FILTERS
+      </span>
 
-  <span
-    class="hilya-filters__count"
-    data-filter-count
-    hidden
-  >
-    0
-  </span>
-</button>
-
+      <span
+        class="hilya-filters__count"
+        data-filter-count
+        hidden
+      >
+        0
+      </span>
+    </button>
 
 
     <!-- PRODUCTS COUNT -->
@@ -179,6 +178,7 @@
           data-filter-toggle
         >
           <span>Availability</span>
+
           <span
             class="hilya-filter-chevron"
             aria-hidden="true"
@@ -488,6 +488,11 @@
     aria-hidden="true"
   >
 
+    <!-- =======================================
+         FIXED DRAWER HEADER
+         FILTERS + X
+    ======================================== -->
+
     <div class="hilya-filter-drawer__header">
 
       <div>
@@ -514,6 +519,10 @@
 
     </div>
 
+
+    <!-- =======================================
+         ONLY THIS AREA SCROLLS
+    ======================================== -->
 
     <div class="hilya-filter-drawer__content">
 
@@ -706,7 +715,15 @@ document.addEventListener('DOMContentLoaded', function () {
       );
     }
 
+    /*
+      LOCK THE WEBSITE BEHIND THE DRAWER
+    */
+
     document.documentElement.classList.add(
+      'hilya-filter-lock'
+    );
+
+    document.body.classList.add(
       'hilya-filter-lock'
     );
 
@@ -737,7 +754,15 @@ document.addEventListener('DOMContentLoaded', function () {
       );
     }
 
+    /*
+      UNLOCK THE WEBSITE
+    */
+
     document.documentElement.classList.remove(
+      'hilya-filter-lock'
+    );
+
+    document.body.classList.remove(
       'hilya-filter-lock'
     );
 
@@ -3065,6 +3090,24 @@ document.addEventListener('DOMContentLoaded', function () {
   width: 100%;
 }
 
+
+/* =========================================
+   LOCK WEBSITE SCROLL
+   WHEN MOBILE FILTER IS OPEN
+========================================= */
+
+html.hilya-filter-lock,
+html.hilya-filter-lock body,
+body.hilya-filter-lock {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+
+/* =========================================
+   MOBILE BAR
+========================================= */
+
 .hilya-filters__mobile-bar {
   display: none;
 }
@@ -3336,7 +3379,9 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
 
-/* CHROME / EDGE */
+/* =========================================
+   CHROME / EDGE
+========================================= */
 
 .hilya-price-slider
 input[type="range"]::-webkit-slider-runnable-track {
@@ -3369,7 +3414,9 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 
-/* FIREFOX */
+/* =========================================
+   FIREFOX
+========================================= */
 
 .hilya-price-slider
 input[type="range"]::-moz-range-track {
@@ -3671,7 +3718,7 @@ input[type="range"]::-moz-range-thumb {
 
 
 /* =========================================
-   MOBILE DRAWER
+   MOBILE OVERLAY
 ========================================= */
 
 .hilya-filter-overlay {
@@ -3694,6 +3741,11 @@ input[type="range"]::-moz-range-thumb {
   opacity: 1;
   visibility: visible;
 }
+
+
+/* =========================================
+   DESKTOP DRAWER DEFAULT
+========================================= */
 
 .hilya-filter-drawer {
   position: fixed;
@@ -3720,6 +3772,11 @@ input[type="range"]::-moz-range-thumb {
 .hilya-filter-drawer.is-open {
   transform: translateX(0);
 }
+
+
+/* =========================================
+   DESKTOP DRAWER HEADER
+========================================= */
 
 .hilya-filter-drawer__header {
   display: flex;
@@ -3944,102 +4001,92 @@ input[type="range"]::-moz-range-thumb {
   ======================================= */
 
   .hilya-filters__mobile-button {
-  display: inline-flex;
-  align-items: center;
+    display: inline-flex;
+    align-items: center;
 
-  justify-self: start;
+    justify-self: start;
 
-  gap: .55rem;
+    gap: .55rem;
 
-  padding: 0;
+    padding: 0;
 
-  border: 0;
+    border: 0;
 
-  background: transparent;
+    background: transparent;
 
-  color: var(--color-foreground);
+    color: var(--color-foreground);
 
-  font: inherit;
+    font: inherit;
 
-  font-size: .63rem;
-  font-weight: 500;
+    font-size: .63rem;
+    font-weight: 500;
 
-  letter-spacing: .1em;
+    letter-spacing: .1em;
 
-  cursor: pointer;
+    cursor: pointer;
   }
 
 
   /* =========================================
-   FILTER ICON
+     FILTER ICON
   ========================================= */
 
   .hilya-filters__filter-icon {
-  position: relative;
+    position: relative;
 
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: space-between;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-  width: .7rem;
-  height: .40rem;
-  flex-basis: .7rem;
+    width: .7rem;
+    height: .40rem;
+    flex-basis: .7rem;
   }
 
-
-  /* lines */
 
   .hilya-filters__filter-icon span {
-  position: relative;
+    position: relative;
 
-  display: block;
+    display: block;
 
-  width: 100%;
-  height: 1px;
+    width: 100%;
+    height: 1px;
 
-  background: currentColor;
+    background: currentColor;
   }
 
-
-  /* knobs */
 
   .hilya-filters__filter-icon span::after {
-  content: "";
+    content: "";
 
-  position: absolute;
+    position: absolute;
 
-  top: 50%;
+    top: 50%;
 
-  width: .23rem;
-  height: .23rem;
+    width: .23rem;
+    height: .23rem;
 
-  border: 1px solid currentColor;
-  border-radius: 50%;
+    border: 1px solid currentColor;
+    border-radius: 50%;
 
-  background: var(--color-background);
+    background: var(--color-background);
 
-  transform: translateY(-50%);
+    transform: translateY(-50%);
   }
 
 
-  /* knob positions */
-
   .hilya-filters__filter-icon span:first-child::after {
-  left: 18%;
+    left: 18%;
   }
 
   .hilya-filters__filter-icon span:last-child::after {
-  left: 58%;
+    left: 58%;
   }
 
-
-
-  /* FILTER TEXT */
 
   .hilya-filters__filter-text {
-  display: inline-block;
+    display: inline-block;
   }
-
 
 
   /* =======================================
@@ -4181,9 +4228,6 @@ input[type="range"]::-moz-range-thumb {
 
   /* =======================================
      HIDE OLD MOBILE PRODUCTS TOOLBAR
-
-     The mobile bar above now contains
-     FILTERS + PRODUCTS + SORT.
   ======================================= */
 
   .hilya-filters__products-toolbar {
@@ -4193,7 +4237,10 @@ input[type="range"]::-moz-range-thumb {
 
   /* =======================================
      MOBILE DRAWER
-     OPEN FROM LEFT
+     
+     IMPORTANT:
+     DRAWER ITSELF DOES NOT SCROLL.
+     ONLY CONTENT SCROLLS.
   ======================================= */
 
   .hilya-filter-drawer {
@@ -4209,7 +4256,22 @@ input[type="range"]::-moz-range-thumb {
 
     width: min(28rem, 92vw);
 
-    overflow-y: auto;
+    /*
+      Use the real mobile viewport height.
+    */
+    height: 100dvh;
+    max-height: 100dvh;
+
+    /*
+      Drawer itself NEVER scrolls.
+    */
+    overflow: hidden;
+
+    /*
+      Header + content become flex children.
+    */
+    display: flex;
+    flex-direction: column;
 
     background: var(--color-background);
 
@@ -4219,6 +4281,11 @@ input[type="range"]::-moz-range-thumb {
     transition:
       transform 320ms
       cubic-bezier(.22,.61,.36,1);
+
+    /*
+      Stop scroll chaining.
+    */
+    overscroll-behavior: none;
   }
 
 
@@ -4230,191 +4297,144 @@ input[type="range"]::-moz-range-thumb {
 
   /* =======================================
      DRAWER HEADER
+     
+     ALWAYS FIXED/VISIBLE
   ======================================= */
 
+  .hilya-filter-drawer__header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    /*
+      NEVER shrink.
+      NEVER scroll.
+    */
+    flex: 0 0 auto;
+
+    padding:
+      2rem
+      1.5rem
+      1.35rem;
+
+    background: var(--color-background);
+
+    border-bottom:
+      1px solid rgb(0 0 0 / 8%);
+
+    position: relative;
+
+    z-index: 2;
+  }
+
+
+  .hilya-filter-drawer__eyebrow {
+    display: none;
+  }
+
+
+  .hilya-filter-drawer__header h2 {
+    margin: 0;
+
+    color: var(--color-foreground);
+
+    font-size: 1.2rem;
+
+    font-weight: 400;
+
+    letter-spacing: .08em;
+  }
+
+
+  .hilya-filter-drawer__close {
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--color-foreground);
+
+    font-size: 1.8rem;
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    flex: 0 0 auto;
+  }
+
+
   /* =======================================
-   MOBILE DRAWER
-   HEADER FIXED + CONTENT SCROLLS ONLY
-======================================= */
+     DRAWER CONTENT
+     
+     THIS IS THE ONLY SCROLLABLE PART
+  ======================================= */
 
-.hilya-filter-drawer {
-  position: fixed;
+  .hilya-filter-drawer__content {
+    /*
+      Allow flex child to shrink.
+      This is extremely important.
+    */
+    flex: 1 1 auto;
 
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: auto;
+    min-height: 0;
 
-  z-index: 100001;
+    width: 100%;
 
-  width: min(28rem, 92vw);
+    /*
+      ONLY THIS ELEMENT SCROLLS.
+    */
+    overflow-y: auto;
 
-  /*
-    IMPORTANT:
-    The drawer itself must NOT scroll.
-    Only .hilya-filter-drawer__content scrolls.
-  */
-  height: 100dvh;
-  max-height: 100dvh;
+    overflow-x: hidden;
 
-  overflow: hidden;
+    /*
+      Prevent the scroll from escaping
+      into the website underneath.
+    */
+    overscroll-behavior-y: contain;
 
-  display: flex;
-  flex-direction: column;
+    /*
+      Smooth native touch scrolling.
+    */
+    -webkit-overflow-scrolling: touch;
 
-  background: var(--color-background);
-
-  transform: translateX(-100%);
-
-  transition:
-    transform 320ms
-    cubic-bezier(.22,.61,.36,1);
-
-  /*
-    Prevent scroll chaining from the drawer
-    to the page underneath.
-  */
-  overscroll-behavior: none;
-}
+    padding:
+      0
+      1.5rem
+      2rem;
+  }
 
 
-.hilya-filter-drawer.is-open {
-  transform: translateX(0);
-}
+  /* =======================================
+     MOBILE FILTER GROUPS
+  ======================================= */
+
+  .hilya-filter-drawer
+  .hilya-filter-group {
+    border-top:
+      1px solid rgb(0 0 0 / 9%);
+  }
 
 
-/* =======================================
-   DRAWER HEADER
-   ALWAYS VISIBLE
-======================================= */
-
-.hilya-filter-drawer__header {
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  /*
-    Header never scrolls.
-  */
-  flex: 0 0 auto;
-
-  padding:
-    2rem
-    1.5rem
-    1.35rem;
-
-  background: var(--color-background);
-
-  border-bottom: 1px solid rgb(0 0 0 / 8%);
-
-  position: relative;
-  z-index: 2;
-}
+  .hilya-filter-drawer
+  .hilya-filter-group:last-child {
+    border-bottom:
+      1px solid rgb(0 0 0 / 9%);
+  }
 
 
-.hilya-filter-drawer__eyebrow {
-  display: none;
-}
-
-
-.hilya-filter-drawer__header h2 {
-  margin: 0;
-
-  color: var(--color-foreground);
-
-  font-size: 1.2rem;
-
-  font-weight: 400;
-
-  letter-spacing: .08em;
-}
-
-
-.hilya-filter-drawer__close {
-  padding: 0;
-
-  border: 0;
-
-  background: transparent;
-
-  color: var(--color-foreground);
-
-  font-size: 1.8rem;
-
-  font-weight: 300;
-
-  line-height: 1;
-
-  cursor: pointer;
-
-  flex: 0 0 auto;
-}
-
-
-/* =======================================
-   DRAWER CONTENT
-   THIS IS THE ONLY SCROLLABLE AREA
-======================================= */
-
-.hilya-filter-drawer__content {
-  /*
-    VERY IMPORTANT:
-    Without min-height: 0, flex children can
-    force the drawer itself to become scrollable.
-  */
-  flex: 1 1 auto;
-
-  min-height: 0;
-
-  width: 100%;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  /*
-    Prevent the scroll from escaping to the
-    website underneath when reaching the top/bottom.
-  */
-  overscroll-behavior-y: contain;
-
-  /*
-    Better touch scrolling on mobile.
-  */
-  -webkit-overflow-scrolling: touch;
-
-  padding:
-    0
-    1.5rem
-    2rem;
-}
-
-
-/* =======================================
-   FILTER GROUPS
-======================================= */
-
-.hilya-filter-drawer
-.hilya-filter-group {
-  border-top:
-    1px solid rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filter-drawer
-.hilya-filter-group:last-child {
-  border-bottom:
-    1px solid rgb(0 0 0 / 9%);
-}
-
-
-.hilya-filter-drawer
-.hilya-filter-group__toggle,
-.hilya-filter-drawer
-.hilya-filter-group__content {
-  padding-inline: 0;
-}
-
+  .hilya-filter-drawer
+  .hilya-filter-group__toggle,
+  .hilya-filter-drawer
+  .hilya-filter-group__content {
+    padding-inline: 0;
+  }
 
 
   /* =======================================
