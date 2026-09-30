@@ -3253,13 +3253,52 @@ input[type="range"]::-moz-range-thumb {
     align-self: start;
     position: sticky;
     top: 96px;
+    width: 100%;
   }
 
+  /* Compact desktop sidebar without changing filter contents */
+  .hilya-filter-sidebar__heading {
+    margin: 0 0 .55rem;
+  }
+
+  .hilya-filter-sidebar__heading h2 {
+    font-size: .96rem;
+  }
+
+  .hilya-filter-group__toggle {
+    padding: .65rem 0;
+    font-size: .72rem;
+  }
+
+  .hilya-filter-group__content {
+    padding-bottom: .65rem;
+  }
+
+  .hilya-filter-option {
+    min-height: 1.7rem;
+    font-size: .70rem;
+  }
+
+  .hilya-price-slider {
+    margin: .12rem 0 .38rem;
+  }
+
+  .hilya-price-input {
+    height: 1.7rem;
+    padding-inline: .38rem;
+  }
 
   .hilya-filters__products-toolbar {
     grid-area: toolbar;
+    min-height: 2.35rem;
+    margin-bottom: .35rem;
   }
 
+  .hilya-filters__results,
+  .hilya-filters__sort-label,
+  .hilya-filters__sort-trigger {
+    line-height: 1.2;
+  }
 
   .hilya-filters__mobile-bar,
   .hilya-filter-drawer,
