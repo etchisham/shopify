@@ -288,22 +288,13 @@
 
 {% stylesheet %}
 
-
 /* =========================================
    COLLECTION
 ========================================= */
 
 .catalog-page__inner {
-
   width: 100%;
-
-  padding-inline:
-    clamp(
-      1rem,
-      5vw,
-      5.5rem
-    );
-
+  padding-inline: clamp(1rem, 5vw, 5.5rem);
 }
 
 
@@ -312,95 +303,38 @@
 ========================================= */
 
 .catalog-page__header {
-
   width: 100%;
-
   margin-inline: auto;
-
-  margin-block-end:
-    clamp(
-      2.25rem,
-      4vw,
-      3.5rem
-    );
-
+  margin-block-end: clamp(2.25rem, 4vw, 3.5rem);
   text-align: center;
-
 }
-
 
 .catalog-page__eyebrow {
-
-  margin:
-    0 0 .8rem;
-
-  color:
-    var(--color-muted);
-
-  font-size:
-    .62rem;
-
-  font-weight:
-    500;
-
-  line-height:
-    1;
-
-  letter-spacing:
-    .24em;
-
-  text-transform:
-    uppercase;
-
+  margin: 0 0 .8rem;
+  color: var(--color-muted);
+  font-size: .62rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .24em;
+  text-transform: uppercase;
 }
-
 
 .catalog-page__title {
-
   margin: 0;
-
-  color:
-    var(--color-foreground);
-
-  font-size:
-    clamp(
-      1.9rem,
-      3.5vw,
-      3.2rem
-    );
-
-  font-weight:
-    400;
-
-  line-height:
-    1.08;
-
-  letter-spacing:
-    .035em;
-
-  text-transform:
-    uppercase;
-
+  color: var(--color-foreground);
+  font-size: clamp(1.9rem, 3.5vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: .035em;
+  text-transform: uppercase;
 }
 
-
 .catalog-page__description {
-
-  max-width:
-    36rem;
-
-  margin:
-    1rem auto 0;
-
-  color:
-    var(--color-muted);
-
-  font-size:
-    .85rem;
-
-  line-height:
-    1.7;
-
+  max-width: 36rem;
+  margin: 1rem auto 0;
+  color: var(--color-muted);
+  font-size: .85rem;
+  line-height: 1.7;
 }
 
 
@@ -409,16 +343,8 @@
 ========================================= */
 
 .catalog-page__toolbar {
-
   width: 100%;
-
-  margin-block-end:
-    clamp(
-      1.5rem,
-      2.5vw,
-      2.25rem
-    );
-
+  margin-block-end: clamp(1.5rem, 2.5vw, 2.25rem);
 }
 
 
@@ -427,36 +353,14 @@
 ========================================= */
 
 .catalog-grid {
-
   display: grid;
-
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
-  column-gap:
-    clamp(
-      .7rem,
-      1.5vw,
-      1.5rem
-    );
-
-  row-gap:
-    clamp(
-      2.5rem,
-      4vw,
-      4.25rem
-    );
-
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(.7rem, 1.5vw, 1.5rem);
+  row-gap: clamp(2.5rem, 4vw, 4.25rem);
 }
 
-
 .catalog-product-item.is-filtered-out {
-
   display: none;
-
 }
 
 
@@ -465,64 +369,30 @@
 ========================================= */
 
 .catalog-page__pagination {
-
   display: flex;
-
   flex-wrap: wrap;
-
   justify-content: center;
-
   align-items: center;
-
   gap: .3rem;
-
-  margin-block-start:
-    4.5rem;
-
+  margin-block-start: 4.5rem;
   text-align: center;
-
 }
-
 
 .catalog-page__pagination > * {
-
   display: inline-grid;
-
-  min-width:
-    2.5rem;
-
-  min-height:
-    2.5rem;
-
+  min-width: 2.5rem;
+  min-height: 2.5rem;
   place-items: center;
-
   padding: .5rem;
-
-  color:
-    var(--color-foreground);
-
-  border-radius:
-    50%;
-
-  font-size:
-    .75rem;
-
-  line-height:
-    1;
-
-  text-decoration:
-    none;
-
+  color: var(--color-foreground);
+  border-radius: 50%;
+  font-size: .75rem;
+  line-height: 1;
+  text-decoration: none;
 }
 
-
 .catalog-page__pagination > *:hover {
-
-  background:
-    rgb(
-      0 0 0 / 5%
-    );
-
+  background: rgb(0 0 0 / 5%);
 }
 
 
@@ -531,28 +401,12 @@
 ========================================= */
 
 .catalog-page__empty {
-
-  max-width:
-    36rem;
-
-  margin:
-    3rem auto;
-
-  padding:
-    3rem 1.5rem;
-
-  border:
-    1px solid
-    rgb(
-      0 0 0 / 8%
-    );
-
-  text-align:
-    center;
-
-  color:
-    var(--color-muted);
-
+  max-width: 36rem;
+  margin: 3rem auto;
+  padding: 3rem 1.5rem;
+  border: 1px solid rgb(0 0 0 / 8%);
+  text-align: center;
+  color: var(--color-muted);
 }
 
 
@@ -563,141 +417,31 @@
 @media (min-width: 46.875rem) {
 
   .catalog-grid {
-
-    grid-template-columns:
-      repeat(
-        3,
-        minmax(0, 1fr)
-      );
-
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
 }
 
 
 /* =========================================
-   DESKTOP COLLECTION LAYOUT
+   DESKTOP
 ========================================= */
 
 @media (min-width: 40.001rem) {
 
-
   /*
-    The toolbar itself becomes transparent
-    to the CSS grid so its children can occupy
-    the left and right columns directly.
-  */
+    Main layout:
 
-  .catalog-page__toolbar {
-
-    display:
-      contents;
-
-  }
-
-
-  /*
-    LEFT SIDEBAR
-  */
-
-  .hilya-filter-sidebar {
-
-    grid-column:
-      1;
-
-    grid-row:
-      2 / span 2;
-
-    width:
-      100%;
-
-  }
-
-
-  /*
-    PRODUCTS TOP BAR
-  */
-
-  .hilya-filters__products-toolbar {
-
-    grid-column:
-      2;
-
-    grid-row:
-      2;
-
-    width:
-      100%;
-
-  }
-
-
-  /*
-    PRODUCTS
-  */
-
-  .catalog-grid {
-
-    grid-column:
-      2;
-
-    grid-row:
-      3;
-
-  }
-
-
-  /*
-    PAGINATION
-  */
-
-  .catalog-page__pagination {
-
-    grid-column:
-      2;
-
-    grid-row:
-      4;
-
-  }
-
-
-  /*
-    EMPTY COLLECTION
-  */
-
-  .catalog-page__empty {
-
-    grid-column:
-      2;
-
-    grid-row:
-      3;
-
-  }
-
-
-  /*
-    MAIN TWO-COLUMN LAYOUT
-
-    Left  = Filters
-    Right = Products
+    LEFT  = Filters
+    RIGHT = Products
   */
 
   .catalog-page__inner {
-
-    display:
-      grid;
+    display: grid;
 
     grid-template-columns:
-      minmax(
-        13rem,
-        14rem
-      )
-      minmax(
-        0,
-        1fr
-      );
+      minmax(13rem, 15rem)
+      minmax(0, 1fr);
 
     column-gap:
       clamp(
@@ -706,41 +450,293 @@
         4.5rem
       );
 
-    align-items:
-      start;
-
+    align-items: start;
   }
 
 
-  /*
-    HEADER FULL WIDTH
-  */
+  /* Header stays full width */
 
   .catalog-page__header {
-
-    grid-column:
-      1 / -1;
-
-    grid-row:
-      1;
-
+    grid-column: 1 / -1;
+    grid-row: 1;
   }
 
 
   /*
-    REMOVE OLD TOOLBAR SPACING
+    Remove toolbar wrapper from layout.
+    Its children become direct grid items.
   */
 
   .catalog-page__toolbar {
-
-    margin-block-end:
-      0;
-
-    border:
-      0;
-
+    display: contents;
+    margin: 0;
   }
 
+
+  /*
+    Remove the extra filters wrapper
+    from the grid on desktop.
+  */
+
+  .hilya-filters {
+    display: contents;
+  }
+
+
+  /*
+    PRODUCTS TOP BAR
+  */
+
+  .hilya-filters__top {
+    grid-column: 2;
+    grid-row: 2;
+
+    display: grid;
+
+    grid-template-columns:
+      1fr auto;
+
+    align-items: center;
+
+    min-height: 3.75rem;
+
+    margin-bottom: 1.25rem;
+
+    border-bottom:
+      1px solid
+      rgb(0 0 0 / 8%);
+  }
+
+
+  /*
+    FILTER BUTTON IS NOT NEEDED
+    ON DESKTOP
+  */
+
+  .hilya-filters__button {
+    display: none;
+  }
+
+
+  /*
+    PRODUCT COUNT
+  */
+
+  .hilya-filters__results {
+    grid-column: 1;
+
+    justify-self: start;
+
+    color: var(--color-muted);
+
+    font-size: .65rem;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+  }
+
+
+  /*
+    SORT
+  */
+
+  .hilya-filters__sort {
+    grid-column: 2;
+
+    justify-self: end;
+  }
+
+
+  /*
+    ACTIVE FILTERS
+  */
+
+  .hilya-filters__active {
+    grid-column: 2;
+    grid-row: 2;
+
+    align-self: end;
+
+    justify-content: flex-start;
+
+    margin-bottom: 1.25rem;
+
+    padding: 0 0 1rem;
+  }
+
+
+  /*
+    SIDEBAR FILTERS
+
+    The drawer becomes a normal
+    left-side sidebar on desktop.
+  */
+
+  .hilya-filter-drawer {
+    position: sticky;
+
+    top: 100px;
+
+    grid-column: 1;
+
+    grid-row: 2 / span 3;
+
+    width: 100%;
+
+    max-height:
+      calc(
+        100vh - 120px
+      );
+
+    overflow-y: auto;
+
+    background:
+      transparent;
+
+    transform: none;
+
+    box-shadow: none;
+
+    visibility: visible;
+
+    opacity: 1;
+  }
+
+
+  .hilya-filter-drawer__header {
+    padding:
+      0 0 1rem;
+
+    border-bottom:
+      1px solid
+      rgb(0 0 0 / 8%);
+  }
+
+
+  .hilya-filter-drawer__eyebrow {
+    font-size: .55rem;
+  }
+
+
+  .hilya-filter-drawer__header h2 {
+    font-size: .9rem;
+
+    letter-spacing: .12em;
+  }
+
+
+  /*
+    CLOSE BUTTON HIDDEN
+  */
+
+  .hilya-filter-drawer__close {
+    display: none;
+  }
+
+
+  /*
+    FILTER GROUPS
+  */
+
+  .hilya-filter-group {
+    border-bottom:
+      1px solid
+      rgb(0 0 0 / 8%);
+  }
+
+
+  .hilya-filter-group summary {
+    padding:
+      1.15rem 0;
+
+    font-size: .67rem;
+  }
+
+
+  .hilya-filter-group__content {
+    padding:
+      0 0 1rem;
+  }
+
+
+  /*
+    FILTER OPTIONS
+  */
+
+  .hilya-filter-option {
+    min-height: 2.15rem;
+
+    font-size: .75rem;
+  }
+
+
+  /*
+    PRICE
+  */
+
+  .hilya-price-fields {
+    grid-template-columns:
+      1fr;
+
+    gap: .9rem;
+  }
+
+
+  /*
+    REMOVE APPLY/CLEAR BUTTON AREA
+    FROM THE SIDEBAR.
+
+    CLEAR ALL is handled above
+    with active filters.
+  */
+
+  .hilya-filter-actions {
+    display: none;
+  }
+
+
+  /*
+    PRODUCTS
+  */
+
+  .catalog-grid {
+    grid-column: 2;
+    grid-row: 3;
+
+    width: 100%;
+
+    align-self: start;
+  }
+
+
+  /*
+    PAGINATION
+  */
+
+  .catalog-page__pagination {
+    grid-column: 2;
+    grid-row: 4;
+  }
+
+
+  /*
+    EMPTY
+  */
+
+  .catalog-page__empty {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+
+  /*
+    HIDE MOBILE OVERLAY
+  */
+
+  .hilya-filter-overlay {
+    display: none;
+  }
 
 }
 
@@ -752,13 +748,11 @@
 @media (min-width: 64rem) {
 
   .catalog-grid {
-
     grid-template-columns:
       repeat(
         4,
         minmax(0, 1fr)
       );
-
   }
 
 }
@@ -770,39 +764,21 @@
 
 @media (max-width: 40rem) {
 
-
   .catalog-page__inner {
-
-    padding-inline:
-      1rem;
-
+    padding-inline: 1rem;
   }
-
 
   .catalog-page__header {
-
-    margin-block-end:
-      2.25rem;
-
+    margin-block-end: 2.25rem;
   }
-
 
   .catalog-page__eyebrow {
-
-    margin-bottom:
-      .7rem;
-
-    font-size:
-      .58rem;
-
-    letter-spacing:
-      .22em;
-
+    margin-bottom: .7rem;
+    font-size: .58rem;
+    letter-spacing: .22em;
   }
 
-
   .catalog-page__title {
-
     font-size:
       clamp(
         1.75rem,
@@ -810,47 +786,25 @@
         2.25rem
       );
 
-    letter-spacing:
-      .025em;
-
+    letter-spacing: .025em;
   }
-
 
   .catalog-page__description {
-
-    margin-top:
-      .9rem;
-
-    font-size:
-      .78rem;
-
+    margin-top: .9rem;
+    font-size: .78rem;
   }
-
 
   .catalog-page__toolbar {
-
-    margin-block-end:
-      0;
-
+    margin-block-end: 1.35rem;
   }
-
 
   .catalog-grid {
-
-    column-gap:
-      .7rem;
-
-    row-gap:
-      2.75rem;
-
+    column-gap: .7rem;
+    row-gap: 2.75rem;
   }
 
-
   .catalog-page__pagination {
-
-    margin-block-start:
-      3.5rem;
-
+    margin-block-start: 3.5rem;
   }
 
 }
@@ -862,20 +816,12 @@
 
 @media (max-width: 27rem) {
 
-
   .catalog-page__inner {
-
-    padding-inline:
-      .8rem;
-
+    padding-inline: .8rem;
   }
 
-
   .catalog-grid {
-
-    column-gap:
-      .6rem;
-
+    column-gap: .6rem;
   }
 
 }
@@ -888,14 +834,10 @@
 @media (prefers-reduced-motion: reduce) {
 
   .catalog-page__pagination > * {
-
-    transition:
-      none;
-
+    transition: none;
   }
 
 }
-
 
 {% endstylesheet %}
 
