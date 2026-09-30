@@ -6,7 +6,8 @@
     ================================= -->
 
     <header class="catalog-page__header">
-<h1 class="catalog-page__title">
+
+      <h1 class="catalog-page__title">
 
         {% if collection.handle == 'all' %}
 
@@ -24,9 +25,7 @@
       {% if section.settings.show_collection_description and collection.description != blank %}
 
         <div class="catalog-page__description rte">
-
           {{ collection.description }}
-
         </div>
 
       {% endif %}
@@ -65,22 +64,20 @@
 
         <div class="catalog-grid">
 
-
           {% for product in collection.products %}
 
-
             {% liquid
-  assign product_colors = ''
-  assign product_available = product.available
+              assign product_colors = ''
+              assign product_available = product.available
 
-  for option in product.options_with_values
-    if option.name == 'Color'
-      for value in option.values
-        assign product_colors = product_colors | append: value.name | append: '|'
-      endfor
-    endif
-  endfor
-%}
+              for option in product.options_with_values
+                if option.name == 'Color'
+                  for value in option.values
+                    assign product_colors = product_colors | append: value.name | append: '|'
+                  endfor
+                endif
+              endfor
+            %}
 
 
             <div
@@ -101,13 +98,9 @@
                 type="application/json"
                 data-variant-data
               >
-
                 [
-
                   {% for variant in product.variants %}
-
                     {
-
                       "id":
                         {{ variant.id | json }},
 
@@ -125,13 +118,9 @@
                       "url":
                         {{ variant.url | json }},
 
-
                       "image":
-
                       {% if variant.featured_image %}
-
                         {
-
                           "src":
                             {{ variant.featured_image
                               | image_url: width: 1200
@@ -141,15 +130,10 @@
                             {{ variant.featured_image.alt
                               | default: product.title
                               | json }}
-
                         }
-
                       {% else %}
-
                         null
-
                       {% endif %},
-
 
                       "images": [
 
@@ -159,9 +143,7 @@
                           | strip
                         %}
 
-
                         {% assign matched_image_count = 0 %}
-
 
                         {% for image in product.images %}
 
@@ -171,15 +153,11 @@
                             | downcase
                           %}
 
-
                           {% if image_alt contains variant_color %}
-
 
                             {% if matched_image_count > 0 %},{% endif %}
 
-
                             {
-
                               "src":
                                 {{ image
                                   | image_url: width: 1200
@@ -189,30 +167,24 @@
                                 {{ image.alt
                                   | default: product.title
                                   | json }}
-
                             }
-
 
                             {% assign matched_image_count =
                               matched_image_count
                               | plus: 1
                             %}
 
-
                           {% endif %}
 
                         {% endfor %}
 
                       ]
-
                     }
 
                     {% unless forloop.last %},{% endunless %}
 
                   {% endfor %}
-
                 ]
-
               </script>
 
 
@@ -226,12 +198,9 @@
                 sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
               %}
 
-
             </div>
 
-
           {% endfor %}
-
 
         </div>
 
@@ -246,9 +215,7 @@
             class="catalog-page__pagination"
             aria-label="Pagination"
           >
-
             {{ paginate | default_pagination }}
-
           </nav>
 
         {% endif %}
@@ -275,30 +242,264 @@
 
     {% endpaginate %}
 
-
   </div>
 </section>
 
 
 {% stylesheet %}
 
-.catalog-page__inner { width: 100%; padding-inline: clamp(1rem, 5vw, 5.5rem); }
-.catalog-page__header { width: 100%; margin-inline: auto; margin-block-end: 1.6rem; text-align: center; }
-.catalog-page__title { margin: 0; color: var(--color-foreground); font-size: clamp(1.45rem, 2.25vw, 2.05rem); font-weight: 300; line-height: 1.1; letter-spacing: .045em; text-transform: uppercase; }
-.catalog-page__description { max-width: 36rem; margin: .8rem auto 0; color: var(--color-muted); font-size: .78rem; line-height: 1.7; }
-.catalog-page__toolbar { width: 100%; margin: 0; }
-.catalog-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(.7rem, 1.5vw, 1.5rem); row-gap: clamp(2.5rem, 4vw, 4.25rem); grid-area: products; align-self: start; }
-.catalog-product-item.is-filtered-out { display: none; }
-.catalog-page__pagination { grid-area: pagination; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .3rem; margin-block-start: 4.5rem; text-align: center; }
-.catalog-page__pagination > * { display: inline-grid; min-width: 2.5rem; min-height: 2.5rem; place-items: center; padding: .5rem; color: var(--color-foreground); border-radius: 50%; font-size: .75rem; line-height: 1; text-decoration: none; }
-.catalog-page__pagination > *:hover { background: rgb(0 0 0 / 5%); }
-.catalog-page__empty { max-width: 36rem; margin: 3rem auto; padding: 3rem 1.5rem; border: 1px solid rgb(0 0 0 / 8%); text-align: center; color: var(--color-muted); }
-@media (min-width: 40.001rem) { .catalog-page__inner { display: grid; grid-template-columns: minmax(12.5rem, 15rem) minmax(0, 1fr); grid-template-areas: "header header" "sidebar toolbar" "sidebar products" "sidebar pagination"; column-gap: clamp(2rem, 4vw, 4.5rem); align-items: start; } .catalog-page__header { grid-area: header; } .catalog-page__toolbar { display: contents; } .hilya-filters { display: contents; } .catalog-page__pagination { margin-block-start: 4rem; } }
-@media (min-width: 46.875rem) { .catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 64rem) { .catalog-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-@media (max-width: 40rem) { .catalog-page__inner { padding-inline: 1rem; } .catalog-page__header { margin-block-end: 1.35rem; } .catalog-page__title { font-size: clamp(1.35rem, 7vw, 1.8rem); letter-spacing: .035em; } .catalog-page__description { margin-top: .7rem; font-size: .74rem; } .catalog-page__toolbar { margin-block-end: .9rem; } .catalog-grid { column-gap: .7rem; row-gap: 2.75rem; } .catalog-page__pagination { margin-block-start: 3.5rem; } }
-@media (max-width: 27rem) { .catalog-page__inner { padding-inline: .8rem; } .catalog-grid { column-gap: .6rem; } }
-@media (prefers-reduced-motion: reduce) { .catalog-page__pagination > * { transition: none; } }
+/* =========================================
+   COLLECTION PAGE
+========================================= */
+
+.catalog-page__inner {
+  width: 100%;
+  padding-inline: clamp(1rem, 5vw, 5.5rem);
+}
+
+
+/* =========================================
+   COLLECTION HEADER
+========================================= */
+
+.catalog-page__header {
+  width: 100%;
+  margin-inline: auto;
+  margin-block-end: .75rem;
+  text-align: center;
+}
+
+.catalog-page__title {
+  margin: 0;
+  color: var(--color-foreground);
+  font-size: clamp(1.65rem, 2.55vw, 2.15rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: .065em;
+  text-transform: uppercase;
+}
+
+.catalog-page__description {
+  max-width: 36rem;
+  margin: .65rem auto 0;
+  color: var(--color-muted);
+  font-size: .78rem;
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.catalog-page__toolbar {
+  width: 100%;
+  margin: 0;
+}
+
+
+/* =========================================
+   PRODUCT GRID
+========================================= */
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(.7rem, 1.5vw, 1.5rem);
+  row-gap: clamp(2.5rem, 4vw, 4.25rem);
+  grid-area: products;
+  align-self: start;
+}
+
+.catalog-product-item.is-filtered-out {
+  display: none;
+}
+
+
+/* =========================================
+   PAGINATION
+========================================= */
+
+.catalog-page__pagination {
+  grid-area: pagination;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .3rem;
+  margin-block-start: 4.5rem;
+  text-align: center;
+}
+
+.catalog-page__pagination > * {
+  display: inline-grid;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  place-items: center;
+  padding: .5rem;
+  color: var(--color-foreground);
+  border-radius: 50%;
+  font-size: .75rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.catalog-page__pagination > *:hover {
+  background: rgb(0 0 0 / 5%);
+}
+
+
+/* =========================================
+   EMPTY COLLECTION
+========================================= */
+
+.catalog-page__empty {
+  max-width: 36rem;
+  margin: 3rem auto;
+  padding: 3rem 1.5rem;
+  border: 1px solid rgb(0 0 0 / 8%);
+  text-align: center;
+  color: var(--color-muted);
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 40.001rem) {
+
+  .catalog-page__inner {
+    display: grid;
+    grid-template-columns:
+      minmax(12.5rem, 15rem)
+      minmax(0, 1fr);
+
+    grid-template-areas:
+      "header header"
+      "sidebar toolbar"
+      "sidebar products"
+      "sidebar pagination";
+
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+  }
+
+  .catalog-page__header {
+    grid-area: header;
+  }
+
+  .catalog-page__toolbar {
+    display: contents;
+  }
+
+  .hilya-filters {
+    display: contents;
+  }
+
+  .catalog-page__pagination {
+    margin-block-start: 4rem;
+  }
+
+}
+
+
+/* =========================================
+   3 COLUMNS
+========================================= */
+
+@media (min-width: 46.875rem) {
+
+  .catalog-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================
+   4 COLUMNS
+========================================= */
+
+@media (min-width: 64rem) {
+
+  .catalog-grid {
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 40rem) {
+
+  .catalog-page__inner {
+    padding-inline: 1rem;
+  }
+
+  .catalog-page__header {
+    margin-block-end: .55rem;
+  }
+
+  .catalog-page__title {
+    font-size: clamp(1.4rem, 7vw, 1.85rem);
+    letter-spacing: .045em;
+  }
+
+  .catalog-page__description {
+    margin-top: .6rem;
+    font-size: .74rem;
+  }
+
+  .catalog-page__toolbar {
+    margin-block-end: .65rem;
+  }
+
+  .catalog-grid {
+    column-gap: .7rem;
+    row-gap: 2.75rem;
+  }
+
+  .catalog-page__pagination {
+    margin-block-start: 3.5rem;
+  }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 27rem) {
+
+  .catalog-page__inner {
+    padding-inline: .8rem;
+  }
+
+  .catalog-grid {
+    column-gap: .6rem;
+  }
+
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .catalog-page__pagination > * {
+    transition: none;
+  }
+
+}
 
 {% endstylesheet %}
 
@@ -306,68 +507,35 @@
 {% schema %}
 
 {
-
-  "name":
-    "t:general.collection",
-
+  "name": "t:general.collection",
 
   "disabled_on": {
-
-    "groups":
-      [
-        "header",
-        "footer"
-      ]
-
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
-
 
   "settings": [
 
     {
-
-      "type":
-        "checkbox",
-
-      "id":
-        "show_collection_description",
-
-      "label":
-        "t:labels.show_collection_description",
-
-      "default":
-        false
-
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "t:labels.show_collection_description",
+      "default": false
     },
 
-
     {
-
-      "type":
-        "range",
-
-      "id":
-        "products_per_page",
-
-      "min":
-        12,
-
-      "max":
-        48,
-
-      "step":
-        4,
-
-      "label":
-        "t:labels.products_to_show",
-
-      "default":
-        24
-
+      "type": "range",
+      "id": "products_per_page",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "label": "t:labels.products_to_show",
+      "default": 24
     }
 
   ]
-
 }
 
 {% endschema %}
