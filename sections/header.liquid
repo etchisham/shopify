@@ -7,6 +7,8 @@
   font-style: normal;
   font-display: swap;
 }
+
+
 /* =========================================================
    HILYA HEADER
    ========================================================= */
@@ -32,11 +34,18 @@
 
   border-bottom: 1px solid var(--header-border);
 
+  /*
+    IMPORTANT:
+    Header is normal in the document flow initially.
+    This prevents it from covering the first part of the page.
+  */
   position: relative;
+
   z-index: 1000;
 
   box-sizing: border-box;
 }
+
 
 .site-header,
 .site-header * {
@@ -45,10 +54,14 @@
 
 
 /* =========================================================
-   FIXED HEADER
+   SCROLLED / STICKY HEADER
    ========================================================= */
 
-.site-header--sticky {
+/*
+  Header becomes fixed ONLY after scrolling.
+*/
+
+.site-header--scrolled {
   position: fixed !important;
 
   top: 0 !important;
@@ -61,13 +74,16 @@
   margin-left: 0 !important;
   margin-right: 0 !important;
 
-  z-index: 99999 !important;
+  z-index: 9999 !important;
 }
 
 
-/* Reserve header space */
+/*
+  When header becomes fixed, reserve its space so
+  the page does not jump upward.
+*/
 
-body:has(.site-header--sticky) {
+body.hilya-header-is-scrolled {
   padding-top: var(--hilya-header-height);
 }
 
@@ -123,6 +139,7 @@ body:has(.site-header--sticky) {
   transform: translateY(-1px);
 }
 
+
 .site-header__brand:hover {
   color: var(--header-text);
 }
@@ -150,6 +167,7 @@ body:has(.site-header--sticky) {
   z-index: 15;
 }
 
+
 .desktop-nav > a {
   color: var(--header-text);
   text-decoration: none;
@@ -167,6 +185,7 @@ body:has(.site-header--sticky) {
   display: flex;
   align-items: center;
 }
+
 
 .desktop-nav > a:hover {
   opacity: 0.65;
@@ -213,12 +232,14 @@ body:has(.site-header--sticky) {
   cursor: default;
 }
 
+
 .desktop-menu__trigger {
   height: 100%;
 
   display: flex;
   align-items: center;
 }
+
 
 .desktop-categories__trigger {
   height: 100%;
@@ -250,6 +271,7 @@ body:has(.site-header--sticky) {
 
   pointer-events: none;
 }
+
 
 .desktop-menu__icon span {
   width: 100%;
@@ -298,6 +320,7 @@ body:has(.site-header--sticky) {
   z-index: 2000;
 }
 
+
 .desktop-dropdown a {
   display: block;
 
@@ -316,6 +339,7 @@ body:has(.site-header--sticky) {
 
   white-space: nowrap;
 }
+
 
 .desktop-dropdown a:hover {
   background: rgba(0, 0, 0, 0.035);
@@ -362,6 +386,7 @@ body:has(.site-header--sticky) {
   z-index: 20;
 }
 
+
 .header-action {
   color: var(--header-text);
 
@@ -374,12 +399,14 @@ body:has(.site-header--sticky) {
   position: relative;
 }
 
+
 .header-action svg {
   width: 18px;
   height: 18px;
 
   stroke: currentColor;
 }
+
 
 .cart-count {
   position: absolute;
@@ -412,10 +439,12 @@ body:has(.site-header--sticky) {
   position: relative;
 }
 
+
 .header-search summary {
   list-style: none;
   cursor: pointer;
 }
+
 
 .header-search summary::-webkit-details-marker {
   display: none;
@@ -444,12 +473,14 @@ body:has(.site-header--sticky) {
   z-index: 3000;
 }
 
+
 .header-search__form {
   display: flex;
   align-items: center;
 
   gap: 8px;
 }
+
 
 .header-search__input {
   flex: 1;
@@ -470,6 +501,7 @@ body:has(.site-header--sticky) {
 
   font-size: 0.78rem;
 }
+
 
 .header-search__input::placeholder {
   color: var(--header-text);
@@ -499,6 +531,7 @@ body:has(.site-header--sticky) {
 
   padding: 0;
 }
+
 
 .header-search__submit svg {
   width: 18px;
@@ -531,7 +564,9 @@ body:has(.site-header--sticky) {
 @media screen and (max-width: 749px) {
 
   .site-header {
-    --hilya-header-height: {{ section.settings.mobile_height }}px;
+
+    --hilya-header-height:
+      {{ section.settings.mobile_height }}px;
 
     width: 100vw !important;
     max-width: none !important;
@@ -542,6 +577,7 @@ body:has(.site-header--sticky) {
 
 
   .site-header__inner {
+
     width: 100% !important;
     max-width: none !important;
 
@@ -557,24 +593,25 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .site-header__brand {
-  position: absolute;
 
-  left: 50%;
-  top: 50%;
+    position: absolute;
 
-  transform:
-    translate(-50%, -50%)
-    translateY(-1px);
+    left: 50%;
+    top: 50%;
 
-  font-family: "Hilya Script", cursive;
+    transform:
+      translate(-50%, -50%)
+      translateY(-1px);
 
-  font-size: 2.15rem;
+    font-family: "Hilya Script", cursive;
 
-  font-style: normal;
-  font-weight: 400;
+    font-size: 2.15rem;
 
-  letter-spacing: 0;
-}
+    font-style: normal;
+    font-weight: 400;
+
+    letter-spacing: 0;
+  }
 
 
   /* =======================================================
@@ -591,6 +628,7 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .mobile-menu {
+
     display: block;
 
     position: static;
@@ -600,6 +638,7 @@ body:has(.site-header--sticky) {
 
 
   .mobile-menu summary {
+
     list-style: none;
 
     width: 22px;
@@ -617,6 +656,7 @@ body:has(.site-header--sticky) {
     position: relative;
   }
 
+
   .mobile-menu summary::-webkit-details-marker {
     display: none;
   }
@@ -627,6 +667,7 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .mobile-menu__icon {
+
     width: 21px;
     height: 16px;
 
@@ -638,7 +679,9 @@ body:has(.site-header--sticky) {
     position: relative;
   }
 
+
   .mobile-menu__icon span {
+
     width: 100%;
     height: 1px;
 
@@ -658,18 +701,23 @@ body:has(.site-header--sticky) {
 
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(1) {
+
     transform:
       translateY(7.5px)
       rotate(45deg);
   }
 
+
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(2) {
+
     opacity: 0;
   }
 
+
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(3) {
+
     transform:
       translateY(-7.5px)
       rotate(-45deg);
@@ -681,6 +729,7 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .mobile-menu__panel {
+
     position: fixed;
 
     top: var(--header-mobile-height);
@@ -710,7 +759,7 @@ body:has(.site-header--sticky) {
     box-shadow:
       none;
 
-    z-index: 99998;
+    z-index: 100000;
 
     box-sizing: border-box;
 
@@ -723,6 +772,7 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .mobile-menu__panel > a {
+
     display: block;
 
     width: 100%;
@@ -750,13 +800,16 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .mobile-categories {
+
     width: 100%;
 
     border-bottom:
       1px solid rgba(0, 0, 0, 0.08);
   }
 
+
   .mobile-categories summary {
+
     list-style: none;
 
     width: 100%;
@@ -779,6 +832,7 @@ body:has(.site-header--sticky) {
     cursor: pointer;
   }
 
+
   .mobile-categories summary::-webkit-details-marker {
     display: none;
   }
@@ -787,6 +841,7 @@ body:has(.site-header--sticky) {
   /* Categories arrow */
 
   .mobile-categories__arrow {
+
     width: 7px;
     height: 7px;
 
@@ -805,6 +860,7 @@ body:has(.site-header--sticky) {
       transform 0.2s ease;
   }
 
+
   .mobile-categories[open]
   .mobile-categories__arrow {
 
@@ -817,13 +873,16 @@ body:has(.site-header--sticky) {
   /* Category items */
 
   .mobile-categories__items {
+
     width: 100%;
 
     padding:
       0 0 5px 14px;
   }
 
+
   .mobile-categories__items a {
+
     display: block;
 
     width: 100%;
@@ -849,12 +908,15 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .header-actions {
+
     margin-left: auto;
 
     gap: 14px;
   }
 
+
   .header-action svg {
+
     width: 18px;
     height: 18px;
   }
@@ -865,6 +927,7 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .header-search__panel {
+
     position: fixed;
 
     top: var(--header-mobile-height);
@@ -877,10 +940,12 @@ body:has(.site-header--sticky) {
 
     box-sizing: border-box;
 
-    z-index: 99998;
+    z-index: 100000;
   }
 
+
   .header-search__form {
+
     width: 100%;
   }
 
@@ -905,6 +970,7 @@ body:has(.site-header--sticky) {
    ========================================================= */
 
 .shopify-section:has(.site-header) {
+
   width: 100vw !important;
   max-width: none !important;
 
@@ -915,11 +981,52 @@ body:has(.site-header--sticky) {
   padding-right: 0 !important;
 }
 
+
+/* =========================================================
+   MOBILE SHOPIFY FILTERS / DRAWERS
+   ========================================================= */
+
+/*
+  These are intentionally above the sticky header.
+  This prevents the header from remaining visible above
+  a product filter / drawer.
+*/
+
+@media screen and (max-width: 749px) {
+
+  .facets__drawer,
+  .mobile-facets__wrapper,
+  .mobile-facets,
+  .drawer,
+  .filter-drawer,
+  .collection-filters,
+  .product-filter-drawer,
+  [id*="FilterDrawer"],
+  [id*="filter-drawer"],
+  [class*="filter-drawer"],
+  [class*="FilterDrawer"] {
+
+    z-index: 100000 !important;
+  }
+
+
+  .facets__overlay,
+  .mobile-facets__overlay,
+  .drawer__overlay,
+  .filter-drawer__overlay,
+  [class*="drawer"][class*="overlay"],
+  [class*="filter"][class*="overlay"] {
+
+    z-index: 99999 !important;
+  }
+
+}
+
 {% endstyle %}
 
 
 <header
-  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
+  class="site-header{% if section.settings.sticky_header %} site-header--sticky-enabled{% endif %}"
 >
 
   <div class="site-header__inner">
@@ -1415,53 +1522,229 @@ body:has(.site-header--sticky) {
 <script>
 (function () {
 
-  function setupHilyaMobileMenu() {
+  function setupHilyaHeader() {
 
-    const menu = document.querySelector('.mobile-menu');
+    const header =
+      document.querySelector('.site-header');
+
+    if (!header) return;
+
+
+    const stickyEnabled =
+      header.classList.contains(
+        'site-header--sticky-enabled'
+      );
+
+    if (!stickyEnabled) return;
+
+
+    /* =====================================================
+       HEADER HEIGHT
+       ===================================================== */
+
+    function updateHeaderHeight() {
+
+      const height =
+        header.offsetHeight;
+
+      header.style.setProperty(
+        '--hilya-header-height',
+        height + 'px'
+      );
+    }
+
+
+    updateHeaderHeight();
+
+
+    /* =====================================================
+       SCROLL
+       ===================================================== */
+
+    function handleScroll() {
+
+      /*
+        At the very top:
+        Header remains in normal document flow.
+
+        After scrolling:
+        Header becomes fixed.
+      */
+
+      if (window.scrollY > 5) {
+
+        if (
+          !header.classList.contains(
+            'site-header--scrolled'
+          )
+        ) {
+
+          updateHeaderHeight();
+
+          header.classList.add(
+            'site-header--scrolled'
+          );
+
+          document.body.classList.add(
+            'hilya-header-is-scrolled'
+          );
+        }
+
+      } else {
+
+        header.classList.remove(
+          'site-header--scrolled'
+        );
+
+        document.body.classList.remove(
+          'hilya-header-is-scrolled'
+        );
+      }
+    }
+
+
+    window.addEventListener(
+      'scroll',
+      handleScroll,
+      {
+        passive: true
+      }
+    );
+
+
+    /* =====================================================
+       RESIZE
+       ===================================================== */
+
+    window.addEventListener(
+      'resize',
+      function () {
+
+        updateHeaderHeight();
+
+        if (
+          header.classList.contains(
+            'site-header--scrolled'
+          )
+        ) {
+
+          document.body.style.paddingTop = '';
+
+        }
+
+        /*
+          Reset sticky state when returning to top.
+        */
+
+        if (window.scrollY <= 5) {
+
+          header.classList.remove(
+            'site-header--scrolled'
+          );
+
+          document.body.classList.remove(
+            'hilya-header-is-scrolled'
+          );
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       INITIAL STATE
+       ===================================================== */
+
+    handleScroll();
+
+
+    /* =====================================================
+       MOBILE MENU
+       ===================================================== */
+
+    const menu =
+      header.querySelector(
+        '.mobile-menu'
+      );
 
     if (!menu) return;
 
+
     function lockPage() {
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
+
+      document.documentElement.style.overflow =
+        'hidden';
+
+      document.body.style.overflow =
+        'hidden';
     }
+
 
     function unlockPage() {
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+
+      document.documentElement.style.overflow =
+        '';
+
+      document.body.style.overflow =
+        '';
     }
 
-    menu.addEventListener('toggle', function () {
 
-      if (menu.open) {
-        lockPage();
-      } else {
-        unlockPage();
+    menu.addEventListener(
+      'toggle',
+      function () {
+
+        if (menu.open) {
+
+          lockPage();
+
+        } else {
+
+          unlockPage();
+
+        }
+
       }
+    );
 
-    });
 
-    window.addEventListener('resize', function () {
+    /* =====================================================
+       DESKTOP / MOBILE SWITCH
+       ===================================================== */
 
-      if (window.innerWidth > 749) {
-        menu.open = false;
-        unlockPage();
+    window.addEventListener(
+      'resize',
+      function () {
+
+        if (
+          window.innerWidth > 749
+        ) {
+
+          menu.open = false;
+
+          unlockPage();
+
+        }
+
       }
-
-    });
+    );
 
   }
 
-  if (document.readyState === 'loading') {
+
+  if (
+    document.readyState ===
+    'loading'
+  ) {
 
     document.addEventListener(
       'DOMContentLoaded',
-      setupHilyaMobileMenu
+      setupHilyaHeader
     );
 
   } else {
 
-    setupHilyaMobileMenu();
+    setupHilyaHeader();
 
   }
 
