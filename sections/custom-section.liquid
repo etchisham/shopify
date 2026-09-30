@@ -160,13 +160,14 @@
   font-weight: 600;
 }
 
+
 /* LINK */
 
 .story-section__link {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
-  gap: 12px;
+  gap: 8px;
 
   color: #111111;
   text-decoration: none;
@@ -179,14 +180,19 @@
 }
 
 .story-section__arrow {
-  display: inline-block;
-  font-size: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
   line-height: 1;
+  margin-top: -1px;
+
   transition: transform .3s ease;
 }
 
 .story-section__link:hover .story-section__arrow {
-  transform: translateX(5px);
+  transform: translateX(4px);
 }
 
 /* LARGE DESKTOP */
