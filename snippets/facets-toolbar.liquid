@@ -2753,181 +2753,240 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* =========================================
    PRICE SLIDER
-   Styled closer to reference screenshot
 ========================================= */
 
 .hilya-price-slider {
   position: relative;
   width: 100%;
-  height: 1.55rem;
-  margin: .05rem 0 .55rem;
+  height: 1.4rem;
+  margin: .2rem 0 .5rem;
+  overflow: visible;
 }
 
+/* BACKGROUND LINE */
 
-/* Base black/gray line */
+.hilya-price-slider__track {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 2px;
+  margin: 0;
+  padding: 0;
+  transform: translateY(-50%);
+  background: #d2d2d2 !important;
+  border: 0 !important;
+  border-radius: 0;
+  box-shadow: none !important;
+}
 
-.hilya-price-slider__track,
+/* ACTIVE LINE */
+
 .hilya-price-slider__range {
   position: absolute;
   top: 50%;
-  height: 3px;
-  transform: translateY(-50%);
-  border-radius: 0;
-}
-
-
-/* Inactive track */
-
-.hilya-price-slider__track {
-  right: 0;
-  left: 0;
-  background: rgb(0 0 0 / 22%);
-}
-
-
-/* Active selected area */
-
-.hilya-price-slider__range {
-  background: #111;
-  z-index: 1;
-}
-
-
-/* Native range */
-
-.hilya-price-slider input[type="range"] {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 1.55rem;
+  height: 2px;
   margin: 0;
   padding: 0;
-  background: transparent;
-  appearance: none;
-  pointer-events: none;
+  transform: translateY(-50%);
+  background: #111 !important;
+  border: 0 !important;
+  border-radius: 0;
   z-index: 2;
+  box-shadow: none !important;
 }
 
 
-/* Chrome / Safari track */
+/* INVISIBLE RANGE CONTROLS */
 
-.hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
-  height: 3px;
-  background: transparent;
-  border: 0;
+.hilya-price-slider input[type="range"] {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+
+  width: 100% !important;
+  height: 1.4rem !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  pointer-events: none;
+  z-index: 4;
 }
 
 
-/* Chrome / Safari handles */
+/* CHROME / EDGE */
 
-.hilya-price-slider input[type="range"]::-webkit-slider-thumb {
-  width: 10px;
-  height: 10px;
-  margin-top: -3.5px;
-  border: 0;
+.hilya-price-slider
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.hilya-price-slider
+input[type="range"]::-webkit-slider-thumb {
+  width: 11px;
+  height: 11px;
+
+  margin-top: -4.5px;
+
+  border: 0 !important;
   border-radius: 50%;
-  background: #111;
-  box-shadow: none;
-  appearance: none;
+
+  background: #111 !important;
+
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  box-shadow: none !important;
+
   cursor: pointer;
   pointer-events: auto;
 }
 
 
-/* Firefox track */
+/* FIREFOX */
 
-.hilya-price-slider input[type="range"]::-moz-range-track {
-  height: 3px;
-  background: transparent;
-  border: 0;
+.hilya-price-slider
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
+.hilya-price-slider
+input[type="range"]::-moz-range-progress {
+  background: transparent !important;
+}
 
-/* Firefox handles */
+.hilya-price-slider
+input[type="range"]::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
 
-.hilya-price-slider input[type="range"]::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
-  border: 0;
+  border: 0 !important;
   border-radius: 50%;
-  background: #111;
-  box-shadow: none;
+
+  background: #111 !important;
+
+  box-shadow: none !important;
+
   cursor: pointer;
   pointer-events: auto;
 }
 
 
 /* =========================================
-   PRICE INPUTS
+   PRICE NUMBER FIELDS
 ========================================= */
 
 .hilya-price-values {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto
-    minmax(0, 1fr);
-
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: .42rem;
-  font-size: .62rem;
-}
+  gap: .4rem;
 
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  font-size: .6rem;
+}
 
 .hilya-price-input {
   display: flex;
   align-items: center;
-  gap: .28rem;
+
+  width: 100%;
   min-width: 0;
-  height: 1.95rem;
+  height: 1.85rem;
+
+  margin: 0;
   padding: 0 .5rem;
-  border: 1px solid rgb(0 0 0 / 15%);
-  background: var(--color-background);
+
+  border: 1px solid rgb(0 0 0 / 16%) !important;
+  border-radius: 0;
+
+  background: var(--color-background) !important;
+
+  box-shadow: none !important;
+  outline: none;
 }
-
-
-.hilya-price-input--max {
-  justify-content: flex-start;
-}
-
 
 .hilya-price-input span {
   flex: 0 0 auto;
-  color: var(--color-muted);
-  font-size: .55rem;
-}
 
+  color: var(--color-muted);
+  font-size: .52rem;
+  line-height: 1;
+}
 
 .hilya-price-input input {
+  display: block;
+
   width: 100%;
   min-width: 0;
+  height: 100%;
+
+  margin: 0;
   padding: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
+
+  border: 0 !important;
+  outline: 0 !important;
+
+  background: transparent !important;
+
   color: var(--color-foreground);
+
   font: inherit;
-  font-size: .61rem;
+  font-size: .6rem;
+  line-height: 1;
+
   text-align: right;
+
+  box-shadow: none !important;
 }
 
+.hilya-price-input input:focus {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
 
 .hilya-price-input input::-webkit-inner-spin-button,
 .hilya-price-input input::-webkit-outer-spin-button {
-  appearance: none;
   margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
 }
-
 
 .hilya-price-input input[type="number"] {
   appearance: textfield;
+  -moz-appearance: textfield;
 }
-
 
 .hilya-price-values__to {
   color: var(--color-muted);
-  font-size: .58rem;
+  font-size: .56rem;
+  line-height: 1;
+  white-space: nowrap;
 }
+
 
 
 /* =========================================
