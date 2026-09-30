@@ -7,46 +7,36 @@
   font-style: normal;
   font-display: swap;
 }
-
-
 /* =========================================================
-   HILYA HEADER — VARIABLES
+   HILYA HEADER
    ========================================================= */
 
 .site-header {
-
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
   --header-border: {{ section.settings.border_color }};
+  --header-height: {{ section.settings.desktop_height }}px;
+  --header-mobile-height: {{ section.settings.mobile_height }}px;
+  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
-  --header-height:
-    {{ section.settings.desktop_height }}px;
+  width: 100vw !important;
+  max-width: none !important;
 
-  --header-mobile-height:
-    {{ section.settings.mobile_height }}px;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
 
-  --hilya-header-height:
-    {{ section.settings.desktop_height }}px;
-
-  width: 100% !important;
-  max-width: 100% !important;
-
-  margin: 0 !important;
   padding: 0 !important;
 
   background: var(--header-bg);
   color: var(--header-text);
 
-  border-bottom:
-    1px solid var(--header-border);
+  border-bottom: 1px solid var(--header-border);
 
   position: relative;
-
   z-index: 1000;
 
   box-sizing: border-box;
 }
-
 
 .site-header,
 .site-header * {
@@ -55,44 +45,10 @@
 
 
 /* =========================================================
-   FULL WIDTH SHOPIFY SECTION
+   FIXED HEADER
    ========================================================= */
 
-/*
-   This is what makes the header reach
-   the left and right edges immediately.
-
-   IMPORTANT:
-   The header itself stays width:100%.
-   The Shopify section is what escapes
-   the theme's centered container.
-*/
-
-.shopify-section:has(.site-header) {
-
-  width: 100vw !important;
-  max-width: 100vw !important;
-
-  margin-left:
-    calc(50% - 50vw) !important;
-
-  margin-right: 0 !important;
-
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-
-  box-sizing: border-box;
-
-  overflow: visible !important;
-}
-
-
-/* =========================================================
-   STICKY HEADER
-   ========================================================= */
-
-.site-header--scrolled {
-
+.site-header--sticky {
   position: fixed !important;
 
   top: 0 !important;
@@ -100,11 +56,19 @@
   right: 0 !important;
 
   width: 100vw !important;
-  max-width: 100vw !important;
+  max-width: none !important;
 
-  margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 
-  z-index: 9999 !important;
+  z-index: 99999 !important;
+}
+
+
+/* Reserve header space */
+
+body:has(.site-header--sticky) {
+  padding-top: var(--hilya-header-height);
 }
 
 
@@ -113,55 +77,41 @@
    ========================================================= */
 
 .site-header__inner {
-
   width: 100% !important;
   max-width: none !important;
 
-  height:
-    var(--header-height);
+  height: var(--header-height);
 
   margin: 0 !important;
 
-  padding-left:
-    {{ section.settings.desktop_padding }}px;
-
-  padding-right:
-    {{ section.settings.desktop_padding }}px;
+  padding-left: {{ section.settings.desktop_padding }}px;
+  padding-right: {{ section.settings.desktop_padding }}px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 
   position: relative;
-
-  box-sizing: border-box;
 }
 
 
 /* =========================================================
-   BRAND
+   HILYA BRAND
+   Elegant Script / Luxury Wordmark
    ========================================================= */
 
 .site-header__brand {
-
   position: relative;
-
   z-index: 20;
 
   color: var(--header-text);
-
   text-decoration: none;
 
-  font-family:
-    "Hilya Script",
-    cursive;
+  font-family: "Hilya Script", cursive;
 
   font-size: 2.7rem;
 
   font-style: normal;
-
   font-weight: 400;
 
   letter-spacing: 0;
@@ -170,13 +120,10 @@
 
   white-space: nowrap;
 
-  transform:
-    translateY(-1px);
+  transform: translateY(-1px);
 }
 
-
 .site-header__brand:hover {
-
   color: var(--header-text);
 }
 
@@ -186,19 +133,16 @@
    ========================================================= */
 
 .desktop-nav {
-
   position: absolute;
 
   left: 50%;
   top: 50%;
 
-  transform:
-    translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 
   height: 100%;
 
   display: flex;
-
   align-items: center;
 
   gap: 30px;
@@ -206,19 +150,14 @@
   z-index: 15;
 }
 
-
 .desktop-nav > a {
-
   color: var(--header-text);
-
   text-decoration: none;
 
   font-size: 0.78rem;
-
   font-weight: 500;
 
   letter-spacing: 0.08em;
-
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -226,30 +165,26 @@
   height: 100%;
 
   display: flex;
-
   align-items: center;
 }
 
-
 .desktop-nav > a:hover {
-
   opacity: 0.65;
 }
 
 
 /* =========================================================
-   DESKTOP MENU / CATEGORIES
+   DESKTOP MENU + CATEGORIES
+   HOVER ONLY
    ========================================================= */
 
 .desktop-menu,
 .desktop-categories {
-
   position: relative;
 
   height: 100%;
 
   display: flex;
-
   align-items: center;
 }
 
@@ -260,7 +195,6 @@
 
 .desktop-menu__trigger,
 .desktop-categories__trigger {
-
   appearance: none;
   -webkit-appearance: none;
 
@@ -279,31 +213,23 @@
   cursor: default;
 }
 
-
 .desktop-menu__trigger {
-
   height: 100%;
 
   display: flex;
-
   align-items: center;
 }
 
-
 .desktop-categories__trigger {
-
   height: 100%;
 
   display: flex;
-
   align-items: center;
 
   font-size: 0.78rem;
-
   font-weight: 500;
 
   letter-spacing: 0.08em;
-
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -315,22 +241,17 @@
    ========================================================= */
 
 .desktop-menu__icon {
-
   width: 18px;
   height: 14px;
 
   display: flex;
-
   flex-direction: column;
-
   justify-content: space-between;
 
   pointer-events: none;
 }
 
-
 .desktop-menu__icon span {
-
   width: 100%;
   height: 1px;
 
@@ -345,15 +266,12 @@
    ========================================================= */
 
 .desktop-dropdown {
-
   position: absolute;
 
   top: 100%;
   left: 50%;
 
-  transform:
-    translateX(-50%)
-    translateY(8px);
+  transform: translateX(-50%) translateY(8px);
 
   min-width: 195px;
 
@@ -361,8 +279,7 @@
 
   background: var(--header-bg);
 
-  border:
-    1px solid var(--header-border);
+  border: 1px solid var(--header-border);
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.07);
@@ -381,9 +298,7 @@
   z-index: 2000;
 }
 
-
 .desktop-dropdown a {
-
   display: block;
 
   padding: 9px 20px;
@@ -393,7 +308,6 @@
   text-decoration: none;
 
   font-size: 0.76rem;
-
   font-weight: 500;
 
   letter-spacing: 0.06em;
@@ -403,16 +317,13 @@
   white-space: nowrap;
 }
 
-
 .desktop-dropdown a:hover {
-
-  background:
-    rgba(0, 0, 0, 0.035);
+  background: rgba(0, 0, 0, 0.035);
 }
 
 
 /* =========================================================
-   DESKTOP HOVER
+   DESKTOP HOVER ONLY
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -439,11 +350,9 @@
    ========================================================= */
 
 .header-actions {
-
   margin-left: auto;
 
   display: flex;
-
   align-items: center;
 
   gap: 17px;
@@ -453,34 +362,26 @@
   z-index: 20;
 }
 
-
 .header-action {
-
   color: var(--header-text);
 
   text-decoration: none;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   position: relative;
 }
 
-
 .header-action svg {
-
   width: 18px;
   height: 18px;
 
   stroke: currentColor;
 }
 
-
 .cart-count {
-
   position: absolute;
 
   top: -8px;
@@ -494,11 +395,9 @@
   border-radius: 50%;
 
   background: var(--header-text);
-
   color: var(--header-bg);
 
   font-size: 9px;
-
   line-height: 15px;
 
   text-align: center;
@@ -510,33 +409,26 @@
    ========================================================= */
 
 .header-search {
-
   position: relative;
 }
 
-
 .header-search summary {
-
   list-style: none;
-
   cursor: pointer;
 }
 
-
 .header-search summary::-webkit-details-marker {
-
   display: none;
 }
 
 
-.header-search__panel {
+/* Search box */
 
+.header-search__panel {
   position: absolute;
 
   right: 0;
-
-  top:
-    calc(100% + 18px);
+  top: calc(100% + 18px);
 
   width: 270px;
 
@@ -544,8 +436,7 @@
 
   background: var(--header-bg);
 
-  border:
-    1px solid var(--header-border);
+  border: 1px solid var(--header-border);
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.07);
@@ -553,19 +444,14 @@
   z-index: 3000;
 }
 
-
 .header-search__form {
-
   display: flex;
-
   align-items: center;
 
   gap: 8px;
 }
 
-
 .header-search__input {
-
   flex: 1;
 
   min-width: 0;
@@ -574,8 +460,7 @@
 
   padding: 0 11px;
 
-  border:
-    1px solid var(--header-border);
+  border: 1px solid var(--header-border);
 
   background: transparent;
 
@@ -586,17 +471,17 @@
   font-size: 0.78rem;
 }
 
-
 .header-search__input::placeholder {
-
   color: var(--header-text);
-
   opacity: 0.55;
 }
 
 
-.header-search__submit {
+/* =========================================================
+   SEARCH SUBMIT BUTTON
+   ========================================================= */
 
+.header-search__submit {
   width: 38px;
   height: 38px;
 
@@ -604,12 +489,10 @@
 
   background: transparent;
 
-  color: #000;
+  color: #000000ff;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   cursor: pointer;
@@ -617,9 +500,7 @@
   padding: 0;
 }
 
-
 .header-search__submit svg {
-
   width: 18px;
   height: 18px;
 
@@ -630,7 +511,6 @@
   stroke-width: 1.5;
 
   stroke-linecap: round;
-
   stroke-linejoin: round;
 }
 
@@ -640,7 +520,6 @@
    ========================================================= */
 
 .mobile-menu {
-
   display: none;
 }
 
@@ -652,29 +531,24 @@
 @media screen and (max-width: 749px) {
 
   .site-header {
+    --hilya-header-height: {{ section.settings.mobile_height }}px;
 
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100vw !important;
+    max-width: none !important;
 
-    margin: 0 !important;
-
-    --hilya-header-height:
-      {{ section.settings.mobile_height }}px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
 
   .site-header__inner {
-
     width: 100% !important;
-    max-width: 100% !important;
+    max-width: none !important;
 
-    height:
-      var(--header-mobile-height);
+    height: var(--header-mobile-height);
 
     padding-left: 16px;
     padding-right: 16px;
-
-    overflow: visible;
   }
 
 
@@ -683,36 +557,31 @@
      ======================================================= */
 
   .site-header__brand {
+  position: absolute;
 
-    position: absolute;
+  left: 50%;
+  top: 50%;
 
-    left: 50%;
-    top: 50%;
+  transform:
+    translate(-50%, -50%)
+    translateY(-1px);
 
-    transform:
-      translate(-50%, -50%)
-      translateY(-1px);
+  font-family: "Hilya Script", cursive;
 
-    font-family:
-      "Hilya Script",
-      cursive;
+  font-size: 2.15rem;
 
-    font-size: 2.15rem;
+  font-style: normal;
+  font-weight: 400;
 
-    font-style: normal;
-
-    font-weight: 400;
-
-    letter-spacing: 0;
-  }
+  letter-spacing: 0;
+}
 
 
   /* =======================================================
-     HIDE DESKTOP
+     HIDE DESKTOP NAV
      ======================================================= */
 
   .desktop-nav {
-
     display: none;
   }
 
@@ -722,7 +591,6 @@
      ======================================================= */
 
   .mobile-menu {
-
     display: block;
 
     position: static;
@@ -732,7 +600,6 @@
 
 
   .mobile-menu summary {
-
     list-style: none;
 
     width: 22px;
@@ -742,7 +609,6 @@
     margin: 0;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
@@ -751,9 +617,7 @@
     position: relative;
   }
 
-
   .mobile-menu summary::-webkit-details-marker {
-
     display: none;
   }
 
@@ -763,12 +627,10 @@
      ======================================================= */
 
   .mobile-menu__icon {
-
     width: 21px;
     height: 16px;
 
     display: flex;
-
     flex-direction: column;
 
     justify-content: space-between;
@@ -776,9 +638,7 @@
     position: relative;
   }
 
-
   .mobile-menu__icon span {
-
     width: 100%;
     height: 1px;
 
@@ -794,25 +654,22 @@
   }
 
 
+  /* Open = X */
+
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(1) {
-
     transform:
       translateY(7.5px)
       rotate(45deg);
   }
 
-
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(2) {
-
     opacity: 0;
   }
 
-
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(3) {
-
     transform:
       translateY(-7.5px)
       rotate(-45deg);
@@ -820,22 +677,21 @@
 
 
   /* =======================================================
-     MOBILE MENU PANEL
+     MOBILE MENU FULL SCREEN
      ======================================================= */
 
   .mobile-menu__panel {
-
     position: fixed;
 
-    top:
-      var(--header-mobile-height);
-
+    top: var(--header-mobile-height);
     left: 0;
 
     width: 100vw;
 
     height:
       calc(100vh - var(--header-mobile-height));
+
+    max-height: none;
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -851,9 +707,10 @@
     border-bottom:
       1px solid var(--header-border);
 
-    box-shadow: none;
+    box-shadow:
+      none;
 
-    z-index: 100000;
+    z-index: 99998;
 
     box-sizing: border-box;
 
@@ -862,11 +719,10 @@
 
 
   /* =======================================================
-     MOBILE LINKS
+     MOBILE MENU LINKS
      ======================================================= */
 
   .mobile-menu__panel > a {
-
     display: block;
 
     width: 100%;
@@ -878,7 +734,6 @@
     text-decoration: none;
 
     font-size: 0.82rem;
-
     font-weight: 500;
 
     letter-spacing: 0.08em;
@@ -895,16 +750,13 @@
      ======================================================= */
 
   .mobile-categories {
-
     width: 100%;
 
     border-bottom:
       1px solid rgba(0, 0, 0, 0.08);
   }
 
-
   .mobile-categories summary {
-
     list-style: none;
 
     width: 100%;
@@ -912,15 +764,12 @@
     min-height: 48px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
     color: var(--header-text);
 
     font-size: 0.82rem;
-
     font-weight: 500;
 
     letter-spacing: 0.08em;
@@ -930,15 +779,14 @@
     cursor: pointer;
   }
 
-
   .mobile-categories summary::-webkit-details-marker {
-
     display: none;
   }
 
 
-  .mobile-categories__arrow {
+  /* Categories arrow */
 
+  .mobile-categories__arrow {
     width: 7px;
     height: 7px;
 
@@ -957,7 +805,6 @@
       transform 0.2s ease;
   }
 
-
   .mobile-categories[open]
   .mobile-categories__arrow {
 
@@ -967,17 +814,16 @@
   }
 
 
-  .mobile-categories__items {
+  /* Category items */
 
+  .mobile-categories__items {
     width: 100%;
 
     padding:
       0 0 5px 14px;
   }
 
-
   .mobile-categories__items a {
-
     display: block;
 
     width: 100%;
@@ -1003,15 +849,12 @@
      ======================================================= */
 
   .header-actions {
-
     margin-left: auto;
 
     gap: 14px;
   }
 
-
   .header-action svg {
-
     width: 18px;
     height: 18px;
   }
@@ -1022,12 +865,9 @@
      ======================================================= */
 
   .header-search__panel {
-
     position: fixed;
 
-    top:
-      var(--header-mobile-height);
-
+    top: var(--header-mobile-height);
     left: 0;
 
     width: 100vw;
@@ -1037,12 +877,10 @@
 
     box-sizing: border-box;
 
-    z-index: 100000;
+    z-index: 99998;
   }
 
-
   .header-search__form {
-
     width: 100%;
   }
 
@@ -1056,7 +894,6 @@
 @media screen and (min-width: 750px) {
 
   .mobile-menu {
-
     display: none !important;
   }
 
@@ -1064,64 +901,25 @@
 
 
 /* =========================================================
-   MOBILE FILTER / DRAWER
+   FULL WIDTH SHOPIFY SECTION
    ========================================================= */
 
-/*
-   The product filter must be above the header.
-   We intentionally use a very high z-index here.
-*/
+.shopify-section:has(.site-header) {
+  width: 100vw !important;
+  max-width: none !important;
 
-@media screen and (max-width: 749px) {
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: 0 !important;
 
-  .mobile-facets,
-  .mobile-facets__wrapper,
-  .facets__drawer,
-  .facets__dialog,
-  .facets__form,
-  .filter-drawer,
-  .product-filter-drawer,
-  .collection-filter-drawer,
-  [id*="FilterDrawer"],
-  [id*="filter-drawer"],
-  [class*="FilterDrawer"],
-  [class*="filter-drawer"] {
-
-    z-index: 1000000 !important;
-  }
-
-
-  .mobile-facets::before,
-  .mobile-facets__overlay,
-  .facets__overlay,
-  .drawer__overlay,
-  .filter-drawer__overlay,
-  [class*="drawer"][class*="overlay"],
-  [class*="filter"][class*="overlay"] {
-
-    z-index: 999999 !important;
-  }
-
-}
-
-
-/* =========================================================
-   PREVENT HORIZONTAL OVERFLOW
-   ========================================================= */
-
-html,
-body {
-
-  max-width: 100%;
-
-  overflow-x: hidden;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 {% endstyle %}
 
 
 <header
-  class="site-header{% if section.settings.sticky_header %} site-header--sticky-enabled{% endif %}"
+  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
 >
 
   <div class="site-header__inner">
@@ -1136,11 +934,9 @@ body {
       <summary aria-label="Open menu">
 
         <span class="mobile-menu__icon">
-
           <span></span>
           <span></span>
           <span></span>
-
         </span>
 
       </summary>
@@ -1156,6 +952,8 @@ body {
           All Products
         </a>
 
+
+        <!-- MOBILE CATEGORIES -->
 
         <details class="mobile-categories">
 
@@ -1222,6 +1020,8 @@ body {
         </a>
 
 
+        <!-- INSTAGRAM - NEW TAB -->
+
         <a
           href="{{ section.settings.instagram_link }}"
           target="_blank"
@@ -1284,6 +1084,8 @@ body {
     <nav class="desktop-nav">
 
 
+      <!-- DESKTOP MENU -->
+
       <div class="desktop-menu">
 
         <button
@@ -1293,11 +1095,9 @@ body {
         >
 
           <span class="desktop-menu__icon">
-
             <span></span>
             <span></span>
             <span></span>
-
           </span>
 
         </button>
@@ -1329,6 +1129,8 @@ body {
 
           {% endif %}
 
+
+          <!-- INSTAGRAM - NEW TAB -->
 
           <a
             href="{{ section.settings.instagram_link }}"
@@ -1373,10 +1175,14 @@ body {
       </div>
 
 
+      <!-- HOME -->
+
       <a href="{{ routes.root_url }}">
         Home
       </a>
 
+
+      <!-- DESKTOP CATEGORIES -->
 
       <div class="desktop-categories">
 
@@ -1415,6 +1221,8 @@ body {
       </div>
 
 
+      <!-- CONTACT -->
+
       <a href="{{ section.settings.contact_link }}">
         Contact Us
       </a>
@@ -1428,6 +1236,8 @@ body {
 
     <div class="header-actions">
 
+
+      <!-- SEARCH -->
 
       {% if section.settings.show_search %}
 
@@ -1515,6 +1325,8 @@ body {
       {% endif %}
 
 
+      <!-- ACCOUNT -->
+
       {% if section.settings.show_account %}
 
         <a
@@ -1547,6 +1359,8 @@ body {
 
       {% endif %}
 
+
+      <!-- CART -->
 
       <a
         href="{{ routes.cart_url }}"
@@ -1599,151 +1413,59 @@ body {
 
 
 <script>
-
 (function () {
 
-  function setupHilyaHeader() {
+  function setupHilyaMobileMenu() {
 
-    const header =
-      document.querySelector('.site-header');
-
-    if (!header) return;
-
-
-    const stickyEnabled =
-      header.classList.contains(
-        'site-header--sticky-enabled'
-      );
-
-    if (!stickyEnabled) return;
-
-
-    function handleScroll() {
-
-      if (window.scrollY > 5) {
-
-        header.classList.add(
-          'site-header--scrolled'
-        );
-
-      } else {
-
-        header.classList.remove(
-          'site-header--scrolled'
-        );
-
-      }
-
-    }
-
-
-    window.addEventListener(
-      'scroll',
-      handleScroll,
-      {
-        passive: true
-      }
-    );
-
-
-    window.addEventListener(
-      'resize',
-      function () {
-
-        handleScroll();
-
-      }
-    );
-
-
-    handleScroll();
-
-
-    /* =====================================================
-       MOBILE MENU
-       ===================================================== */
-
-    const menu =
-      header.querySelector(
-        '.mobile-menu'
-      );
+    const menu = document.querySelector('.mobile-menu');
 
     if (!menu) return;
 
-
     function lockPage() {
-
-      document.documentElement.style.overflow =
-        'hidden';
-
-      document.body.style.overflow =
-        'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
     }
-
 
     function unlockPage() {
-
-      document.documentElement.style.overflow =
-        '';
-
-      document.body.style.overflow =
-        '';
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
     }
 
+    menu.addEventListener('toggle', function () {
 
-    menu.addEventListener(
-      'toggle',
-      function () {
-
-        if (menu.open) {
-
-          lockPage();
-
-        } else {
-
-          unlockPage();
-
-        }
-
+      if (menu.open) {
+        lockPage();
+      } else {
+        unlockPage();
       }
-    );
 
+    });
 
-    window.addEventListener(
-      'resize',
-      function () {
+    window.addEventListener('resize', function () {
 
-        if (window.innerWidth > 749) {
-
-          menu.open = false;
-
-          unlockPage();
-
-        }
-
+      if (window.innerWidth > 749) {
+        menu.open = false;
+        unlockPage();
       }
-    );
+
+    });
 
   }
 
-
-  if (
-    document.readyState === 'loading'
-  ) {
+  if (document.readyState === 'loading') {
 
     document.addEventListener(
       'DOMContentLoaded',
-      setupHilyaHeader
+      setupHilyaMobileMenu
     );
 
   } else {
 
-    setupHilyaHeader();
+    setupHilyaMobileMenu();
 
   }
 
 })();
-
 </script>
 
 
