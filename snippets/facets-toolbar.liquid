@@ -414,7 +414,9 @@
   </span>
 
 
-  {% assign current_sort = collection.sort_by | default: collection.default_sort_by | default: 'manual' %}
+  {% assign current_sort = collection.sort_by | default: 'manual' %}
+
+
 
 
   <button
