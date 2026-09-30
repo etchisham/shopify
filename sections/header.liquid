@@ -14,36 +14,53 @@
    ========================================================= */
 
 .site-header {
+
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
   --header-border: {{ section.settings.border_color }};
-  --header-height: {{ section.settings.desktop_height }}px;
-  --header-mobile-height: {{ section.settings.mobile_height }}px;
-  --hilya-header-height: {{ section.settings.desktop_height }}px;
 
-  width: 100vw !important;
-  max-width: none !important;
+  --header-height:
+    {{ section.settings.desktop_height }}px;
 
-  margin-left: calc(50% - 50vw) !important;
+  --header-mobile-height:
+    {{ section.settings.mobile_height }}px;
+
+  --hilya-header-height:
+    {{ section.settings.desktop_height }}px;
+
+
+  /*
+    IMPORTANT:
+
+    When the header is at the top of the page,
+    it stays inside the Shopify section width.
+
+    This prevents the horizontal gap / overflow
+    that was appearing before scrolling.
+  */
+
+  width: 100% !important;
+  max-width: 100% !important;
+
+  margin-left: 0 !important;
   margin-right: 0 !important;
 
   padding: 0 !important;
 
   background: var(--header-bg);
+
   color: var(--header-text);
 
-  border-bottom: 1px solid var(--header-border);
+  border-bottom:
+    1px solid var(--header-border);
 
-  /*
-    IMPORTANT:
-    Header is normal in the document flow initially.
-    This prevents it from covering the first part of the page.
-  */
   position: relative;
 
   z-index: 1000;
 
   box-sizing: border-box;
+
+  overflow: visible;
 }
 
 
@@ -54,22 +71,44 @@
 
 
 /* =========================================================
+   FULL WIDTH SHOPIFY SECTION
+   ========================================================= */
+
+.shopify-section:has(.site-header) {
+
+  width: 100vw !important;
+  max-width: none !important;
+
+  margin-left:
+    calc(50% - 50vw) !important;
+
+  margin-right: 0 !important;
+
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
    SCROLLED / STICKY HEADER
    ========================================================= */
 
-/*
-  Header becomes fixed ONLY after scrolling.
-*/
-
 .site-header--scrolled {
+
   position: fixed !important;
 
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
 
+  /*
+    Only use viewport width when fixed.
+  */
+
   width: 100vw !important;
-  max-width: none !important;
+  max-width: 100vw !important;
 
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -78,13 +117,14 @@
 }
 
 
-/*
-  When header becomes fixed, reserve its space so
-  the page does not jump upward.
-*/
+/* =========================================================
+   RESERVE SPACE ONLY AFTER HEADER BECOMES FIXED
+   ========================================================= */
 
 body.hilya-header-is-scrolled {
-  padding-top: var(--hilya-header-height);
+
+  padding-top:
+    var(--hilya-header-height);
 }
 
 
@@ -93,18 +133,25 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .site-header__inner {
+
   width: 100% !important;
   max-width: none !important;
 
-  height: var(--header-height);
+  height:
+    var(--header-height);
 
   margin: 0 !important;
 
-  padding-left: {{ section.settings.desktop_padding }}px;
-  padding-right: {{ section.settings.desktop_padding }}px;
+  padding-left:
+    {{ section.settings.desktop_padding }}px;
+
+  padding-right:
+    {{ section.settings.desktop_padding }}px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   position: relative;
@@ -113,21 +160,26 @@ body.hilya-header-is-scrolled {
 
 /* =========================================================
    HILYA BRAND
-   Elegant Script / Luxury Wordmark
    ========================================================= */
 
 .site-header__brand {
+
   position: relative;
+
   z-index: 20;
 
   color: var(--header-text);
+
   text-decoration: none;
 
-  font-family: "Hilya Script", cursive;
+  font-family:
+    "Hilya Script",
+    cursive;
 
   font-size: 2.7rem;
 
   font-style: normal;
+
   font-weight: 400;
 
   letter-spacing: 0;
@@ -136,11 +188,13 @@ body.hilya-header-is-scrolled {
 
   white-space: nowrap;
 
-  transform: translateY(-1px);
+  transform:
+    translateY(-1px);
 }
 
 
 .site-header__brand:hover {
+
   color: var(--header-text);
 }
 
@@ -150,16 +204,19 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .desktop-nav {
+
   position: absolute;
 
   left: 50%;
   top: 50%;
 
-  transform: translate(-50%, -50%);
+  transform:
+    translate(-50%, -50%);
 
   height: 100%;
 
   display: flex;
+
   align-items: center;
 
   gap: 30px;
@@ -169,13 +226,17 @@ body.hilya-header-is-scrolled {
 
 
 .desktop-nav > a {
+
   color: var(--header-text);
+
   text-decoration: none;
 
   font-size: 0.78rem;
+
   font-weight: 500;
 
   letter-spacing: 0.08em;
+
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -183,27 +244,30 @@ body.hilya-header-is-scrolled {
   height: 100%;
 
   display: flex;
+
   align-items: center;
 }
 
 
 .desktop-nav > a:hover {
+
   opacity: 0.65;
 }
 
 
 /* =========================================================
    DESKTOP MENU + CATEGORIES
-   HOVER ONLY
    ========================================================= */
 
 .desktop-menu,
 .desktop-categories {
+
   position: relative;
 
   height: 100%;
 
   display: flex;
+
   align-items: center;
 }
 
@@ -214,13 +278,17 @@ body.hilya-header-is-scrolled {
 
 .desktop-menu__trigger,
 .desktop-categories__trigger {
+
   appearance: none;
+
   -webkit-appearance: none;
 
   border: 0;
+
   outline: 0;
 
   margin: 0;
+
   padding: 0;
 
   background: transparent;
@@ -234,23 +302,29 @@ body.hilya-header-is-scrolled {
 
 
 .desktop-menu__trigger {
+
   height: 100%;
 
   display: flex;
+
   align-items: center;
 }
 
 
 .desktop-categories__trigger {
+
   height: 100%;
 
   display: flex;
+
   align-items: center;
 
   font-size: 0.78rem;
+
   font-weight: 500;
 
   letter-spacing: 0.08em;
+
   text-transform: uppercase;
 
   white-space: nowrap;
@@ -262,11 +336,15 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .desktop-menu__icon {
+
   width: 18px;
+
   height: 14px;
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: space-between;
 
   pointer-events: none;
@@ -274,7 +352,9 @@ body.hilya-header-is-scrolled {
 
 
 .desktop-menu__icon span {
+
   width: 100%;
+
   height: 1px;
 
   display: block;
@@ -288,12 +368,16 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .desktop-dropdown {
+
   position: absolute;
 
   top: 100%;
+
   left: 50%;
 
-  transform: translateX(-50%) translateY(8px);
+  transform:
+    translateX(-50%)
+    translateY(8px);
 
   min-width: 195px;
 
@@ -301,7 +385,8 @@ body.hilya-header-is-scrolled {
 
   background: var(--header-bg);
 
-  border: 1px solid var(--header-border);
+  border:
+    1px solid var(--header-border);
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.07);
@@ -322,6 +407,7 @@ body.hilya-header-is-scrolled {
 
 
 .desktop-dropdown a {
+
   display: block;
 
   padding: 9px 20px;
@@ -331,6 +417,7 @@ body.hilya-header-is-scrolled {
   text-decoration: none;
 
   font-size: 0.76rem;
+
   font-weight: 500;
 
   letter-spacing: 0.06em;
@@ -342,12 +429,14 @@ body.hilya-header-is-scrolled {
 
 
 .desktop-dropdown a:hover {
-  background: rgba(0, 0, 0, 0.035);
+
+  background:
+    rgba(0, 0, 0, 0.035);
 }
 
 
 /* =========================================================
-   DESKTOP HOVER ONLY
+   DESKTOP HOVER
    ========================================================= */
 
 @media screen and (min-width: 750px) {
@@ -374,9 +463,11 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .header-actions {
+
   margin-left: auto;
 
   display: flex;
+
   align-items: center;
 
   gap: 17px;
@@ -388,12 +479,15 @@ body.hilya-header-is-scrolled {
 
 
 .header-action {
+
   color: var(--header-text);
 
   text-decoration: none;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   position: relative;
@@ -401,7 +495,9 @@ body.hilya-header-is-scrolled {
 
 
 .header-action svg {
+
   width: 18px;
+
   height: 18px;
 
   stroke: currentColor;
@@ -409,12 +505,15 @@ body.hilya-header-is-scrolled {
 
 
 .cart-count {
+
   position: absolute;
 
   top: -8px;
+
   right: -9px;
 
   min-width: 15px;
+
   height: 15px;
 
   padding: 0 3px;
@@ -422,9 +521,11 @@ body.hilya-header-is-scrolled {
   border-radius: 50%;
 
   background: var(--header-text);
+
   color: var(--header-bg);
 
   font-size: 9px;
+
   line-height: 15px;
 
   text-align: center;
@@ -436,28 +537,33 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .header-search {
+
   position: relative;
 }
 
 
 .header-search summary {
+
   list-style: none;
+
   cursor: pointer;
 }
 
 
 .header-search summary::-webkit-details-marker {
+
   display: none;
 }
 
 
-/* Search box */
-
 .header-search__panel {
+
   position: absolute;
 
   right: 0;
-  top: calc(100% + 18px);
+
+  top:
+    calc(100% + 18px);
 
   width: 270px;
 
@@ -465,7 +571,8 @@ body.hilya-header-is-scrolled {
 
   background: var(--header-bg);
 
-  border: 1px solid var(--header-border);
+  border:
+    1px solid var(--header-border);
 
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.07);
@@ -475,7 +582,9 @@ body.hilya-header-is-scrolled {
 
 
 .header-search__form {
+
   display: flex;
+
   align-items: center;
 
   gap: 8px;
@@ -483,6 +592,7 @@ body.hilya-header-is-scrolled {
 
 
 .header-search__input {
+
   flex: 1;
 
   min-width: 0;
@@ -491,7 +601,8 @@ body.hilya-header-is-scrolled {
 
   padding: 0 11px;
 
-  border: 1px solid var(--header-border);
+  border:
+    1px solid var(--header-border);
 
   background: transparent;
 
@@ -504,17 +615,21 @@ body.hilya-header-is-scrolled {
 
 
 .header-search__input::placeholder {
+
   color: var(--header-text);
+
   opacity: 0.55;
 }
 
 
 /* =========================================================
-   SEARCH SUBMIT BUTTON
+   SEARCH BUTTON
    ========================================================= */
 
 .header-search__submit {
+
   width: 38px;
+
   height: 38px;
 
   border: 0;
@@ -524,7 +639,9 @@ body.hilya-header-is-scrolled {
   color: #000000ff;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   cursor: pointer;
@@ -534,7 +651,9 @@ body.hilya-header-is-scrolled {
 
 
 .header-search__submit svg {
+
   width: 18px;
+
   height: 18px;
 
   stroke: currentColor;
@@ -544,6 +663,7 @@ body.hilya-header-is-scrolled {
   stroke-width: 1.5;
 
   stroke-linecap: round;
+
   stroke-linejoin: round;
 }
 
@@ -553,6 +673,7 @@ body.hilya-header-is-scrolled {
    ========================================================= */
 
 .mobile-menu {
+
   display: none;
 }
 
@@ -565,26 +686,38 @@ body.hilya-header-is-scrolled {
 
   .site-header {
 
-    --hilya-header-height:
-      {{ section.settings.mobile_height }}px;
+    width: 100% !important;
 
-    width: 100vw !important;
-    max-width: none !important;
+    max-width: 100% !important;
 
     margin-left: 0 !important;
+
     margin-right: 0 !important;
+
+    --hilya-header-height:
+      {{ section.settings.mobile_height }}px;
   }
 
+
+  /*
+    IMPORTANT:
+    Prevent horizontal overflow on mobile.
+  */
 
   .site-header__inner {
 
     width: 100% !important;
-    max-width: none !important;
 
-    height: var(--header-mobile-height);
+    max-width: 100% !important;
+
+    height:
+      var(--header-mobile-height);
 
     padding-left: 16px;
+
     padding-right: 16px;
+
+    overflow: visible;
   }
 
 
@@ -597,17 +730,21 @@ body.hilya-header-is-scrolled {
     position: absolute;
 
     left: 50%;
+
     top: 50%;
 
     transform:
       translate(-50%, -50%)
       translateY(-1px);
 
-    font-family: "Hilya Script", cursive;
+    font-family:
+      "Hilya Script",
+      cursive;
 
     font-size: 2.15rem;
 
     font-style: normal;
+
     font-weight: 400;
 
     letter-spacing: 0;
@@ -619,6 +756,7 @@ body.hilya-header-is-scrolled {
      ======================================================= */
 
   .desktop-nav {
+
     display: none;
   }
 
@@ -642,13 +780,17 @@ body.hilya-header-is-scrolled {
     list-style: none;
 
     width: 22px;
+
     height: 18px;
 
     padding: 0;
+
     margin: 0;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     cursor: pointer;
@@ -658,6 +800,7 @@ body.hilya-header-is-scrolled {
 
 
   .mobile-menu summary::-webkit-details-marker {
+
     display: none;
   }
 
@@ -669,9 +812,11 @@ body.hilya-header-is-scrolled {
   .mobile-menu__icon {
 
     width: 21px;
+
     height: 16px;
 
     display: flex;
+
     flex-direction: column;
 
     justify-content: space-between;
@@ -683,6 +828,7 @@ body.hilya-header-is-scrolled {
   .mobile-menu__icon span {
 
     width: 100%;
+
     height: 1px;
 
     display: block;
@@ -696,8 +842,6 @@ body.hilya-header-is-scrolled {
     transform-origin: center;
   }
 
-
-  /* Open = X */
 
   .mobile-menu[open]
   .mobile-menu__icon span:nth-child(1) {
@@ -732,7 +876,9 @@ body.hilya-header-is-scrolled {
 
     position: fixed;
 
-    top: var(--header-mobile-height);
+    top:
+      var(--header-mobile-height);
+
     left: 0;
 
     width: 100vw;
@@ -743,6 +889,7 @@ body.hilya-header-is-scrolled {
     max-height: none;
 
     overflow-y: auto;
+
     overflow-x: hidden;
 
     padding:
@@ -756,8 +903,7 @@ body.hilya-header-is-scrolled {
     border-bottom:
       1px solid var(--header-border);
 
-    box-shadow:
-      none;
+    box-shadow: none;
 
     z-index: 100000;
 
@@ -784,6 +930,7 @@ body.hilya-header-is-scrolled {
     text-decoration: none;
 
     font-size: 0.82rem;
+
     font-weight: 500;
 
     letter-spacing: 0.08em;
@@ -817,12 +964,15 @@ body.hilya-header-is-scrolled {
     min-height: 48px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
     color: var(--header-text);
 
     font-size: 0.82rem;
+
     font-weight: 500;
 
     letter-spacing: 0.08em;
@@ -834,15 +984,15 @@ body.hilya-header-is-scrolled {
 
 
   .mobile-categories summary::-webkit-details-marker {
+
     display: none;
   }
 
 
-  /* Categories arrow */
-
   .mobile-categories__arrow {
 
     width: 7px;
+
     height: 7px;
 
     border-right:
@@ -854,6 +1004,7 @@ body.hilya-header-is-scrolled {
     transform: rotate(45deg);
 
     margin-right: 3px;
+
     margin-top: -4px;
 
     transition:
@@ -869,8 +1020,6 @@ body.hilya-header-is-scrolled {
     margin-top: 4px;
   }
 
-
-  /* Category items */
 
   .mobile-categories__items {
 
@@ -918,6 +1067,7 @@ body.hilya-header-is-scrolled {
   .header-action svg {
 
     width: 18px;
+
     height: 18px;
   }
 
@@ -930,7 +1080,9 @@ body.hilya-header-is-scrolled {
 
     position: fixed;
 
-    top: var(--header-mobile-height);
+    top:
+      var(--header-mobile-height);
+
     left: 0;
 
     width: 100vw;
@@ -959,6 +1111,7 @@ body.hilya-header-is-scrolled {
 @media screen and (min-width: 750px) {
 
   .mobile-menu {
+
     display: none !important;
   }
 
@@ -966,31 +1119,8 @@ body.hilya-header-is-scrolled {
 
 
 /* =========================================================
-   FULL WIDTH SHOPIFY SECTION
-   ========================================================= */
-
-.shopify-section:has(.site-header) {
-
-  width: 100vw !important;
-  max-width: none !important;
-
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: 0 !important;
-
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-
-/* =========================================================
    MOBILE SHOPIFY FILTERS / DRAWERS
    ========================================================= */
-
-/*
-  These are intentionally above the sticky header.
-  This prevents the header from remaining visible above
-  a product filter / drawer.
-*/
 
 @media screen and (max-width: 749px) {
 
@@ -1060,8 +1190,6 @@ body.hilya-header-is-scrolled {
         </a>
 
 
-        <!-- MOBILE CATEGORIES -->
-
         <details class="mobile-categories">
 
           <summary>
@@ -1127,8 +1255,6 @@ body.hilya-header-is-scrolled {
         </a>
 
 
-        <!-- INSTAGRAM - NEW TAB -->
-
         <a
           href="{{ section.settings.instagram_link }}"
           target="_blank"
@@ -1191,8 +1317,6 @@ body.hilya-header-is-scrolled {
     <nav class="desktop-nav">
 
 
-      <!-- DESKTOP MENU -->
-
       <div class="desktop-menu">
 
         <button
@@ -1237,8 +1361,6 @@ body.hilya-header-is-scrolled {
           {% endif %}
 
 
-          <!-- INSTAGRAM - NEW TAB -->
-
           <a
             href="{{ section.settings.instagram_link }}"
             target="_blank"
@@ -1282,14 +1404,10 @@ body.hilya-header-is-scrolled {
       </div>
 
 
-      <!-- HOME -->
-
       <a href="{{ routes.root_url }}">
         Home
       </a>
 
-
-      <!-- DESKTOP CATEGORIES -->
 
       <div class="desktop-categories">
 
@@ -1328,8 +1446,6 @@ body.hilya-header-is-scrolled {
       </div>
 
 
-      <!-- CONTACT -->
-
       <a href="{{ section.settings.contact_link }}">
         Contact Us
       </a>
@@ -1343,8 +1459,6 @@ body.hilya-header-is-scrolled {
 
     <div class="header-actions">
 
-
-      <!-- SEARCH -->
 
       {% if section.settings.show_search %}
 
@@ -1432,8 +1546,6 @@ body.hilya-header-is-scrolled {
       {% endif %}
 
 
-      <!-- ACCOUNT -->
-
       {% if section.settings.show_account %}
 
         <a
@@ -1466,8 +1578,6 @@ body.hilya-header-is-scrolled {
 
       {% endif %}
 
-
-      <!-- CART -->
 
       <a
         href="{{ routes.cart_url }}"
@@ -1563,14 +1673,6 @@ body.hilya-header-is-scrolled {
 
     function handleScroll() {
 
-      /*
-        At the very top:
-        Header remains in normal document flow.
-
-        After scrolling:
-        Header becomes fixed.
-      */
-
       if (window.scrollY > 5) {
 
         if (
@@ -1622,20 +1724,6 @@ body.hilya-header-is-scrolled {
 
         updateHeaderHeight();
 
-        if (
-          header.classList.contains(
-            'site-header--scrolled'
-          )
-        ) {
-
-          document.body.style.paddingTop = '';
-
-        }
-
-        /*
-          Reset sticky state when returning to top.
-        */
-
         if (window.scrollY <= 5) {
 
           header.classList.remove(
@@ -1643,6 +1731,16 @@ body.hilya-header-is-scrolled {
           );
 
           document.body.classList.remove(
+            'hilya-header-is-scrolled'
+          );
+
+        } else {
+
+          header.classList.add(
+            'site-header--scrolled'
+          );
+
+          document.body.classList.add(
             'hilya-header-is-scrolled'
           );
         }
@@ -1707,10 +1805,6 @@ body.hilya-header-is-scrolled {
       }
     );
 
-
-    /* =====================================================
-       DESKTOP / MOBILE SWITCH
-       ===================================================== */
 
     window.addEventListener(
       'resize',
