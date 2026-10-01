@@ -32,23 +32,16 @@
   if heading == blank
     assign heading = 'products.bundle.heading' | t
   endif
-  assign current_variant = product.selected_or_first_available_variant
-  assign current_minimum = current_variant.quantity_rule.min | default: 1
+
   assign bundle_total = 0
   assign bundle_count = 0
-  if current_variant.available and product.requires_selling_plan == false
-    assign bundle_total = current_variant.price | times: current_minimum
-    assign bundle_count = 1
-  endif
 %}
 
 {% if request.page_type == 'collection' %}
 
-  {%- comment -%} الوضع التاني: بيرجّع الكروت بس لما يتطلب بالـ fetch {%- endcomment -%}
+  {%- comment -%} الوضع التاني: بيرجّع الكروت بس لما يتطلب بالـ fetch (من غير wrapper) {%- endcomment -%}
   {%- for related in collection.products limit: 12 -%}
-    <div data-bundle-item data-product-id="{{ related.id }}">
-      {% render 'bundle-product', product: related, section_id: '__SID__' %}
-    </div>
+    {% render 'bundle-product', product: related, section_id: '__SID__' %}
   {%- endfor -%}
 
 {% elsif related_products != blank or use_tag %}
@@ -57,7 +50,6 @@
     <h2 id="BundleHeading-{{ section.id }}">{{ heading | escape }}</h2>
     <form action="{{ routes.cart_add_url }}" method="post" data-bought-together-form>
       <div class="bought-together__cards" data-bundle-cards>
-        {% render 'bundle-product', product: product, section_id: section.id, current: true %}
         {% unless use_tag %}
           {% assign seen_ids = ',' | append: product.id | append: ',' %}
           {% assign shown = 0 %}
@@ -83,7 +75,7 @@
         <p>{{ 'products.bundle.total' | t }}: <strong><bdi data-bundle-total>{{ bundle_total | money }}</bdi></strong></p>
         <button class="button button--full" type="submit" name="add" data-bundle-add disabled>
           <span class="button-spinner" aria-hidden="true"></span>
-          <span data-add-label>{{ 'products.bundle.add_selected' | t: count: bundle_count }}</span>
+          <span data-add-label>{% if bundle_count > 0 %}{{ 'products.bundle.add_selected' | t: count: bundle_count }}{% else %}{{ 'products.bundle.select_products' | t }}{% endif %}</span>
           <span data-loading-label hidden>{{ 'products.bundle.adding' | t }}</span>
         </button>
         <p class="bought-together__note">{{ 'products.bundle.price_note' | t }}</p>
@@ -108,6 +100,7 @@
               var doc = new DOMParser().parseFromString(html, 'text/html');
               var current = root.dataset.currentProductId;
 
+              /* كل كارت هو <article data-bundle-item> مباشرة، واستبعد المنتج الحالي */
               var items = Array.prototype.filter.call(
                 doc.querySelectorAll('[data-bundle-item]'),
                 function (el) { return el.dataset.productId !== current; }
@@ -117,9 +110,7 @@
               if (!items.length) return;
 
               var cards = root.querySelector('[data-bundle-cards]');
-              items.forEach(function (el) {
-                while (el.firstElementChild) cards.appendChild(el.firstElementChild);
-              });
+              items.forEach(function (el) { cards.appendChild(el); });
 
               root.hidden = false;
               root.dispatchEvent(new CustomEvent('bundle:cards-updated', { bubbles: true }));
