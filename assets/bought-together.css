@@ -72,6 +72,7 @@
   .bought-together__summary strong { font-size: 1rem; }
   .bought-together__summary .button { min-height: 2.75rem; padding-block: 0.6rem; font-size: 0.875rem; }
   .bought-together__note { margin-block-start: 0.6rem; font-size: 0.75rem; }
+    .bought-together.section-spacing { padding-block-end: 2.5rem; }
 }
 @media (max-width: 479px) { .bundle-product { flex-basis: 70%; } }
 @media (min-width: 1000px) {
