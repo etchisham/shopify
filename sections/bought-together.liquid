@@ -33,8 +33,36 @@
     assign heading = 'products.bundle.heading' | t
   endif
 
+  assign current_variant = product.selected_or_first_available_variant
+  assign current_minimum = current_variant.quantity_rule.min | default: 1
   assign bundle_total = 0
   assign bundle_count = 0
+  if current_variant.available and product.requires_selling_plan == false
+    assign bundle_total = current_variant.price | times: current_minimum
+    assign bundle_count = 1
+  endif
+
+  # count related products (without the current one) to place the current one in the middle
+  assign related_count = 0
+  unless use_tag
+    assign counted_ids = ',' | append: product.id | append: ','
+    for related in related_products limit: 12
+      if related_count >= 4
+        break
+      endif
+      assign counted_token = ',' | append: related.id | append: ','
+      unless counted_ids contains counted_token
+        assign counted_ids = counted_ids | append: counted_token
+        assign related_count = related_count | plus: 1
+      endunless
+    endfor
+  endunless
+  assign middle_index = related_count | divided_by: 2
+
+  assign show_section = false
+  if use_tag or related_count > 0
+    assign show_section = true
+  endif
 %}
 
 {% if request.page_type == 'collection' %}
@@ -44,7 +72,7 @@
     {% render 'bundle-product', product: related, section_id: '__SID__' %}
   {%- endfor -%}
 
-{% elsif related_products != blank or use_tag %}
+{% elsif show_section %}
 
   <section class="bought-together section-spacing" data-bought-together data-section-id="{{ section.id }}" data-current-product-id="{{ product.id }}" {% if use_tag %}data-tag-url="{{ routes.all_products_collection_url }}/{{ group_handle }}?section_id={{ section_file }}" hidden{% endif %} data-money-format="{{ shop.money_format | escape }}" data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-button-label="{{ 'products.bundle.add_selected' | t: count: '__count__' | escape }}" data-empty-label="{{ 'products.bundle.select_products' | t | escape }}" aria-labelledby="BundleHeading-{{ section.id }}">
     <h2 id="BundleHeading-{{ section.id }}">{{ heading | escape }}</h2>
@@ -58,6 +86,9 @@
             {% assign related_token = ',' | append: related.id | append: ',' %}
             {% unless seen_ids contains related_token %}
               {% assign seen_ids = seen_ids | append: related_token %}
+              {% if shown == middle_index %}
+                {% render 'bundle-product', product: product, section_id: section.id, current: true %}
+              {% endif %}
               {% assign shown = shown | plus: 1 %}
               {% render 'bundle-product', product: related, section_id: section.id %}
               {% if related.available and related.requires_selling_plan == false and related.metafields.custom.personalization_required.value != true %}
@@ -69,6 +100,9 @@
               {% endif %}
             {% endunless %}
           {% endfor %}
+        {% else %}
+          {%- comment -%} وضع التاج: المنتج الحالي يتحط هنا، والـ JS بيوزّع المنتجات المرتبطة حواليه {%- endcomment -%}
+          {% render 'bundle-product', product: product, section_id: section.id, current: true %}
         {% endunless %}
       </div>
       <div class="bought-together__summary">
@@ -110,7 +144,14 @@
               if (!items.length) return;
 
               var cards = root.querySelector('[data-bundle-cards]');
-              items.forEach(function (el) { cards.appendChild(el); });
+              var currentCard = cards.querySelector('[data-bundle-current]');
+              var middle = Math.floor(items.length / 2);
+
+              /* نص المنتجات قبل المنتج الحالي والباقي بعده */
+              items.forEach(function (el, i) {
+                if (i < middle && currentCard) cards.insertBefore(el, currentCard);
+                else cards.appendChild(el);
+              });
 
               root.hidden = false;
               root.dispatchEvent(new CustomEvent('bundle:cards-updated', { bubbles: true }));
