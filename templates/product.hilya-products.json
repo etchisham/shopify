@@ -86,7 +86,7 @@
       "settings": {
         "show_breadcrumbs": true,
         "show_product_vendor": false,
-        "show_rating": false,
+        "show_rating": true,
         "show_inventory": true,
         "show_tax_note": true,
         "show_quantity": true,
@@ -363,6 +363,13 @@
     "trust": {
       "type": "trust-bar",
       "blocks": {
+        "item_An4pGC": {
+          "type": "item",
+          "settings": {
+            "heading": "Secure checkout",
+            "text": "Protected by Shopify"
+          }
+        },
         "secure": {
           "type": "item",
           "settings": {
@@ -386,6 +393,7 @@
         }
       },
       "block_order": [
+        "item_An4pGC",
         "secure",
         "details",
         "support"
