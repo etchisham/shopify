@@ -11,7 +11,7 @@
   width: 100%;
   max-width: 87.5rem;
   margin-inline: auto;
-  padding: 1.25rem clamp(1rem, 3vw, 2.25rem) 5rem;
+  padding: 1.25rem clamp(1rem, 3vw, 2.25rem) 2rem;
 
   color: var(--etsy-ink);
   font-family: Arial, Helvetica, sans-serif;
@@ -1327,7 +1327,7 @@
     padding:
       0.85rem
       1rem
-      3rem;
+      1.25rem;
   }
 
   .product-breadcrumbs {
