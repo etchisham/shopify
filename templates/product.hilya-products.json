@@ -39,7 +39,7 @@
             "metafield_key_ar": "",
             "content_en": "<ul><li>Keep your jewelry away from chemicals like (perfumes, lotions, hand sanitizer, etc.) which may cause a color change.</li><li>Remove your jewelry before sleeping or physical exercise to avoid any damages as we may move a lot.</li><li>Remove your jewelry before showering & swimming to keep your jewelry shiny.</li><li>Wipe your jewelry with a soft cloth occasionally for more shining.</li></ul>",
             "content_ar": "<ul><li>احفظي مجوهراتك بعيداً عن المواد الكيميائية مثل (العطور، والكريمات، ومعقم اليدين، وما إلى ذلك) التي قد تسبب تغير اللون.</li><li>انزعي مجوهراتك قبل النوم أو ممارسة الرياضة لتجنب أي أضرار، لأننا قد نتحرك كثيراً.</li><li>انزعي مجوهراتك قبل الاستحمام والسباحة للحفاظ على لمعانها.</li><li>امسح مجوهراتك بقطعة قماش ناعمة من حين لآخر لمزيد من اللمعان.</li></ul>",
-            "open_by_default": true,
+            "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false
           }
