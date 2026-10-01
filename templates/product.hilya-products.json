@@ -142,8 +142,8 @@
     "bought_together": {
       "type": "bought-together",
       "settings": {
-        "heading_en": "",
-        "heading_ar": "",
+        "heading_en": "Same Collection",
+        "heading_ar": "نفس المجموعة",
         "tag_prefix": "collection-",
         "products": []
       }
