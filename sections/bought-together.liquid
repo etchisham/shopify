@@ -1,4 +1,6 @@
 {% liquid
+  assign section_file = 'bought-together'
+
   assign tag_prefix = section.settings.tag_prefix | default: 'collection-' | downcase | replace: ' ', '-'
   assign prefix_length = tag_prefix | size
   assign group_handle = ''
@@ -13,11 +15,13 @@
   endfor
 
   assign related_products = product.metafields.custom.frequently_bought_together.value
-  if related_products == blank and group_handle != blank
-    assign related_products = collections[group_handle].products
-  endif
+  assign use_tag = false
   if related_products == blank
-    assign related_products = section.settings.products
+    if group_handle != blank
+      assign use_tag = true
+    else
+      assign related_products = section.settings.products
+    endif
   endif
 
   assign locale_root = request.locale.iso_code | split: '-' | first
@@ -38,30 +42,42 @@
   endif
 %}
 
-{% if related_products != blank %}
-  <section class="bought-together section-spacing" data-bought-together data-section-id="{{ section.id }}" data-money-format="{{ shop.money_format | escape }}" data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-button-label="{{ 'products.bundle.add_selected' | t: count: '__count__' | escape }}" data-empty-label="{{ 'products.bundle.select_products' | t | escape }}" aria-labelledby="BundleHeading-{{ section.id }}">
+{% if request.page_type == 'collection' %}
+
+  {%- comment -%} الوضع التاني: بيرجّع الكروت بس لما يتطلب بالـ fetch {%- endcomment -%}
+  {%- for related in collection.products limit: 12 -%}
+    <div data-bundle-item data-product-id="{{ related.id }}">
+      {% render 'bundle-product', product: related, section_id: '__SID__' %}
+    </div>
+  {%- endfor -%}
+
+{% elsif related_products != blank or use_tag %}
+
+  <section class="bought-together section-spacing" data-bought-together data-section-id="{{ section.id }}" data-current-product-id="{{ product.id }}" {% if use_tag %}data-tag-url="{{ routes.all_products_collection_url }}/{{ group_handle }}?section_id={{ section_file }}" hidden{% endif %} data-money-format="{{ shop.money_format | escape }}" data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-button-label="{{ 'products.bundle.add_selected' | t: count: '__count__' | escape }}" data-empty-label="{{ 'products.bundle.select_products' | t | escape }}" aria-labelledby="BundleHeading-{{ section.id }}">
     <h2 id="BundleHeading-{{ section.id }}">{{ heading | escape }}</h2>
     <form action="{{ routes.cart_add_url }}" method="post" data-bought-together-form>
       <div class="bought-together__cards" data-bundle-cards>
         {% render 'bundle-product', product: product, section_id: section.id, current: true %}
-        {% assign seen_ids = ',' | append: product.id | append: ',' %}
-        {% assign shown = 0 %}
-        {% for related in related_products limit: 12 %}
-          {% if shown >= 4 %}{% break %}{% endif %}
-          {% assign related_token = ',' | append: related.id | append: ',' %}
-          {% unless seen_ids contains related_token %}
-            {% assign seen_ids = seen_ids | append: related_token %}
-            {% assign shown = shown | plus: 1 %}
-            {% render 'bundle-product', product: related, section_id: section.id %}
-            {% if related.available and related.requires_selling_plan == false and related.metafields.custom.personalization_required.value != true %}
-              {% assign selected = related.selected_or_first_available_variant %}
-              {% assign minimum_quantity = selected.quantity_rule.min | default: 1 %}
-              {% assign line_total = selected.price | times: minimum_quantity %}
-              {% assign bundle_total = bundle_total | plus: line_total %}
-              {% assign bundle_count = bundle_count | plus: 1 %}
-            {% endif %}
-          {% endunless %}
-        {% endfor %}
+        {% unless use_tag %}
+          {% assign seen_ids = ',' | append: product.id | append: ',' %}
+          {% assign shown = 0 %}
+          {% for related in related_products limit: 12 %}
+            {% if shown >= 4 %}{% break %}{% endif %}
+            {% assign related_token = ',' | append: related.id | append: ',' %}
+            {% unless seen_ids contains related_token %}
+              {% assign seen_ids = seen_ids | append: related_token %}
+              {% assign shown = shown | plus: 1 %}
+              {% render 'bundle-product', product: related, section_id: section.id %}
+              {% if related.available and related.requires_selling_plan == false and related.metafields.custom.personalization_required.value != true %}
+                {% assign selected = related.selected_or_first_available_variant %}
+                {% assign minimum_quantity = selected.quantity_rule.min | default: 1 %}
+                {% assign line_total = selected.price | times: minimum_quantity %}
+                {% assign bundle_total = bundle_total | plus: line_total %}
+                {% assign bundle_count = bundle_count | plus: 1 %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        {% endunless %}
       </div>
       <div class="bought-together__summary">
         <p>{{ 'products.bundle.total' | t }}: <strong><bdi data-bundle-total>{{ bundle_total | money }}</bdi></strong></p>
@@ -74,10 +90,53 @@
         <noscript><p>{{ 'products.bundle.no_javascript' | t }}</p></noscript>
       </div>
     </form>
+
+    {% if use_tag %}
+      <script>
+        (function () {
+          var root = document.currentScript.parentElement;
+          if (!root || !root.dataset.tagUrl) return;
+
+          fetch(root.dataset.tagUrl, { credentials: 'same-origin' })
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .then(function (html) {
+              if (!html) return;
+
+              /* خلي ids الكروت تطابق id السكشن الحقيقي */
+              html = html.split('__SID__').join(root.dataset.sectionId);
+
+              var doc = new DOMParser().parseFromString(html, 'text/html');
+              var current = root.dataset.currentProductId;
+
+              var items = Array.prototype.filter.call(
+                doc.querySelectorAll('[data-bundle-item]'),
+                function (el) { return el.dataset.productId !== current; }
+              ).slice(0, 4);
+
+              /* مفيش منتج تاني بنفس التاج: السكشن يفضل مخفي */
+              if (!items.length) return;
+
+              var cards = root.querySelector('[data-bundle-cards]');
+              items.forEach(function (el) {
+                while (el.firstElementChild) cards.appendChild(el.firstElementChild);
+              });
+
+              root.hidden = false;
+              root.dispatchEvent(new CustomEvent('bundle:cards-updated', { bubbles: true }));
+            })
+            .catch(function () {});
+        })();
+      </script>
+    {% endif %}
   </section>
+
 {% elsif request.design_mode %}
   <section class="bought-together section-spacing"><h2>{{ heading | escape }}</h2><p>{{ 'products.bundle.editor_setup' | t }}</p></section>
 {% endif %}
+
+{% stylesheet %}
+  [data-bought-together][hidden] { display: none !important; }
+{% endstylesheet %}
 
 {% schema %}
 {
