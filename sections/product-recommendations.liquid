@@ -9,14 +9,16 @@
   <div class="product-recommendations__inner">
 
     <div class="product-recommendations__header">
-
       <h2 class="product-recommendations__title">
         {{ section.settings.heading | escape }}
       </h2>
+    </div>
 
-      {% if recommendation_collection != blank and recommendation_collection.products_count > 4 %}
-        <div class="product-recommendations__controls">
+    {% if recommendation_collection != blank and recommendation_collection.products_count > 0 %}
 
+      <div class="product-recommendations__carousel">
+
+        {% if recommendation_collection.products_count > 4 %}
           <button
             type="button"
             class="product-recommendations__arrow product-recommendations__arrow--prev"
@@ -34,66 +36,62 @@
           >
             <span aria-hidden="true">→</span>
           </button>
+        {% endif %}
 
-        </div>
-      {% endif %}
+        <div
+          class="product-recommendations__track"
+          data-recommendations-track
+        >
 
-    </div>
+          {% for product in recommendation_collection.products limit: 12 %}
 
-    {% if recommendation_collection != blank and recommendation_collection.products_count > 0 %}
+            <article class="product-recommendations__item">
 
-      <div
-        class="product-recommendations__track"
-        data-recommendations-track
-      >
+              <a
+                href="{{ product.url }}"
+                class="product-recommendations__image-link"
+                aria-label="{{ product.title | escape }}"
+              >
 
-        {% for product in recommendation_collection.products limit: 12 %}
+                {% if product.featured_image != blank %}
 
-          <article class="product-recommendations__item">
+                  {{
+                    product.featured_image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 900',
+                      sizes: '(min-width: 990px) 25vw, 50vw',
+                      alt: product.featured_image.alt | default: product.title
+                    }}
 
-            <a
-              href="{{ product.url }}"
-              class="product-recommendations__image-link"
-              aria-label="{{ product.title | escape }}"
-            >
+                {% else %}
 
-              {% if product.featured_image != blank %}
+                  {{ 'product-1' | placeholder_svg_tag }}
 
-                {{
-                  product.featured_image
-                  | image_url: width: 900
-                  | image_tag:
-                    loading: 'lazy',
-                    widths: '360, 540, 720, 900',
-                    sizes: '(min-width: 990px) 25vw, 50vw',
-                    alt: product.featured_image.alt | default: product.title
-                  }}
+                {% endif %}
 
-              {% else %}
+              </a>
 
-                {{ 'product-1' | placeholder_svg_tag }}
+              <div class="product-recommendations__info">
 
-              {% endif %}
+                <h3 class="product-recommendations__product-title">
+                  <a href="{{ product.url }}">
+                    {{ product.title | escape }}
+                  </a>
+                </h3>
 
-            </a>
+                <div class="product-recommendations__price">
+                  {% render 'price', product: product %}
+                </div>
 
-            <div class="product-recommendations__info">
-
-              <h3 class="product-recommendations__product-title">
-                <a href="{{ product.url }}">
-                  {{ product.title | escape }}
-                </a>
-              </h3>
-
-              <div class="product-recommendations__price">
-                {% render 'price', product: product %}
               </div>
 
-            </div>
+            </article>
 
-          </article>
+          {% endfor %}
 
-        {% endfor %}
+        </div>
 
       </div>
 
@@ -114,29 +112,16 @@
 
     if (!track) return;
 
-    const getScrollAmount = () => {
-      const item = track.querySelector('.product-recommendations__item');
-
-      if (!item) {
-        return track.clientWidth;
-      }
-
-      const styles = window.getComputedStyle(track);
-      const gap = parseFloat(styles.columnGap || styles.gap || 0);
-
-      return item.getBoundingClientRect().width + gap;
-    };
-
     previous?.addEventListener('click', () => {
       track.scrollBy({
-        left: -(getScrollAmount() * 4),
+        left: -track.clientWidth,
         behavior: 'smooth'
       });
     });
 
     next?.addEventListener('click', () => {
       track.scrollBy({
-        left: getScrollAmount() * 4,
+        left: track.clientWidth,
         behavior: 'smooth'
       });
     });
@@ -145,10 +130,19 @@
 </script>
 {% stylesheet %}
 
+.product-recommendations,
+.product-recommendations *,
+.product-recommendations *::before,
+.product-recommendations *::after {
+  box-sizing: border-box;
+}
+
 .product-recommendations {
   width: 100%;
+  max-width: 100%;
   margin-top: 5rem;
   padding: 0 0 1rem;
+  overflow-x: clip;
 }
 
 .product-recommendations__inner {
@@ -160,10 +154,9 @@
 
 .product-recommendations__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  justify-content: center;
   margin-bottom: 1.75rem;
+  text-align: center;
 }
 
 .product-recommendations__title {
@@ -176,13 +169,15 @@
   line-height: 1.2;
 }
 
-.product-recommendations__controls {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
+.product-recommendations__carousel {
+  position: relative;
+  container-type: inline-size;
 }
 
 .product-recommendations__arrow {
+  position: absolute;
+  top: calc((100cqw - 3rem) / 8);
+  z-index: 2;
   display: grid;
   width: 2.65rem;
   height: 2.65rem;
@@ -195,23 +190,33 @@
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-50%);
   transition:
     background-color 160ms ease,
     color 160ms ease,
-    border-color 160ms ease,
-    transform 160ms ease;
+    border-color 160ms ease;
+}
+
+.product-recommendations__arrow--prev {
+  left: 0.5rem;
+}
+
+.product-recommendations__arrow--next {
+  right: 0.5rem;
 }
 
 .product-recommendations__arrow:hover {
   border-color: #222;
   background: #222;
   color: #fff;
-  transform: translateY(-1px);
 }
 
 .product-recommendations__track {
   display: flex;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   gap: 1rem;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
@@ -318,19 +323,14 @@
     font-size: 1.3rem;
   }
 
-  .product-recommendations__controls {
-    gap: 0.4rem;
-  }
-
   .product-recommendations__arrow {
+    top: calc((100cqw - 0.75rem) / 4);
     width: 2.35rem;
     height: 2.35rem;
   }
 
   .product-recommendations__track {
     gap: 0.75rem;
-    margin-inline-end: -1rem;
-    padding-inline-end: 1rem;
   }
 
   .product-recommendations__item {
