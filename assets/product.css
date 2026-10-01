@@ -1532,3 +1532,10 @@
 .product-page__price.is-updating {
   opacity: 0.45;
 }
+
+[data-product-page][data-back-pending] .product-page__back,
+[data-product-page][data-back-pending] .product-breadcrumbs a[href*="/collections/"] {
+  visibility: hidden;
+  animation: back-reveal 0s linear 2s forwards;
+}
+@keyframes back-reveal { to { visibility: visible; } }
