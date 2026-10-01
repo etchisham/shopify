@@ -40,6 +40,8 @@
   data-product-vendor="{{ product.vendor | escape }}"
   data-option-error="{{ 'products.details.option_error' | t | escape }}"
   data-back-label="{{ 'products.details.back_to_results' | t | escape }}"
+  data-add-label="{{ 'products.product.add_to_cart' | t | escape }}"
+  data-sold-out-label="{{ 'products.product.sold_out' | t | escape }}"
   data-name-required="{{ has_name_tag }}"
   data-date-required="{{ has_date_tag }}"
   data-personalization-error="Please complete the required personalization fields."
@@ -110,7 +112,7 @@
 
         <h1>{{ product.title | escape }}</h1>
 
-        <div class="product-page__price">
+        <div class="product-page__price" data-product-price-block>
 
           {% if current_variant != blank %}
             {% render 'price', product: product, use_variant: true %}
@@ -143,6 +145,7 @@
           </p>
         {% endif %}
 
+        <div data-product-inventory>
         {% if section.settings.show_inventory and current_variant.inventory_management %}
           {% if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}
 
@@ -158,6 +161,7 @@
 
           {% endif %}
         {% endif %}
+        </div>
 
         <ul class="product-page__delivery" role="list">
 
