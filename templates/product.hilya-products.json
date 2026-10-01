@@ -109,8 +109,8 @@
       "type": "product-recommendations",
       "name": "Product recommendations",
       "settings": {
-        "collection": "",
-        "heading": "Best Sellers"
+        "collection": "best-sellers",
+        "heading": "You May Also Like"
       }
     },
     "trust": {
