@@ -47,14 +47,14 @@
         "details_material_care": {
           "type": "accordion",
           "settings": {
-            "heading_en": "Material care",
-            "heading_ar": "العناية بالخامات",
+            "heading_en": "Warranty Policy",
+            "heading_ar": "سياسة الضمان",
             "source": "metafield",
             "metafield_namespace": "custom",
-            "metafield_key": "material_care",
+            "metafield_key": "warranty-policy",
             "metafield_key_ar": "",
-            "content_en": "<p>Care requirements vary by material. Contact us for guidance before cleaning or storing your product.</p>",
-            "content_ar": "<p>تختلف متطلبات العناية حسب الخامة. تواصل معنا للحصول على إرشادات قبل تنظيف المنتج أو تخزينه.</p>",
+            "content_en": "<p>We offer a 3-month repair warranty that covers any manufacturing defects. Your jewelry is in good hands always.</p><p>Even after your 3-month warranty ends, we’re still here for you. Repairs and maintenance are available for a small fee, based on your piece’s condition.</p><p>Please note: The warranty does not cover misuse, damage, or loss.</p>",
+            "content_ar": "<p>&nbsp;نقدم ضمان إصلاح لمدة 3 أشهر يغطي أي عيوب تصنيعية. مجوهراتك في أيدٍ أمينة دائمًا.</p><p>حتى بعد انتهاء فترة الضمان التي تبلغ ثلاثة أشهر، سنظل في خدمتكم. تتوفر خدمات الإصلاح والصيانة مقابل رسوم رمزية، بناءً على حالة المنتج.</p><p>يرجى الملاحظة: لا يغطي الضمان سوء الاستخدام أو التلف أو الفقدان.</p>",
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false
