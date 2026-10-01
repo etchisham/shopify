@@ -60,6 +60,17 @@
     {% render 'product-breadcrumbs', product: product, collection: collection %}
   {% endif %}
 
+    <script>
+    (function () {
+      try {
+        var r = new URL(document.referrer);
+        if (r.origin === location.origin && /\/(collections\/[^/]+|search)\/?$/.test(r.pathname)) {
+          document.currentScript.parentElement.setAttribute('data-back-pending', '');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <a
     class="product-page__back"
     data-product-back
