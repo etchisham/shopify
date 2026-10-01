@@ -45,6 +45,18 @@
 
           {% for product in recommendation_collection.products limit: 12 %}
 
+            {% liquid
+              assign rating = product.metafields.reviews.rating.value
+              assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+              assign rating_value = rating.rating | default: rating
+              assign rating_maximum = rating.scale_max | default: 5
+              assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
+              assign review_word = 'review'
+              if rating_count != 1
+                assign review_word = 'reviews'
+              endif
+            %}
+
             <article class="product-recommendations__item">
 
               <a
@@ -81,6 +93,18 @@
                   </a>
                 </h3>
 
+                {% if settings.card_show_rating and rating_value != blank and rating_count > 0 %}
+                  <div
+                    class="product-recommendations__rating"
+                    role="img"
+                    aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
+                  >
+                    <span class="product-recommendations__rating-star" aria-hidden="true">★</span>
+                    <span class="product-recommendations__rating-value">{{ rating_display }}</span>
+                    <span class="product-recommendations__rating-count">({{ rating_count }} {{ review_word }})</span>
+                  </div>
+                {% endif %}
+
                 <div class="product-recommendations__price">
                   {% render 'price', product: product %}
                 </div>
@@ -112,6 +136,17 @@
 
     if (!track) return;
 
+    const isRtl = () => window.getComputedStyle(track).direction === 'rtl';
+
+    const updateArrows = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const fromLeft = isRtl() ? max + track.scrollLeft : track.scrollLeft;
+      const fromRight = max - fromLeft;
+
+      previous?.setAttribute('data-hidden', fromLeft <= 1 ? 'true' : 'false');
+      next?.setAttribute('data-hidden', fromRight <= 1 ? 'true' : 'false');
+    };
+
     previous?.addEventListener('click', () => {
       track.scrollBy({
         left: -track.clientWidth,
@@ -125,6 +160,11 @@
         behavior: 'smooth'
       });
     });
+
+    track.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+    window.addEventListener('load', updateArrows);
+    updateArrows();
 
   })();
 </script>
@@ -191,8 +231,11 @@
   font-size: 1rem;
   line-height: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  pointer-events: none;
   transform: translateY(-50%);
   transition:
+    opacity 200ms ease,
     background-color 160ms ease,
     color 160ms ease,
     border-color 160ms ease;
@@ -206,10 +249,29 @@
   right: 0.5rem;
 }
 
+.product-recommendations__arrow[data-hidden="true"] {
+  visibility: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-recommendations__carousel:hover .product-recommendations__arrow,
+  .product-recommendations__carousel:focus-within .product-recommendations__arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .product-recommendations__arrow:hover {
   border-color: #222;
   background: #222;
   color: #fff;
+}
+
+/* Touch devices: no arrows, swipe instead */
+@media (hover: none) {
+  .product-recommendations__arrow {
+    display: none;
+  }
 }
 
 .product-recommendations__track {
@@ -310,6 +372,32 @@ html[dir="rtl"] .product-recommendations__price .price {
   font-size: 0.78rem;
 }
 
+.product-recommendations__rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+  line-height: 1;
+}
+
+.product-recommendations__rating-star {
+  color: #f5b301;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.product-recommendations__rating-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.product-recommendations__rating-count {
+  color: #666;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
 .product-recommendations__empty {
   margin: 0;
   color: #666;
@@ -333,18 +421,12 @@ html[dir="rtl"] .product-recommendations__price .price {
     font-size: 1.3rem;
   }
 
-  .product-recommendations__arrow {
-    top: calc((100cqw - 0.75rem) / 4);
-    width: 2.35rem;
-    height: 2.35rem;
-  }
-
   .product-recommendations__track {
     gap: 0.75rem;
   }
 
   .product-recommendations__item {
-    flex: 0 0 calc((100% - 0.75rem) / 2);
+    flex: 0 0 calc((100% - 1.5rem) / 2.3);
   }
 
   .product-recommendations__info {
