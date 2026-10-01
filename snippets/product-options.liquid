@@ -1,5 +1,7 @@
 {% doc %}
-  Product variant options.
+  Product variant options, shown as selectable pills.
+  A hidden native <select> per option is kept in sync by product.js
+  (it is what the variant logic and the no-JS fallback rely on).
   @param {product} product - Current product.
   @param {string} section_id - Owning section ID.
 {% enddoc %}
@@ -17,59 +19,68 @@
 
       <div class="product-form__field product-option-field">
 
-        <label
-          for="ProductOption-{{ section_id }}-{{ option.position }}"
+        <span
+          class="product-option-label"
+          id="ProductOptionLabel-{{ section_id }}-{{ option.position }}"
         >
           {{ option.name | escape }}
-        </label>
+        </span>
 
-        <div class="product-option-select-wrap">
+        <div
+          class="product-option-pills"
+          role="radiogroup"
+          aria-labelledby="ProductOptionLabel-{{ section_id }}-{{ option.position }}"
+          data-option-pills
+          data-option-position="{{ option.position }}"
+        >
 
-          <select
-            id="ProductOption-{{ section_id }}-{{ option.position }}"
-            class="product-option-select"
-            data-product-option
-            data-option-position="{{ option.position }}"
-            autocomplete="off"
-          >
+          {% for value in option.values %}
 
-            {% for value in option.values %}
+            {%- assign value_available = false -%}
 
-              {%- comment -%}
-                Options are never disabled: the script switches to the
-                closest existing variant when a combination is missing.
-                An option is only labelled "sold out" when no variant
-                with that value is available at all.
-              {%- endcomment -%}
-              {%- assign value_available = false -%}
+            {%- for variant in product.variants -%}
+              {%- if variant.options[option_index] == value.name and variant.available -%}
+                {%- assign value_available = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
 
-              {%- for variant in product.variants -%}
-                {%- if variant.options[option_index] == value.name and variant.available -%}
-                  {%- assign value_available = true -%}
-                  {%- break -%}
-                {%- endif -%}
-              {%- endfor -%}
+            <button
+              type="button"
+              role="radio"
+              class="product-option-pill{% unless value_available %} is-soldout{% endunless %}"
+              data-option-value="{{ value.name | escape }}"
+              aria-checked="{{ value.selected }}"
+              tabindex="{% if value.selected %}0{% else %}-1{% endif %}"
+              {% unless value_available %}
+                title="{{ 'products.product.sold_out' | t | escape }}"
+              {% endunless %}
+            >
+              {{ value.name | escape }}
+            </button>
 
-              <option
-                value="{{ value.name | escape }}"
-                {% if value.selected %}
-                  selected
-                  data-selected
-                {% endif %}
-              >
-                {{ value.name | escape }}
-                {%- unless value_available %} — {{ 'products.product.sold_out' | t }}{% endunless -%}
-              </option>
-
-            {% endfor %}
-
-          </select>
-
-          <span class="product-option-select__chevron" aria-hidden="true">
-            {% render 'icon', name: 'chevron' %}
-          </span>
+          {% endfor %}
 
         </div>
+
+        <select
+          hidden
+          class="product-option-select"
+          aria-hidden="true"
+          tabindex="-1"
+          data-product-option
+          data-option-position="{{ option.position }}"
+          autocomplete="off"
+        >
+          {% for value in option.values %}
+            <option
+              value="{{ value.name | escape }}"
+              {% if value.selected %}selected{% endif %}
+            >
+              {{ value.name | escape }}
+            </option>
+          {% endfor %}
+        </select>
 
       </div>
 
