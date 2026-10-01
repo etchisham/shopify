@@ -33,7 +33,7 @@
             {% for value in option.values %}
 
               <option
-                value="{{ value.id }}"
+                value="{{ value.name | escape }}"
                 data-product-url="{{ value.product_url }}"
                 {% if value.selected %}
                   selected
