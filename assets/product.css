@@ -1522,3 +1522,13 @@
       transparent
     );
 }
+
+/* Price refresh state */
+
+.product-page__price {
+  transition: opacity 140ms ease;
+}
+
+.product-page__price.is-updating {
+  opacity: 0.45;
+}

@@ -554,13 +554,18 @@
       if (!sectionId || !base) return;
 
       fetchController?.abort();
-      fetchController = new AbortController();
+
+      const controller = new AbortController();
+      fetchController = controller;
+
+      const priceBlock = root.querySelector('[data-product-price-block]');
+      priceBlock?.classList.add('is-updating');
 
       try {
         const response = await fetch(
           `${base}?variant=${variant.id}&section_id=${encodeURIComponent(sectionId)}`,
           {
-            signal: fetchController.signal,
+            signal: controller.signal,
             headers: { Accept: 'text/html' }
           }
         );
@@ -582,6 +587,12 @@
         if (error.name !== 'AbortError') {
           console.warn('Hilya: could not refresh price.', error);
         }
+      } finally {
+        if (fetchController === controller) {
+          root
+            .querySelector('[data-product-price-block]')
+            ?.classList.remove('is-updating');
+        }
       }
     };
 
@@ -600,28 +611,11 @@
 
       root.dataset.productPrice = variant.price_formatted || variant.price;
 
-      /* Instant price feedback (replaced by server markup right after) */
-      const priceCurrent = root.querySelector(
-        '.product-page__price .price__current'
-      );
-
-      if (priceCurrent && variant.price_formatted) {
-        priceCurrent.textContent = variant.price_formatted;
-      }
-
-      const compare = root.querySelector('[data-variant-compare-price]');
-
-      if (compare) {
-        if (
-          variant.compare_at_price &&
-          Number(variant.compare_at_price) > Number(variant.price)
-        ) {
-          compare.textContent = variant.compare_at_price_formatted;
-          compare.hidden = false;
-        } else {
-          compare.hidden = true;
-        }
-      }
+      /*
+        Price and compare-at price are rendered by the server through the
+        theme's own price snippet (see refreshFromServer), so the currency
+        format always matches the rest of the page.
+      */
 
       /* Availability */
       const add = root.querySelector('[data-product-add]');
@@ -907,6 +901,86 @@
   }
 
   /* =========================================================
+     BACK NAVIGATION
+     Returns the shopper to the listing page they actually came
+     from (collection / all products / search), not to the first
+     collection the product happens to belong to.
+  ========================================================= */
+
+  const BACK_TO = 'Back to';
+  const BACK_TO_SEARCH = 'Back to search results';
+
+  function backNavigation(root, signal) {
+    if (!document.referrer) return;
+
+    let ref;
+
+    try {
+      ref = new URL(document.referrer);
+    } catch (error) {
+      return;
+    }
+
+    if (ref.origin !== window.location.origin) return;
+
+    const isCollection = /\/collections\/[^/]+\/?$/.test(ref.pathname);
+    const isSearch = /\/search\/?$/.test(ref.pathname);
+
+    if (!isCollection && !isSearch) return;
+
+    const href = ref.pathname + ref.search;
+
+    const back = root.querySelector('[data-product-back]');
+    const backLabel = root.querySelector('[data-product-back-label]');
+
+    const crumb = root.querySelector(
+      '.product-breadcrumbs a[href*="/collections/"]'
+    );
+
+    if (back) back.setAttribute('href', href);
+
+    if (crumb) {
+      crumb.setAttribute('href', href);
+      crumb.style.visibility = 'hidden'; /* until the real title is known */
+    }
+
+    const finish = (title) => {
+      if (title) {
+        if (backLabel) backLabel.textContent = `${BACK_TO} ${title}`;
+        if (crumb) crumb.textContent = title;
+      }
+
+      if (crumb) crumb.style.visibility = '';
+    };
+
+    if (isSearch) {
+      if (backLabel) backLabel.textContent = BACK_TO_SEARCH;
+      if (crumb) {
+        crumb.textContent = BACK_TO_SEARCH.replace(/^Back to /, '');
+        crumb.style.visibility = '';
+      }
+      return;
+    }
+
+    fetch(href, { signal, credentials: 'same-origin' })
+      .then((response) => (response.ok ? response.text() : ''))
+      .then((html) => {
+        if (!html) return finish('');
+
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        const heading = doc.querySelector('h1')?.textContent?.trim();
+
+        const fromTitle = doc.title
+          ?.split(/\s[–|\-—]\s/)[0]
+          ?.trim();
+
+        finish(heading || fromTitle || '');
+      })
+      .catch(() => finish(''));
+  }
+
+  /* =========================================================
      INIT
   ========================================================= */
 
@@ -935,6 +1009,7 @@
       safely('quantity', () => quantity(root, signal));
       safely('variants', () => variants(root, media, signal));
       safely('optionPills', () => optionPills(root, signal));
+      safely('backNavigation', () => backNavigation(root, signal));
       safely('personalization', () => personalization(root, signal));
       safely('descriptions', () => descriptions(root, signal));
     });
