@@ -474,7 +474,7 @@
 .cart-toast,
 .cart-feedback {
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   top: 1.25rem;
   right: 1.25rem;
   width: max-content;
