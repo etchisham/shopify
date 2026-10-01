@@ -790,6 +790,12 @@
   transform: scale(1.03);
 }
 
+.product-gallery__thumbnail:focus-visible,
+.product-gallery__arrow:focus-visible {
+  outline: 2px solid var(--etsy-ink);
+  outline-offset: 2px;
+}
+
 .product-gallery__thumbnail[aria-current='true'] {
   border-color: var(--etsy-ink);
   opacity: 1;
@@ -1089,31 +1095,7 @@
     1px solid var(--etsy-line);
 }
 
-/* Zoom close button */
-.product-zoom__close {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--etsy-ink);
-  cursor: pointer;
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.product-zoom__close:hover {
-  background: var(--etsy-soft);
-  border-radius: 50%;
-}
-
-.product-zoom__close:focus-visible {
-  outline: 2px solid var(--etsy-ink);
-  outline-offset: 2px;
-}
+/* Zoom header buttons */
 
 .product-zoom__header > span {
   margin-inline-end: auto;
@@ -1122,7 +1104,8 @@
   color: var(--etsy-muted);
 }
 
-.product-zoom__close {
+.product-zoom__close,
+.product-zoom__toggle {
   display: grid;
 
   width: 44px;
@@ -1136,22 +1119,25 @@
   border-radius: 50%;
 
   background: transparent;
-  color: inherit;
+  color: var(--etsy-ink);
 
   cursor: pointer;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
 }
 
-.product-zoom__close:hover {
+.product-zoom__close:hover,
+.product-zoom__toggle:hover {
   background: var(--etsy-soft);
 }
 
-.product-zoom__close svg {
-  width: 1.35rem;
-  height: 1.35rem;
-
-  fill: none;
-  stroke: currentcolor;
-  stroke-width: 2;
+.product-zoom__close:focus-visible,
+.product-zoom__toggle:focus-visible {
+  outline: 2px solid var(--etsy-ink);
+  outline-offset: 2px;
 }
 
 .product-zoom__canvas {
@@ -1179,8 +1165,14 @@
   object-fit: contain;
 }
 
+.product-zoom__canvas {
+  cursor: zoom-in;
+}
+
 .product-zoom__canvas.is-zoomed {
   display: block;
+
+  cursor: zoom-out;
 }
 
 .product-zoom__canvas.is-zoomed img {
@@ -1354,6 +1346,12 @@
   .product-zoom {
     width: 100vw;
     height: 100dvh;
+  }
+
+  .product-form select,
+  .product-form input,
+  .product-form textarea {
+    font-size: 16px;
   }
 }
 
