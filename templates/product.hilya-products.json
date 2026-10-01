@@ -63,30 +63,14 @@
         "details_did_you_know": {
           "type": "accordion",
           "settings": {
-            "heading_en": "Did you know?",
-            "heading_ar": "هل تعلم؟",
+            "heading_en": "Return & Exchange Policies",
+            "heading_ar": "سياسات الإرجاع والاستبدال",
             "source": "metafield",
             "metafield_namespace": "custom",
-            "metafield_key": "did_you_know",
+            "metafield_key": "return_exchange_policies",
             "metafield_key_ar": "",
-            "content_en": "<p>Product options may change the price and availability. Select your preferred options to see the current details.</p>",
-            "content_ar": "<p>قد تتغير الأسعار وتوافر المنتج حسب الخيارات. حدد خياراتك المفضلة للاطلاع على التفاصيل الحالية.</p>",
-            "open_by_default": false,
-            "truncate_content": false,
-            "show_highlights": false
-          }
-        },
-        "details_about_seller": {
-          "type": "accordion",
-          "settings": {
-            "heading_en": "Meet your seller",
-            "heading_ar": "تعرّف على البائع",
-            "source": "metafield",
-            "metafield_namespace": "custom",
-            "metafield_key": "about_seller",
-            "metafield_key_ar": "",
-            "content_en": "<p>Have a question about this product? Contact our team for help before placing your order.</p>",
-            "content_ar": "<p>هل لديك سؤال عن هذا المنتج؟ تواصل مع فريقنا للحصول على المساعدة قبل إتمام طلبك.</p>",
+            "content_en": "<ul><li>We offer easy returns & exchange within 14 days after the delivery date.</li><li>To be eligible for a return & exchange, your item must be in the same condition that you received it, unworn or unused, and in its original packaging. You’ll also need the receipt or proof of purchase.</li><li>In case of any missing part of the products or the packaging, the courier can not pick up the&nbsp;items&nbsp;from your side</li><li>In case of refunding for no reason or just changing your mind, the order can be returned but subjected to return fees to be paid by the customer.</li><li>In case of a manufacturing fault and the item cannot be replaced or mended you get a full free refund within 2-4 working days from the request.</li><li>In case of paying online through a debit or credit card, the amount will be transferred within 7-14 days according to your bank.</li><li>For COD orders exceeding 2k,refunds will be processed through online banking.&nbsp;</li></ul><p><strong>For more information or return & exchange requests kindly contact us on our Facebook or Instagram page or Whatsapp.</strong></p>",
+            "content_ar": "<ul><li>نقدم خدمة الإرجاع والاستبدال بسهولة خلال 14 يومًا من تاريخ التسليم.</li><li>للاستفادة من خدمة الإرجاع والاستبدال، يجب أن يكون المنتج في نفس الحالة التي استلمته بها، غير ملبوس أو مستخدم، وفي عبوته الأصلية. ستحتاج أيضًا إلى إيصال الشراء أو ما يثبت عملية الشراء.</li><li>في حالة فقدان أي جزء من المنتجات أو العبوة، لا يمكن لمندوب التوصيل استلام المنتجات &nbsp;من جانبك</li><li>في حالة استرداد المبلغ بدون سبب أو لمجرد تغيير رأيك، يمكن إرجاع الطلب ولكن يخضع لرسوم إرجاع يدفعها العميل.</li><li>في حالة وجود عيب في التصنيع وعدم إمكانية استبدال المنتج أو إصلاحه، ستحصل على استرداد كامل مجاني في غضون 2-4 أيام عمل من تاريخ الطلب.</li><li>في حالة الدفع عبر الإنترنت باستخدام بطاقة الخصم أو الائتمان، سيتم تحويل المبلغ في غضون 7-14 يومًا وفقًا لبنكك.</li><li>بالنسبة لطلبات الدفع عند الاستلام التي تتجاوز قيمتها 2000، ستتم معالجة المبالغ المستردة من خلال الخدمات المصرفية عبر الإنترنت.&nbsp;</li></ul><p><strong>للمزيد من المعلومات أو لطلبات الإرجاع والاستبدال، يرجى التواصل معنا عبر صفحتنا على فيسبوك أو إنستغرام او واتساب.</strong></p>",
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false
@@ -97,8 +81,7 @@
         "details_item_details",
         "details_shipping_returns",
         "details_material_care",
-        "details_did_you_know",
-        "details_about_seller"
+        "details_did_you_know"
       ],
       "settings": {
         "show_breadcrumbs": true,
