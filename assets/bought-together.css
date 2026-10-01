@@ -68,6 +68,10 @@
   .bought-together form { grid-template-columns: 1fr; gap: 1.5rem; }
   .bought-together__summary { max-width: 24rem; width: 100%; justify-self: center; }
   .bundle-product { flex-basis: calc((100% - 4rem) / 3); min-width: 10rem; }
+  .bought-together__summary > p:first-child { margin-block-end: 0.5rem; font-size: 0.9rem; }
+  .bought-together__summary strong { font-size: 1rem; }
+  .bought-together__summary .button { min-height: 2.75rem; padding-block: 0.6rem; font-size: 0.875rem; }
+  .bought-together__note { margin-block-start: 0.6rem; font-size: 0.75rem; }
 }
 @media (max-width: 479px) { .bundle-product { flex-basis: 70%; } }
 @media (min-width: 1000px) {
