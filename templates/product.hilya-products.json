@@ -31,7 +31,7 @@
         "details_shipping_returns": {
           "type": "accordion",
           "settings": {
-            "heading_en": "Shipping and return policies",
+            "heading_en": "Jewerly Care",
             "heading_ar": "سياسات الشحن والإرجاع",
             "source": "metafield",
             "metafield_namespace": "custom",
@@ -109,16 +109,9 @@
         "show_quantity": true,
         "show_buy_now": true,
         "show_dynamic_checkout": true,
-        "show_save_button": true,
         "media_position": "left",
         "image_ratio": "1 / 1",
-        "image_fit": "contain",
-        "show_personalization": true,
-        "personalization_required": true,
-        "personalization_label_en": "",
-        "personalization_label_ar": "",
-        "personalization_prompt_en": "",
-        "personalization_prompt_ar": ""
+        "image_fit": "contain"
       }
     },
     "bought_together": {
