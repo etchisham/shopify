@@ -58,7 +58,6 @@
       <button class="product-gallery__arrow product-gallery__arrow--next" type="button" data-product-next aria-label="{{ 'products.details.next_media' | t | escape }}" disabled>{% render 'icon', name: 'chevron' %}</button>
       <p class="product-gallery__counter"><span data-product-media-counter>{{ initial_index | plus: 1 }}</span> / {{ product.media.size }}</p>
     {% endif %}
-    <button class="product-gallery__save" type="button" data-product-save data-save-icon aria-pressed="false" aria-label="{{ 'products.details.save_item' | t | escape }}" hidden>{% render 'icon', name: 'heart' %}</button>
   </div>
   <p class="visually-hidden" role="status" data-product-media-status></p>
   <dialog class="product-zoom" data-product-zoom-dialog aria-label="{{ 'products.details.full_size_images' | t | escape }}">
