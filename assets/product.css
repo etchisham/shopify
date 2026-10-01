@@ -1427,3 +1427,98 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* =========================================================
+   Item details polish
+========================================================= */
+
+/* Remove the oversized, unsized icon shown before "Brand" */
+.product-highlights li > svg,
+.product-highlights svg {
+  display: none !important;
+}
+
+.product-highlights {
+  gap: 0.5rem;
+
+  margin: 0 0 1rem;
+  padding: 0 0 1rem;
+
+  border-block-end: 1px solid var(--etsy-line);
+
+  font-size: 0.88rem;
+}
+
+.product-highlights li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  color: var(--etsy-muted);
+}
+
+.product-highlights li strong,
+.product-highlights li b {
+  color: var(--etsy-ink);
+  font-weight: 700;
+}
+
+.product-accordion > summary {
+  transition: color 140ms ease;
+}
+
+.product-accordion > summary:hover {
+  color: #000;
+}
+
+.product-accordion > summary:focus-visible {
+  outline: 2px solid var(--etsy-ink);
+  outline-offset: 2px;
+}
+
+.product-accordion__content {
+  padding-block-end: 1.4rem;
+
+  line-height: 1.65;
+}
+
+.product-accordion__description .rte > :first-child {
+  margin-block-start: 0;
+}
+
+.product-accordion__description .rte p {
+  margin-block: 0 0.9rem;
+}
+
+.product-accordion__description .rte ul,
+.product-accordion__description .rte ol {
+  display: grid;
+  gap: 0.6rem;
+
+  margin: 0 0 1rem;
+  padding-inline-start: 1.15rem;
+}
+
+.product-accordion__description .rte li::marker {
+  color: var(--etsy-muted);
+}
+
+.product-accordion__description .rte strong {
+  color: var(--etsy-ink);
+}
+
+.product-accordion__more {
+  width: auto;
+
+  padding-inline: 0;
+
+  font-size: 0.85rem;
+}
+
+.product-accordion__description.is-collapsed [data-description-text] {
+  mask-image:
+    linear-gradient(
+      #000 45%,
+      transparent
+    );
+}
