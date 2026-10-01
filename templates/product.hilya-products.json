@@ -100,7 +100,7 @@
     "bought_together": {
       "type": "bought-together",
       "settings": {
-        "heading_en": "Same Collection",
+        "heading_en": "Explore the Collection",
         "heading_ar": "نفس المجموعة",
         "tag_prefix": "collection-",
         "products": []
