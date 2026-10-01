@@ -23,7 +23,7 @@
             "metafield_key_ar": "",
             "content_en": "<p>Crafted from high-quality copper and finished with 18K gold or silver plating, featuring an elegant design and refined finish made for everyday wear and special occasions.</p>",
             "content_ar": "<p>مصنوع من النحاس عالي الجودة، ومطلي بذهب عيار 18 قيراط أو بالفضة، بتصميم أنيق ولمسة فاخرة تناسب إطلالتك اليومية والمناسبات الخاصة.</p>",
-            "open_by_default": true,
+            "open_by_default": false,
             "truncate_content": true,
             "show_highlights": true
           }
@@ -97,6 +97,23 @@
         "image_fit": "contain"
       }
     },
+    "bought_together": {
+      "type": "bought-together",
+      "settings": {
+        "heading_en": "Same Collection",
+        "heading_ar": "نفس المجموعة",
+        "tag_prefix": "collection-",
+        "products": []
+      }
+    },
+    "product_recommendations_N3GPQf": {
+      "type": "product-recommendations",
+      "name": "Product recommendations",
+      "settings": {
+        "collection": "best-sellers",
+        "heading": "You May Also Like"
+      }
+    },
     "trust": {
       "type": "trust-bar",
       "blocks": {
@@ -139,23 +156,6 @@
         "heading": "Purchase information"
       }
     },
-    "bought_together": {
-      "type": "bought-together",
-      "settings": {
-        "heading_en": "Same Collection",
-        "heading_ar": "نفس المجموعة",
-        "tag_prefix": "collection-",
-        "products": []
-      }
-    },
-    "product_recommendations_N3GPQf": {
-      "type": "product-recommendations",
-      "name": "Product recommendations",
-      "settings": {
-        "collection": "best-sellers",
-        "heading": "You May Also Like"
-      }
-    },
     "1789423886655db41b": {
       "type": "apps",
       "blocks": {
@@ -177,9 +177,9 @@
   },
   "order": [
     "main",
-    "trust",
     "bought_together",
     "product_recommendations_N3GPQf",
+    "trust",
     "1789423886655db41b"
   ]
 }
