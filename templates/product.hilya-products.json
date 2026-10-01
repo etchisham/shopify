@@ -31,7 +31,7 @@
         "details_shipping_returns": {
           "type": "accordion",
           "settings": {
-            "heading_en": "Jewerly Care",
+            "heading_en": "Jewelry Care",
             "heading_ar": "العناية بالمجوهرات",
             "source": "metafield",
             "metafield_namespace": "",
