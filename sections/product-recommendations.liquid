@@ -143,7 +143,225 @@
 
   })();
 </script>
+{% stylesheet %}
 
+.product-recommendations {
+  width: 100%;
+  margin-top: 5rem;
+  padding: 0 0 1rem;
+}
+
+.product-recommendations__inner {
+  width: 100%;
+  max-width: 87.5rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2.25rem);
+}
+
+.product-recommendations__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.product-recommendations__title {
+  margin: 0;
+  color: #222;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.product-recommendations__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.product-recommendations__arrow {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #d8d8d8;
+  border-radius: 50%;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.product-recommendations__arrow:hover {
+  border-color: #222;
+  background: #222;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.product-recommendations__track {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.product-recommendations__track::-webkit-scrollbar {
+  display: none;
+}
+
+.product-recommendations__item {
+  min-width: 0;
+  flex: 0 0 calc((100% - 3rem) / 4);
+  scroll-snap-align: start;
+}
+
+.product-recommendations__image-link {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: #f5f5f1;
+  text-decoration: none;
+}
+
+.product-recommendations__image-link img,
+.product-recommendations__image-link svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.product-recommendations__image-link img {
+  transition: transform 400ms ease;
+}
+
+.product-recommendations__image-link:hover img {
+  transform: scale(1.025);
+}
+
+.product-recommendations__info {
+  padding-top: 0.8rem;
+}
+
+.product-recommendations__product-title {
+  margin: 0;
+  color: #222;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.product-recommendations__product-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-recommendations__product-title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.product-recommendations__price {
+  margin-top: 0.35rem;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.product-recommendations__price .price {
+  gap: 0.35rem;
+}
+
+.product-recommendations__price .price__current {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.product-recommendations__price .price__compare {
+  font-size: 0.78rem;
+}
+
+.product-recommendations__empty {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 749px) {
+  .product-recommendations {
+    margin-top: 3.5rem;
+  }
+
+  .product-recommendations__inner {
+    padding-inline: 1rem;
+  }
+
+  .product-recommendations__header {
+    margin-bottom: 1.2rem;
+  }
+
+  .product-recommendations__title {
+    font-size: 1.3rem;
+  }
+
+  .product-recommendations__controls {
+    gap: 0.4rem;
+  }
+
+  .product-recommendations__arrow {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .product-recommendations__track {
+    gap: 0.75rem;
+    margin-inline-end: -1rem;
+    padding-inline-end: 1rem;
+  }
+
+  .product-recommendations__item {
+    flex: 0 0 calc((100% - 0.75rem) / 2);
+  }
+
+  .product-recommendations__info {
+    padding-top: 0.65rem;
+  }
+
+  .product-recommendations__product-title {
+    font-size: 0.82rem;
+  }
+
+  .product-recommendations__price {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-recommendations__track {
+    scroll-behavior: auto;
+  }
+
+  .product-recommendations__image-link img {
+    transition: none;
+  }
+}
+
+{% endstylesheet %}
 
 {% schema %}
 {
