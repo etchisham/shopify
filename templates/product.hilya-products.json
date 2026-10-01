@@ -97,22 +97,6 @@
         "image_fit": "contain"
       }
     },
-    "bought_together": {
-      "type": "bought-together",
-      "settings": {
-        "heading_en": "",
-        "heading_ar": "",
-        "products": []
-      }
-    },
-    "product_recommendations_N3GPQf": {
-      "type": "product-recommendations",
-      "name": "Product recommendations",
-      "settings": {
-        "collection": "best-sellers",
-        "heading": "You May Also Like"
-      }
-    },
     "trust": {
       "type": "trust-bar",
       "blocks": {
@@ -155,6 +139,22 @@
         "heading": "Purchase information"
       }
     },
+    "bought_together": {
+      "type": "bought-together",
+      "settings": {
+        "heading_en": "",
+        "heading_ar": "",
+        "products": []
+      }
+    },
+    "product_recommendations_N3GPQf": {
+      "type": "product-recommendations",
+      "name": "Product recommendations",
+      "settings": {
+        "collection": "best-sellers",
+        "heading": "You May Also Like"
+      }
+    },
     "1789423886655db41b": {
       "type": "apps",
       "blocks": {
@@ -176,9 +176,9 @@
   },
   "order": [
     "main",
+    "trust",
     "bought_together",
     "product_recommendations_N3GPQf",
-    "trust",
     "1789423886655db41b"
   ]
 }
