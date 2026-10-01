@@ -32,13 +32,13 @@
           "type": "accordion",
           "settings": {
             "heading_en": "Jewerly Care",
-            "heading_ar": "سياسات الشحن والإرجاع",
+            "heading_ar": "العناية بالمجوهرات",
             "source": "metafield",
-            "metafield_namespace": "custom",
-            "metafield_key": "shipping_returns",
+            "metafield_namespace": "",
+            "metafield_key": "",
             "metafield_key_ar": "",
-            "content_en": "<p>Shipping options and costs are shown at checkout. For delivery estimates or return questions, contact us before placing your order.</p>",
-            "content_ar": "<p>تظهر خيارات الشحن وتكلفته عند إتمام الشراء. للاستفسار عن موعد التوصيل المتوقع أو الإرجاع، تواصل معنا قبل إتمام طلبك.</p>",
+            "content_en": "<ul><li>Keep your jewelry away from chemicals like (perfumes, lotions, hand sanitizer, etc.) which may cause a color change.</li><li>Remove your jewelry before sleeping or physical exercise to avoid any damages as we may move a lot.</li><li>Remove your jewelry before showering & swimming to keep your jewelry shiny.</li><li>Wipe your jewelry with a soft cloth occasionally for more shining.</li></ul>",
+            "content_ar": "<ul><li>احفظي مجوهراتك بعيداً عن المواد الكيميائية مثل (العطور، والكريمات، ومعقم اليدين، وما إلى ذلك) التي قد تسبب تغير اللون.</li><li>انزعي مجوهراتك قبل النوم أو ممارسة الرياضة لتجنب أي أضرار، لأننا قد نتحرك كثيراً.</li><li>انزعي مجوهراتك قبل الاستحمام والسباحة للحفاظ على لمعانها.</li><li>امسح مجوهراتك بقطعة قماش ناعمة من حين لآخر لمزيد من اللمعان.</li></ul>",
             "open_by_default": true,
             "truncate_content": false,
             "show_highlights": false
@@ -103,7 +103,7 @@
       "settings": {
         "show_breadcrumbs": true,
         "show_product_vendor": false,
-        "show_rating": true,
+        "show_rating": false,
         "show_inventory": true,
         "show_tax_note": true,
         "show_quantity": true,
