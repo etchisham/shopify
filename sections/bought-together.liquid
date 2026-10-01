@@ -1,5 +1,25 @@
 {% liquid
-  assign related_products = product.metafields.custom.frequently_bought_together.value | default: section.settings.products
+  assign tag_prefix = section.settings.tag_prefix | default: 'collection-' | downcase | replace: ' ', '-'
+  assign prefix_length = tag_prefix | size
+  assign group_handle = ''
+  for tag in product.tags
+    if group_handle == blank
+      assign tag_handle = tag | handleize
+      assign tag_start = tag_handle | slice: 0, prefix_length
+      if tag_start == tag_prefix
+        assign group_handle = tag_handle
+      endif
+    endif
+  endfor
+
+  assign related_products = product.metafields.custom.frequently_bought_together.value
+  if related_products == blank and group_handle != blank
+    assign related_products = collections[group_handle].products
+  endif
+  if related_products == blank
+    assign related_products = section.settings.products
+  endif
+
   assign locale_root = request.locale.iso_code | split: '-' | first
   assign heading = section.settings.heading_en
   if locale_root == 'ar'
@@ -25,10 +45,13 @@
       <div class="bought-together__cards" data-bundle-cards>
         {% render 'bundle-product', product: product, section_id: section.id, current: true %}
         {% assign seen_ids = ',' | append: product.id | append: ',' %}
-        {% for related in related_products limit: 4 %}
+        {% assign shown = 0 %}
+        {% for related in related_products limit: 12 %}
+          {% if shown >= 4 %}{% break %}{% endif %}
           {% assign related_token = ',' | append: related.id | append: ',' %}
           {% unless seen_ids contains related_token %}
             {% assign seen_ids = seen_ids | append: related_token %}
+            {% assign shown = shown | plus: 1 %}
             {% render 'bundle-product', product: related, section_id: section.id %}
             {% if related.available and related.requires_selling_plan == false and related.metafields.custom.personalization_required.value != true %}
               {% assign selected = related.selected_or_first_available_variant %}
@@ -63,6 +86,7 @@
   "settings": [
     { "type": "text", "id": "heading_en", "label": "t:labels.heading_en" },
     { "type": "text", "id": "heading_ar", "label": "t:labels.heading_ar" },
+    { "type": "text", "id": "tag_prefix", "label": "Tag prefix", "default": "collection-" },
     { "type": "product_list", "id": "products", "label": "t:bought_together.products", "limit": 4, "info": "t:bought_together.products_info" }
   ],
   "presets": [{ "name": "t:bought_together.name" }]
