@@ -140,7 +140,7 @@
 .product-recommendations {
   width: 100%;
   max-width: 100%;
-  margin-top: 5rem;
+  margin-top: 2rem;
   padding: 0 0 1rem;
   overflow-x: clip;
 }
@@ -288,15 +288,25 @@
 }
 
 .product-recommendations__price .price {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   gap: 0.35rem;
+  direction: ltr;
+}
+
+html[dir="rtl"] .product-recommendations__price .price {
+  justify-content: flex-end;
 }
 
 .product-recommendations__price .price__current {
+  order: 1;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .product-recommendations__price .price__compare {
+  order: 2;
   font-size: 0.78rem;
 }
 
@@ -308,7 +318,7 @@
 
 @media (max-width: 749px) {
   .product-recommendations {
-    margin-top: 3.5rem;
+    margin-top: 1.25rem;
   }
 
   .product-recommendations__inner {
