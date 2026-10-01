@@ -106,14 +106,6 @@
         "products": []
       }
     },
-    "product_recommendations_N3GPQf": {
-      "type": "product-recommendations",
-      "name": "Product recommendations",
-      "settings": {
-        "collection": "best-sellers",
-        "heading": "You May Also Like"
-      }
-    },
     "1789423886655db41b": {
       "type": "apps",
       "blocks": {
@@ -131,6 +123,14 @@
         "judge_me_reviews_review_widget_LxYaQx"
       ],
       "settings": {}
+    },
+    "product_recommendations_N3GPQf": {
+      "type": "product-recommendations",
+      "name": "Product recommendations",
+      "settings": {
+        "collection": "best-sellers",
+        "heading": "You May Also Like"
+      }
     },
     "trust": {
       "type": "trust-bar",
@@ -178,8 +178,8 @@
   "order": [
     "main",
     "bought_together",
-    "product_recommendations_N3GPQf",
     "1789423886655db41b",
+    "product_recommendations_N3GPQf",
     "trust"
   ]
 }
