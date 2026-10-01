@@ -85,7 +85,7 @@
       ],
       "settings": {
         "show_breadcrumbs": true,
-        "show_product_vendor": false,
+        "show_product_vendor": true,
         "show_rating": true,
         "show_inventory": true,
         "show_tax_note": true,
