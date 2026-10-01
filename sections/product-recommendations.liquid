@@ -1,0 +1,168 @@
+{% liquid
+  assign recommendation_collection = section.settings.collection
+
+  if recommendation_collection == blank
+    assign recommendation_collection = collections['best-sellers']
+  endif
+%}
+
+<section class="product-recommendations" data-product-recommendations>
+  <div class="product-recommendations__inner">
+
+    <div class="product-recommendations__header">
+      <div>
+        {% if section.settings.eyebrow != blank %}
+          <p class="product-recommendations__eyebrow">
+            {{ section.settings.eyebrow | escape }}
+          </p>
+        {% endif %}
+
+        <h2 class="product-recommendations__title">
+          {{ section.settings.heading | escape }}
+        </h2>
+      </div>
+
+      {% if recommendation_collection != blank and recommendation_collection.products_count > 4 %}
+        <div class="product-recommendations__controls">
+          <button
+            type="button"
+            class="product-recommendations__arrow product-recommendations__arrow--prev"
+            data-recommendations-prev
+            aria-label="Previous products"
+          >
+            ←
+          </button>
+
+          <button
+            type="button"
+            class="product-recommendations__arrow product-recommendations__arrow--next"
+            data-recommendations-next
+            aria-label="Next products"
+          >
+            →
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if recommendation_collection != blank and recommendation_collection.products_count > 0 %}
+
+      <div
+        class="product-recommendations__track"
+        data-recommendations-track
+      >
+        {% for product in recommendation_collection.products limit: 12 %}
+          <article class="product-recommendations__item">
+
+            <a
+              href="{{ product.url }}"
+              class="product-recommendations__image-link"
+              aria-label="{{ product.title | escape }}"
+            >
+              {% if product.featured_image != blank %}
+                {{
+                  product.featured_image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '360, 540, 720, 900',
+                    sizes: '(min-width: 990px) 25vw, 50vw',
+                    alt: product.featured_image.alt | default: product.title
+                  }}
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag }}
+              {% endif %}
+            </a>
+
+            <div class="product-recommendations__info">
+              <h3 class="product-recommendations__product-title">
+                <a href="{{ product.url }}">
+                  {{ product.title | escape }}
+                </a>
+              </h3>
+
+              <div class="product-recommendations__price">
+                {% render 'price', product: product %}
+              </div>
+            </div>
+
+          </article>
+        {% endfor %}
+      </div>
+
+    {% else %}
+
+      <p class="product-recommendations__empty">
+        No products available.
+      </p>
+
+    {% endif %}
+
+  </div>
+</section>
+
+<script>
+  (() => {
+    const section = document.currentScript?.previousElementSibling;
+
+    if (!section) return;
+
+    const track = section.querySelector('[data-recommendations-track]');
+    const previous = section.querySelector('[data-recommendations-prev]');
+    const next = section.querySelector('[data-recommendations-next]');
+
+    if (!track) return;
+
+    const getScrollAmount = () => {
+      const item = track.querySelector('.product-recommendations__item');
+
+      if (!item) return track.clientWidth;
+
+      return item.getBoundingClientRect().width + 16;
+    };
+
+    previous?.addEventListener('click', () => {
+      track.scrollBy({
+        left: -getScrollAmount() * 4,
+        behavior: 'smooth'
+      });
+    });
+
+    next?.addEventListener('click', () => {
+      track.scrollBy({
+        left: getScrollAmount() * 4,
+        behavior: 'smooth'
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "YOU MAY ALSO LIKE"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Sellers"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product recommendations"
+    }
+  ]
+}
+{% endschema %}
