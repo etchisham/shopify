@@ -144,9 +144,8 @@
       "settings": {
         "heading_en": "",
         "heading_ar": "",
-        "products": [
-          "fa-eny-karib-ring"
-        ]
+        "tag_prefix": "collection-",
+        "products": []
       }
     },
     "product_recommendations_N3GPQf": {
