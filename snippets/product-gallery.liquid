@@ -212,13 +212,23 @@
       <span data-product-zoom-counter></span>
 
       <button
-  type="button"
-  class="product-zoom__close"
-  data-product-zoom-close
-  aria-label="Close"
->
-  <span aria-hidden="true">×</span>
-</button>
+        type="button"
+        class="product-zoom__toggle"
+        data-product-zoom-toggle
+        data-label-in="Zoom in"
+        data-label-out="Zoom out"
+        aria-label="Zoom in"
+        aria-pressed="false"
+      >+</button>
+
+      <button
+        type="button"
+        class="product-zoom__close"
+        data-product-zoom-close
+        aria-label="Close"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
 
     </div>
 
