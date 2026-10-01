@@ -78,3 +78,4 @@
 @media (min-width: 1000px) {
   .bought-together__summary { margin-block-start: 5rem; }
 }
+.bundle-product h3 > span { display: none; }
