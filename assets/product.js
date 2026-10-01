@@ -719,6 +719,91 @@
   }
 
   /* =========================================================
+     OPTION PILLS (visual layer over the hidden <select>s)
+  ========================================================= */
+
+  function optionPills(root, signal) {
+    const groups = [...root.querySelectorAll('[data-option-pills]')];
+    if (!groups.length) return;
+
+    const selectFor = (group) =>
+      root.querySelector(
+        `[data-product-option][data-option-position="${group.dataset.optionPosition}"]`
+      );
+
+    const sync = () => {
+      groups.forEach((group) => {
+        const select = selectFor(group);
+        if (!select) return;
+
+        group.querySelectorAll('[data-option-value]').forEach((pill) => {
+          const on = pill.dataset.optionValue === select.value;
+
+          pill.setAttribute('aria-checked', String(on));
+          pill.tabIndex = on ? 0 : -1;
+        });
+      });
+    };
+
+    const choose = (pill) => {
+      const group = pill.closest('[data-option-pills]');
+      const select = group && selectFor(group);
+
+      if (!select || select.value === pill.dataset.optionValue) return;
+
+      select.value = pill.dataset.optionValue;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+
+      sync();
+    };
+
+    root.addEventListener(
+      'click',
+      (event) => {
+        const pill = event.target.closest('[data-option-value]');
+        if (pill) choose(pill);
+      },
+      { signal }
+    );
+
+    root.addEventListener(
+      'keydown',
+      (event) => {
+        const pill = event.target.closest('[data-option-value]');
+        if (!pill) return;
+
+        const keys = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'];
+        if (!keys.includes(event.key)) return;
+
+        event.preventDefault();
+
+        const list = [...pill.closest('[data-option-pills]').children];
+        const forward =
+          event.key === 'ArrowDown' ||
+          (event.key === 'ArrowRight' ? !isRtl() : event.key === 'ArrowLeft' && isRtl());
+
+        const target =
+          list[(list.indexOf(pill) + (forward ? 1 : -1) + list.length) % list.length];
+
+        target.focus();
+        choose(target);
+      },
+      { signal }
+    );
+
+    /* Runs after variants() has finished adjusting the selects */
+    root.addEventListener(
+      'change',
+      (event) => {
+        if (event.target.matches('[data-product-option]')) sync();
+      },
+      { signal }
+    );
+
+    sync();
+  }
+
+  /* =========================================================
      PERSONALIZATION
   ========================================================= */
 
@@ -849,6 +934,7 @@
 
       safely('quantity', () => quantity(root, signal));
       safely('variants', () => variants(root, media, signal));
+      safely('optionPills', () => optionPills(root, signal));
       safely('personalization', () => personalization(root, signal));
       safely('descriptions', () => descriptions(root, signal));
     });
