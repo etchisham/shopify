@@ -911,74 +911,81 @@
   const BACK_TO_SEARCH = 'Back to search results';
 
   function backNavigation(root, signal) {
-    if (!document.referrer) return;
+  const ready = () => root.removeAttribute('data-back-pending');
 
-    let ref;
+  if (!document.referrer) return ready();
 
-    try {
-      ref = new URL(document.referrer);
-    } catch (error) {
-      return;
-    }
-
-    if (ref.origin !== window.location.origin) return;
-
-    const isCollection = /\/collections\/[^/]+\/?$/.test(ref.pathname);
-    const isSearch = /\/search\/?$/.test(ref.pathname);
-
-    if (!isCollection && !isSearch) return;
-
-    const href = ref.pathname + ref.search;
-
-    const back = root.querySelector('[data-product-back]');
-    const backLabel = root.querySelector('[data-product-back-label]');
-
-    const crumb = root.querySelector(
-      '.product-breadcrumbs a[href*="/collections/"]'
-    );
-
-    if (back) back.setAttribute('href', href);
-
-    if (crumb) {
-      crumb.setAttribute('href', href);
-      crumb.style.visibility = 'hidden'; /* until the real title is known */
-    }
-
-    const finish = (title) => {
-      if (title) {
-        if (backLabel) backLabel.textContent = `${BACK_TO} ${title}`;
-        if (crumb) crumb.textContent = title;
-      }
-
-      if (crumb) crumb.style.visibility = '';
-    };
-
-    if (isSearch) {
-      if (backLabel) backLabel.textContent = BACK_TO_SEARCH;
-      if (crumb) {
-        crumb.textContent = BACK_TO_SEARCH.replace(/^Back to /, '');
-        crumb.style.visibility = '';
-      }
-      return;
-    }
-
-    fetch(href, { signal, credentials: 'same-origin' })
-      .then((response) => (response.ok ? response.text() : ''))
-      .then((html) => {
-        if (!html) return finish('');
-
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-
-        const heading = doc.querySelector('h1')?.textContent?.trim();
-
-        const fromTitle = doc.title
-          ?.split(/\s[–|\-—]\s/)[0]
-          ?.trim();
-
-        finish(heading || fromTitle || '');
-      })
-      .catch(() => finish(''));
+  let ref;
+  try {
+    ref = new URL(document.referrer);
+  } catch (error) {
+    return ready();
   }
+
+  if (ref.origin !== window.location.origin) return ready();
+
+  const isCollection = /\/collections\/[^/]+\/?$/.test(ref.pathname);
+  const isSearch = /\/search\/?$/.test(ref.pathname);
+
+  if (!isCollection && !isSearch) return ready();
+
+  const href = ref.pathname + ref.search;
+
+  const back = root.querySelector('[data-product-back]');
+  const backLabel = root.querySelector('[data-product-back-label]');
+  const crumb = root.querySelector('.product-breadcrumbs a[href*="/collections/"]');
+
+  if (back) back.setAttribute('href', href);
+  if (crumb) crumb.setAttribute('href', href);
+
+  const apply = (title) => {
+    if (title) {
+      if (backLabel) backLabel.textContent = `${BACK_TO} ${title}`;
+      if (crumb) crumb.textContent = title;
+    }
+    ready();
+  };
+
+  if (isSearch) {
+    if (backLabel) backLabel.textContent = BACK_TO_SEARCH;
+    if (crumb) crumb.textContent = BACK_TO_SEARCH.replace(/^Back to /, '');
+    return ready();
+  }
+
+  const cacheKey = `back-title:${ref.pathname}`;
+
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) return apply(cached);
+  } catch (error) {}
+
+  /* لو الـ fetch اتأخر، اظهر النص الافتراضي بدل ما يفضل مخفي */
+  const timer = setTimeout(ready, 1500);
+
+  fetch(href, { signal, credentials: 'same-origin' })
+    .then((response) => (response.ok ? response.text() : ''))
+    .then((html) => {
+      let title = '';
+
+      if (html) {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const heading = doc.querySelector('h1')?.textContent?.trim();
+        const fromTitle = doc.title?.split(/\s[–|\-—]\s/)[0]?.trim();
+        title = heading || fromTitle || '';
+      }
+
+      if (title) {
+        try { sessionStorage.setItem(cacheKey, title); } catch (error) {}
+      }
+
+      clearTimeout(timer);
+      apply(title);
+    })
+    .catch(() => {
+      clearTimeout(timer);
+      ready();
+    });
+}
 
   /* =========================================================
      INIT
