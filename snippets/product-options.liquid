@@ -1,5 +1,5 @@
 {% doc %}
-  Product variant options resolved by the Section Rendering API.
+  Product variant options.
   @param {product} product - Current product.
   @param {string} section_id - Owning section ID.
 {% enddoc %}
@@ -12,6 +12,8 @@
   >
 
     {% for option in product.options_with_values %}
+
+      {% assign option_index = option.position | minus: 1 %}
 
       <div class="product-form__field product-option-field">
 
@@ -28,25 +30,35 @@
             class="product-option-select"
             data-product-option
             data-option-position="{{ option.position }}"
+            autocomplete="off"
           >
 
             {% for value in option.values %}
 
+              {%- comment -%}
+                Options are never disabled: the script switches to the
+                closest existing variant when a combination is missing.
+                An option is only labelled "sold out" when no variant
+                with that value is available at all.
+              {%- endcomment -%}
+              {%- assign value_available = false -%}
+
+              {%- for variant in product.variants -%}
+                {%- if variant.options[option_index] == value.name and variant.available -%}
+                  {%- assign value_available = true -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+
               <option
                 value="{{ value.name | escape }}"
-                data-product-url="{{ value.product_url }}"
                 {% if value.selected %}
                   selected
                   data-selected
                 {% endif %}
-                {% unless value.available %}
-                  disabled
-                {% endunless %}
               >
-                {{ value.name | default: value | escape }}
-                {% unless value.available %}
-                  — {{ 'products.product.sold_out' | t }}
-                {% endunless %}
+                {{ value.name | escape }}
+                {%- unless value_available %} — {{ 'products.product.sold_out' | t }}{% endunless -%}
               </option>
 
             {% endfor %}
@@ -75,28 +87,19 @@
 
         {% for value in option.values %}
 
-          {% capture option_ids %}
-            {% for other_option in product.options_with_values %}
-              {% unless forloop.first %},{% endunless %}
+          {%- capture option_ids -%}
+            {%- for other_option in product.options_with_values -%}
+              {%- unless forloop.first -%},{%- endunless -%}
 
-              {% if other_option.position == option.position %}
-
-                {{ value.id }}
-
-              {% else %}
-
-                {% for other_value in other_option.values %}
-
-                  {% if other_value.selected %}
-                    {{ other_value.id }}
-                  {% endif %}
-
-                {% endfor %}
-
-              {% endif %}
-
-            {% endfor %}
-          {% endcapture %}
+              {%- if other_option.position == option.position -%}
+                {{- value.id -}}
+              {%- else -%}
+                {%- for other_value in other_option.values -%}
+                  {%- if other_value.selected -%}{{- other_value.id -}}{%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
 
           <a
             href="{{ value.product_url | default: product.url }}?option_values={{ option_ids | strip | url_encode }}"
@@ -104,7 +107,7 @@
               aria-current="true"
             {% endif %}
           >
-            {{ value.name | default: value | escape }}
+            {{ value.name | escape }}
           </a>
 
         {% endfor %}
