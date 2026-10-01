@@ -1089,6 +1089,32 @@
     1px solid var(--etsy-line);
 }
 
+/* Zoom close button */
+.product-zoom__close {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--etsy-ink);
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.product-zoom__close:hover {
+  background: var(--etsy-soft);
+  border-radius: 50%;
+}
+
+.product-zoom__close:focus-visible {
+  outline: 2px solid var(--etsy-ink);
+  outline-offset: 2px;
+}
+
 .product-zoom__header > span {
   margin-inline-end: auto;
 
