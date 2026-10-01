@@ -32,7 +32,7 @@
   padding-inline: 0.9rem 2rem;
   border: 1px solid var(--color-border);
   border-radius: 999px;
-  background-color: #fff;
+  background-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23222' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -44,12 +44,16 @@
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+  -webkit-tap-highlight-color: transparent;
   box-shadow: none;
   transition: border-color 140ms ease;
 }
 [dir='rtl'] .bought-together .bundle-product select { background-position: left 0.75rem center; }
 .bought-together .bundle-product select:hover { border-color: currentColor; }
-.bought-together .bundle-product select:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+/* One single ring only: no outline on top of the border (that caused the oval-inside-oval look) */
+.bought-together .bundle-product select:focus,
+.bought-together .bundle-product select:focus-visible { outline: none; box-shadow: none; border-color: currentColor; }
+.bought-together .bundle-product select:focus-visible { box-shadow: 0 0 0 1px currentColor; }
 .bought-together .bundle-product select:disabled { opacity: 0.5; cursor: not-allowed; }
 .bundle-product__price { margin-block: 0.65rem 0; font-size: 1rem; text-align: center; }
 .bundle-product__unavailable, .bought-together__note { color: var(--color-muted); font-size: 0.8rem; }
