@@ -1,394 +1,685 @@
-{%- liquid
-  assign columns = 'Shop,Categories,About' | split: ','
-
-  assign shop_links = 'all_products_link:All Products|new_arrivals_link:New Arrivals|best_sellers_link:Best Sellers|sale_link:Sale'
-  assign categories_links = 'necklaces_link:Necklaces|rings_link:Rings|pendants_link:Pendants|bracelets_link:Bracelets|keychains_link:Keychains'
-  assign about_links = 'our_story_link:Our Story|contact_link:Contact Us|shipping_link:Shipping|returns_link:Returns'
-
-  assign whatsapp_digits = section.settings.whatsapp_number | strip | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')'
--%}
-
 <footer class="hilya-footer">
-  <div class="hilya-footer__container">
 
-    <div class="hilya-footer__inner">
+  <div class="hilya-footer__inner">
 
-      {%- comment -%} BRAND {%- endcomment -%}
-      <div class="hilya-footer__brand">
-        <a href="{{ routes.root_url }}" class="hilya-footer__logo">Hilya</a>
-        <p>JEWELRY &amp; ACCESSORIES</p>
-      </div>
+    <!-- BRAND -->
 
-      {%- comment -%} LINK COLUMNS (Shop / Categories / About) {%- endcomment -%}
-      {%- for column in columns -%}
-        {%- case column -%}
-          {%- when 'Shop' -%}
-            {%- assign links = shop_links | split: '|' -%}
-          {%- when 'Categories' -%}
-            {%- assign links = categories_links | split: '|' -%}
-          {%- when 'About' -%}
-            {%- assign links = about_links | split: '|' -%}
-        {%- endcase -%}
+    <div class="hilya-footer__brand">
 
-        <div class="hilya-footer__column">
-          <h3>{{ column }}</h3>
+      <a href="{{ routes.root_url }}" class="hilya-footer__logo">
+        Hilya
+      </a>
 
-          {%- for item in links -%}
-            {%- assign parts = item | split: ':' -%}
-            {%- assign link_url = section.settings[parts[0]] -%}
-            {%- if link_url != blank -%}
-              <a href="{{ link_url }}">{{ parts[1] }}</a>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-      {%- endfor -%}
-
-      {%- comment -%} NEWSLETTER {%- endcomment -%}
-      <div class="hilya-footer__newsletter">
-        <h3>Join Our Newsletter</h3>
-
-        <p>Be the first to know about new collections and exclusive offers.</p>
-
-        {%- form 'customer', class: 'hilya-newsletter-form' -%}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-
-          <input
-            type="email"
-            name="contact[email]"
-            placeholder="Your email address"
-            autocomplete="email"
-            aria-label="Your email address"
-            required
-          >
-
-          <button type="submit" aria-label="Subscribe">→</button>
-        {%- endform -%}
-      </div>
+      <p>
+        JEWELRY & ACCESSORIES
+      </p>
 
     </div>
 
-    <div class="hilya-footer__bottom">
 
-      <p>&copy; {{ 'now' | date: '%Y' }} Hilya. All rights reserved.</p>
+    <!-- SHOP -->
 
-      {%- comment -%} SOCIAL ICONS {%- endcomment -%}
-      <div class="hilya-footer__social">
+    <div class="hilya-footer__column">
 
-        {%- if section.settings.instagram_url != blank -%}
-          <a
-            class="hilya-footer__social-link hilya-footer__social-link--instagram"
-            href="{{ section.settings.instagram_url }}"
-            target="_blank"
-            rel="noopener"
-            aria-label="Instagram"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
-              <circle cx="12" cy="12" r="4"></circle>
-              <circle cx="17.5" cy="6.5" r="1"></circle>
-            </svg>
-          </a>
-        {%- endif -%}
+      <h3>Shop</h3>
 
-        {%- if section.settings.facebook_url != blank -%}
-          <a
-            class="hilya-footer__social-link hilya-footer__social-link--facebook"
-            href="{{ section.settings.facebook_url }}"
-            target="_blank"
-            rel="noopener"
-            aria-label="Facebook"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.7.3-1 1-1z"></path>
-            </svg>
-          </a>
-        {%- endif -%}
+      {% if section.settings.all_products_link != blank %}
+        <a href="{{ section.settings.all_products_link }}">
+          All Products
+        </a>
+      {% endif %}
 
-        {%- if whatsapp_digits != blank -%}
-          <a
-            class="hilya-footer__social-link hilya-footer__social-link--whatsapp"
-            href="https://wa.me/{{ whatsapp_digits }}"
-            target="_blank"
-            rel="noopener"
-            aria-label="WhatsApp"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.5-4A8 8 0 1 1 20 11.5z"></path>
-              <path d="M9 8.5c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.3 2.2l.6-.5c.2-.2.4-.2.6-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.4-1.6 1.5-1.1.1-2.8-.7-4.2-1.9-1.4-1.2-2.4-2.8-2.5-3.9-.1-.7.2-1.1.6-1.4z"></path>
-            </svg>
-          </a>
-        {%- endif -%}
+      {% if section.settings.new_arrivals_link != blank %}
+        <a href="{{ section.settings.new_arrivals_link }}">
+          New Arrivals
+        </a>
+      {% endif %}
 
-      </div>
+      {% if section.settings.best_sellers_link != blank %}
+        <a href="{{ section.settings.best_sellers_link }}">
+          Best Sellers
+        </a>
+      {% endif %}
+
+      {% if section.settings.sale_link != blank %}
+        <a href="{{ section.settings.sale_link }}">
+          Sale
+        </a>
+      {% endif %}
+
+    </div>
+
+
+    <!-- CATEGORIES -->
+
+    <div class="hilya-footer__column">
+
+      <h3>Categories</h3>
+
+      {% if section.settings.necklaces_link != blank %}
+        <a href="{{ section.settings.necklaces_link }}">Necklaces</a>
+      {% endif %}
+
+      {% if section.settings.rings_link != blank %}
+        <a href="{{ section.settings.rings_link }}">Rings</a>
+      {% endif %}
+
+      {% if section.settings.pendants_link != blank %}
+        <a href="{{ section.settings.pendants_link }}">Pendants</a>
+      {% endif %}
+
+      {% if section.settings.bracelets_link != blank %}
+        <a href="{{ section.settings.bracelets_link }}">Bracelets</a>
+      {% endif %}
+
+      {% if section.settings.keychains_link != blank %}
+        <a href="{{ section.settings.keychains_link }}">Keychains</a>
+      {% endif %}
+
+    </div>
+
+
+    <!-- ABOUT -->
+
+    <div class="hilya-footer__column">
+
+      <h3>About</h3>
+
+      {% if section.settings.our_story_link != blank %}
+        <a href="{{ section.settings.our_story_link }}">Our Story</a>
+      {% endif %}
+
+      {% if section.settings.contact_link != blank %}
+        <a href="{{ section.settings.contact_link }}">Contact Us</a>
+      {% endif %}
+
+      {% if section.settings.shipping_link != blank %}
+        <a href="{{ section.settings.shipping_link }}">Shipping</a>
+      {% endif %}
+
+      {% if section.settings.returns_link != blank %}
+        <a href="{{ section.settings.returns_link }}">Returns</a>
+      {% endif %}
+
+    </div>
+
+
+    <!-- NEWSLETTER -->
+
+    <div class="hilya-footer__newsletter">
+
+      <h3>Join Our Newsletter</h3>
+
+      <p>
+        Be the first to know about new collections
+        and exclusive offers.
+      </p>
+
+      {% form 'customer', class: 'hilya-newsletter-form' %}
+
+        <input
+          type="email"
+          name="contact[email]"
+          placeholder="Your email address"
+          autocomplete="email"
+          required
+        >
+
+        <button type="submit" aria-label="Subscribe">
+          →
+        </button>
+
+      {% endform %}
+
     </div>
 
   </div>
+
+
+  <!-- BOTTOM -->
+
+  <div class="hilya-footer__bottom">
+
+    <p>
+      © {{ 'now' | date: '%Y' }} Hilya. All rights reserved.
+    </p>
+
+
+    <!-- SOCIAL ICONS -->
+
+    <div class="hilya-footer__social">
+
+      {% if section.settings.instagram_url != blank %}
+
+        <a
+          href="{{ section.settings.instagram_url }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="Instagram"
+        >
+
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1"></circle>
+          </svg>
+
+        </a>
+
+      {% endif %}
+
+
+      {% if section.settings.facebook_url != blank %}
+
+        <a
+          href="{{ section.settings.facebook_url }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="Facebook"
+        >
+
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.7.3-1 1-1z"></path>
+          </svg>
+
+        </a>
+
+      {% endif %}
+
+
+      {% if section.settings.whatsapp_number != blank %}
+
+        <a
+          href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="WhatsApp"
+        >
+
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.5-4A8 8 0 1 1 20 11.5z"></path>
+            <path d="M9 8.5c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.3 2.2l.6-.5c.2-.2.4-.2.6-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.4-1.6 1.5-1.1.1-2.8-.7-4.2-1.9-1.4-1.2-2.4-2.8-2.5-3.9-.1-.7.2-1.1.6-1.4z"></path>
+          </svg>
+
+        </a>
+
+      {% endif %}
+
+    </div>
+
+  </div>
+
 </footer>
 
+
 {% stylesheet %}
+
+.hilya-footer {
+
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+
+  background: #181818;
+  color: #ffffff;
+
+  padding: 42px max(24px, calc((100vw - 1400px) / 2)) 18px;
+
+  box-sizing: border-box;
+
+}
+
+
+.hilya-footer__inner {
+
+  display: grid;
+
+  grid-template-columns: 1.4fr .8fr .8fr .8fr 1.5fr;
+
+  gap: 50px;
+
+  padding-bottom: 32px;
+
+}
+
+
+/* BRAND */
+
+.hilya-footer__logo {
+
+  display: block;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+
+  font-size: 34px;
+
+  line-height: 1;
+
+  font-weight: 500;
+
+  letter-spacing: -.04em;
+
+}
+
+
+.hilya-footer__brand p {
+
+  margin: 8px 0 0;
+
+  color: #aaa;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+  letter-spacing: .18em;
+
+}
+
+
+/* COLUMNS */
+
+.hilya-footer__column {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 8px;
+
+}
+
+
+.hilya-footer h3 {
+
+  margin: 0 0 10px;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  line-height: 1;
+
+  font-weight: 500;
+
+}
+
+
+.hilya-footer__column a {
+
+  color: #aaa;
+
+  text-decoration: none;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  line-height: 1.3;
+
+}
+
+
+.hilya-footer__column a:hover {
+
+  color: #ffffff;
+
+}
+
+
+/* NEWSLETTER */
+
+.hilya-footer__newsletter p {
+
+  max-width: 230px;
+
+  margin: 0 0 13px;
+
+  color: #aaa;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+
+}
+
+
+.hilya-newsletter-form {
+
+  position: relative;
+
+  display: flex;
+
+  width: 100%;
+
+  max-width: 280px;
+
+  height: 31px;
+
+}
+
+
+.hilya-newsletter-form input {
+
+  width: 100%;
+
+  height: 100%;
+
+  padding: 0 38px 0 12px;
+
+  border: 0;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
+  box-sizing: border-box;
+
+}
+
+
+.hilya-newsletter-form button {
+
+  position: absolute;
+
+  top: 0;
+
+  right: 0;
+
+  width: 34px;
+
+  height: 31px;
+
+  border: 0;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+}
+
+
+/* BOTTOM */
+
+.hilya-footer__bottom {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-top: 17px;
+
+  border-top: 1px solid #333;
+
+}
+
+
+.hilya-footer__bottom p {
+
+  margin: 0;
+
+  color: #999;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 8px;
+
+}
+
+
+.hilya-footer__social {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+}
+
+
+.hilya-footer__social a {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 18px;
+
+  height: 18px;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  transition: opacity .2s ease;
+
+}
+
+
+.hilya-footer__social a:hover {
+
+  opacity: .65;
+
+}
+
+
+.hilya-footer__social svg {
+
+  width: 15px;
+
+  height: 15px;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.5;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+
+}
+
+
+.hilya-footer__social a:nth-child(2) svg {
+
+  fill: currentColor;
+
+  stroke: none;
+
+}
+
+
+.hilya-footer__social a:nth-child(3) svg {
+
+  fill: none;
+
+  stroke: currentColor;
+
+}
+
+
+/* TABLET */
+
+@media (min-width: 750px) and (max-width: 1100px) {
+
   .hilya-footer {
-    /* Design tokens */
-    --footer-bg: #181818;
-    --footer-text: #ffffff;
-    --footer-muted: #aaaaaa;
-    --footer-faint: #999999;
-    --footer-border: #333333;
-    --footer-max-width: 1400px;
-    --footer-pad-x: 24px;
-    --footer-gap: 50px;
-    --footer-font: Arial, sans-serif;
-    --footer-font-size: 9px;
+
+    width: 100vw;
+    max-width: 100vw;
+
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    padding: 40px 28px 18px;
 
     box-sizing: border-box;
-    width: 100%;
-    padding: 42px var(--footer-pad-x) 18px;
-    background: var(--footer-bg);
-    color: var(--footer-text);
-    font-family: var(--footer-font);
 
-    /* Safety net: nothing inside the footer can create a sideways scroll */
-    overflow-x: clip;
   }
 
-  .hilya-footer *,
-  .hilya-footer *::before,
-  .hilya-footer *::after {
-    box-sizing: border-box;
-  }
 
-  .hilya-footer__container {
-    width: 100%;
-    max-width: var(--footer-max-width);
-    margin-inline: auto;
-  }
-
-  /* Layout */
   .hilya-footer__inner {
-    display: grid;
+
+    width: 100%;
+
     grid-template-columns:
-      minmax(0, 1.4fr)
-      minmax(0, 0.8fr)
-      minmax(0, 0.8fr)
-      minmax(0, 0.8fr)
-      minmax(0, 1.5fr);
-    gap: var(--footer-gap);
-    padding-bottom: 32px;
+      1.25fr
+      .8fr
+      .8fr
+      .8fr
+      1.2fr;
+
+    gap: 28px;
+
+    padding-bottom: 30px;
+
   }
 
-  /* Brand */
-  .hilya-footer__logo {
-    display: block;
-    color: var(--footer-text);
-    text-decoration: none;
-    font-family: "Cormorant Garamond", "Times New Roman", serif;
-    font-size: 34px;
-    line-height: 1;
-    font-weight: 500;
-    letter-spacing: -0.04em;
-  }
-
-  .hilya-footer__brand p {
-    margin: 8px 0 0;
-    color: var(--footer-muted);
-    font-size: 8px;
-    letter-spacing: 0.18em;
-  }
-
-  /* Headings + columns */
-  .hilya-footer h3 {
-    margin: 0 0 10px;
-    color: var(--footer-text);
-    font-family: var(--footer-font);
-    font-size: var(--footer-font-size);
-    line-height: 1;
-    font-weight: 500;
-  }
-
-  .hilya-footer__column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    min-width: 0;
-  }
-
-  .hilya-footer__column a {
-    color: var(--footer-muted);
-    text-decoration: none;
-    font-size: var(--footer-font-size);
-    line-height: 1.3;
-    overflow-wrap: anywhere;
-  }
-
-  .hilya-footer__column a:hover {
-    color: var(--footer-text);
-  }
-
-  /* Newsletter */
-  .hilya-footer__newsletter {
-    min-width: 0;
-  }
 
   .hilya-footer__newsletter p {
-    max-width: 230px;
-    margin: 0 0 13px;
-    color: var(--footer-muted);
-    font-size: var(--footer-font-size);
-    line-height: 1.5;
+
+    max-width: 210px;
+
   }
+
 
   .hilya-newsletter-form {
-    position: relative;
-    display: flex;
+
+    max-width: 240px;
+
+  }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 749px) {
+
+  .hilya-footer {
+
+    width: 100vw;
+    max-width: 100vw;
+
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    padding: 38px 22px 18px;
+
+    box-sizing: border-box;
+
+  }
+
+
+  .hilya-footer__inner {
+
     width: 100%;
-    max-width: 280px;
-    height: 31px;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 34px 28px;
+
   }
 
-  .hilya-newsletter-form input[type="email"] {
-    width: 100%;
-    min-width: 0;
-    height: 100%;
-    padding-block: 0;
-    padding-inline: 12px 38px;
-    border: 0;
-    border-radius: 0;
-    outline: none;
-    background: #ffffff;
-    color: #111111;
-    font-family: var(--footer-font);
-    font-size: var(--footer-font-size);
+
+  .hilya-footer__brand {
+
+    grid-column: 1 / -1;
+
   }
 
-  .hilya-newsletter-form button {
-    position: absolute;
-    inset-block: 0;
-    inset-inline-end: 0;
-    width: 34px;
-    border: 0;
-    border-radius: 0;
-    background: #ffffff;
-    color: #111111;
-    font-size: 15px;
-    cursor: pointer;
+
+  .hilya-footer__newsletter {
+
+    grid-column: 1 / -1;
+
   }
 
-  /* Bottom bar */
+
+  .hilya-footer__logo {
+
+    font-size: 34px;
+
+  }
+
+
   .hilya-footer__bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding-top: 17px;
-    border-top: 1px solid var(--footer-border);
+
+    width: 100%;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
   }
 
-  .hilya-footer__bottom p {
-    margin: 0;
-    color: var(--footer-faint);
-    font-size: 8px;
-  }
 
   .hilya-footer__social {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+
+    gap: 18px;
+
   }
 
-  .hilya-footer__social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    color: var(--footer-text);
-    text-decoration: none;
-    transition: opacity 0.2s ease;
-  }
+}
 
-  .hilya-footer__social-link:hover {
-    opacity: 0.65;
-  }
-
-  .hilya-footer__social-link svg {
-    width: 15px;
-    height: 15px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  /* Facebook icon is a filled shape (class-based, so it still works if another icon is hidden) */
-  .hilya-footer__social-link--facebook svg {
-    fill: currentColor;
-    stroke: none;
-  }
-
-  /* Tablet */
-  @media (min-width: 750px) and (max-width: 1100px) {
-    .hilya-footer {
-      --footer-pad-x: 28px;
-      --footer-gap: 28px;
-      padding-top: 40px;
-    }
-
-    .hilya-footer__inner {
-      grid-template-columns:
-        minmax(0, 1.25fr)
-        minmax(0, 0.8fr)
-        minmax(0, 0.8fr)
-        minmax(0, 0.8fr)
-        minmax(0, 1.2fr);
-      padding-bottom: 30px;
-    }
-
-    .hilya-footer__newsletter p {
-      max-width: 210px;
-    }
-
-    .hilya-newsletter-form {
-      max-width: 240px;
-    }
-  }
-
-  /* Mobile */
-  @media (max-width: 749px) {
-    .hilya-footer {
-      --footer-pad-x: 22px;
-      padding-top: 38px;
-    }
-
-    .hilya-footer__inner {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 34px 28px;
-    }
-
-    .hilya-footer__brand,
-    .hilya-footer__newsletter {
-      grid-column: 1 / -1;
-    }
-
-    .hilya-footer__bottom {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .hilya-footer__social {
-      gap: 18px;
-    }
-  }
 {% endstylesheet %}
 
+
 {% schema %}
+
 {
+
   "name": "Hilya Footer",
+
   "settings": [
-    { "type": "header", "content": "Social Media" },
-    { "type": "url", "id": "instagram_url", "label": "Instagram link" },
-    { "type": "url", "id": "facebook_url", "label": "Facebook link" },
+
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram link"
+    },
+
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook link"
+    },
+
     {
       "type": "text",
       "id": "whatsapp_number",
@@ -396,25 +687,112 @@
       "info": "Enter your WhatsApp number with country code, for example: 201012345678"
     },
 
-    { "type": "header", "content": "Shop Links" },
-    { "type": "url", "id": "all_products_link", "label": "All Products link" },
-    { "type": "url", "id": "new_arrivals_link", "label": "New Arrivals link" },
-    { "type": "url", "id": "best_sellers_link", "label": "Best Sellers link" },
-    { "type": "url", "id": "sale_link", "label": "Sale link" },
 
-    { "type": "header", "content": "Category Links" },
-    { "type": "url", "id": "necklaces_link", "label": "Necklaces link" },
-    { "type": "url", "id": "rings_link", "label": "Rings link" },
-    { "type": "url", "id": "pendants_link", "label": "Pendants link" },
-    { "type": "url", "id": "bracelets_link", "label": "Bracelets link" },
-    { "type": "url", "id": "keychains_link", "label": "Keychains link" },
+    {
+      "type": "header",
+      "content": "Shop Links"
+    },
 
-    { "type": "header", "content": "About Links" },
-    { "type": "url", "id": "our_story_link", "label": "Our Story link" },
-    { "type": "url", "id": "contact_link", "label": "Contact Us link" },
-    { "type": "url", "id": "shipping_link", "label": "Shipping link" },
-    { "type": "url", "id": "returns_link", "label": "Returns link" }
+    {
+      "type": "url",
+      "id": "all_products_link",
+      "label": "All Products link"
+    },
+
+    {
+      "type": "url",
+      "id": "new_arrivals_link",
+      "label": "New Arrivals link"
+    },
+
+    {
+      "type": "url",
+      "id": "best_sellers_link",
+      "label": "Best Sellers link"
+    },
+
+    {
+      "type": "url",
+      "id": "sale_link",
+      "label": "Sale link"
+    },
+
+
+    {
+      "type": "header",
+      "content": "Category Links"
+    },
+
+    {
+      "type": "url",
+      "id": "necklaces_link",
+      "label": "Necklaces link"
+    },
+
+    {
+      "type": "url",
+      "id": "rings_link",
+      "label": "Rings link"
+    },
+
+    {
+      "type": "url",
+      "id": "pendants_link",
+      "label": "Pendants link"
+    },
+
+    {
+      "type": "url",
+      "id": "bracelets_link",
+      "label": "Bracelets link"
+    },
+
+    {
+      "type": "url",
+      "id": "keychains_link",
+      "label": "Keychains link"
+    },
+
+
+    {
+      "type": "header",
+      "content": "About Links"
+    },
+
+    {
+      "type": "url",
+      "id": "our_story_link",
+      "label": "Our Story link"
+    },
+
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact Us link"
+    },
+
+    {
+      "type": "url",
+      "id": "shipping_link",
+      "label": "Shipping link"
+    },
+
+    {
+      "type": "url",
+      "id": "returns_link",
+      "label": "Returns link"
+    }
+
   ],
-  "presets": [{ "name": "Hilya Footer" }]
+
+  "presets": [
+
+    {
+      "name": "Hilya Footer"
+    }
+
+  ]
+
 }
+
 {% endschema %}
