@@ -1,8 +1,13 @@
+```javascript
 (() => {
   const controllers = new WeakMap();
 
   const reducedMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* =========================================================
+     GALLERY
+  ========================================================= */
 
   function gallery(root, signal) {
     const node = root.querySelector('[data-product-gallery]');
@@ -13,125 +18,58 @@
     const thumbnails = [...node.querySelectorAll('[data-product-thumbnail]')];
     const previous = node.querySelector('[data-product-previous]');
     const next = node.querySelector('[data-product-next]');
-    const rail = node.querySelector('[data-product-thumbnails]');
+    const status = node.querySelector('[data-product-media-status]');
+
+    if (!track || !slides.length) {
+      return { selectMedia: () => {} };
+    }
 
     let active = -1;
-    let scrollFrame;
+    let scrollFrame = null;
 
-    const revealThumbnail = thumbnail => {
-      if (!thumbnail || !rail) return;
-
-      const box = rail.getBoundingClientRect();
-      const item = thumbnail.getBoundingClientRect();
-
-      if (rail.scrollHeight > rail.clientHeight) {
-        const top =
-          item.top < box.top
-            ? item.top - box.top
-            : item.bottom > box.bottom
-              ? item.bottom - box.bottom
-              : 0;
-
-        if (top) {
-          rail.scrollBy({
-            top,
-            behavior: reducedMotion() ? 'auto' : 'smooth'
-          });
-        }
-      } else {
-        const left =
-          item.left < box.left
-            ? item.left - box.left
-            : item.right > box.right
-              ? item.right - box.right
-              : 0;
-
-        if (left) {
-          rail.scrollBy({
-            left,
-            behavior: reducedMotion() ? 'auto' : 'smooth'
-          });
-        }
-      }
-    };
-
-    const mark = index => {
-      if (index < 0 || index >= slides.length || active === index) return;
+    const mark = (index) => {
+      if (index < 0 || index >= slides.length) return;
 
       active = index;
 
-      slides.forEach((slide, position) => {
-        slide.inert = position !== index;
-        slide.setAttribute(
-          'aria-hidden',
-          String(position !== index)
-        );
+      slides.forEach((slide, i) => {
+        const isActive = i === index;
 
-        if (position === index) return;
-
-        slide.querySelectorAll('video').forEach(video => video.pause());
-
-        slide.querySelectorAll('iframe').forEach(frame => {
-          try {
-            const origin = new URL(frame.src).origin;
-            const host = new URL(frame.src).hostname;
-
-            if (
-              /(^|\.)(
-                youtube\.com|
-                youtube-nocookie\.com
-              )$/x.test(host)
-            ) {
-              frame.contentWindow.postMessage(
-                JSON.stringify({
-                  event: 'command',
-                  func: 'pauseVideo',
-                  args: []
-                }),
-                origin
-              );
-            }
-
-            if (/(^|\.)vimeo\.com$/.test(host)) {
-              frame.contentWindow.postMessage(
-                { method: 'pause' },
-                origin
-              );
-            }
-          } catch (_error) {}
-        });
+        slide.inert = !isActive;
+        slide.setAttribute('aria-hidden', String(!isActive));
       });
 
-      thumbnails.forEach((thumbnail, position) => {
+      thumbnails.forEach((thumbnail, i) => {
         thumbnail.disabled = false;
-        thumbnail.tabIndex = position === index ? 0 : -1;
+        thumbnail.tabIndex = i === index ? 0 : -1;
 
-        if (position === index) {
+        if (i === index) {
           thumbnail.setAttribute('aria-current', 'true');
         } else {
           thumbnail.removeAttribute('aria-current');
         }
       });
 
-      if (previous) previous.disabled = index === 0;
-      if (next) next.disabled = index === slides.length - 1;
+      if (previous) {
+        previous.disabled = index <= 0;
+      }
+
+      if (next) {
+        next.disabled = index >= slides.length - 1;
+      }
 
       const counter = node.querySelector(
         '[data-product-media-counter]'
       );
 
-      if (counter) counter.textContent = index + 1;
-
-      const status = node.querySelector(
-        '[data-product-media-status]'
-      );
+      if (counter) {
+        counter.textContent = String(index + 1);
+      }
 
       if (status) {
         status.textContent =
           slides[index].getAttribute('aria-label') || '';
       }
-
-      revealThumbnail(thumbnails[index]);
     };
 
     const go = (index, smooth = true) => {
@@ -142,20 +80,12 @@
         Math.min(slides.length - 1, index)
       );
 
-      const target = slides[index].getBoundingClientRect();
-      const box = track.getBoundingClientRect();
-
-      const rtl =
-        getComputedStyle(track).direction === 'rtl';
-
-      const delta = rtl
-        ? target.right - box.right
-        : target.left - box.left;
+      const slide = slides[index];
 
       mark(index);
 
       track.scrollTo({
-        left: track.scrollLeft + delta,
+        left: slide.offsetLeft,
         behavior:
           smooth && !reducedMotion()
             ? 'smooth'
@@ -166,75 +96,28 @@
     thumbnails.forEach((thumbnail, index) => {
       thumbnail.addEventListener(
         'click',
-        () => go(index),
+        (event) => {
+          event.preventDefault();
+          go(index);
+        },
         { signal }
       );
     });
 
     previous?.addEventListener(
       'click',
-      () => go(active - 1),
+      (event) => {
+        event.preventDefault();
+        go(active - 1);
+      },
       { signal }
     );
 
     next?.addEventListener(
       'click',
-      () => go(active + 1),
-      { signal }
-    );
-
-    node.addEventListener(
-      'keydown',
-      event => {
-        if (
-          event.target !== track &&
-          !event.target.closest('[data-product-thumbnail]')
-        ) {
-          return;
-        }
-
-        const rtl =
-          getComputedStyle(track).direction === 'rtl';
-
-        let index;
-
-        if (event.key === 'ArrowRight') {
-          index = active + (rtl ? -1 : 1);
-        }
-
-        if (event.key === 'ArrowLeft') {
-          index = active + (rtl ? 1 : -1);
-        }
-
-        if (event.key === 'ArrowDown') {
-          index = active + 1;
-        }
-
-        if (event.key === 'ArrowUp') {
-          index = active - 1;
-        }
-
-        if (event.key === 'Home') {
-          index = 0;
-        }
-
-        if (event.key === 'End') {
-          index = slides.length - 1;
-        }
-
-        if (index === undefined) return;
-
+      (event) => {
         event.preventDefault();
-
-        go(index);
-
-        if (
-          event.target.closest('[data-product-thumbnail]')
-        ) {
-          thumbnails[active]?.focus({
-            preventScroll: true
-          });
-        }
+        go(active + 1);
       },
       { signal }
     );
@@ -245,26 +128,34 @@
         cancelAnimationFrame(scrollFrame);
 
         scrollFrame = requestAnimationFrame(() => {
-          const box = track.getBoundingClientRect();
-          const center = (box.left + box.right) / 2;
+          const trackRect =
+            track.getBoundingClientRect();
+
+          const center =
+            (trackRect.left + trackRect.right) / 2;
 
           let closest = 0;
           let distance = Infinity;
 
           slides.forEach((slide, index) => {
-            const rect = slide.getBoundingClientRect();
+            const rect =
+              slide.getBoundingClientRect();
 
-            const gap = Math.abs(
-              (rect.left + rect.right) / 2 - center
-            );
+            const slideCenter =
+              (rect.left + rect.right) / 2;
 
-            if (gap < distance) {
+            const currentDistance =
+              Math.abs(slideCenter - center);
+
+            if (currentDistance < distance) {
+              distance = currentDistance;
               closest = index;
-              distance = gap;
             }
           });
 
-          mark(closest);
+          if (closest !== active) {
+            mark(closest);
+          }
         });
       },
       {
@@ -273,299 +164,777 @@
       }
     );
 
-    const resize = new ResizeObserver(() =>
-      go(active, false)
-    );
-
-    resize.observe(track);
-
     signal.addEventListener(
       'abort',
       () => {
-        resize.disconnect();
         cancelAnimationFrame(scrollFrame);
       },
       { once: true }
     );
 
-    go(
-      Number(node.dataset.initialIndex) || 0,
-      false
-    );
+    const initialIndex =
+      Number(node.dataset.initialIndex) || 0;
+
+    go(initialIndex, false);
+
+    /* -------------------------
+       ZOOM
+    ------------------------- */
 
     const dialog = node.querySelector(
       '[data-product-zoom-dialog]'
     );
 
-    if (!dialog) {
-      return {
-        selectMedia: id => {
-          const index = slides.findIndex(
-            slide =>
-              slide.dataset.productMedia === String(id)
-          );
+    if (dialog) {
+      const images = slides.filter(
+        (slide) =>
+          slide.dataset.mediaType === 'image'
+      );
 
-          if (index >= 0) go(index);
-        }
-      };
-    }
+      const canvas = dialog.querySelector(
+        '[data-product-zoom-canvas]'
+      );
 
-    const images = slides.filter(
-      slide => slide.dataset.mediaType === 'image'
-    );
+      const closeButton = dialog.querySelector(
+        '[data-product-zoom-close]'
+      );
 
-    const canvas = dialog.querySelector(
-      '[data-product-zoom-canvas]'
-    );
+      const zoomPrevious = dialog.querySelector(
+        '[data-product-zoom-previous]'
+      );
 
-    const toggle = dialog.querySelector(
-      '[data-product-zoom-toggle]'
-    );
+      const zoomNext = dialog.querySelector(
+        '[data-product-zoom-next]'
+      );
 
-    const zoomPrevious = dialog.querySelector(
-      '[data-product-zoom-previous]'
-    );
+      let zoomIndex = 0;
+      let zoomOpener = null;
 
-    const zoomNext = dialog.querySelector(
-      '[data-product-zoom-next]'
-    );
+      const renderZoom = () => {
+        if (!images.length || !canvas) return;
 
-    let zoomIndex = 0;
-    let zoomOpener;
+        const slide = images[zoomIndex];
 
-    const renderZoom = () => {
-      if (!images.length) return;
-
-      const link =
-        images[zoomIndex].querySelector(
+        const link = slide.querySelector(
           '[data-product-zoom]'
         );
 
-      if (!link) return;
+        if (!link) return;
 
-      let image = canvas.querySelector('img');
+        let image = canvas.querySelector('img');
 
-      if (!image) {
-        image = document.createElement('img');
-        image.width = 2400;
-        image.height = 2400;
-        canvas.append(image);
-      }
+        if (!image) {
+          image = document.createElement('img');
+          canvas.appendChild(image);
+        }
 
-      image.src = link.dataset.zoomSrc;
-      image.alt = link.dataset.zoomAlt;
+        image.src = link.dataset.zoomSrc || '';
+        image.alt = link.dataset.zoomAlt || '';
 
-      const counter = dialog.querySelector(
-        '[data-product-zoom-counter]'
+        const counter = dialog.querySelector(
+          '[data-product-zoom-counter]'
+        );
+
+        if (counter) {
+          counter.textContent =
+            slide.getAttribute('aria-label') || '';
+        }
+
+        if (zoomPrevious) {
+          zoomPrevious.disabled =
+            zoomIndex === 0;
+        }
+
+        if (zoomNext) {
+          zoomNext.disabled =
+            zoomIndex === images.length - 1;
+        }
+      };
+
+      node.addEventListener(
+        'click',
+        (event) => {
+          const link =
+            event.target.closest(
+              '[data-product-zoom]'
+            );
+
+          if (!link) return;
+
+          event.preventDefault();
+
+          const slide =
+            link.closest(
+              '[data-product-media]'
+            );
+
+          const index =
+            images.indexOf(slide);
+
+          zoomIndex =
+            index >= 0 ? index : 0;
+
+          zoomOpener = link;
+
+          renderZoom();
+
+          if (typeof dialog.showModal === 'function') {
+            dialog.showModal();
+          } else {
+            dialog.setAttribute('open', '');
+          }
+        },
+        { signal }
       );
 
-      if (counter) {
-        counter.textContent =
-          images[zoomIndex].getAttribute('aria-label');
-      }
+      closeButton?.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
 
-      zoomPrevious.disabled = zoomIndex === 0;
-      zoomNext.disabled =
-        zoomIndex === images.length - 1;
-
-      canvas.classList.remove('is-zoomed');
-      canvas.scrollTo({
-        top: 0,
-        left: 0
-      });
-
-      toggle.setAttribute(
-        'aria-pressed',
-        'false'
+          if (typeof dialog.close === 'function') {
+            dialog.close();
+          } else {
+            dialog.removeAttribute('open');
+          }
+        },
+        { signal }
       );
 
-      toggle.textContent =
-        toggle.dataset.zoomIn;
+      dialog.addEventListener(
+        'cancel',
+        (event) => {
+          event.preventDefault();
 
-      go(
-        Number(images[zoomIndex].dataset.mediaIndex),
-        false
+          if (typeof dialog.close === 'function') {
+            dialog.close();
+          } else {
+            dialog.removeAttribute('open');
+          }
+        },
+        { signal }
+      );
+
+      dialog.addEventListener(
+        'click',
+        (event) => {
+          if (event.target === dialog) {
+            if (typeof dialog.close === 'function') {
+              dialog.close();
+            } else {
+              dialog.removeAttribute('open');
+            }
+          }
+        },
+        { signal }
+      );
+
+      dialog.addEventListener(
+        'close',
+        () => {
+          zoomOpener?.focus({
+            preventScroll: true
+          });
+
+          zoomOpener = null;
+        },
+        { signal }
+      );
+
+      zoomPrevious?.addEventListener(
+        'click',
+        () => {
+          if (zoomIndex > 0) {
+            zoomIndex--;
+            renderZoom();
+          }
+        },
+        { signal }
+      );
+
+      zoomNext?.addEventListener(
+        'click',
+        () => {
+          if (zoomIndex < images.length - 1) {
+            zoomIndex++;
+            renderZoom();
+          }
+        },
+        { signal }
+      );
+
+      dialog.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+
+            if (typeof dialog.close === 'function') {
+              dialog.close();
+            } else {
+              dialog.removeAttribute('open');
+            }
+
+            return;
+          }
+
+          if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            zoomNext?.click();
+          }
+
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            zoomPrevious?.click();
+          }
+        },
+        { signal }
+      );
+    }
+
+    return {
+      selectMedia: (id) => {
+        const index =
+          slides.findIndex(
+            (slide) =>
+              String(slide.dataset.productMedia) ===
+              String(id)
+          );
+
+        if (index >= 0) {
+          go(index);
+        }
+      }
+    };
+  }
+
+  /* =========================================================
+     QUANTITY
+  ========================================================= */
+
+  function quantity(root, signal) {
+    const getInput = (button) => {
+      const wrapper =
+        button.closest('.quantity-selector');
+
+      return wrapper?.querySelector(
+        '[data-quantity-input]'
       );
     };
 
-    node.addEventListener(
-      'click',
-      event => {
-        const link =
-          event.target.closest('[data-product-zoom]');
+    const normalize = (input, value) => {
+      const min =
+        Number(input.min) || 1;
 
+      const step =
+        Number(input.step) || 1;
+
+      const max =
+        input.max !== ''
+          ? Number(input.max)
+          : Infinity;
+
+      value = Number(value);
+
+      if (!Number.isFinite(value)) {
+        value = min;
+      }
+
+      value = Math.max(min, value);
+      value = Math.min(max, value);
+
+      const steps =
+        Math.round((value - min) / step);
+
+      value =
+        min + steps * step;
+
+      value = Math.max(min, value);
+      value = Math.min(max, value);
+
+      input.value = String(value);
+
+      input.dispatchEvent(
+        new Event('change', {
+          bubbles: true
+        })
+      );
+    };
+
+    root.addEventListener(
+      'click',
+      (event) => {
+        const plus =
+          event.target.closest(
+            '[data-quantity-plus]'
+          );
+
+        const minus =
+          event.target.closest(
+            '[data-quantity-minus]'
+          );
+
+        if (!plus && !minus) return;
+
+        event.preventDefault();
+
+        const input =
+          getInput(plus || minus);
+
+        if (!input) return;
+
+        const step =
+          Number(input.step) || 1;
+
+        const current =
+          Number(input.value) ||
+          Number(input.min) ||
+          1;
+
+        if (plus) {
+          normalize(
+            input,
+            current + step
+          );
+        } else {
+          normalize(
+            input,
+            current - step
+          );
+        }
+      },
+      { signal }
+    );
+
+    root.addEventListener(
+      'change',
+      (event) => {
         if (
-          !link ||
-          typeof dialog.showModal !== 'function'
+          !event.target.matches(
+            '[data-quantity-input]'
+          )
         ) {
           return;
         }
 
-        event.preventDefault();
-
-        zoomOpener = link;
-
-        zoomIndex = images.indexOf(
-          link.closest('[data-product-media]')
+        normalize(
+          event.target,
+          event.target.value
         );
-
-        renderZoom();
-
-        dialog.showModal();
       },
       { signal }
     );
+  }
 
-    dialog
-      .querySelector('[data-product-zoom-close]')
-      ?.addEventListener(
-        'click',
-        () => dialog.close(),
-        { signal }
+  /* =========================================================
+     VARIANTS
+  ========================================================= */
+
+  function variants(root, media, signal) {
+    const form =
+      root.querySelector('.product-form');
+
+    if (!form) return;
+
+    const selects = [
+      ...root.querySelectorAll(
+        '[data-product-option]'
+      )
+    ];
+
+    if (!selects.length) return;
+
+    const variantData =
+      root.querySelector(
+        '[data-product-variants-json]'
       );
 
-    dialog.addEventListener(
-      'close',
-      () => {
-        const target =
-          zoomOpener?.closest('[data-product-media]')
-            ?.inert
-            ? track
-            : zoomOpener;
+    if (!variantData) {
+      console.error(
+        'Hilya: variant JSON is missing.'
+      );
+      return;
+    }
 
-        target?.focus({
-          preventScroll: true
-        });
-      },
-      { signal }
-    );
+    let variantsList = [];
 
-    dialog.addEventListener(
-      'click',
-      event => {
-        if (event.target === dialog) {
-          dialog.close();
-        }
-      },
-      { signal }
-    );
+    try {
+      variantsList =
+        JSON.parse(
+          variantData.textContent
+        );
+    } catch (error) {
+      console.error(
+        'Hilya: invalid variant JSON.',
+        error
+      );
+      return;
+    }
 
-    zoomPrevious?.addEventListener(
-      'click',
-      () => {
-        if (zoomIndex > 0) {
-          zoomIndex--;
-          renderZoom();
-        }
-      },
-      { signal }
-    );
-
-    zoomNext?.addEventListener(
-      'click',
-      () => {
-        if (zoomIndex < images.length - 1) {
-          zoomIndex++;
-          renderZoom();
-        }
-      },
-      { signal }
-    );
-
-    dialog.addEventListener(
-      'keydown',
-      event => {
-        const rtl =
-          getComputedStyle(track).direction === 'rtl';
-
-        if (
-          event.key ===
-          (rtl ? 'ArrowLeft' : 'ArrowRight')
-        ) {
-          event.preventDefault();
-          zoomNext?.click();
-        }
-
-        if (
-          event.key ===
-          (rtl ? 'ArrowRight' : 'ArrowLeft')
-        ) {
-          event.preventDefault();
-          zoomPrevious?.click();
-        }
-      },
-      { signal }
-    );
-
-    toggle?.addEventListener(
-      'click',
-      () => {
-        const zoomed =
-          canvas.classList.toggle('is-zoomed');
-
-        toggle.setAttribute(
-          'aria-pressed',
-          String(zoomed)
+    const findVariant = () => {
+      const selectedValues =
+        selects.map(
+          (select) => select.value
         );
 
-        toggle.textContent =
-          zoomed
-            ? toggle.dataset.zoomOut
-            : toggle.dataset.zoomIn;
-      },
-      { signal }
-    );
+      return variantsList.find(
+        (variant) => {
+          if (!variant.options) {
+            return false;
+          }
 
-    return {
-      selectMedia: id => {
-        const index = slides.findIndex(
-          slide =>
-            slide.dataset.productMedia === String(id)
-        );
-
-        if (index >= 0) go(index);
-      }
+          return variant.options.every(
+            (optionValue, index) =>
+              String(optionValue) ===
+              String(selectedValues[index])
+          );
+        }
+      );
     };
+
+    const update = () => {
+      const variant =
+        findVariant();
+
+      if (!variant) {
+        return;
+      }
+
+      const variantId =
+        root.querySelector(
+          '[data-product-variant-id]'
+        );
+
+      const variantInput =
+        form.querySelector(
+          'input[name="id"]'
+        );
+
+      if (variantInput) {
+        variantInput.value =
+          variant.id;
+      }
+
+      if (variantId) {
+        variantId.textContent =
+          variant.id;
+      }
+
+      root.dataset.productPrice =
+        variant.price;
+
+      /* Price */
+
+      const priceCurrent =
+        root.querySelector(
+          '.product-page__price .price__current'
+        );
+
+      if (priceCurrent) {
+        priceCurrent.textContent =
+          variant.price_formatted;
+      }
+
+      /* Compare at price */
+
+      const compare =
+        root.querySelector(
+          '[data-variant-compare-price]'
+        );
+
+      if (compare) {
+        if (
+          variant.compare_at_price &&
+          Number(variant.compare_at_price) >
+            Number(variant.price)
+        ) {
+          compare.textContent =
+            variant.compare_at_price_formatted;
+
+          compare.hidden = false;
+        } else {
+          compare.hidden = true;
+        }
+      }
+
+      /* Availability */
+
+      const add =
+        root.querySelector(
+          '[data-product-add]'
+        );
+
+      const buy =
+        root.querySelector(
+          '[data-product-buy]'
+        );
+
+      if (add) {
+        add.disabled =
+          !variant.available;
+
+        if (variant.available) {
+          add.removeAttribute(
+            'data-unavailable'
+          );
+        } else {
+          add.dataset.unavailable =
+            'true';
+        }
+
+        const label =
+          add.querySelector(
+            '[data-product-add-label]'
+          );
+
+        if (label) {
+          label.textContent =
+            variant.available
+              ? 'Add to cart'
+              : 'Sold out';
+        }
+      }
+
+      if (buy) {
+        buy.disabled =
+          !variant.available;
+      }
+
+      /* Quantity */
+
+      const quantityInput =
+        root.querySelector(
+          '[data-quantity-input]'
+        );
+
+      if (quantityInput) {
+        const min =
+          variant.quantity_rule?.min || 1;
+
+        const step =
+          variant.quantity_rule?.increment || 1;
+
+        const max =
+          variant.quantity_rule?.max;
+
+        quantityInput.min =
+          String(min);
+
+        quantityInput.step =
+          String(step);
+
+        if (max) {
+          quantityInput.max =
+            String(max);
+        } else {
+          quantityInput.removeAttribute(
+            'max'
+          );
+        }
+
+        const current =
+          Number(quantityInput.value) ||
+          min;
+
+        quantityInput.value =
+          String(
+            Math.max(
+              min,
+              max
+                ? Math.min(max, current)
+                : current
+            )
+          );
+      }
+
+      /* Featured image */
+
+      if (variant.featured_media_id) {
+        media.selectMedia(
+          variant.featured_media_id
+        );
+      }
+
+      /* URL */
+
+      const url =
+        new URL(
+          window.location.href
+        );
+
+      url.searchParams.set(
+        'variant',
+        variant.id
+      );
+
+      history.replaceState(
+        history.state,
+        '',
+        url.href
+      );
+
+      document.dispatchEvent(
+        new CustomEvent(
+          'theme:product-variant',
+          {
+            detail: variant
+          }
+        )
+      );
+    };
+
+    selects.forEach((select) => {
+      select.addEventListener(
+        'change',
+        update,
+        { signal }
+      );
+    });
+
+    update();
   }
+
+  /* =========================================================
+     PERSONALIZATION
+  ========================================================= */
+
+  function personalization(root, signal) {
+    const form =
+      root.querySelector('.product-form');
+
+    if (!form) return;
+
+    form.addEventListener(
+      'submit',
+      (event) => {
+        const nameRequired =
+          root.dataset.nameRequired ===
+          'true';
+
+        const dateRequired =
+          root.dataset.dateRequired ===
+          'true';
+
+        const name =
+          form.querySelector(
+            '[data-personalization-name]'
+          );
+
+        const date =
+          form.querySelector(
+            '[data-personalization-date]'
+          );
+
+        if (
+          nameRequired &&
+          name &&
+          !name.value.trim()
+        ) {
+          event.preventDefault();
+
+          name.setCustomValidity(
+            'Please enter the name.'
+          );
+
+          name.reportValidity();
+
+          return;
+        }
+
+        if (name) {
+          name.setCustomValidity('');
+        }
+
+        if (
+          dateRequired &&
+          date &&
+          !date.value
+        ) {
+          event.preventDefault();
+
+          date.setCustomValidity(
+            'Please select the date.'
+          );
+
+          date.reportValidity();
+
+          return;
+        }
+
+        if (date) {
+          date.setCustomValidity('');
+        }
+      },
+      {
+        capture: true,
+        signal
+      }
+    );
+
+    form.addEventListener(
+      'input',
+      (event) => {
+        if (
+          event.target.matches(
+            '[data-personalization-name], [data-personalization-date]'
+          )
+        ) {
+          event.target.setCustomValidity('');
+        }
+      },
+      { signal }
+    );
+  }
+
+  /* =========================================================
+     DESCRIPTION
+  ========================================================= */
 
   function descriptions(root, signal) {
     root
       .querySelectorAll(
         '[data-product-description][data-truncate]'
       )
-      .forEach(node => {
-        const text = node.querySelector(
-          '[data-description-text]'
-        );
+      .forEach((node) => {
+        const text =
+          node.querySelector(
+            '[data-description-text]'
+          );
 
-        const button = node.querySelector(
-          '[data-description-more]'
-        );
+        const button =
+          node.querySelector(
+            '[data-description-more]'
+          );
 
-        if (!text || !button) return;
+        const details =
+          node.closest('details');
 
-        const details = node.closest('details');
-
-        if (!details) return;
+        if (!text || !button || !details) {
+          return;
+        }
 
         const measure = () => {
           if (
-            button.getAttribute('aria-expanded') ===
-              'true' ||
+            button.getAttribute(
+              'aria-expanded'
+            ) === 'true' ||
             !details.open
           ) {
             return;
           }
 
-          node.classList.add('is-collapsed');
+          node.classList.add(
+            'is-collapsed'
+          );
 
-          const overflows =
+          const overflow =
             text.scrollHeight >
             text.clientHeight + 2;
 
-          button.hidden = !overflows;
+          button.hidden =
+            !overflow;
 
-          if (!overflows) {
+          if (!overflow) {
             node.classList.remove(
               'is-collapsed'
             );
@@ -584,11 +953,6 @@
               'aria-expanded',
               String(expanded)
             );
-
-            button.textContent =
-              expanded
-                ? button.dataset.less
-                : button.dataset.more;
 
             node.classList.toggle(
               'is-collapsed',
@@ -613,638 +977,23 @@
           }
         );
 
-        text
-          .querySelectorAll('img')
-          .forEach(image =>
-            image.addEventListener(
-              'load',
-              measure,
-              { signal }
-            )
-          );
-
         measure();
       });
   }
 
-  function options(root, media, signal) {
-    let requestController;
-    let revision = 0;
-
-    const error =
-      root.querySelector('[data-product-error]');
-
-    const reveal = () => {
-      root
-        .querySelectorAll('[data-product-options]')
-        .forEach(node => {
-          node.hidden = false;
-        });
-    };
-
-    const busy = value => {
-      const form =
-        root.querySelector('.product-form');
-
-      if (!form) return;
-
-      if (value) {
-        form.setAttribute(
-          'data-variant-pending',
-          'true'
-        );
-      } else {
-        form.removeAttribute(
-          'data-variant-pending'
-        );
-      }
-
-      const actions =
-        root.querySelector(
-          '[data-product-actions]'
-        );
-
-      const add =
-        root.querySelector(
-          '[data-product-add]'
-        );
-
-      const variantContent =
-        root.querySelector(
-          '[data-product-variant-content]'
-        );
-
-      if (actions) {
-        actions.inert = value;
-      }
-
-      if (add) {
-        add.disabled =
-          value ||
-          !variantContent?.dataset.variantId ||
-          add.dataset.unavailable === 'true';
-      }
-
-      const buy =
-        root.querySelector(
-          '[data-product-buy]'
-        );
-
-      if (buy) {
-        buy.disabled =
-          add?.disabled ?? value;
-      }
-
-      root
-        .querySelector('[data-product-options]')
-        ?.setAttribute(
-          'aria-busy',
-          String(value)
-        );
-    };
-
-    root.addEventListener(
-      'submit',
-      event => {
-        if (
-          event.target.matches('.product-form') &&
-          event.target.hasAttribute(
-            'data-variant-pending'
-          )
-        ) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-        }
-      },
-      {
-        capture: true,
-        signal
-      }
-    );
-
-    root.addEventListener(
-      'invalid',
-      event => {
-        const field =
-          event.target.closest(
-            '[data-personalization-field]'
-          );
-
-        if (!field) return;
-
-        const errorMessage =
-          root.querySelector(
-            '[data-product-error]'
-          );
-
-        if (errorMessage) {
-          errorMessage.textContent =
-            root.dataset.personalizationError ||
-            'Please complete the required personalization fields.';
-
-          errorMessage.hidden = false;
-        }
-      },
-      {
-        capture: true,
-        signal
-      }
-    );
-
-    root.addEventListener(
-      'change',
-      async event => {
-        if (
-          !event.target.matches(
-            '[data-product-option]'
-          )
-        ) {
-          return;
-        }
-
-        const selected = [
-          ...root.querySelectorAll(
-            '[data-product-option]'
-          )
-        ].map(select => select.value);
-
-        const sibling =
-          event.target.selectedOptions[0]
-            ?.dataset.productUrl;
-
-        const target = new URL(
-          sibling || root.dataset.productUrl,
-          location.origin
-        );
-
-        target.searchParams.set(
-          'option_values',
-          selected.join(',')
-        );
-
-        if (
-          target.pathname !==
-          new URL(
-            root.dataset.productUrl,
-            location.origin
-          ).pathname
-        ) {
-          location.assign(target.href);
-          return;
-        }
-
-        requestController?.abort();
-
-        requestController =
-          new AbortController();
-
-        const request =
-          requestController;
-
-        const version = ++revision;
-
-        const focusId =
-          event.target.id;
-
-        busy(true);
-
-        if (error) {
-          error.hidden = true;
-        }
-
-        const timer = setTimeout(
-          () => request.abort(),
-          15000
-        );
-
-        try {
-          target.searchParams.set(
-            'section_id',
-            root.dataset.sectionId
-          );
-
-          const response =
-            await fetch(target.href, {
-              signal: request.signal,
-              credentials: 'same-origin'
-            });
-
-          if (!response.ok) {
-            throw new Error(
-              'Option request failed'
-            );
-          }
-
-          const html =
-            new DOMParser().parseFromString(
-              await response.text(),
-              'text/html'
-            );
-
-          const replacement =
-            html.querySelector(
-              '[data-product-variant-content]'
-            );
-
-          if (!replacement) {
-            throw new Error(
-              'Option content missing'
-            );
-          }
-
-          if (
-            version !== revision ||
-            signal.aborted
-          ) {
-            return;
-          }
-
-          const values = new Map(
-            [
-              ...root.querySelectorAll(
-                '.product-form input, .product-form textarea'
-              )
-            ]
-              .filter(
-                input =>
-                  input.name !== 'id' &&
-                  input.type !== 'hidden'
-              )
-              .map(input => [
-                input.name,
-                input.value
-              ])
-          );
-
-          const quantity =
-            root.querySelector(
-              'input[type="number"][name="quantity"]'
-            );
-
-          const quantityValue =
-            quantity?.value;
-
-          root
-            .querySelector(
-              '[data-product-variant-content]'
-            )
-            .replaceWith(replacement);
-
-          root.dataset.productPrice =
-            replacement.dataset
-              .variantPriceLabel ||
-            root.dataset.productPrice;
-
-          reveal();
-
-          values.forEach(
-            (value, name) => {
-              const input = [
-                ...root.querySelectorAll(
-                  '.product-form input, .product-form textarea'
-                )
-              ].find(
-                input =>
-                  input.name === name
-              );
-
-              if (input) {
-                input.value = value;
-              }
-            }
-          );
-
-          const newQuantity =
-            root.querySelector(
-              'input[type="number"][name="quantity"]'
-            );
-
-          if (newQuantity) {
-            const minimum =
-              Number(newQuantity.min) || 1;
-
-            const step =
-              Number(newQuantity.step) || 1;
-
-            const maximum =
-              newQuantity.max
-                ? Number(newQuantity.max)
-                : Infinity;
-
-            const requested =
-              Number(quantityValue) ||
-              minimum;
-
-            const steps = Math.max(
-              0,
-              Math.floor(
-                (requested - minimum) /
-                  step
-              )
-            );
-
-            newQuantity.value =
-              Math.min(
-                maximum,
-                minimum +
-                  steps * step
-              );
-          }
-
-          const url =
-            new URL(location.href);
-
-          if (replacement.dataset.variantId) {
-            url.searchParams.set(
-              'variant',
-              replacement.dataset.variantId
-            );
-
-            url.searchParams.delete(
-              'option_values'
-            );
-          } else {
-            url.searchParams.delete(
-              'variant'
-            );
-
-            url.searchParams.set(
-              'option_values',
-              selected.join(',')
-            );
-          }
-
-          history.replaceState(
-            history.state,
-            '',
-            url.href
-          );
-
-          media.selectMedia(
-            replacement.dataset
-              .featuredMediaId
-          );
-
-          document.dispatchEvent(
-            new CustomEvent(
-              'theme:product-variant',
-              {
-                detail: {
-                  productId:
-                    root.dataset.productId,
-
-                  variantId:
-                    replacement.dataset
-                      .variantId,
-
-                  title:
-                    replacement.dataset
-                      .variantTitle,
-
-                  price:
-                    replacement.dataset
-                      .variantPrice,
-
-                  minimum:
-                    replacement.dataset
-                      .variantMinimum,
-
-                  available:
-                    replacement.dataset
-                      .variantAvailable ===
-                    'true'
-                }
-              }
-            )
-          );
-
-          window.Shopify
-            ?.PaymentButton
-            ?.init?.();
-
-          root
-            .querySelector(
-              '#' +
-                CSS.escape(focusId)
-            )
-            ?.focus({
-              preventScroll: true
-            });
-
-        } catch (_error) {
-          root
-            .querySelectorAll(
-              '[data-product-option]'
-            )
-            .forEach(select => {
-              select.value =
-                select.querySelector(
-                  '[data-selected]'
-                )?.value || '';
-            });
-
-          if (error) {
-            error.textContent =
-              root.dataset.optionError;
-
-            error.hidden = false;
-          }
-        } finally {
-          clearTimeout(timer);
-
-          if (
-            version === revision &&
-            !signal.aborted
-          ) {
-            busy(false);
-          }
-        }
-      },
-      { signal }
-    );
-
-    signal.addEventListener(
-      'abort',
-      () =>
-        requestController?.abort(),
-      { once: true }
-    );
-
-    reveal();
-  }
-
-  function personalization(root, signal) {
-    const form =
-      root.querySelector('.product-form');
-
-    if (!form) return;
-
-    const validate = () => {
-      const fields = [
-        ...form.querySelectorAll(
-          '[data-personalization-field]'
-        )
-      ];
-
-      let valid = true;
-      let firstInvalid = null;
-
-      fields.forEach(field => {
-        const value =
-          field.value.trim();
-
-        field.value = value;
-
-        if (!value) {
-          valid = false;
-
-          if (!firstInvalid) {
-            firstInvalid = field;
-          }
-        }
-      });
-
-      if (!valid) {
-        const error =
-          root.querySelector(
-            '[data-product-error]'
-          );
-
-        if (error) {
-          error.textContent =
-            root.dataset.personalizationError ||
-            'Please complete the required personalization fields.';
-
-          error.hidden = false;
-        }
-
-        firstInvalid?.focus();
-
-        return false;
-      }
-
-      const error =
-        root.querySelector(
-          '[data-product-error]'
-        );
-
-      if (error) {
-        error.hidden = true;
-      }
-
-      return true;
-    };
-
-    form.addEventListener(
-      'submit',
-      event => {
-        if (!validate()) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-        }
-      },
-      {
-        capture: true,
-        signal
-      }
-    );
-
-    form.addEventListener(
-      'input',
-      event => {
-        if (
-          event.target.matches(
-            '[data-personalization-field]'
-          )
-        ) {
-          const error =
-            root.querySelector(
-              '[data-product-error]'
-            );
-
-          if (error) {
-            error.hidden = true;
-          }
-        }
-      },
-      { signal }
-    );
-  }
-
-  function quantity(root, signal) {
-    root.addEventListener(
-      'click',
-      event => {
-        const decrease =
-          event.target.closest(
-            '[data-quantity-decrease]'
-          );
-
-        const increase =
-          event.target.closest(
-            '[data-quantity-increase]'
-          );
-
-        if (!decrease && !increase) {
-          return;
-        }
-
-        const wrapper =
-          event.target.closest(
-            '.quantity-selector'
-          );
-
-        const input =
-          wrapper?.querySelector(
-            '[data-quantity-input]'
-          );
-
-        if (!input) return;
-
-        const min =
-          Number(input.min) || 1;
-
-        const max =
-          input.max
-            ? Number(input.max)
-            : Infinity;
-
-        const step =
-          Number(input.step) || 1;
-
-        let value =
-          Number(input.value) || min;
-
-        if (increase) {
-          value += step;
-        }
-
-        if (decrease) {
-          value -= step;
-        }
-
-        value = Math.max(
-          min,
-          Math.min(max, value)
-        );
-
-        input.value = value;
-
-        input.dispatchEvent(
-          new Event('change', {
-            bubbles: true
-          })
-        );
-      },
-      { signal }
-    );
-  }
+  /* =========================================================
+     INIT
+  ========================================================= */
 
   function bind(scope = document) {
     scope
-      .querySelectorAll('[data-product-page]')
-      .forEach(root => {
-        if (controllers.has(root)) return;
+      .querySelectorAll(
+        '[data-product-page]'
+      )
+      .forEach((root) => {
+        if (controllers.has(root)) {
+          return;
+        }
 
         const controller =
           new AbortController();
@@ -1260,14 +1009,14 @@
         const media =
           gallery(root, signal);
 
-        options(
+        quantity(
           root,
-          media,
           signal
         );
 
-        descriptions(
+        variants(
           root,
+          media,
           signal
         );
 
@@ -1276,46 +1025,10 @@
           signal
         );
 
-        quantity(
+        descriptions(
           root,
           signal
         );
-
-        try {
-          const referrer =
-            new URL(
-              document.referrer
-            );
-
-          if (
-            referrer.origin ===
-              location.origin &&
-            /\/(search|collections)(\/|$)/
-              .test(
-                referrer.pathname
-              )
-          ) {
-            const back =
-              root.querySelector(
-                '[data-product-back]'
-              );
-
-            const label =
-              root.querySelector(
-                '[data-product-back-label]'
-              );
-
-            if (back) {
-              back.href =
-                referrer.href;
-            }
-
-            if (label) {
-              label.textContent =
-                root.dataset.backLabel;
-            }
-          }
-        } catch (_error) {}
       });
   }
 
@@ -1323,21 +1036,24 @@
 
   document.addEventListener(
     'shopify:section:load',
-    event => bind(event.target)
+    (event) => {
+      bind(event.target);
+    }
   );
 
   document.addEventListener(
     'shopify:section:unload',
-    event => {
+    (event) => {
       event.target
         .querySelectorAll(
           '[data-product-page]'
         )
-        .forEach(root =>
+        .forEach((root) => {
           controllers
             .get(root)
-            ?.abort()
-        );
+            ?.abort();
+        });
     }
   );
 })();
+```
