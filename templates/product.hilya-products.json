@@ -102,7 +102,9 @@
       "settings": {
         "heading_en": "",
         "heading_ar": "",
-        "products": []
+        "products": [
+          "brace-name-copy"
+        ]
       }
     },
     "feature_ready_to_hang": {
