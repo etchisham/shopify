@@ -15,10 +15,11 @@
   assign rating_count = product.metafields.reviews.rating_count.value | default: 0
   assign rating_value = rating.rating | default: rating
   assign rating_maximum = rating.scale_max | default: 5
-  assign rating_percentage = 0
 
-  if rating_value != blank and rating_maximum > 0
-    assign rating_percentage = rating_value | times: 100.0 | divided_by: rating_maximum
+  assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
+  assign review_word = 'review'
+  if rating_count != 1
+    assign review_word = 'reviews'
   endif
 
   assign compare_price = product.compare_at_price_max
@@ -142,31 +143,21 @@
     {% endif %}
 
 
-    {% if settings.card_show_rating and rating_value != blank %}
+    {% if settings.card_show_rating and rating_value != blank and rating_count > 0 %}
 
-      <div class="product-card__rating">
+      <div
+        class="product-card__rating"
+        role="img"
+        aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
+      >
 
-        <span
-          class="product-card__stars"
-          style="--rating-percentage: {{ rating_percentage }}%;"
-          role="img"
-          aria-label="{{ 'products.product.rating' | t: rating: rating_value, maximum: rating_maximum | escape }}"
-        >
-          <span aria-hidden="true">★★★★★</span>
+        <span class="product-card__rating-star" aria-hidden="true">★</span>
+
+        <span class="product-card__rating-value">{{ rating_display }}</span>
+
+        <span class="product-card__rating-count">
+          ({{ rating_count }} {{ review_word }})
         </span>
-
-
-        {% if rating_count > 0 %}
-
-          <span class="product-card__rating-count">
-            ({{ rating_count }})
-          </span>
-
-          <span class="visually-hidden">
-            {{ 'products.product.rating_count' | t: count: rating_count }}
-          </span>
-
-        {% endif %}
 
       </div>
 
@@ -379,41 +370,28 @@
 .product-card__rating {
   display: flex;
   min-height: 1.35rem;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 0.3rem;
   line-height: 1;
 }
 
-.product-card__stars {
-  position: relative;
-  display: inline-block;
-  direction: ltr;
-  color: color-mix(
-    in srgb,
-    var(--color-foreground) 18%,
-    transparent
-  );
+.product-card__rating-star {
+  color: #f5b301;
   font-size: 1.05rem;
-  letter-spacing: -0.08em;
   line-height: 1;
-  unicode-bidi: isolate;
 }
 
-.product-card__stars::after {
-  content: '★★★★★';
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  width: var(--rating-percentage);
-  overflow: hidden;
-  color: var(--color-foreground);
-  white-space: nowrap;
+.product-card__rating-value {
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .product-card__rating-count {
   color: var(--color-muted);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 
@@ -542,7 +520,7 @@
     font-size: 7px;
   }
 
-  .product-card__stars {
+  .product-card__rating-star {
     font-size: .92rem;
   }
 
