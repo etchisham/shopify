@@ -3,7 +3,8 @@
     scope.querySelectorAll('[data-bought-together]').forEach(section => {
       if (section.dataset.bound) return;
       section.dataset.bound = 'true';
-      const items = [...section.querySelectorAll('[data-bundle-item]')];
+      /* الكروت بتتحسب كل مرة عشان الكروت المجلوبة بالـ fetch تتحسب كمان */
+      const getItems = () => [...section.querySelectorAll('[data-bundle-item]')];
       const button = section.querySelector('[data-bundle-add]');
       const formatter = new Intl.NumberFormat(document.documentElement.lang, { style: 'currency', currency: section.dataset.currency || 'USD' });
       const money = cents => {
@@ -23,7 +24,7 @@
       };
       const update = () => {
         let count = 0, total = 0;
-        items.forEach(item => {
+        getItems().forEach(item => {
           const select = item.querySelector('[data-bundle-variant]');
           const option = select.selectedOptions[0];
           const checkbox = item.querySelector('[data-bundle-check]');
@@ -38,6 +39,7 @@
         button.disabled = count === 0 || section.querySelector('form').getAttribute('aria-busy') === 'true';
       };
       section.addEventListener('change', update);
+      section.addEventListener('bundle:cards-updated', update);
       const mainVariant = document.querySelector('.product-form [name="id"]');
       const current = section.querySelector('[data-bundle-current] [data-bundle-variant]');
       if (mainVariant && current) {
