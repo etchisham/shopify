@@ -70,3 +70,6 @@
   .bundle-product { flex-basis: calc((100% - 4rem) / 3); min-width: 10rem; }
 }
 @media (max-width: 479px) { .bundle-product { flex-basis: 70%; } }
+@media (min-width: 1000px) {
+  .bought-together__summary { margin-block-start: 5rem; }
+}
