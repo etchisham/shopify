@@ -3,28 +3,28 @@
   assign product_form_id = 'ProductForm-' | append: section.id
   assign locale_root = request.locale.iso_code | split: '-' | first
 
-  assign browsing_collection = collection | default: product.collections.first
-  assign checkout_url = routes.root_url | append: '/checkout' | replace: '//', '/'
-
   assign rating = product.metafields.reviews.rating.value
   assign rating_count = product.metafields.reviews.rating_count.value | default: 0
   assign rating_value = rating.rating | default: rating
   assign rating_maximum = rating.scale_max | default: 5
 
-  assign has_name = false
-  assign has_date = false
-
-  if product.tags contains 'Name'
-    assign has_name = true
-  endif
-
-  if product.tags contains 'Date'
-    assign has_date = true
-  endif
+  assign browsing_collection = collection | default: product.collections.first
+  assign checkout_url = routes.root_url | append: '/checkout' | replace: '//', '/'
 
   assign saved_image_url = ''
   if product.featured_image != blank
     assign saved_image_url = product.featured_image | image_url: width: 360
+  endif
+
+  assign has_name_tag = false
+  assign has_date_tag = false
+
+  if product.tags contains 'Name'
+    assign has_name_tag = true
+  endif
+
+  if product.tags contains 'Date'
+    assign has_date_tag = true
   endif
 %}
 
@@ -40,12 +40,15 @@
   data-product-vendor="{{ product.vendor | escape }}"
   data-option-error="{{ 'products.details.option_error' | t | escape }}"
   data-back-label="{{ 'products.details.back_to_results' | t | escape }}"
+  data-name-required="{{ has_name_tag }}"
+  data-date-required="{{ has_date_tag }}"
   data-personalization-error="Please complete the required personalization fields."
   style="
     --product-image-ratio: {{ section.settings.image_ratio }};
     --product-image-fit: {{ section.settings.image_fit }};
   "
 >
+
   {% if section.settings.show_breadcrumbs %}
     {% render 'product-breadcrumbs', product: product, collection: collection %}
   {% endif %}
@@ -79,6 +82,7 @@
       >
 
         <div class="product-page__seller">
+
           {% if section.settings.show_product_vendor and product.vendor != blank %}
             <span class="product-page__shop">
               {{ product.vendor | escape }}
@@ -86,11 +90,7 @@
           {% endif %}
 
           {% if section.settings.show_rating and rating_value != blank and rating_count > 0 %}
-            {% assign rating_percent = rating_value
-              | times: 100.0
-              | divided_by: rating_maximum
-              | at_most: 100
-            %}
+            {% assign rating_percent = rating_value | times: 100.0 | divided_by: rating_maximum | at_most: 100 %}
 
             <span
               class="product-page__stars"
@@ -105,11 +105,13 @@
               ({{ rating_count }})
             </span>
           {% endif %}
+
         </div>
 
         <h1>{{ product.title | escape }}</h1>
 
         <div class="product-page__price">
+
           {% if current_variant != blank %}
             {% render 'price', product: product, use_variant: true %}
           {% else %}
@@ -128,6 +130,7 @@
               {{ 'products.product.discount' | t: percent: percent_off }}
             </p>
           {% endif %}
+
         </div>
 
         {% if section.settings.show_tax_note %}
@@ -142,17 +145,22 @@
 
         {% if section.settings.show_inventory and current_variant.inventory_management %}
           {% if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 10 %}
+
             <p class="product__inventory product__inventory--low">
               {{ 'products.product.inventory_low' | t: count: current_variant.inventory_quantity }}
             </p>
+
           {% elsif current_variant.available %}
+
             <p class="product__inventory">
               {{ 'products.product.inventory_in_stock' | t }}
             </p>
+
           {% endif %}
         {% endif %}
 
         <ul class="product-page__delivery" role="list">
+
           {% if product.metafields.custom.delivery_note != blank %}
             <li>
               {% render 'icon', name: 'check' %}
@@ -166,6 +174,7 @@
               <span>{{ product.metafields.custom.returns_note | metafield_tag }}</span>
             </li>
           {% endif %}
+
         </ul>
 
         {% form 'product',
@@ -181,22 +190,19 @@
             value="{{ current_variant.id }}"
           >
 
-          {% render 'product-options',
-            product: product,
-            section_id: section.id
-          %}
+          {% render 'product-options', product: product, section_id: section.id %}
 
-          {% if has_name or has_date %}
-            <div class="product-personalization product-personalization--fields">
+          {% if has_name_tag or has_date_tag %}
 
-              <div class="product-personalization__header">
+            <div class="product-personalization">
+
+              <div class="product-personalization__heading">
                 <span>Personalization</span>
-                <span class="product-personalization__required">
-                  Required
-                </span>
+                <span class="product-personalization__required">Required</span>
               </div>
 
-              {% if has_name %}
+              {% if has_name_tag %}
+
                 <div class="product-form__field">
                   <label for="ProductName-{{ section.id }}">
                     Name
@@ -209,12 +215,15 @@
                     maxlength="100"
                     autocomplete="name"
                     required
-                    data-personalization-field="name"
+                    data-personalization-name
+                    placeholder="Enter the name"
                   >
                 </div>
+
               {% endif %}
 
-              {% if has_date %}
+              {% if has_date_tag %}
+
                 <div class="product-form__field">
                   <label for="ProductDate-{{ section.id }}">
                     Date
@@ -225,25 +234,30 @@
                     type="date"
                     name="properties[Date]"
                     required
-                    data-personalization-field="date"
+                    data-personalization-date
                   >
                 </div>
+
               {% endif %}
 
             </div>
+
           {% endif %}
 
           {% if section.settings.show_quantity %}
+
             <div class="product-form__field product-form__quantity">
+
               <label for="Quantity-{{ section.id }}">
                 {{ 'products.product.quantity' | t }}
               </label>
 
               <div class="quantity-selector">
+
                 <button
                   type="button"
                   class="quantity-selector__button"
-                  data-quantity-decrease
+                  data-quantity-minus
                   aria-label="Decrease quantity"
                 >
                   −
@@ -251,6 +265,7 @@
 
                 <input
                   id="Quantity-{{ section.id }}"
+                  class="quantity-selector__input"
                   type="number"
                   name="quantity"
                   min="{{ current_variant.quantity_rule.min | default: 1 }}"
@@ -266,24 +281,33 @@
                 <button
                   type="button"
                   class="quantity-selector__button"
-                  data-quantity-increase
+                  data-quantity-plus
                   aria-label="Increase quantity"
                 >
                   +
                 </button>
+
               </div>
+
             </div>
+
           {% else %}
+
             <input
               type="hidden"
               name="quantity"
               value="{{ current_variant.quantity_rule.min | default: 1 }}"
             >
+
           {% endif %}
 
-          <div class="product-form__actions" data-product-actions>
+          <div
+            class="product-form__actions"
+            data-product-actions
+          >
 
             {% if section.settings.show_buy_now %}
+
               <button
                 class="button button--full product-form__buy-now"
                 type="submit"
@@ -294,11 +318,13 @@
                   disabled
                 {% endunless %}
               >
-                {{ 'products.details.buy_now' | t }}
+                Buy it now
               </button>
 
             {% elsif section.settings.show_dynamic_checkout and current_variant.available %}
+
               {{ form | payment_button }}
+
             {% endif %}
 
             <button
@@ -311,7 +337,11 @@
                 disabled
               {% endunless %}
             >
-              <span class="button-spinner" aria-hidden="true"></span>
+
+              <span
+                class="button-spinner"
+                aria-hidden="true"
+              ></span>
 
               <span data-product-add-label>
                 {% if current_variant == blank %}
@@ -323,9 +353,13 @@
                 {% endif %}
               </span>
 
-              <span data-loading-label hidden>
+              <span
+                data-loading-label
+                hidden
+              >
                 {{ 'products.bundle.adding' | t }}
               </span>
+
             </button>
 
           </div>
@@ -342,9 +376,13 @@
       ></p>
 
       <div class="product-page__accordions">
+
         {% for block in section.blocks %}
+
           {% case block.type %}
+
             {% when 'accordion' %}
+
               {% render 'product-accordion',
                 product: product,
                 block: block,
@@ -352,13 +390,19 @@
               %}
 
             {% when '@app' %}
+
               {% render block %}
+
           {% endcase %}
+
         {% endfor %}
+
       </div>
 
     </div>
+
   </div>
+
 </article>
 
 {% schema %}
