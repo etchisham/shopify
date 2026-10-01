@@ -202,6 +202,24 @@
         "mobile_padding_bottom": 40
       }
     },
+    "1789423886655db41b": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_LxYaQx": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_LxYaQx"
+      ],
+      "settings": {}
+    },
     "trust": {
       "type": "trust-bar",
       "blocks": {
@@ -243,31 +261,13 @@
       "settings": {
         "heading": "Purchase information"
       }
-    },
-    "1789423886655db41b": {
-      "type": "apps",
-      "blocks": {
-        "judge_me_reviews_review_widget_LxYaQx": {
-          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {
-            "review_data": "sample_data",
-            "max_width": 1200,
-            "show_shop_reviews": false,
-            "empty_state": "empty_widget"
-          }
-        }
-      },
-      "block_order": [
-        "judge_me_reviews_review_widget_LxYaQx"
-      ],
-      "settings": {}
     }
   },
   "order": [
     "main",
     "bought_together",
     "feature_why_ikonick",
-    "trust",
-    "1789423886655db41b"
+    "1789423886655db41b",
+    "trust"
   ]
 }
