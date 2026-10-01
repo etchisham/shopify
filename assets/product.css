@@ -396,6 +396,70 @@
   left: 0.85rem;
 }
 
+/* Option pills */
+
+.product-option-label {
+  color: var(--etsy-ink);
+
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.product-option-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.product-option-pill {
+  min-height: 2.75rem;
+
+  padding: 0.5rem 1.2rem;
+
+  border: 1px solid #8d8d8d;
+  border-radius: 999px;
+
+  background: #fff;
+  color: var(--etsy-ink);
+
+  cursor: pointer;
+
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.2;
+
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.product-option-pill:hover {
+  border-color: var(--etsy-ink);
+  background: var(--etsy-soft);
+}
+
+.product-option-pill[aria-checked='true'] {
+  border-color: var(--etsy-ink);
+  background: var(--etsy-ink);
+  color: #fff;
+}
+
+.product-option-pill:focus-visible {
+  outline: 2px solid var(--etsy-ink);
+  outline-offset: 2px;
+}
+
+.product-option-pill.is-soldout {
+  border-style: dashed;
+  color: var(--etsy-muted);
+  text-decoration: line-through;
+}
+
+.product-option-pill.is-soldout[aria-checked='true'] {
+  color: #fff;
+}
+
 /* Personalization */
 
 .product-personalization {
