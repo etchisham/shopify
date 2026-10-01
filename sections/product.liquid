@@ -1,7 +1,6 @@
 {% liquid
   assign current_variant = product.selected_or_first_available_variant
   assign product_form_id = 'ProductForm-' | append: section.id
-  assign locale_root = request.locale.iso_code | split: '-' | first
 
   assign rating = product.metafields.reviews.rating.value
   assign rating_count = product.metafields.reviews.rating_count.value | default: 0
@@ -413,7 +412,8 @@
               {% render 'product-accordion',
                 product: product,
                 block: block,
-                section_id: section.id
+                section_id: section.id,
+                current_variant: current_variant
               %}
 
             {% when '@app' %}
