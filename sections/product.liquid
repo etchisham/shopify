@@ -7,6 +7,12 @@
   assign rating_value = rating.rating | default: rating
   assign rating_maximum = rating.scale_max | default: 5
 
+  assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
+  assign review_word = 'review'
+  if rating_count != 1
+    assign review_word = 'reviews'
+  endif
+
   assign browsing_collection = collection | default: product.collections.first
   assign checkout_url = routes.root_url | append: '/checkout' | replace: '//', '/'
 
@@ -82,34 +88,31 @@
         data-variant-available="{{ current_variant.available }}"
       >
 
-        <div class="product-page__seller">
-
-          {% if section.settings.show_product_vendor and product.vendor != blank %}
+        {% if section.settings.show_product_vendor and product.vendor != blank %}
+          <div class="product-page__seller">
             <span class="product-page__shop">
               {{ product.vendor | escape }}
             </span>
-          {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="product-page__title-row">
+
+          <h1>{{ product.title | escape }}</h1>
 
           {% if section.settings.show_rating and rating_value != blank and rating_count > 0 %}
-            {% assign rating_percent = rating_value | times: 100.0 | divided_by: rating_maximum | at_most: 100 %}
-
             <span
-              class="product-page__stars"
-              style="--rating-percentage: {{ rating_percent }}%;"
+              class="product-page__rating"
               role="img"
-              aria-label="{{ 'products.product.rating' | t: rating: rating_value, maximum: rating_maximum | escape }}"
+              aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
             >
-              <span aria-hidden="true">★★★★★</span>
-            </span>
-
-            <span class="product-page__rating-count">
-              ({{ rating_count }})
+              <span class="product-page__rating-star" aria-hidden="true">★</span>
+              <span class="product-page__rating-value">{{ rating_display }}</span>
+              <span class="product-page__rating-count">({{ rating_count }} {{ review_word }})</span>
             </span>
           {% endif %}
 
         </div>
-
-        <h1>{{ product.title | escape }}</h1>
 
         <div class="product-page__price" data-product-price-block>
 
@@ -430,6 +433,43 @@
   </div>
 
 </article>
+
+{% stylesheet %}
+
+.product-page__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+}
+
+.product-page__title-row h1 {
+  margin: 0;
+}
+
+.product-page__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.product-page__rating-star {
+  color: #f5b301;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.product-page__rating-value {
+  font-weight: 600;
+}
+
+.product-page__rating-count {
+  color: #666;
+}
+
+{% endstylesheet %}
 
 {% schema %}
 {
