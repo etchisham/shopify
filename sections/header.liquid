@@ -1428,13 +1428,11 @@ body:has(.site-header--sticky) {
         </svg>
 
 
-        {% if cart.item_count > 0 %}
-
-          <span class="cart-count">
-            {{ cart.item_count }}
-          </span>
-
-        {% endif %}
+        <span
+  class="cart-count"
+  data-cart-count
+  {% if cart.item_count == 0 %}hidden{% endif %}
+>{{ cart.item_count }}</span>
 
       </a>
 
