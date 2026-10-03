@@ -589,3 +589,16 @@
 @media (prefers-reduced-motion: reduce) {
   .cart-drawer__panel, .cart-toast { animation: none; }
 }
+
+.cart-toast,
+.cart-feedback {
+  z-index: 100001;
+  top: calc(var(--hilya-header-height, 72px) + 0.75rem);
+}
+
+@media (max-width: 749px) {
+  .cart-toast,
+  .cart-feedback {
+    top: calc(var(--hilya-header-height, 64px) + 0.5rem);
+  }
+}
