@@ -18,10 +18,7 @@
       aria-expanded="false"
       aria-controls="HilyaFilterDrawer"
     >
-      <span
-        class="hilya-filters__filter-icon"
-        aria-hidden="true"
-      >
+      <span class="hilya-filters__filter-icon" aria-hidden="true">
         <span></span>
         <span></span>
       </span>
@@ -30,11 +27,7 @@
         FILTERS
       </span>
 
-      <span
-        class="hilya-filters__count"
-        data-filter-count
-        hidden
-      >
+      <span class="hilya-filters__count" data-filter-count hidden>
         0
       </span>
     </button>
@@ -72,10 +65,7 @@
           {% endfor %}
         </span>
 
-        <span
-          class="hilya-filters__sort-chevron"
-          aria-hidden="true"
-        ></span>
+        <span class="hilya-filters__sort-chevron" aria-hidden="true"></span>
       </button>
 
       <div
@@ -96,10 +86,7 @@
               {{ option.name }}
             </span>
 
-            <span
-              class="hilya-filters__sort-check"
-              aria-hidden="true"
-            >
+            <span class="hilya-filters__sort-check" aria-hidden="true">
               ✓
             </span>
           </button>
@@ -121,51 +108,28 @@
       <h2>Filters</h2>
     </div>
 
-    <div
-      class="hilya-filters__active"
-      data-active-filters
-      hidden
-    ></div>
+    <div class="hilya-filters__active" data-active-filters hidden></div>
 
-    <form
-      class="hilya-filter-form"
-      data-hilya-filter-form
-    >
+    <form class="hilya-filter-form" data-hilya-filter-form>
 
       <!-- AVAILABILITY -->
 
       <div class="hilya-filter-group is-open">
 
-        <button
-          type="button"
-          class="hilya-filter-group__toggle"
-          data-filter-toggle
-        >
+        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
           <span>Availability</span>
-
-          <span
-            class="hilya-filter-chevron"
-            aria-hidden="true"
-          ></span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="availability"
-              value="in_stock"
-            >
+            <input type="checkbox" name="availability" value="in_stock">
             <span>In stock</span>
           </label>
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="availability"
-              value="out_of_stock"
-            >
+            <input type="checkbox" name="availability" value="out_of_stock">
             <span>Out of stock</span>
           </label>
 
@@ -178,17 +142,9 @@
 
       <div class="hilya-filter-group is-open">
 
-        <button
-          type="button"
-          class="hilya-filter-group__toggle"
-          data-filter-toggle
-        >
+        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
           <span>Price</span>
-
-          <span
-            class="hilya-filter-chevron"
-            aria-hidden="true"
-          ></span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
         <div class="hilya-filter-group__content">
@@ -197,10 +153,7 @@
 
             <div class="hilya-price-slider__track"></div>
 
-            <div
-              class="hilya-price-slider__range"
-              data-price-range
-            ></div>
+            <div class="hilya-price-slider__range" data-price-range></div>
 
             <input
               type="range"
@@ -273,36 +226,20 @@
 
       <div class="hilya-filter-group is-open">
 
-        <button
-          type="button"
-          class="hilya-filter-group__toggle"
-          data-filter-toggle
-        >
+        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
           <span>Color</span>
-
-          <span
-            class="hilya-filter-chevron"
-            aria-hidden="true"
-          ></span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="color"
-              value="Gold Plated"
-            >
+            <input type="checkbox" name="color" value="Gold Plated">
             <span>Gold Plated</span>
           </label>
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="color"
-              value="Silver Plated"
-            >
+            <input type="checkbox" name="color" value="Silver Plated">
             <span>Silver Plated</span>
           </label>
 
@@ -315,63 +252,35 @@
 
       <div class="hilya-filter-group is-open">
 
-        <button
-          type="button"
-          class="hilya-filter-group__toggle"
-          data-filter-toggle
-        >
+        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
           <span>Product Type</span>
-
-          <span
-            class="hilya-filter-chevron"
-            aria-hidden="true"
-          ></span>
+          <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
         <div class="hilya-filter-group__content">
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="product_type"
-              value="Necklaces"
-            >
+            <input type="checkbox" name="product_type" value="Necklaces">
             <span>Necklaces</span>
           </label>
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="product_type"
-              value="Rings"
-            >
+            <input type="checkbox" name="product_type" value="Rings">
             <span>Rings</span>
           </label>
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="product_type"
-              value="Pendants"
-            >
+            <input type="checkbox" name="product_type" value="Pendants">
             <span>Pendants</span>
           </label>
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="product_type"
-              value="Bracelets"
-            >
+            <input type="checkbox" name="product_type" value="Bracelets">
             <span>Bracelets</span>
           </label>
 
           <label class="hilya-filter-option">
-            <input
-              type="checkbox"
-              name="product_type"
-              value="Keychains"
-            >
+            <input type="checkbox" name="product_type" value="Keychains">
             <span>Keychains</span>
           </label>
 
@@ -388,10 +297,7 @@
        MOBILE DRAWER
   ========================================== -->
 
-  <div
-    class="hilya-filter-overlay"
-    data-filter-overlay
-  ></div>
+  <div class="hilya-filter-overlay" data-filter-overlay></div>
 
 
   <aside
@@ -437,11 +343,7 @@
 
     <div class="hilya-filter-drawer__content">
 
-      <div
-        class="hilya-filters__active"
-        data-active-filters-mobile
-        hidden
-      ></div>
+      <div class="hilya-filters__active" data-active-filters-mobile hidden></div>
 
       <div data-mobile-filter-content></div>
 
@@ -497,10 +399,7 @@
 
         </span>
 
-        <span
-          class="hilya-filters__sort-chevron"
-          aria-hidden="true"
-        ></span>
+        <span class="hilya-filters__sort-chevron" aria-hidden="true"></span>
 
       </button>
 
@@ -525,10 +424,7 @@
               {{ option.name }}
             </span>
 
-            <span
-              class="hilya-filters__sort-check"
-              aria-hidden="true"
-            >
+            <span class="hilya-filters__sort-check" aria-hidden="true">
               ✓
             </span>
 
@@ -549,45 +445,21 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  const openButton =
-    document.querySelector('[data-filter-open]');
+  const openButton = document.querySelector('[data-filter-open]');
+  const closeButton = document.querySelector('[data-filter-close]');
+  const drawer = document.querySelector('[data-filter-drawer]');
+  const overlay = document.querySelector('[data-filter-overlay]');
+  const form = document.querySelector('[data-hilya-filter-form]');
 
-  const closeButton =
-    document.querySelector('[data-filter-close]');
+  /* "let" because products from other pages are added later */
+  let items = Array.from(document.querySelectorAll('[data-product-item]'));
 
-  const drawer =
-    document.querySelector('[data-filter-drawer]');
-
-  const overlay =
-    document.querySelector('[data-filter-overlay]');
-
-  const form =
-    document.querySelector('[data-hilya-filter-form]');
-
-  const items =
-    Array.from(
-      document.querySelectorAll('[data-product-item]')
-    );
-
-  const resultsElements =
-    document.querySelectorAll('[data-filter-results]');
-
-  const countBadge =
-    document.querySelector('[data-filter-count]');
-
-  const activeFilters =
-    document.querySelector('[data-active-filters]');
-
-  const activeFiltersMobile =
-    document.querySelector('[data-active-filters-mobile]');
-
-  const mobileContent =
-    document.querySelector('[data-mobile-filter-content]');
-
-  const mobileHeaderMain =
-    document.querySelector(
-      '.hilya-filter-drawer__header-main'
-    );
+  const resultsElements = document.querySelectorAll('[data-filter-results]');
+  const countBadge = document.querySelector('[data-filter-count]');
+  const activeFilters = document.querySelector('[data-active-filters]');
+  const activeFiltersMobile = document.querySelector('[data-active-filters-mobile]');
+  const mobileContent = document.querySelector('[data-mobile-filter-content]');
+  const mobileHeaderMain = document.querySelector('.hilya-filter-drawer__header-main');
 
 
   if (!form) {
@@ -614,19 +486,11 @@ document.addEventListener('DOMContentLoaded', function () {
     drawer.setAttribute('aria-hidden', 'false');
 
     if (openButton) {
-      openButton.setAttribute(
-        'aria-expanded',
-        'true'
-      );
+      openButton.setAttribute('aria-expanded', 'true');
     }
 
-    document.documentElement.classList.add(
-      'hilya-filter-lock'
-    );
-
-    document.body.classList.add(
-      'hilya-filter-lock'
-    );
+    document.documentElement.classList.add('hilya-filter-lock');
+    document.body.classList.add('hilya-filter-lock');
 
   }
 
@@ -646,57 +510,34 @@ document.addEventListener('DOMContentLoaded', function () {
     drawer.setAttribute('aria-hidden', 'true');
 
     if (openButton) {
-      openButton.setAttribute(
-        'aria-expanded',
-        'false'
-      );
+      openButton.setAttribute('aria-expanded', 'false');
     }
 
-    document.documentElement.classList.remove(
-      'hilya-filter-lock'
-    );
-
-    document.body.classList.remove(
-      'hilya-filter-lock'
-    );
+    document.documentElement.classList.remove('hilya-filter-lock');
+    document.body.classList.remove('hilya-filter-lock');
 
   }
 
 
   if (openButton) {
-    openButton.addEventListener(
-      'click',
-      openDrawer
-    );
+    openButton.addEventListener('click', openDrawer);
   }
-
 
   if (closeButton) {
-    closeButton.addEventListener(
-      'click',
-      closeDrawer
-    );
+    closeButton.addEventListener('click', closeDrawer);
   }
-
 
   if (overlay) {
-    overlay.addEventListener(
-      'click',
-      closeDrawer
-    );
+    overlay.addEventListener('click', closeDrawer);
   }
 
+  document.addEventListener('keydown', function (event) {
 
-  document.addEventListener(
-    'keydown',
-    function (event) {
-
-      if (event.key === 'Escape') {
-        closeDrawer();
-      }
-
+    if (event.key === 'Escape') {
+      closeDrawer();
     }
-  );
+
+  });
 
 
   /* =========================================
@@ -709,9 +550,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.matchMedia('(max-width: 40rem)').matches
   ) {
 
-    mobileHeaderMain.appendChild(
-      activeFiltersMobile
-    );
+    mobileHeaderMain.appendChild(activeFiltersMobile);
 
   }
 
@@ -722,16 +561,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (mobileContent) {
 
-    const filterGroups =
-      form.querySelectorAll(
-        '.hilya-filter-group'
-      );
+    const filterGroups = form.querySelectorAll('.hilya-filter-group');
 
     filterGroups.forEach(function (group) {
 
-      mobileContent.appendChild(
-        group.cloneNode(true)
-      );
+      mobileContent.appendChild(group.cloneNode(true));
 
     });
 
@@ -744,9 +578,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function normalize(value) {
 
-    return String(value || '')
-      .trim()
-      .toLowerCase();
+    return String(value || '').trim().toLowerCase();
 
   }
 
@@ -764,10 +596,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function getVariantData(item) {
 
-    const dataElement =
-      item.querySelector(
-        '[data-variant-data]'
-      );
+    const dataElement = item.querySelector('[data-variant-data]');
 
     if (!dataElement) {
       return [];
@@ -775,14 +604,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     try {
 
-      const parsed =
-        JSON.parse(
-          dataElement.textContent
-        );
+      const parsed = JSON.parse(dataElement.textContent);
 
-      return Array.isArray(parsed)
-        ? parsed
-        : [];
+      return Array.isArray(parsed) ? parsed : [];
 
     } catch (error) {
 
@@ -793,73 +617,48 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  function getVariantByColor(
-    item,
-    color
-  ) {
+  function getVariantByColor(item, color) {
 
-    const wantedColor =
-      normalize(color);
+    const wantedColor = normalize(color);
 
-    return getVariantData(item).find(
-      function (variant) {
+    return getVariantData(item).find(function (variant) {
 
-        return normalize(
-          variant.color
-        ) === wantedColor;
+      return normalize(variant.color) === wantedColor;
 
-      }
-    ) || null;
+    }) || null;
 
   }
 
 
   /* =========================================
      ORIGINAL CARD STATE
+     (a function, so products loaded from
+     other pages can use it too)
   ========================================= */
 
-  items.forEach(function (item) {
+  function initItem(item) {
 
-    const card =
-      item.querySelector(
-        '[data-product-card]'
-      );
+    const card = item.querySelector('[data-product-card]');
 
     if (!card) {
       return;
     }
 
 
-    const priceElement =
-      card.querySelector(
-        '[data-product-price]'
-      );
+    const priceElement = card.querySelector('[data-product-price]');
 
+    const primaryLayer = card.querySelector('[data-product-image-primary]');
 
-    const primaryLayer =
-      card.querySelector(
-        '[data-product-image-primary]'
-      );
+    const secondaryLayer = card.querySelector('[data-product-image-secondary]');
 
-
-    const secondaryLayer =
-      card.querySelector(
-        '[data-product-image-secondary]'
-      );
-
-
-    const links =
-      card.querySelectorAll(
-        '[data-product-link], [data-product-media]'
-      );
+    const links = card.querySelectorAll('[data-product-link], [data-product-media]');
 
 
     /* ORIGINAL PRICE */
 
     if (priceElement) {
 
-      priceElement.dataset.originalHtml =
-        priceElement.innerHTML;
+      priceElement.dataset.originalHtml = priceElement.innerHTML;
 
     }
 
@@ -868,8 +667,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     links.forEach(function (link) {
 
-      link.dataset.originalUrl =
-        link.getAttribute('href') || '';
+      link.dataset.originalUrl = link.getAttribute('href') || '';
 
     });
 
@@ -878,16 +676,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (primaryLayer) {
 
-      primaryLayer.dataset.originalHtml =
-        primaryLayer.innerHTML;
+      primaryLayer.dataset.originalHtml = primaryLayer.innerHTML;
 
     }
 
-
     if (secondaryLayer) {
 
-      secondaryLayer.dataset.originalHtml =
-        secondaryLayer.innerHTML;
+      secondaryLayer.dataset.originalHtml = secondaryLayer.innerHTML;
 
     }
 
@@ -895,18 +690,18 @@ document.addEventListener('DOMContentLoaded', function () {
     /* ORIGINAL SECONDARY STATE */
 
     card.dataset.originalHasSecondary =
-      card.classList.contains(
-        'product-card--has-secondary'
-      )
+      card.classList.contains('product-card--has-secondary')
         ? 'true'
         : 'false';
 
-  });
+  }
+
+  items.forEach(initItem);
 
 
   /* =========================================
      IMAGE SELECTION BY ALT TEXT
-     
+
      GOLD:
      Gold Plated Front
      Gold Plated Detail
@@ -918,51 +713,32 @@ document.addEventListener('DOMContentLoaded', function () {
      Silver Plated Lifestyle
   ========================================= */
 
-  function getColorImage(
-    images,
-    color,
-    type
-  ) {
+  function getColorImage(images, color, type) {
 
     if (!Array.isArray(images)) {
       return null;
     }
 
-    const wantedColor =
-      normalize(color);
+    const wantedColor = normalize(color);
+    const wantedType = normalize(type);
 
-    const wantedType =
-      normalize(type);
+    return images.find(function (image) {
 
+      const alt = normalize(image && image.alt);
 
-    return images.find(
-      function (image) {
+      return (
+        alt.includes(wantedColor) &&
+        alt.includes(wantedType)
+      );
 
-        const alt =
-          normalize(
-            image && image.alt
-          );
-
-        return (
-          alt.includes(wantedColor) &&
-          alt.includes(wantedType)
-        );
-
-      }
-    ) || null;
+    }) || null;
 
   }
 
 
-  function getImagesForColor(
-    variant,
-    color
-  ) {
+  function getImagesForColor(variant, color) {
 
-    const images =
-      Array.isArray(variant.images)
-        ? variant.images
-        : [];
+    const images = Array.isArray(variant.images) ? variant.images : [];
 
 
     /*
@@ -971,113 +747,62 @@ document.addEventListener('DOMContentLoaded', function () {
       not on image order.
     */
 
-    let primaryImage =
-      getColorImage(
-        images,
-        color,
-        'front'
-      );
+    let primaryImage = getColorImage(images, color, 'front');
+
+    let secondaryImage = getColorImage(images, color, 'detail');
 
 
-    let secondaryImage =
-      getColorImage(
-        images,
-        color,
-        'detail'
-      );
-
-
-    /*
-      If there is no Detail image,
-      use Lifestyle.
-    */
+    /* If there is no Detail image, use Lifestyle. */
 
     if (!secondaryImage) {
 
-      secondaryImage =
-        getColorImage(
-          images,
-          color,
-          'lifestyle'
-        );
+      secondaryImage = getColorImage(images, color, 'lifestyle');
 
     }
 
 
-    /*
-      Fallback if the exact ALT naming
-      is missing.
-    */
+    /* Fallback if the exact ALT naming is missing. */
 
     if (!primaryImage) {
 
-      primaryImage =
-        images.find(
-          function (image) {
+      primaryImage = images.find(function (image) {
 
-            return normalize(
-              image && image.alt
-            ).includes(
-              normalize(color)
-            );
+        return normalize(image && image.alt).includes(normalize(color));
 
-          }
-        ) || null;
+      }) || null;
 
     }
 
 
-    /*
-      Last fallback: variant.image.
-    */
+    /* Last fallback: variant.image. */
 
-    if (
-      !primaryImage &&
-      variant.image &&
-      variant.image.src
-    ) {
+    if (!primaryImage && variant.image && variant.image.src) {
 
-      primaryImage =
-        variant.image;
+      primaryImage = variant.image;
 
     }
 
 
-    /*
-      If there is still no secondary image,
-      use another image of the same color.
-    */
+    /* If there is still no secondary image, use another image of the same color. */
 
     if (!secondaryImage) {
 
-      const primarySrc =
-        primaryImage
-          ? primaryImage.src
-          : null;
+      const primarySrc = primaryImage ? primaryImage.src : null;
 
+      secondaryImage = images.find(function (image) {
 
-      secondaryImage =
-        images.find(
-          function (image) {
+        if (!image || !image.src) {
+          return false;
+        }
 
-            if (!image || !image.src) {
-              return false;
-            }
+        const alt = normalize(image.alt);
 
-            const alt =
-              normalize(
-                image.alt
-              );
+        return (
+          image.src !== primarySrc &&
+          alt.includes(normalize(color))
+        );
 
-            return (
-              image.src !== primarySrc &&
-              alt.includes(
-                normalize(color)
-              )
-            );
-
-          }
-        ) || null;
+      }) || null;
 
     }
 
@@ -1094,28 +819,16 @@ document.addEventListener('DOMContentLoaded', function () {
      SET IMAGE
   ========================================= */
 
-  function setLayerImage(
-    layer,
-    image
-  ) {
+  function setLayerImage(layer, image) {
 
-    if (
-      !layer ||
-      !image ||
-      !image.src
-    ) {
+    if (!layer || !image || !image.src) {
       return;
     }
 
-
     layer.innerHTML =
       '<img' +
-        ' src="' +
-          escapeAttribute(image.src) +
-        '"' +
-        ' alt="' +
-          escapeAttribute(image.alt || '') +
-        '"' +
+        ' src="' + escapeAttribute(image.src) + '"' +
+        ' alt="' + escapeAttribute(image.alt || '') + '"' +
         ' loading="lazy"' +
         ' width="1200"' +
         ' height="960"' +
@@ -1128,9 +841,7 @@ document.addEventListener('DOMContentLoaded', function () {
      PRICE HTML FOR SELECTED VARIANT
   ========================================= */
 
-  function buildVariantPriceHtml(
-    variant
-  ) {
+  function buildVariantPriceHtml(variant) {
 
     if (
       !variant ||
@@ -1140,48 +851,26 @@ document.addEventListener('DOMContentLoaded', function () {
       return '';
     }
 
-
-    const price =
-      Number(variant.price);
-
+    const price = Number(variant.price);
 
     if (!Number.isFinite(price)) {
       return '';
     }
 
+    const compareAt = Number(variant.compare_at_price);
 
-    const compareAt =
-      Number(
-        variant.compare_at_price
-      );
-
-
-    const hasSale =
-      Number.isFinite(compareAt) &&
-      compareAt > price;
-
+    const hasSale = Number.isFinite(compareAt) && compareAt > price;
 
     let html =
       '<div class="price' +
-        (
-          variant.available === false
-            ? ' price--sold-out'
-            : ''
-        ) +
-        (
-          hasSale
-            ? ' price--sale'
-            : ''
-        ) +
+        (variant.available === false ? ' price--sold-out' : '') +
+        (hasSale ? ' price--sale' : '') +
       '">';
-
 
     html +=
       '<span class="price__current">' +
-        'EGP ' +
-        price.toLocaleString('en-US') +
+        'EGP ' + price.toLocaleString('en-US') +
       '</span>';
-
 
     if (hasSale) {
 
@@ -1191,15 +880,12 @@ document.addEventListener('DOMContentLoaded', function () {
         '</span>' +
 
         '<s class="price__compare">' +
-          'EGP ' +
-          compareAt.toLocaleString('en-US') +
+          'EGP ' + compareAt.toLocaleString('en-US') +
         '</s>';
 
     }
 
-
     html += '</div>';
-
 
     return html;
 
@@ -1210,31 +896,19 @@ document.addEventListener('DOMContentLoaded', function () {
      DISCOUNT BADGE
   ========================================= */
 
-  function updateDiscountBadge(
-    card,
-    variant
-  ) {
+  function updateDiscountBadge(card, variant) {
 
-    const media =
-      card.querySelector(
-        '[data-product-media]'
-      );
+    const media = card.querySelector('[data-product-media]');
 
     if (!media) {
       return;
     }
 
-
-    const existing =
-      media.querySelector(
-        '[data-variant-discount]'
-      );
-
+    const existing = media.querySelector('[data-variant-discount]');
 
     if (existing) {
       existing.remove();
     }
-
 
     if (
       !variant ||
@@ -1245,13 +919,8 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-
-    const price =
-      Number(variant.price);
-
-    const compareAt =
-      Number(variant.compare_at_price);
-
+    const price = Number(variant.price);
+    const compareAt = Number(variant.compare_at_price);
 
     if (
       !Number.isFinite(price) ||
@@ -1261,36 +930,19 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-
-    const percentage =
-      Math.round(
-        (
-          (compareAt - price) /
-          compareAt
-        ) * 100
-      );
-
+    const percentage = Math.round(((compareAt - price) / compareAt) * 100);
 
     if (percentage <= 0) {
       return;
     }
 
+    const badge = document.createElement('span');
 
-    const badge =
-      document.createElement('span');
+    badge.className = 'product-card__discount';
 
+    badge.dataset.variantDiscount = '';
 
-    badge.className =
-      'product-card__discount';
-
-
-    badge.dataset.variantDiscount =
-      '';
-
-
-    badge.textContent =
-      percentage + '% OFF';
-
+    badge.textContent = percentage + '% OFF';
 
     media.appendChild(badge);
 
@@ -1301,26 +953,15 @@ document.addEventListener('DOMContentLoaded', function () {
      AVAILABILITY
   ========================================= */
 
-  function updateAvailabilityBadge(
-    card,
-    available
-  ) {
+  function updateAvailabilityBadge(card, available) {
 
-    const media =
-      card.querySelector(
-        '[data-product-media]'
-      );
+    const media = card.querySelector('[data-product-media]');
 
     if (!media) {
       return;
     }
 
-
-    const existingVariantBadge =
-      media.querySelector(
-        '[data-variant-sold-out]'
-      );
-
+    const existingVariantBadge = media.querySelector('[data-variant-sold-out]');
 
     if (available) {
 
@@ -1332,24 +973,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
     if (!existingVariantBadge) {
 
-      const badge =
-        document.createElement('span');
+      const badge = document.createElement('span');
 
+      badge.className = 'product-card__badge';
 
-      badge.className =
-        'product-card__badge';
+      badge.dataset.variantSoldOut = '';
 
-
-      badge.dataset.variantSoldOut =
-        '';
-
-
-      badge.textContent =
-        'Sold out';
-
+      badge.textContent = 'Sold out';
 
       media.appendChild(badge);
 
@@ -1362,27 +994,15 @@ document.addEventListener('DOMContentLoaded', function () {
      UPDATE CARD FOR COLOR
   ========================================= */
 
-  function updateProductCard(
-    item,
-    color
-  ) {
+  function updateProductCard(item, color) {
 
-    const card =
-      item.querySelector(
-        '[data-product-card]'
-      );
+    const card = item.querySelector('[data-product-card]');
 
     if (!card) {
       return;
     }
 
-
-    const variant =
-      getVariantByColor(
-        item,
-        color
-      );
-
+    const variant = getVariantByColor(item, color);
 
     if (!variant) {
 
@@ -1395,24 +1015,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* PRICE */
 
-    const priceElement =
-      card.querySelector(
-        '[data-product-price]'
-      );
-
+    const priceElement = card.querySelector('[data-product-price]');
 
     if (priceElement) {
 
-      const priceHtml =
-        buildVariantPriceHtml(
-          variant
-        );
-
+      const priceHtml = buildVariantPriceHtml(variant);
 
       if (priceHtml) {
 
-        priceElement.innerHTML =
-          priceHtml;
+        priceElement.innerHTML = priceHtml;
 
       }
 
@@ -1421,20 +1032,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* LINKS */
 
-    const productLinks =
-      card.querySelectorAll(
-        '[data-product-link], [data-product-media]'
-      );
-
+    const productLinks = card.querySelectorAll('[data-product-link], [data-product-media]');
 
     productLinks.forEach(function (link) {
 
       if (variant.url) {
 
-        link.setAttribute(
-          'href',
-          variant.url
-        );
+        link.setAttribute('href', variant.url);
 
       }
 
@@ -1443,89 +1047,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* IMAGES */
 
-    const primaryLayer =
-      card.querySelector(
-        '[data-product-image-primary]'
-      );
+    const primaryLayer = card.querySelector('[data-product-image-primary]');
 
+    const secondaryLayer = card.querySelector('[data-product-image-secondary]');
 
-    const secondaryLayer =
-      card.querySelector(
-        '[data-product-image-secondary]'
-      );
-
-
-    const selectedImages =
-      getImagesForColor(
-        variant,
-        color
-      );
-
+    const selectedImages = getImagesForColor(variant, color);
 
     if (selectedImages.primary) {
 
-      setLayerImage(
-        primaryLayer,
-        selectedImages.primary
-      );
+      setLayerImage(primaryLayer, selectedImages.primary);
 
     }
 
-
     if (selectedImages.secondary) {
 
-      setLayerImage(
-        secondaryLayer,
-        selectedImages.secondary
-      );
-
+      setLayerImage(secondaryLayer, selectedImages.secondary);
 
       if (secondaryLayer) {
 
-        secondaryLayer.hidden =
-          false;
+        secondaryLayer.hidden = false;
 
       }
 
-
-      card.classList.add(
-        'product-card--has-secondary'
-      );
+      card.classList.add('product-card--has-secondary');
 
     } else {
 
       if (secondaryLayer) {
 
-        secondaryLayer.hidden =
-          true;
+        secondaryLayer.hidden = true;
 
-        secondaryLayer.innerHTML =
-          '';
+        secondaryLayer.innerHTML = '';
 
       }
 
-
-      card.classList.remove(
-        'product-card--has-secondary'
-      );
+      card.classList.remove('product-card--has-secondary');
 
     }
 
 
     /* AVAILABILITY */
 
-    updateAvailabilityBadge(
-      card,
-      variant.available !== false
-    );
+    updateAvailabilityBadge(card, variant.available !== false);
 
 
     /* DISCOUNT */
 
-    updateDiscountBadge(
-      card,
-      variant
-    );
+    updateDiscountBadge(card, variant);
 
   }
 
@@ -1536,10 +1104,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function resetProductCard(item) {
 
-    const card =
-      item.querySelector(
-        '[data-product-card]'
-      );
+    const card = item.querySelector('[data-product-card]');
 
     if (!card) {
       return;
@@ -1548,24 +1113,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* RESTORE ORIGINAL PRICE HTML */
 
-    const priceElement =
-      card.querySelector(
-        '[data-product-price]'
-      );
-
+    const priceElement = card.querySelector('[data-product-price]');
 
     if (priceElement) {
 
-      const originalPrice =
-        priceElement.dataset.originalHtml;
+      const originalPrice = priceElement.dataset.originalHtml;
 
+      if (originalPrice !== undefined) {
 
-      if (
-        originalPrice !== undefined
-      ) {
-
-        priceElement.innerHTML =
-          originalPrice;
+        priceElement.innerHTML = originalPrice;
 
       }
 
@@ -1574,26 +1130,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* RESTORE ORIGINAL LINKS */
 
-    const links =
-      card.querySelectorAll(
-        '[data-product-link], [data-product-media]'
-      );
-
+    const links = card.querySelectorAll('[data-product-link], [data-product-media]');
 
     links.forEach(function (link) {
 
-      const originalUrl =
-        link.dataset.originalUrl;
+      const originalUrl = link.dataset.originalUrl;
 
+      if (originalUrl !== undefined) {
 
-      if (
-        originalUrl !== undefined
-      ) {
-
-        link.setAttribute(
-          'href',
-          originalUrl
-        );
+        link.setAttribute('href', originalUrl);
 
       }
 
@@ -1602,24 +1147,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* RESTORE PRIMARY IMAGE */
 
-    const primaryLayer =
-      card.querySelector(
-        '[data-product-image-primary]'
-      );
-
+    const primaryLayer = card.querySelector('[data-product-image-primary]');
 
     if (primaryLayer) {
 
-      const originalImage =
-        primaryLayer.dataset.originalHtml;
+      const originalImage = primaryLayer.dataset.originalHtml;
 
+      if (originalImage !== undefined) {
 
-      if (
-        originalImage !== undefined
-      ) {
-
-        primaryLayer.innerHTML =
-          originalImage;
+        primaryLayer.innerHTML = originalImage;
 
       }
 
@@ -1628,27 +1164,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* RESTORE SECONDARY IMAGE */
 
-    const secondaryLayer =
-      card.querySelector(
-        '[data-product-image-secondary]'
-      );
-
+    const secondaryLayer = card.querySelector('[data-product-image-secondary]');
 
     if (secondaryLayer) {
 
-      const originalImage =
-        secondaryLayer.dataset.originalHtml;
+      const originalImage = secondaryLayer.dataset.originalHtml;
 
+      if (originalImage !== undefined) {
 
-      if (
-        originalImage !== undefined
-      ) {
+        secondaryLayer.innerHTML = originalImage;
 
-        secondaryLayer.innerHTML =
-          originalImage;
-
-        secondaryLayer.hidden =
-          false;
+        secondaryLayer.hidden = false;
 
       }
 
@@ -1657,31 +1183,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* RESTORE SECONDARY CLASS */
 
-    if (
-      card.dataset.originalHasSecondary ===
-      'true'
-    ) {
+    if (card.dataset.originalHasSecondary === 'true') {
 
-      card.classList.add(
-        'product-card--has-secondary'
-      );
+      card.classList.add('product-card--has-secondary');
 
     } else {
 
-      card.classList.remove(
-        'product-card--has-secondary'
-      );
+      card.classList.remove('product-card--has-secondary');
 
     }
 
 
     /* REMOVE VARIANT SOLD OUT */
 
-    const variantBadge =
-      card.querySelector(
-        '[data-variant-sold-out]'
-      );
-
+    const variantBadge = card.querySelector('[data-variant-sold-out]');
 
     if (variantBadge) {
       variantBadge.remove();
@@ -1690,11 +1205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* REMOVE VARIANT DISCOUNT */
 
-    const variantDiscount =
-      card.querySelector(
-        '[data-variant-discount]'
-      );
-
+    const variantDiscount = card.querySelector('[data-variant-discount]');
 
     if (variantDiscount) {
       variantDiscount.remove();
@@ -1707,46 +1218,17 @@ document.addEventListener('DOMContentLoaded', function () {
      PRICE CONTROLS
   ========================================= */
 
-  const desktopPriceMin =
-    form.querySelector('[data-price-min]');
+  const desktopPriceMin = form.querySelector('[data-price-min]');
+  const desktopPriceMax = form.querySelector('[data-price-max]');
+  const desktopPriceMinInput = form.querySelector('[data-price-min-input]');
+  const desktopPriceMaxInput = form.querySelector('[data-price-max-input]');
+  const desktopPriceRange = form.querySelector('[data-price-range]');
 
-  const desktopPriceMax =
-    form.querySelector('[data-price-max]');
-
-  const desktopPriceMinInput =
-    form.querySelector('[data-price-min-input]');
-
-  const desktopPriceMaxInput =
-    form.querySelector('[data-price-max-input]');
-
-  const desktopPriceRange =
-    form.querySelector('[data-price-range]');
-
-
-  const mobilePriceMin =
-    mobileContent
-      ? mobileContent.querySelector('[data-price-min]')
-      : null;
-
-  const mobilePriceMax =
-    mobileContent
-      ? mobileContent.querySelector('[data-price-max]')
-      : null;
-
-  const mobilePriceMinInput =
-    mobileContent
-      ? mobileContent.querySelector('[data-price-min-input]')
-      : null;
-
-  const mobilePriceMaxInput =
-    mobileContent
-      ? mobileContent.querySelector('[data-price-max-input]')
-      : null;
-
-  const mobilePriceRange =
-    mobileContent
-      ? mobileContent.querySelector('[data-price-range]')
-      : null;
+  const mobilePriceMin = mobileContent ? mobileContent.querySelector('[data-price-min]') : null;
+  const mobilePriceMax = mobileContent ? mobileContent.querySelector('[data-price-max]') : null;
+  const mobilePriceMinInput = mobileContent ? mobileContent.querySelector('[data-price-min-input]') : null;
+  const mobilePriceMaxInput = mobileContent ? mobileContent.querySelector('[data-price-max-input]') : null;
+  const mobilePriceRange = mobileContent ? mobileContent.querySelector('[data-price-range]') : null;
 
 
   /* =========================================
@@ -1758,83 +1240,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function calculatePriceMaximum() {
 
-    let highest =
-      0;
-
+    let highest = 0;
 
     items.forEach(function (item) {
 
-      const productPrice =
-        Number(
-          item.dataset.productPrice || 0
-        );
+      const productPrice = Number(item.dataset.productPrice || 0);
 
+      if (Number.isFinite(productPrice)) {
 
-      if (
-        Number.isFinite(productPrice)
-      ) {
-
-        highest =
-          Math.max(
-            highest,
-            productPrice
-          );
+        highest = Math.max(highest, productPrice);
 
       }
 
+      getVariantData(item).forEach(function (variant) {
 
-      getVariantData(item)
-        .forEach(function (variant) {
+        const price = Number(variant.price);
 
-          const price =
-            Number(
-              variant.price
-            );
+        if (Number.isFinite(price)) {
 
+          highest = Math.max(highest, price);
 
-          if (
-            Number.isFinite(price)
-          ) {
+        }
 
-            highest =
-              Math.max(
-                highest,
-                price
-              );
-
-          }
-
-        });
+      });
 
     });
-
 
     if (highest <= 0) {
       return 1000;
     }
 
+    /* Keep the slider visually clean by rounding the maximum upward. */
 
-    /*
-      Keep the slider visually clean by
-      rounding the maximum upward.
-    */
+    const rounded = Math.ceil(highest / 100) * 100;
 
-    const rounded =
-      Math.ceil(
-        highest / 100
-      ) * 100;
-
-
-    return Math.max(
-      1000,
-      rounded
-    );
+    return Math.max(1000, rounded);
 
   }
 
 
-  filterPriceMax =
-    calculatePriceMaximum();
+  filterPriceMax = calculatePriceMaximum();
 
 
   /* =========================================
@@ -1843,18 +1288,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updatePriceInputLimits() {
 
-    const controls =
-      [
-        desktopPriceMin,
-        desktopPriceMax,
-        desktopPriceMinInput,
-        desktopPriceMaxInput,
-        mobilePriceMin,
-        mobilePriceMax,
-        mobilePriceMinInput,
-        mobilePriceMaxInput
-      ];
-
+    const controls = [
+      desktopPriceMin,
+      desktopPriceMax,
+      desktopPriceMinInput,
+      desktopPriceMaxInput,
+      mobilePriceMin,
+      mobilePriceMax,
+      mobilePriceMinInput,
+      mobilePriceMaxInput
+    ];
 
     controls.forEach(function (input) {
 
@@ -1862,8 +1305,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      input.max =
-        filterPriceMax;
+      input.max = filterPriceMax;
 
     });
 
@@ -1877,81 +1319,47 @@ document.addEventListener('DOMContentLoaded', function () {
      PRICE STATE
   ========================================= */
 
-  let currentMinPrice =
-    0;
+  let currentMinPrice = 0;
 
-  let currentMaxPrice =
-    filterPriceMax;
+  let currentMaxPrice = filterPriceMax;
 
 
-  function clampPrice(
-    value,
-    fallback
-  ) {
+  function clampPrice(value, fallback) {
 
-    const number =
-      Number(value);
-
+    const number = Number(value);
 
     if (!Number.isFinite(number)) {
       return fallback;
     }
 
-
-    return Math.min(
-      filterPriceMax,
-      Math.max(
-        0,
-        Math.round(number)
-      )
-    );
+    return Math.min(filterPriceMax, Math.max(0, Math.round(number)));
 
   }
 
 
-  function setPriceState(
-    min,
-    max,
-    source
-  ) {
+  function setPriceState(min, max, source) {
 
-    min =
-      clampPrice(
-        min,
-        0
-      );
+    min = clampPrice(min, 0);
 
-
-    max =
-      clampPrice(
-        max,
-        filterPriceMax
-      );
-
+    max = clampPrice(max, filterPriceMax);
 
     if (min > max) {
 
       if (source === 'min') {
 
-        max =
-          min;
+        max = min;
 
       } else {
 
-        min =
-          max;
+        min = max;
 
       }
 
     }
 
+    currentMinPrice = min;
 
-    currentMinPrice =
-      min;
-
-    currentMaxPrice =
-      max;
-
+    currentMaxPrice = max;
 
     syncPriceControls();
 
@@ -1961,176 +1369,112 @@ document.addEventListener('DOMContentLoaded', function () {
   function syncPriceControls() {
 
     if (desktopPriceMin) {
-      desktopPriceMin.value =
-        currentMinPrice;
+      desktopPriceMin.value = currentMinPrice;
     }
 
     if (desktopPriceMax) {
-      desktopPriceMax.value =
-        currentMaxPrice;
+      desktopPriceMax.value = currentMaxPrice;
     }
 
     if (desktopPriceMinInput) {
-      desktopPriceMinInput.value =
-        currentMinPrice;
+      desktopPriceMinInput.value = currentMinPrice;
     }
 
     if (desktopPriceMaxInput) {
-      desktopPriceMaxInput.value =
-        currentMaxPrice;
+      desktopPriceMaxInput.value = currentMaxPrice;
     }
 
     if (mobilePriceMin) {
-      mobilePriceMin.value =
-        currentMinPrice;
+      mobilePriceMin.value = currentMinPrice;
     }
 
     if (mobilePriceMax) {
-      mobilePriceMax.value =
-        currentMaxPrice;
+      mobilePriceMax.value = currentMaxPrice;
     }
 
     if (mobilePriceMinInput) {
-      mobilePriceMinInput.value =
-        currentMinPrice;
+      mobilePriceMinInput.value = currentMinPrice;
     }
 
     if (mobilePriceMaxInput) {
-      mobilePriceMaxInput.value =
-        currentMaxPrice;
+      mobilePriceMaxInput.value = currentMaxPrice;
     }
 
 
     const minPercent =
       filterPriceMax > 0
-        ? (
-            currentMinPrice /
-            filterPriceMax
-          ) * 100
+        ? (currentMinPrice / filterPriceMax) * 100
         : 0;
-
 
     const maxPercent =
       filterPriceMax > 0
-        ? (
-            currentMaxPrice /
-            filterPriceMax
-          ) * 100
+        ? (currentMaxPrice / filterPriceMax) * 100
         : 100;
 
 
     if (desktopPriceRange) {
 
-      desktopPriceRange.style.left =
-        minPercent + '%';
+      desktopPriceRange.style.left = minPercent + '%';
 
-      desktopPriceRange.style.right =
-        (100 - maxPercent) + '%';
+      desktopPriceRange.style.right = (100 - maxPercent) + '%';
 
     }
 
-
     if (mobilePriceRange) {
 
-      mobilePriceRange.style.left =
-        minPercent + '%';
+      mobilePriceRange.style.left = minPercent + '%';
 
-      mobilePriceRange.style.right =
-        (100 - maxPercent) + '%';
+      mobilePriceRange.style.right = (100 - maxPercent) + '%';
 
     }
 
   }
 
 
-  function handlePriceSliderChange(
-    type,
-    value
-  ) {
+  function handlePriceSliderChange(type, value) {
 
     if (type === 'min') {
 
-      setPriceState(
-        value,
-        currentMaxPrice,
-        'min'
-      );
+      setPriceState(value, currentMaxPrice, 'min');
 
     } else {
 
-      setPriceState(
-        currentMinPrice,
-        value,
-        'max'
-      );
+      setPriceState(currentMinPrice, value, 'max');
 
     }
-
 
     applyFilters();
 
   }
 
 
-  function handlePriceInputChange(
-    type,
-    value
-  ) {
+  function handlePriceInputChange(type, value) {
 
     if (type === 'min') {
 
-      let min =
-        clampPrice(
-          value,
-          0
-        );
+      let min = clampPrice(value, 0);
 
+      if (min > currentMaxPrice) {
 
-      if (
-        min >
-        currentMaxPrice
-      ) {
-
-        min =
-          currentMaxPrice;
+        min = currentMaxPrice;
 
       }
 
-
-      setPriceState(
-        min,
-        currentMaxPrice,
-        'min'
-      );
+      setPriceState(min, currentMaxPrice, 'min');
 
     } else {
 
-      let max =
-        clampPrice(
-          value,
-          filterPriceMax
-        );
+      let max = clampPrice(value, filterPriceMax);
 
+      if (max < currentMinPrice) {
 
-      if (
-        max <
-        currentMinPrice
-      ) {
-
-        max =
-          currentMinPrice;
+        max = currentMinPrice;
 
       }
 
-
-      setPriceState(
-        currentMinPrice,
-        max,
-        'max'
-      );
+      setPriceState(currentMinPrice, max, 'max');
 
     }
-
 
     applyFilters();
 
@@ -2143,184 +1487,105 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (desktopPriceMin) {
 
-    desktopPriceMin.addEventListener(
-      'input',
-      function () {
+    desktopPriceMin.addEventListener('input', function () {
 
-        handlePriceSliderChange(
-          'min',
-          this.value
-        );
+      handlePriceSliderChange('min', this.value);
 
-      }
-    );
+    });
 
   }
-
 
   if (desktopPriceMax) {
 
-    desktopPriceMax.addEventListener(
-      'input',
-      function () {
+    desktopPriceMax.addEventListener('input', function () {
 
-        handlePriceSliderChange(
-          'max',
-          this.value
-        );
+      handlePriceSliderChange('max', this.value);
 
-      }
-    );
+    });
 
   }
-
 
   if (desktopPriceMinInput) {
 
-    desktopPriceMinInput.addEventListener(
-      'input',
-      function () {
+    desktopPriceMinInput.addEventListener('input', function () {
 
-        handlePriceInputChange(
-          'min',
-          this.value
-        );
+      handlePriceInputChange('min', this.value);
 
-      }
-    );
+    });
 
-    desktopPriceMinInput.addEventListener(
-      'change',
-      function () {
+    desktopPriceMinInput.addEventListener('change', function () {
 
-        handlePriceInputChange(
-          'min',
-          this.value
-        );
+      handlePriceInputChange('min', this.value);
 
-      }
-    );
+    });
 
   }
-
 
   if (desktopPriceMaxInput) {
 
-    desktopPriceMaxInput.addEventListener(
-      'input',
-      function () {
+    desktopPriceMaxInput.addEventListener('input', function () {
 
-        handlePriceInputChange(
-          'max',
-          this.value
-        );
+      handlePriceInputChange('max', this.value);
 
-      }
-    );
+    });
 
-    desktopPriceMaxInput.addEventListener(
-      'change',
-      function () {
+    desktopPriceMaxInput.addEventListener('change', function () {
 
-        handlePriceInputChange(
-          'max',
-          this.value
-        );
+      handlePriceInputChange('max', this.value);
 
-      }
-    );
+    });
 
   }
-
 
   if (mobilePriceMin) {
 
-    mobilePriceMin.addEventListener(
-      'input',
-      function () {
+    mobilePriceMin.addEventListener('input', function () {
 
-        handlePriceSliderChange(
-          'min',
-          this.value
-        );
+      handlePriceSliderChange('min', this.value);
 
-      }
-    );
+    });
 
   }
-
 
   if (mobilePriceMax) {
 
-    mobilePriceMax.addEventListener(
-      'input',
-      function () {
+    mobilePriceMax.addEventListener('input', function () {
 
-        handlePriceSliderChange(
-          'max',
-          this.value
-        );
+      handlePriceSliderChange('max', this.value);
 
-      }
-    );
+    });
 
   }
-
 
   if (mobilePriceMinInput) {
 
-    mobilePriceMinInput.addEventListener(
-      'input',
-      function () {
+    mobilePriceMinInput.addEventListener('input', function () {
 
-        handlePriceInputChange(
-          'min',
-          this.value
-        );
+      handlePriceInputChange('min', this.value);
 
-      }
-    );
+    });
 
-    mobilePriceMinInput.addEventListener(
-      'change',
-      function () {
+    mobilePriceMinInput.addEventListener('change', function () {
 
-        handlePriceInputChange(
-          'min',
-          this.value
-        );
+      handlePriceInputChange('min', this.value);
 
-      }
-    );
+    });
 
   }
 
-
   if (mobilePriceMaxInput) {
 
-    mobilePriceMaxInput.addEventListener(
-      'input',
-      function () {
+    mobilePriceMaxInput.addEventListener('input', function () {
 
-        handlePriceInputChange(
-          'max',
-          this.value
-        );
+      handlePriceInputChange('max', this.value);
 
-      }
-    );
+    });
 
-    mobilePriceMaxInput.addEventListener(
-      'change',
-      function () {
+    mobilePriceMaxInput.addEventListener('change', function () {
 
-        handlePriceInputChange(
-          'max',
-          this.value
-        );
+      handlePriceInputChange('max', this.value);
 
-      }
-    );
+    });
 
   }
 
@@ -2329,84 +1594,51 @@ document.addEventListener('DOMContentLoaded', function () {
      MOBILE PRICE ENTER
   ========================================= */
 
-  function closeMobileKeyboardOnEnter(
-    input
-  ) {
+  function closeMobileKeyboardOnEnter(input) {
 
     if (!input) {
       return;
     }
 
+    input.addEventListener('keydown', function (event) {
 
-    input.addEventListener(
-      'keydown',
-      function (event) {
-
-        if (event.key !== 'Enter') {
-          return;
-        }
-
-
-        event.preventDefault();
-
-
-        input.dispatchEvent(
-          new Event(
-            'change',
-            {
-              bubbles: true
-            }
-          )
-        );
-
-
-        input.blur();
-
+      if (event.key !== 'Enter') {
+        return;
       }
-    );
+
+      event.preventDefault();
+
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+
+      input.blur();
+
+    });
 
   }
 
+  closeMobileKeyboardOnEnter(mobilePriceMinInput);
 
-  closeMobileKeyboardOnEnter(
-    mobilePriceMinInput
-  );
-
-  closeMobileKeyboardOnEnter(
-    mobilePriceMaxInput
-  );
+  closeMobileKeyboardOnEnter(mobilePriceMaxInput);
 
 
   /* =========================================
      INITIAL PRICE STATE
   ========================================= */
 
-  setPriceState(
-    0,
-    filterPriceMax,
-    'initial'
-  );
+  setPriceState(0, filterPriceMax, 'initial');
 
 
   /* =========================================
      CHECKED VALUES
   ========================================= */
 
-  function getCheckedValues(
-    name
-  ) {
+  function getCheckedValues(name) {
 
     return Array.from(
-      form.querySelectorAll(
-        'input[name="' +
-          name +
-        '"]:checked'
-      )
+      form.querySelectorAll('input[name="' + name + '"]:checked')
     ).map(function (input) {
 
-      return normalize(
-        input.value
-      );
+      return normalize(input.value);
 
     });
 
@@ -2417,31 +1649,19 @@ document.addEventListener('DOMContentLoaded', function () {
      GET VARIANTS MATCHING COLORS
   ========================================= */
 
-  function getSelectedVariants(
-    item,
-    colors
-  ) {
+  function getSelectedVariants(item, colors) {
 
     if (!colors.length) {
       return [];
     }
 
+    const variants = getVariantData(item);
 
-    const variants =
-      getVariantData(item);
+    return variants.filter(function (variant) {
 
+      return colors.includes(normalize(variant.color));
 
-    return variants.filter(
-      function (variant) {
-
-        return colors.includes(
-          normalize(
-            variant.color
-          )
-        );
-
-      }
-    );
+    });
 
   }
 
@@ -2450,11 +1670,7 @@ document.addEventListener('DOMContentLoaded', function () {
      AVAILABILITY MATCH
   ========================================= */
 
-  function matchesAvailability(
-    item,
-    availability,
-    colors
-  ) {
+  function matchesAvailability(item, availability, colors) {
 
     if (!availability.length) {
       return true;
@@ -2468,48 +1684,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (colors.length > 0) {
 
-      const selectedVariants =
-        getSelectedVariants(
-          item,
-          colors
-        );
+      const selectedVariants = getSelectedVariants(item, colors);
 
+      return selectedVariants.some(function (variant) {
 
-      return selectedVariants.some(
-        function (variant) {
+        const available = variant.available !== false;
 
-          const available =
-            variant.available !== false;
+        return availability.some(function (value) {
 
+          if (value === 'in_stock') {
 
-          return availability.some(
-            function (value) {
+            return available;
 
-              if (
-                value === 'in_stock'
-              ) {
+          }
 
-                return available;
+          if (value === 'out_of_stock') {
 
-              }
+            return !available;
 
+          }
 
-              if (
-                value === 'out_of_stock'
-              ) {
+          return false;
 
-                return !available;
+        });
 
-              }
-
-
-              return false;
-
-            }
-          );
-
-        }
-      );
+      });
 
     }
 
@@ -2519,36 +1718,25 @@ document.addEventListener('DOMContentLoaded', function () {
       use product-level availability.
     */
 
-    const itemAvailable =
-      item.dataset.productAvailable ===
-      'true';
+    const itemAvailable = item.dataset.productAvailable === 'true';
 
+    return availability.some(function (value) {
 
-    return availability.some(
-      function (value) {
+      if (value === 'in_stock') {
 
-        if (
-          value === 'in_stock'
-        ) {
-
-          return itemAvailable;
-
-        }
-
-
-        if (
-          value === 'out_of_stock'
-        ) {
-
-          return !itemAvailable;
-
-        }
-
-
-        return false;
+        return itemAvailable;
 
       }
-    );
+
+      if (value === 'out_of_stock') {
+
+        return !itemAvailable;
+
+      }
+
+      return false;
+
+    });
 
   }
 
@@ -2557,12 +1745,7 @@ document.addEventListener('DOMContentLoaded', function () {
      PRICE MATCH
   ========================================= */
 
-  function matchesPrice(
-    item,
-    colors,
-    minPrice,
-    maxPrice
-  ) {
+  function matchesPrice(item, colors, minPrice, maxPrice) {
 
     /*
       With selected colors:
@@ -2572,35 +1755,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (colors.length > 0) {
 
-      const selectedVariants =
-        getSelectedVariants(
-          item,
-          colors
-        );
-
+      const selectedVariants = getSelectedVariants(item, colors);
 
       if (!selectedVariants.length) {
         return false;
       }
 
+      return selectedVariants.some(function (variant) {
 
-      return selectedVariants.some(
-        function (variant) {
+        const price = Number(variant.price);
 
-          const price =
-            Number(
-              variant.price
-            );
+        return (
+          Number.isFinite(price) &&
+          price >= minPrice &&
+          price <= maxPrice
+        );
 
-
-          return (
-            Number.isFinite(price) &&
-            price >= minPrice &&
-            price <= maxPrice
-          );
-
-        }
-      );
+      });
 
     }
 
@@ -2610,11 +1781,7 @@ document.addEventListener('DOMContentLoaded', function () {
       use product price.
     */
 
-    const itemPrice =
-      Number(
-        item.dataset.productPrice || 0
-      );
-
+    const itemPrice = Number(item.dataset.productPrice || 0);
 
     return (
       Number.isFinite(itemPrice) &&
@@ -2626,53 +1793,264 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* =========================================
+     LOAD ALL PAGES
+     Filters must work on every product, not
+     only on the current page.
+  ========================================= */
+
+  const totalProducts =
+    Number(
+      (
+        resultsElements[0]
+          ? resultsElements[0].textContent
+          : ''
+      ).trim()
+    ) || items.length;
+
+  const currentPage =
+    Number(
+      new URL(window.location.href).searchParams.get('page')
+    ) || 1;
+
+  let allPagesLoaded = false;
+  let loadingPages = false;
+  let pagesLoadFailed = false;
+
+
+  function getItemKey(item) {
+
+    const link = item.querySelector('[data-product-link], [data-product-media]');
+
+    if (!link) {
+      return '';
+    }
+
+    const href =
+      link.dataset.originalUrl ||
+      link.getAttribute('href') ||
+      '';
+
+    return href.split('#')[0].split('?')[0];
+
+  }
+
+
+  function getTotalPages() {
+
+    let max = currentPage;
+
+    document
+      .querySelectorAll('.catalog-page__pagination a[href*="page="]')
+      .forEach(function (link) {
+
+        try {
+
+          const page = Number(
+            new URL(link.href, window.location.origin).searchParams.get('page')
+          );
+
+          if (Number.isFinite(page)) {
+            max = Math.max(max, page);
+          }
+
+        } catch (error) {}
+
+      });
+
+    return max;
+
+  }
+
+
+  async function loadAllPages() {
+
+    loadingPages = true;
+
+    try {
+
+      const grid = document.querySelector('.catalog-grid');
+
+      const totalPages = Math.min(getTotalPages(), 30);
+
+      if (grid && totalPages > 1) {
+
+        const pageNumbers = [];
+
+        for (let page = 1; page <= totalPages; page++) {
+
+          if (page !== currentPage) {
+            pageNumbers.push(page);
+          }
+
+        }
+
+        const results = await Promise.all(
+          pageNumbers.map(function (page) {
+
+            const url = new URL(window.location.href);
+
+            url.searchParams.set('page', page);
+
+            return fetch(url.toString(), { credentials: 'same-origin' })
+              .then(function (response) {
+
+                if (!response.ok) {
+                  throw new Error('Page failed');
+                }
+
+                return response.text();
+
+              })
+              .then(function (html) {
+
+                return {
+                  page: page,
+                  doc: new DOMParser().parseFromString(html, 'text/html')
+                };
+
+              });
+
+          })
+        );
+
+        const anchor = items[0] || null;
+
+        const seen = new Set(items.map(getItemKey));
+
+        const added = [];
+
+        results.forEach(function (result) {
+
+          result.doc
+            .querySelectorAll('[data-product-item]')
+            .forEach(function (node) {
+
+              const item = document.importNode(node, true);
+
+              const key = getItemKey(item);
+
+              if (!key || seen.has(key)) {
+                return;
+              }
+
+              seen.add(key);
+
+              item.dataset.extraPage = 'true';
+
+              item.classList.add('is-filtered-out');
+
+              if (result.page < currentPage) {
+
+                grid.insertBefore(item, anchor);
+
+              } else {
+
+                grid.appendChild(item);
+
+              }
+
+              added.push(item);
+
+            });
+
+        });
+
+        added.forEach(initItem);
+
+        items = items.concat(added);
+
+
+        /* Price slider max may change now */
+
+        const newMax = calculatePriceMaximum();
+
+        if (newMax !== filterPriceMax) {
+
+          const wasAtMax = currentMaxPrice === filterPriceMax;
+
+          filterPriceMax = newMax;
+
+          updatePriceInputLimits();
+
+          setPriceState(
+            currentMinPrice,
+            wasAtMax ? newMax : currentMaxPrice,
+            'initial'
+          );
+
+        }
+
+      }
+
+      allPagesLoaded = true;
+
+    } catch (error) {
+
+      pagesLoadFailed = true;
+
+    }
+
+    loadingPages = false;
+
+    applyFilters();
+
+  }
+
+
+  /* =========================================
      FILTER
   ========================================= */
 
   function applyFilters() {
 
-    const availability =
-      getCheckedValues(
-        'availability'
-      );
+    const availability = getCheckedValues('availability');
+
+    const colors = getCheckedValues('color');
+
+    const productTypes = getCheckedValues('product_type');
+
+    const minPrice = currentMinPrice;
+
+    const maxPrice = currentMaxPrice;
 
 
-    const colors =
-      getCheckedValues(
-        'color'
-      );
+    const isFiltering =
+      availability.length > 0 ||
+      colors.length > 0 ||
+      productTypes.length > 0 ||
+      minPrice > 0 ||
+      maxPrice < filterPriceMax;
+
+    if (
+      isFiltering &&
+      !allPagesLoaded &&
+      !loadingPages &&
+      !pagesLoadFailed
+    ) {
+      loadAllPages();
+    }
 
 
-    const productTypes =
-      getCheckedValues(
-        'product_type'
-      );
-
-
-    const minPrice =
-      currentMinPrice;
-
-
-    const maxPrice =
-      currentMaxPrice;
-
-
-    let visibleCount =
-      0;
+    let visibleCount = 0;
 
 
     items.forEach(function (item) {
 
-      const itemType =
-        normalize(
-          item.dataset.productType
-        );
+      /* Products from other pages stay hidden when no filter is active */
 
+      if (!isFiltering && item.dataset.extraPage === 'true') {
+
+        item.classList.add('is-filtered-out');
+
+        return;
+
+      }
+
+
+      const itemType = normalize(item.dataset.productType);
 
       const itemColors =
-        normalize(
-          item.dataset.productColors
-        )
+        normalize(item.dataset.productColors)
           .split('|')
           .map(function (value) {
 
@@ -2682,25 +2060,16 @@ document.addEventListener('DOMContentLoaded', function () {
           .filter(Boolean);
 
 
-      let matches =
-        true;
+      let matches = true;
 
 
       /* PRODUCT TYPE */
 
-      if (
-        matches &&
-        productTypes.length > 0
-      ) {
+      if (matches && productTypes.length > 0) {
 
-        if (
-          !productTypes.includes(
-            itemType
-          )
-        ) {
+        if (!productTypes.includes(itemType)) {
 
-          matches =
-            false;
+          matches = false;
 
         }
 
@@ -2709,21 +2078,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       /* COLOR */
 
-      if (
-        matches &&
-        colors.length > 0
-      ) {
+      if (matches && colors.length > 0) {
 
-        const matchesColor =
-          colors.some(
-            function (color) {
+        const matchesColor = colors.some(function (color) {
 
-              return itemColors.includes(
-                color
-              );
+          return itemColors.includes(color);
 
-            }
-          );
+        });
 
 
         /*
@@ -2734,24 +2095,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!matchesColor) {
 
-          const hasVariantColor =
-            getVariantData(item).some(
-              function (variant) {
+          const hasVariantColor = getVariantData(item).some(function (variant) {
 
-                return colors.includes(
-                  normalize(
-                    variant.color
-                  )
-                );
+            return colors.includes(normalize(variant.color));
 
-              }
-            );
-
+          });
 
           if (!hasVariantColor) {
 
-            matches =
-              false;
+            matches = false;
 
           }
 
@@ -2762,35 +2114,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
       /* AVAILABILITY */
 
-      if (
-        matches &&
-        !matchesAvailability(
-          item,
-          availability,
-          colors
-        )
-      ) {
+      if (matches && !matchesAvailability(item, availability, colors)) {
 
-        matches =
-          false;
+        matches = false;
 
       }
 
 
       /* PRICE */
 
-      if (
-        matches &&
-        !matchesPrice(
-          item,
-          colors,
-          minPrice,
-          maxPrice
-        )
-      ) {
+      if (matches && !matchesPrice(item, colors, minPrice, maxPrice)) {
 
-        matches =
-          false;
+        matches = false;
 
       }
 
@@ -2799,10 +2134,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (matches) {
 
-        item.classList.remove(
-          'is-filtered-out'
-        );
-
+        item.classList.remove('is-filtered-out');
 
         visibleCount++;
 
@@ -2812,28 +2144,19 @@ document.addEventListener('DOMContentLoaded', function () {
           one clear variant to display.
         */
 
-        if (
-          colors.length === 1
-        ) {
+        if (colors.length === 1) {
 
-          updateProductCard(
-            item,
-            colors[0]
-          );
+          updateProductCard(item, colors[0]);
 
         } else {
 
-          resetProductCard(
-            item
-          );
+          resetProductCard(item);
 
         }
 
       } else {
 
-        item.classList.add(
-          'is-filtered-out'
-        );
+        item.classList.add('is-filtered-out');
 
       }
 
@@ -2842,14 +2165,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* RESULTS */
 
-    resultsElements.forEach(
-      function (element) {
+    const shownCount =
+      !isFiltering
+        ? totalProducts
+        : loadingPages
+          ? '…'
+          : visibleCount;
 
-        element.textContent =
-          visibleCount;
+    resultsElements.forEach(function (element) {
 
-      }
-    );
+      element.textContent = shownCount;
+
+    });
+
+
+    /* PAGINATION */
+
+    const pagination = document.querySelector('.catalog-page__pagination');
+
+    if (pagination) {
+
+      pagination.style.display =
+        isFiltering && !pagesLoadFailed
+          ? 'none'
+          : '';
+
+    }
 
 
     /* ACTIVE FILTER COUNT */
@@ -2858,29 +2199,16 @@ document.addEventListener('DOMContentLoaded', function () {
       availability.length +
       colors.length +
       productTypes.length +
-      (
-        minPrice > 0
-          ? 1
-          : 0
-      ) +
-      (
-        maxPrice < filterPriceMax
-          ? 1
-          : 0
-      );
-
+      (minPrice > 0 ? 1 : 0) +
+      (maxPrice < filterPriceMax ? 1 : 0);
 
     if (countBadge) {
 
-      countBadge.textContent =
-        activeCount;
+      countBadge.textContent = activeCount;
 
-
-      countBadge.hidden =
-        activeCount === 0;
+      countBadge.hidden = activeCount === 0;
 
     }
-
 
     renderActiveFilters(
       availability,
@@ -2905,318 +2233,180 @@ document.addEventListener('DOMContentLoaded', function () {
     maxPrice
   ) {
 
-    const containers =
-      [
-        activeFilters,
-        activeFiltersMobile
-      ].filter(Boolean);
+    const containers = [activeFilters, activeFiltersMobile].filter(Boolean);
+
+    containers.forEach(function (container) {
+
+      container.innerHTML = '';
+
+      const hasFilters =
+        availability.length > 0 ||
+        colors.length > 0 ||
+        productTypes.length > 0 ||
+        minPrice > 0 ||
+        maxPrice < filterPriceMax;
+
+      if (!hasFilters) {
+
+        container.hidden = true;
+
+        return;
+
+      }
+
+      container.hidden = false;
 
 
-    containers.forEach(
-      function (container) {
+      const title = document.createElement('span');
 
-        container.innerHTML =
-          '';
+      title.className = 'hilya-filters__active-label';
 
+      title.textContent = 'FILTERED BY';
 
-        const hasFilters =
-          availability.length > 0 ||
-          colors.length > 0 ||
-          productTypes.length > 0 ||
-          minPrice > 0 ||
-          maxPrice < filterPriceMax;
+      container.appendChild(title);
 
 
-        if (!hasFilters) {
+      availability.forEach(function (value) {
 
-          container.hidden =
-            true;
-
-          return;
-
-        }
-
-
-        container.hidden =
-          false;
-
-
-        const title =
-          document.createElement(
-            'span'
-          );
-
-
-        title.className =
-          'hilya-filters__active-label';
-
-
-        title.textContent =
-          'FILTERED BY';
-
-
-        container.appendChild(
-          title
+        addChip(
+          container,
+          value === 'in_stock' ? 'In stock' : 'Out of stock',
+          'availability',
+          value
         );
 
+      });
 
-        availability.forEach(
-          function (value) {
 
-            addChip(
-              container,
-              value === 'in_stock'
-                ? 'In stock'
-                : 'Out of stock',
-              'availability',
-              value
-            );
+      colors.forEach(function (value) {
 
-          }
+        addChip(
+          container,
+          value === 'gold plated' ? 'Gold Plated' : 'Silver Plated',
+          'color',
+          value
         );
 
+      });
 
-        colors.forEach(
-          function (value) {
 
-            addChip(
-              container,
-              value === 'gold plated'
-                ? 'Gold Plated'
-                : 'Silver Plated',
-              'color',
-              value
-            );
+      productTypes.forEach(function (value) {
 
-          }
+        addChip(
+          container,
+          value.charAt(0).toUpperCase() + value.slice(1),
+          'product_type',
+          value
         );
 
-
-        productTypes.forEach(
-          function (value) {
-
-            addChip(
-              container,
-              value.charAt(0).toUpperCase() +
-                value.slice(1),
-              'product_type',
-              value
-            );
-
-          }
-        );
+      });
 
 
-        if (minPrice > 0) {
+      if (minPrice > 0) {
 
-          addChip(
-            container,
-            'From EGP ' +
-              minPrice.toLocaleString(
-                'en-US'
-              ),
-            'price_min',
-            '0'
-          );
-
-        }
-
-
-        if (
-          maxPrice <
-          filterPriceMax
-        ) {
-
-          addChip(
-            container,
-            'To EGP ' +
-              maxPrice.toLocaleString(
-                'en-US'
-              ),
-            'price_max',
-            String(
-              filterPriceMax
-            )
-          );
-
-        }
-
-
-        const clear =
-          document.createElement(
-            'button'
-          );
-
-
-        clear.type =
-          'button';
-
-
-        clear.className =
-          'hilya-filters__clear';
-
-
-        clear.textContent =
-          'CLEAR ALL';
-
-
-        clear.addEventListener(
-          'click',
-          clearFilters
-        );
-
-
-        container.appendChild(
-          clear
+        addChip(
+          container,
+          'From EGP ' + minPrice.toLocaleString('en-US'),
+          'price_min',
+          '0'
         );
 
       }
-    );
+
+
+      if (maxPrice < filterPriceMax) {
+
+        addChip(
+          container,
+          'To EGP ' + maxPrice.toLocaleString('en-US'),
+          'price_max',
+          String(filterPriceMax)
+        );
+
+      }
+
+
+      const clear = document.createElement('button');
+
+      clear.type = 'button';
+
+      clear.className = 'hilya-filters__clear';
+
+      clear.textContent = 'CLEAR ALL';
+
+      clear.addEventListener('click', clearFilters);
+
+      container.appendChild(clear);
+
+    });
 
   }
 
 
-  function addChip(
-    container,
-    label,
-    inputName,
-    inputValue
-  ) {
+  function addChip(container, label, inputName, inputValue) {
 
-    const chip =
-      document.createElement(
-        'button'
-      );
+    const chip = document.createElement('button');
+
+    chip.type = 'button';
+
+    chip.className = 'hilya-filter-chip';
 
 
-    chip.type =
-      'button';
+    const labelSpan = document.createElement('span');
+
+    labelSpan.textContent = label;
 
 
-    chip.className =
-      'hilya-filter-chip';
+    const removeSpan = document.createElement('span');
+
+    removeSpan.className = 'hilya-filter-chip__remove';
+
+    removeSpan.setAttribute('aria-hidden', 'true');
+
+    removeSpan.textContent = '×';
 
 
-    const labelSpan =
-      document.createElement(
-        'span'
-      );
+    chip.appendChild(labelSpan);
+
+    chip.appendChild(removeSpan);
+
+    chip.setAttribute('aria-label', 'Remove ' + label);
 
 
-    labelSpan.textContent =
-      label;
+    chip.addEventListener('click', function () {
 
+      if (inputName === 'price_min') {
 
-    const removeSpan =
-      document.createElement(
-        'span'
-      );
+        setPriceState(0, currentMaxPrice, 'min');
 
+      } else if (inputName === 'price_max') {
 
-    removeSpan.className =
-      'hilya-filter-chip__remove';
+        setPriceState(currentMinPrice, filterPriceMax, 'max');
 
+      } else {
 
-    removeSpan.setAttribute(
-      'aria-hidden',
-      'true'
-    );
+        const inputs = form.querySelectorAll('input[name="' + inputName + '"]');
 
+        inputs.forEach(function (input) {
 
-    removeSpan.textContent =
-      '×';
+          if (normalize(input.value) === normalize(inputValue)) {
 
+            input.checked = false;
 
-    chip.appendChild(
-      labelSpan
-    );
+          }
 
-
-    chip.appendChild(
-      removeSpan
-    );
-
-
-    chip.setAttribute(
-      'aria-label',
-      'Remove ' + label
-    );
-
-
-    chip.addEventListener(
-      'click',
-      function () {
-
-        if (
-          inputName ===
-          'price_min'
-        ) {
-
-          setPriceState(
-            0,
-            currentMaxPrice,
-            'min'
-          );
-
-        }
-
-        else if (
-          inputName ===
-          'price_max'
-        ) {
-
-          setPriceState(
-            currentMinPrice,
-            filterPriceMax,
-            'max'
-          );
-
-        }
-
-        else {
-
-          const inputs =
-            form.querySelectorAll(
-              'input[name="' +
-                inputName +
-              '"]'
-            );
-
-
-          inputs.forEach(
-            function (input) {
-
-              if (
-                normalize(
-                  input.value
-                ) ===
-                normalize(
-                  inputValue
-                )
-              ) {
-
-                input.checked =
-                  false;
-
-              }
-
-            }
-          );
-
-        }
-
-
-        syncMobileFilters();
-
-        applyFilters();
+        });
 
       }
-    );
+
+      syncMobileFilters();
+
+      applyFilters();
+
+    });
 
 
-    container.appendChild(
-      chip
-    );
+    container.appendChild(chip);
 
   }
 
@@ -3231,43 +2421,28 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-
     form
-      .querySelectorAll(
-        'input[type="checkbox"]'
-      )
-      .forEach(
-        function (input) {
+      .querySelectorAll('input[type="checkbox"]')
+      .forEach(function (input) {
 
-          const matching =
-            Array.from(
-              mobileContent.querySelectorAll(
-                'input[type="checkbox"]'
-              )
-            ).find(
-              function (mobileInput) {
+        const matching = Array.from(
+          mobileContent.querySelectorAll('input[type="checkbox"]')
+        ).find(function (mobileInput) {
 
-                return (
-                  mobileInput.name ===
-                    input.name &&
-                  mobileInput.value ===
-                    input.value
-                );
+          return (
+            mobileInput.name === input.name &&
+            mobileInput.value === input.value
+          );
 
-              }
-            );
+        });
 
+        if (matching) {
 
-          if (matching) {
-
-            matching.checked =
-              input.checked;
-
-          }
+          matching.checked = input.checked;
 
         }
-      );
 
+      });
 
     syncPriceControls();
 
@@ -3281,43 +2456,26 @@ document.addEventListener('DOMContentLoaded', function () {
   function clearFilters() {
 
     form
-      .querySelectorAll(
-        'input[type="checkbox"]'
-      )
-      .forEach(
-        function (input) {
+      .querySelectorAll('input[type="checkbox"]')
+      .forEach(function (input) {
 
-          input.checked =
-            false;
+        input.checked = false;
 
-        }
-      );
-
+      });
 
     if (mobileContent) {
 
       mobileContent
-        .querySelectorAll(
-          'input[type="checkbox"]'
-        )
-        .forEach(
-          function (input) {
+        .querySelectorAll('input[type="checkbox"]')
+        .forEach(function (input) {
 
-            input.checked =
-              false;
+          input.checked = false;
 
-          }
-        );
+        });
 
     }
 
-
-    setPriceState(
-      0,
-      filterPriceMax,
-      'initial'
-    );
-
+    setPriceState(0, filterPriceMax, 'initial');
 
     applyFilters();
 
@@ -3328,54 +2486,36 @@ document.addEventListener('DOMContentLoaded', function () {
      CHECKBOX EVENTS
   ========================================= */
 
-  form.addEventListener(
-    'change',
-    function (event) {
+  form.addEventListener('change', function (event) {
 
-      if (
-        !event.target.matches(
-          'input[type="checkbox"]'
-        )
-      ) {
-        return;
-      }
+    if (!event.target.matches('input[type="checkbox"]')) {
+      return;
+    }
 
+    if (mobileContent) {
 
-      if (mobileContent) {
+      const matching = Array.from(
+        mobileContent.querySelectorAll('input[type="checkbox"]')
+      ).find(function (mobileInput) {
 
-        const matching =
-          Array.from(
-            mobileContent.querySelectorAll(
-              'input[type="checkbox"]'
-            )
-          ).find(
-            function (mobileInput) {
+        return (
+          mobileInput.name === event.target.name &&
+          mobileInput.value === event.target.value
+        );
 
-              return (
-                mobileInput.name ===
-                  event.target.name &&
-                mobileInput.value ===
-                  event.target.value
-              );
+      });
 
-            }
-          );
+      if (matching) {
 
-
-        if (matching) {
-
-          matching.checked =
-            event.target.checked;
-
-        }
+        matching.checked = event.target.checked;
 
       }
-
-
-      applyFilters();
 
     }
-  );
+
+    applyFilters();
+
+  });
 
 
   /* =========================================
@@ -3384,56 +2524,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (mobileContent) {
 
-    mobileContent.addEventListener(
-      'change',
-      function (event) {
+    mobileContent.addEventListener('change', function (event) {
 
-        if (
-          !event.target.matches(
-            'input[type="checkbox"]'
-          )
-        ) {
-          return;
-        }
+      if (!event.target.matches('input[type="checkbox"]')) {
+        return;
+      }
 
+      const name = event.target.name;
 
-        const name =
-          event.target.name;
+      const value = event.target.value;
 
+      const desktopInput = Array.from(
+        form.querySelectorAll('input[type="checkbox"]')
+      ).find(function (input) {
 
-        const value =
-          event.target.value;
+        return input.name === name && input.value === value;
 
+      });
 
-        const desktopInput =
-          Array.from(
-            form.querySelectorAll(
-              'input[type="checkbox"]'
-            )
-          ).find(
-            function (input) {
+      if (desktopInput) {
 
-              return (
-                input.name === name &&
-                input.value === value
-              );
-
-            }
-          );
-
-
-        if (desktopInput) {
-
-          desktopInput.checked =
-            event.target.checked;
-
-        }
-
-
-        applyFilters();
+        desktopInput.checked = event.target.checked;
 
       }
-    );
+
+      applyFilters();
+
+    });
 
   }
 
@@ -3442,267 +2559,150 @@ document.addEventListener('DOMContentLoaded', function () {
      SORT
   ========================================= */
 
-  const sortWraps =
-    document.querySelectorAll(
-      '[data-hilya-sort-wrap]'
-    );
+  const sortWraps = document.querySelectorAll('[data-hilya-sort-wrap]');
 
+  const sortTriggers = document.querySelectorAll('[data-hilya-sort-trigger]');
 
-  const sortTriggers =
-    document.querySelectorAll(
-      '[data-hilya-sort-trigger]'
-    );
+  const sortMenus = document.querySelectorAll('[data-hilya-sort-menu]');
 
-
-  const sortMenus =
-    document.querySelectorAll(
-      '[data-hilya-sort-menu]'
-    );
-
-
-  const sortOptions =
-    document.querySelectorAll(
-      '[data-sort-value]'
-    );
+  const sortOptions = document.querySelectorAll('[data-sort-value]');
 
 
   function closeSortMenus() {
 
-    sortWraps.forEach(
-      function (wrap) {
+    sortWraps.forEach(function (wrap) {
 
-        wrap.classList.remove(
-          'is-open'
-        );
+      wrap.classList.remove('is-open');
 
-      }
-    );
+    });
 
+    sortTriggers.forEach(function (trigger) {
 
-    sortTriggers.forEach(
-      function (trigger) {
+      trigger.setAttribute('aria-expanded', 'false');
 
-        trigger.setAttribute(
-          'aria-expanded',
-          'false'
-        );
+    });
 
-      }
-    );
+    sortMenus.forEach(function (menu) {
 
+      menu.hidden = true;
 
-    sortMenus.forEach(
-      function (menu) {
-
-        menu.hidden =
-          true;
-
-      }
-    );
+    });
 
   }
 
 
-  function openSortMenu(
-    targetWrap
-  ) {
+  function openSortMenu(targetWrap) {
 
     closeSortMenus();
 
+    const trigger = targetWrap.querySelector('[data-hilya-sort-trigger]');
 
-    const trigger =
-      targetWrap.querySelector(
-        '[data-hilya-sort-trigger]'
-      );
+    const menu = targetWrap.querySelector('[data-hilya-sort-menu]');
 
-
-    const menu =
-      targetWrap.querySelector(
-        '[data-hilya-sort-menu]'
-      );
-
-
-    if (
-      !trigger ||
-      !menu
-    ) {
+    if (!trigger || !menu) {
       return;
     }
 
+    targetWrap.classList.add('is-open');
 
-    targetWrap.classList.add(
-      'is-open'
-    );
+    trigger.setAttribute('aria-expanded', 'true');
 
-
-    trigger.setAttribute(
-      'aria-expanded',
-      'true'
-    );
-
-
-    menu.hidden =
-      false;
+    menu.hidden = false;
 
   }
 
 
-  sortTriggers.forEach(
-    function (trigger) {
+  sortTriggers.forEach(function (trigger) {
 
-      trigger.addEventListener(
-        'click',
-        function (event) {
+    trigger.addEventListener('click', function (event) {
 
-          event.stopPropagation();
+      event.stopPropagation();
 
+      const wrap = trigger.closest('[data-hilya-sort-wrap]');
 
-          const wrap =
-            trigger.closest(
-              '[data-hilya-sort-wrap]'
-            );
+      const menu = wrap ? wrap.querySelector('[data-hilya-sort-menu]') : null;
 
+      if (!wrap || !menu) {
+        return;
+      }
 
-          const menu =
-            wrap
-              ? wrap.querySelector(
-                  '[data-hilya-sort-menu]'
-                )
-              : null;
+      if (menu.hidden) {
 
+        openSortMenu(wrap);
 
-          if (
-            !wrap ||
-            !menu
-          ) {
-            return;
-          }
-
-
-          if (menu.hidden) {
-
-            openSortMenu(
-              wrap
-            );
-
-          } else {
-
-            closeSortMenus();
-
-          }
-
-        }
-      );
-
-    }
-  );
-
-
-  sortOptions.forEach(
-    function (option) {
-
-      option.addEventListener(
-        'click',
-        function () {
-
-          const value =
-            option.getAttribute(
-              'data-sort-value'
-            );
-
-
-          const url =
-            new URL(
-              window.location.href
-            );
-
-
-          url.searchParams.set(
-            'sort_by',
-            value
-          );
-
-
-          window.location.href =
-            url.toString();
-
-        }
-      );
-
-    }
-  );
-
-
-  document.addEventListener(
-    'click',
-    function (event) {
-
-      const clickedSort =
-        event.target.closest(
-          '[data-hilya-sort-wrap]'
-        );
-
-
-      if (!clickedSort) {
+      } else {
 
         closeSortMenus();
 
       }
 
+    });
+
+  });
+
+
+  sortOptions.forEach(function (option) {
+
+    option.addEventListener('click', function () {
+
+      const value = option.getAttribute('data-sort-value');
+
+      const url = new URL(window.location.href);
+
+      url.searchParams.set('sort_by', value);
+
+      window.location.href = url.toString();
+
+    });
+
+  });
+
+
+  document.addEventListener('click', function (event) {
+
+    const clickedSort = event.target.closest('[data-hilya-sort-wrap]');
+
+    if (!clickedSort) {
+
+      closeSortMenus();
+
     }
-  );
+
+  });
 
 
-  document.addEventListener(
-    'keydown',
-    function (event) {
+  document.addEventListener('keydown', function (event) {
 
-      if (event.key === 'Escape') {
+    if (event.key === 'Escape') {
 
-        closeSortMenus();
-
-      }
+      closeSortMenus();
 
     }
-  );
+
+  });
 
 
   /* =========================================
      FILTER GROUP TOGGLES
   ========================================= */
 
-  document.addEventListener(
-    'click',
-    function (event) {
+  document.addEventListener('click', function (event) {
 
-      const toggle =
-        event.target.closest(
-          '[data-filter-toggle]'
-        );
+    const toggle = event.target.closest('[data-filter-toggle]');
 
-
-      if (!toggle) {
-        return;
-      }
-
-
-      const group =
-        toggle.closest(
-          '.hilya-filter-group'
-        );
-
-
-      if (!group) {
-        return;
-      }
-
-
-      group.classList.toggle(
-        'is-open'
-      );
-
+    if (!toggle) {
+      return;
     }
-  );
+
+    const group = toggle.closest('.hilya-filter-group');
+
+    if (!group) {
+      return;
+    }
+
+    group.classList.toggle('is-open');
+
+  });
 
 
   /* =========================================
@@ -3714,7 +2714,6 @@ document.addEventListener('DOMContentLoaded', function () {
   applyFilters();
 
 });
-
 
 {% endjavascript %}
 
@@ -3892,19 +2891,13 @@ body.hilya-filter-lock {
   margin-right: .12rem;
   border-right: 1px solid currentColor;
   border-bottom: 1px solid currentColor;
-  transform:
-    rotate(45deg)
-    translateY(-.08rem);
+  transform: rotate(45deg) translateY(-.08rem);
   transform-origin: center;
-  transition:
-    transform 180ms ease;
+  transition: transform 180ms ease;
 }
 
-.hilya-filter-group.is-open
-.hilya-filter-chevron {
-  transform:
-    rotate(225deg)
-    translate(-.02rem, -.02rem);
+.hilya-filter-group.is-open .hilya-filter-chevron {
+  transform: rotate(225deg) translate(-.02rem, -.02rem);
 }
 
 
@@ -3912,8 +2905,7 @@ body.hilya-filter-lock {
    FILTER CONTENT
 ========================================= */
 
-.hilya-filter-group:not(.is-open)
-.hilya-filter-group__content {
+.hilya-filter-group:not(.is-open) .hilya-filter-group__content {
   display: none;
 }
 
@@ -4011,8 +3003,7 @@ body.hilya-filter-lock {
   z-index: 4;
 }
 
-.hilya-price-slider
-input[type="range"]::-webkit-slider-runnable-track {
+.hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 2px;
   border: 0 !important;
@@ -4020,8 +3011,7 @@ input[type="range"]::-webkit-slider-runnable-track {
   box-shadow: none !important;
 }
 
-.hilya-price-slider
-input[type="range"]::-webkit-slider-thumb {
+.hilya-price-slider input[type="range"]::-webkit-slider-thumb {
   width: 11px;
   height: 11px;
   margin-top: -4.5px;
@@ -4035,8 +3025,7 @@ input[type="range"]::-webkit-slider-thumb {
   pointer-events: auto;
 }
 
-.hilya-price-slider
-input[type="range"]::-moz-range-track {
+.hilya-price-slider input[type="range"]::-moz-range-track {
   width: 100%;
   height: 2px;
   border: 0 !important;
@@ -4044,13 +3033,11 @@ input[type="range"]::-moz-range-track {
   box-shadow: none !important;
 }
 
-.hilya-price-slider
-input[type="range"]::-moz-range-progress {
+.hilya-price-slider input[type="range"]::-moz-range-progress {
   background: transparent !important;
 }
 
-.hilya-price-slider
-input[type="range"]::-moz-range-thumb {
+.hilya-price-slider input[type="range"]::-moz-range-thumb {
   width: 11px;
   height: 11px;
   border: 0 !important;
@@ -4068,10 +3055,7 @@ input[type="range"]::-moz-range-thumb {
 
 .hilya-price-values {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    auto
-    minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: .4rem;
   width: 100%;
@@ -4229,8 +3213,7 @@ input[type="range"]::-moz-range-thumb {
   transition: transform 180ms ease;
 }
 
-.hilya-filters__sort.is-open
-.hilya-filters__sort-chevron {
+.hilya-filters__sort.is-open .hilya-filters__sort-chevron {
   transform: rotate(225deg);
 }
 
@@ -4271,8 +3254,7 @@ input[type="range"]::-moz-range-thumb {
   font-size: .7rem;
 }
 
-.hilya-filters__sort-option.is-selected
-.hilya-filters__sort-check {
+.hilya-filters__sort-option.is-selected .hilya-filters__sort-check {
   visibility: visible;
 }
 
@@ -4313,9 +3295,7 @@ input[type="range"]::-moz-range-thumb {
   overflow-y: auto;
   background: var(--color-background);
   transform: translateX(100%);
-  transition:
-    transform 320ms
-    cubic-bezier(.22,.61,.36,1);
+  transition: transform 320ms cubic-bezier(.22,.61,.36,1);
 }
 
 .hilya-filter-drawer.is-open {
@@ -4373,10 +3353,8 @@ input[type="range"]::-moz-range-thumb {
   border-bottom: 1px solid rgb(0 0 0 / 9%);
 }
 
-.hilya-filter-drawer
-.hilya-filter-group__toggle,
-.hilya-filter-drawer
-.hilya-filter-group__content {
+.hilya-filter-drawer .hilya-filter-group__toggle,
+.hilya-filter-drawer .hilya-filter-group__content {
   padding-inline: 0;
 }
 
@@ -4415,9 +3393,7 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .hilya-filter-sidebar:hover {
-    scrollbar-color:
-      rgb(0 0 0 / 14%)
-      transparent;
+    scrollbar-color: rgb(0 0 0 / 14%) transparent;
   }
 
   .hilya-filter-sidebar:hover::-webkit-scrollbar-thumb {
@@ -4501,17 +3477,12 @@ input[type="range"]::-moz-range-thumb {
 
   .hilya-filters__mobile-bar {
     display: grid;
-    grid-template-columns:
-      minmax(0, 1fr)
-      auto
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     width: 100%;
     min-height: 3rem;
-    border-top:
-      1px solid rgb(0 0 0 / 9%);
-    border-bottom:
-      1px solid rgb(0 0 0 / 9%);
+    border-top: 1px solid rgb(0 0 0 / 9%);
+    border-bottom: 1px solid rgb(0 0 0 / 9%);
   }
 
 
@@ -4604,8 +3575,7 @@ input[type="range"]::-moz-range-thumb {
     white-space: nowrap;
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-label {
+  .hilya-filters__sort--mobile .hilya-filters__sort-label {
     display: inline;
     color: var(--color-muted);
     font-size: .58rem;
@@ -4615,8 +3585,7 @@ input[type="range"]::-moz-range-thumb {
     text-transform: none;
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-trigger {
+  .hilya-filters__sort--mobile .hilya-filters__sort-trigger {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
@@ -4637,34 +3606,26 @@ input[type="range"]::-moz-range-thumb {
     box-shadow: none;
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-trigger:hover {
+  .hilya-filters__sort--mobile .hilya-filters__sort-trigger:hover {
     border: 0 !important;
     border-bottom: 0 !important;
     background: transparent;
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-chevron {
+  .hilya-filters__sort--mobile .hilya-filters__sort-chevron {
     width: .38rem;
     height: .38rem;
     margin-top: -.15rem;
-    border-right:
-      1px solid currentColor;
-    border-bottom:
-      1px solid currentColor;
-    transform:
-      rotate(45deg);
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    transform: rotate(45deg);
   }
 
-  .hilya-filters__sort--mobile.is-open
-  .hilya-filters__sort-chevron {
-    transform:
-      rotate(225deg);
+  .hilya-filters__sort--mobile.is-open .hilya-filters__sort-chevron {
+    transform: rotate(225deg);
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-menu {
+  .hilya-filters__sort--mobile .hilya-filters__sort-menu {
     top: calc(100% + .45rem);
     right: 0;
     width: 11rem;
@@ -4703,25 +3664,21 @@ input[type="range"]::-moz-range-thumb {
 
     background: var(--color-background);
 
-    transform:
-      translateX(-100%);
+    transform: translateX(-100%);
 
-    transition:
-      transform 320ms
-      cubic-bezier(.22,.61,.36,1);
+    transition: transform 320ms cubic-bezier(.22,.61,.36,1);
 
     overscroll-behavior: none;
   }
 
   .hilya-filter-drawer.is-open {
-    transform:
-      translateX(0);
+    transform: translateX(0);
   }
 
 
   /* =======================================
      MOBILE DRAWER HEADER
-     
+
      FILTERS + FILTERED BY
      STAY TOGETHER
   ======================================= */
@@ -4733,10 +3690,7 @@ input[type="range"]::-moz-range-thumb {
 
     flex: 0 0 auto;
 
-    padding:
-      2rem
-      1.5rem
-      1.35rem;
+    padding: 2rem 1.5rem 1.35rem;
 
     background: var(--color-background);
 
@@ -4751,22 +3705,18 @@ input[type="range"]::-moz-range-thumb {
     z-index: 2;
   }
 
-
   .hilya-filter-drawer__header-main {
     flex: 1 1 auto;
     min-width: 0;
   }
 
-
   .hilya-filter-drawer__title {
     display: block;
   }
 
-
   .hilya-filter-drawer__eyebrow {
     display: none;
   }
-
 
   .hilya-filter-drawer__header h2 {
     margin: 0;
@@ -4782,8 +3732,7 @@ input[type="range"]::-moz-range-thumb {
      INSIDE FIXED HEADER
   ======================================= */
 
-  .hilya-filter-drawer__header
-  .hilya-filters__active {
+  .hilya-filter-drawer__header .hilya-filters__active {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -4796,9 +3745,7 @@ input[type="range"]::-moz-range-thumb {
     gap: .3rem;
   }
 
-
-  .hilya-filter-drawer__header
-  .hilya-filters__active-label {
+  .hilya-filter-drawer__header .hilya-filters__active-label {
     width: 100%;
     margin: 0 0 .08rem;
 
@@ -4808,18 +3755,12 @@ input[type="range"]::-moz-range-thumb {
     text-transform: uppercase;
   }
 
-
-  .hilya-filter-drawer__header
-  .hilya-filter-chip {
+  .hilya-filter-drawer__header .hilya-filter-chip {
     font-size: .57rem;
-    padding:
-      .36rem
-      .44rem;
+    padding: .36rem .44rem;
   }
 
-
-  .hilya-filter-drawer__header
-  .hilya-filters__clear {
+  .hilya-filter-drawer__header .hilya-filters__clear {
     font-size: .55rem;
   }
 
@@ -4842,7 +3783,7 @@ input[type="range"]::-moz-range-thumb {
 
   /* =======================================
      DRAWER CONTENT
-     
+
      ONLY THIS AREA SCROLLS
   ======================================= */
 
@@ -4861,23 +3802,18 @@ input[type="range"]::-moz-range-thumb {
 
     -webkit-overflow-scrolling: touch;
 
-    padding:
-      0
-      1.5rem
-      2rem;
+    padding: 0 1.5rem 2rem;
   }
 
 
   /* =======================================
      FIRST FILTER LINE
-     
+
      Starts UNDER FILTERED BY.
   ======================================= */
 
-  .hilya-filter-drawer__content
-  .hilya-filter-group:first-child {
-    border-top:
-      1px solid rgb(0 0 0 / 9%);
+  .hilya-filter-drawer__content .hilya-filter-group:first-child {
+    border-top: 1px solid rgb(0 0 0 / 9%);
   }
 
 
@@ -4885,22 +3821,16 @@ input[type="range"]::-moz-range-thumb {
      MOBILE FILTER GROUPS
   ======================================= */
 
-  .hilya-filter-drawer
-  .hilya-filter-group {
-    border-top:
-      1px solid rgb(0 0 0 / 9%);
+  .hilya-filter-drawer .hilya-filter-group {
+    border-top: 1px solid rgb(0 0 0 / 9%);
   }
 
-  .hilya-filter-drawer
-  .hilya-filter-group:last-child {
-    border-bottom:
-      1px solid rgb(0 0 0 / 9%);
+  .hilya-filter-drawer .hilya-filter-group:last-child {
+    border-bottom: 1px solid rgb(0 0 0 / 9%);
   }
 
-  .hilya-filter-drawer
-  .hilya-filter-group__toggle,
-  .hilya-filter-drawer
-  .hilya-filter-group__content {
+  .hilya-filter-drawer .hilya-filter-group__toggle,
+  .hilya-filter-drawer .hilya-filter-group__content {
     padding-inline: 0;
   }
 
@@ -4932,10 +3862,7 @@ input[type="range"]::-moz-range-thumb {
 @media (max-width: 27rem) {
 
   .hilya-filters__mobile-bar {
-    grid-template-columns:
-      minmax(0, 1fr)
-      auto
-      minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   }
 
   .hilya-filters__mobile-button {
@@ -4951,13 +3878,11 @@ input[type="range"]::-moz-range-thumb {
     gap: .3rem;
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-label {
+  .hilya-filters__sort--mobile .hilya-filters__sort-label {
     font-size: .52rem;
   }
 
-  .hilya-filters__sort--mobile
-  .hilya-filters__sort-trigger {
+  .hilya-filters__sort--mobile .hilya-filters__sort-trigger {
     gap: .4rem;
     font-size: .52rem;
   }
