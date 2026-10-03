@@ -14,11 +14,13 @@
     "header": {
       "type": "header",
       "settings": {
+        "all_products_collection": "all-products",
         "contact_link": "shopify://pages/contact",
         "show_new_arrivals": true,
         "new_arrivals_link": "shopify://collections/new-arrivals",
         "show_best_sellers": true,
         "best_sellers_link": "shopify://collections/best-sellers",
+        "show_sales": true,
         "sales_link": "shopify://collections/sales",
         "instagram_link": "https://www.instagram.com/hilya.insta/",
         "show_shipping": true,
