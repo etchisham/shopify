@@ -8,6 +8,34 @@
  * ------------------------------------------------------------
  */
 {
-  "sections": {"main": {"type": "contact", "settings": {}}},
-  "order": ["main"]
+  "sections": {
+    "main": {
+      "type": "contact",
+      "settings": {
+        "eyebrow": "Contact Us",
+        "heading_en": "We’re Here for You.",
+        "heading_ar": "نحن هنا من أجلك.",
+        "text_en": "Whether you have a question about an order, a piece, or simply want to say hello, we’d love to hear from you.",
+        "text_ar": "سواء كان لديك سؤال عن طلبك أو عن إحدى قطعنا، يسعدنا أن نسمع منك.",
+        "details_eyebrow": "Get in Touch",
+        "details_heading": "Let’s Talk.",
+        "email": "",
+        "phone": "",
+        "instagram": "https://www.instagram.com/hilya.insta/",
+        "facebook": "https://www.facebook.com/profile.php?id=61594014310962",
+        "whatsapp": "201062701834",
+        "whatsapp_display": "+20 100 000 0000",
+        "form_eyebrow": "Send a Message",
+        "form_heading": "How Can We Help?",
+        "button_text": "Send Message",
+        "closing_text": "Every detail matters. And so does every conversation.",
+        "padding": 80,
+        "background": "#f7f4ee",
+        "foreground": "#111111"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
 }
