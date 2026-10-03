@@ -219,54 +219,99 @@
 
         {% if paginate.pages > 1 %}
 
-  {% assign current_title = paginate.current_page | append: '' %}
+          {% assign current_title = paginate.current_page | append: '' %}
 
-  <nav class="catalog-page__pagination" aria-label="Pagination">
+          <nav
+            class="catalog-page__pagination"
+            aria-label="Pagination"
+          >
 
-    <ul class="hilya-pagination">
+            <ul class="hilya-pagination">
 
-      <li>
-        {% if paginate.previous.is_link %}
-          <a class="hilya-pagination__item hilya-pagination__item--arrow" href="{{ paginate.previous.url }}" aria-label="Previous page">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-          </a>
-        {% else %}
-          <span class="hilya-pagination__item hilya-pagination__item--arrow is-disabled" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-          </span>
+              <!-- PREVIOUS -->
+
+              <li>
+                {% if paginate.previous.is_link %}
+                  <a
+                    class="hilya-pagination__item hilya-pagination__item--arrow"
+                    href="{{ paginate.previous.url }}"
+                    aria-label="Previous page"
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+                  </a>
+                {% else %}
+                  <span
+                    class="hilya-pagination__item hilya-pagination__item--arrow is-disabled"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+                  </span>
+                {% endif %}
+              </li>
+
+
+              <!-- PAGE NUMBERS -->
+
+              {% for part in paginate.parts %}
+
+                {% assign part_title = part.title | append: '' %}
+
+                <li>
+                  {% if part.is_link %}
+
+                    <a
+                      class="hilya-pagination__item"
+                      href="{{ part.url }}"
+                      aria-label="Page {{ part.title }}"
+                    >
+                      {{ part.title }}
+                    </a>
+
+                  {% elsif part_title == current_title %}
+
+                    <span
+                      class="hilya-pagination__item is-current"
+                      aria-current="page"
+                    >
+                      {{ part.title }}
+                    </span>
+
+                  {% else %}
+
+                    <span class="hilya-pagination__item is-ellipsis">…</span>
+
+                  {% endif %}
+                </li>
+
+              {% endfor %}
+
+
+              <!-- NEXT -->
+
+              <li>
+                {% if paginate.next.is_link %}
+                  <a
+                    class="hilya-pagination__item hilya-pagination__item--arrow"
+                    href="{{ paginate.next.url }}"
+                    aria-label="Next page"
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                {% else %}
+                  <span
+                    class="hilya-pagination__item hilya-pagination__item--arrow is-disabled"
+                    aria-hidden="true"
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </span>
+                {% endif %}
+              </li>
+
+            </ul>
+
+          </nav>
+
         {% endif %}
-      </li>
-
-      {% for part in paginate.parts %}
-        {% assign part_title = part.title | append: '' %}
-        <li>
-          {% if part.is_link %}
-            <a class="hilya-pagination__item" href="{{ part.url }}" aria-label="Page {{ part.title }}">{{ part.title }}</a>
-          {% elsif part_title == current_title %}
-            <span class="hilya-pagination__item is-current" aria-current="page">{{ part.title }}</span>
-          {% else %}
-            <span class="hilya-pagination__item is-ellipsis">…</span>
-          {% endif %}
-        </li>
-      {% endfor %}
-
-      <li>
-        {% if paginate.next.is_link %}
-          <a class="hilya-pagination__item hilya-pagination__item--arrow" href="{{ paginate.next.url }}" aria-label="Next page">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-        {% else %}
-          <span class="hilya-pagination__item hilya-pagination__item--arrow is-disabled" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        {% endif %}
-      </li>
-
-    </ul>
-
-  </nav>
-
-{% endif %}
 
 
       {% else %}
@@ -377,34 +422,92 @@
 
 /* =========================================
    PAGINATION
+   (server-rendered pages + the filtered
+   pagination created by facets-toolbar.liquid
+   share the same look)
 ========================================= */
 
 .catalog-page__pagination {
   grid-area: pagination;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: .3rem;
   margin-block-start: 4.5rem;
-  text-align: center;
 }
 
-.catalog-page__pagination > * {
-  display: inline-grid;
-  min-width: 2.5rem;
-  min-height: 2.5rem;
+.hilya-pagination {
+  display: inline-flex;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid rgb(0 0 0 / 14%);
+  border-radius: .6rem;
+  overflow: hidden;
+}
+
+.hilya-pagination > li {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.hilya-pagination > li + li {
+  border-inline-start: 1px solid rgb(0 0 0 / 14%);
+}
+
+.hilya-pagination__item {
+  display: grid;
+  min-width: 3rem;
+  height: 3rem;
   place-items: center;
-  padding: .5rem;
+  margin: 0;
+  padding: 0 .7rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--color-foreground);
-  border-radius: 50%;
-  font-size: .75rem;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 600;
   line-height: 1;
   text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms ease;
 }
 
-.catalog-page__pagination > *:hover {
-  background: rgb(0 0 0 / 5%);
+a.hilya-pagination__item:hover,
+button.hilya-pagination__item:hover:not(:disabled) {
+  background: rgb(0 0 0 / 4%);
+}
+
+.hilya-pagination__item:focus-visible {
+  outline-offset: -.2rem;
+}
+
+.hilya-pagination__item.is-current {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: -2px;
+  cursor: default;
+}
+
+.hilya-pagination__item.is-ellipsis {
+  cursor: default;
+}
+
+.hilya-pagination__item.is-disabled,
+.hilya-pagination__item:disabled {
+  opacity: .3;
+  cursor: default;
+  pointer-events: none;
+}
+
+.hilya-pagination__item svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+[dir='rtl'] .hilya-pagination__item--arrow svg {
+  transform: scaleX(-1);
 }
 
 
@@ -535,6 +638,13 @@
     margin-block-start: 3.5rem;
   }
 
+  .hilya-pagination__item {
+    min-width: 2.5rem;
+    height: 2.6rem;
+    padding: 0 .45rem;
+    font-size: .72rem;
+  }
+
 }
 
 
@@ -552,6 +662,11 @@
     column-gap: .6rem;
   }
 
+  .hilya-pagination__item {
+    min-width: 2.15rem;
+    padding: 0 .3rem;
+  }
+
 }
 
 
@@ -561,7 +676,7 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-  .catalog-page__pagination > * {
+  .hilya-pagination__item {
     transition: none;
   }
 
