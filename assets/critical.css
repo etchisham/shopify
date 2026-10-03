@@ -287,3 +287,8 @@ textarea {
     animation-iteration-count: 1 !important;
   }
 }
+
+html,
+body {
+  overflow-x: clip;
+}
