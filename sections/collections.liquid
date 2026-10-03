@@ -1,722 +1,334 @@
-<section class="catalog-page collection full-width section-spacing">
-  <div class="catalog-page__inner">
+<section class="collection-list">
 
-    <!-- ================================
-         COLLECTION HEADER
-    ================================= -->
+  <div class="collection-list__intro">
+    <h2 class="collection-list__heading">SHOP BY CATEGORY</h2>
+    <p class="collection-list__subheading">Find your perfect piece</p>
+  </div>
 
-    <header class="catalog-page__header">
+  <div class="collection-list__grid">
 
-      <h1 class="catalog-page__title">
+    {% assign allowed_collections = 'necklaces,rings,pendants,bracelets,keychains' | split: ',' %}
 
-        {% if collection.handle == 'all' %}
+    {% for handle in allowed_collections %}
+      {% assign collection = collections[handle] %}
 
-          All Products
+      {% if collection != blank %}
+        <article class="collection-card">
+          <a href="{{ collection.url }}" class="collection-card__link">
 
-        {% else %}
+            <div class="collection-card__media">
 
-          {{ collection.title | escape }}
+              {% if collection.featured_image %}
+                {{ collection.featured_image
+                  | image_url: width: 1000
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '360, 540, 720, 1000',
+                    sizes: '(min-width: 990px) 20vw, 50vw',
+                    alt: collection.title
+                }}
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'collection-card__placeholder' }}
+              {% endif %}
 
-        {% endif %}
+              <div class="collection-card__overlay">
+                <h2 class="collection-card__title">
+                  {{ collection.title | escape }}
+                </h2>
 
-      </h1>
-
-
-      {% if section.settings.show_collection_description and collection.description != blank %}
-
-        <div class="catalog-page__description rte">
-          {{ collection.description }}
-        </div>
-
-      {% endif %}
-
-    </header>
-
-
-    {% paginate collection.products by section.settings.products_per_page %}
-
-
-      <!-- ================================
-           FILTERS + SORT
-      ================================= -->
-
-      <div class="catalog-page__toolbar">
-
-        {% render 'facets-toolbar',
-          filters: collection.filters,
-          sort_options: collection.sort_options,
-          sort_by: collection.sort_by,
-          default_sort_by: collection.default_sort_by,
-          results_url: collection.url,
-          clear_url: collection.url,
-          results_count: collection.products_count,
-          section_id: section.id
-        %}
-
-      </div>
-
-
-      <!-- ================================
-           PRODUCTS
-      ================================= -->
-
-      {% if collection.products_count > 0 %}
-
-        <div class="catalog-grid">
-
-          {% for product in collection.products %}
-
-            {% liquid
-              assign product_colors = ''
-              assign product_available = product.available
-
-              for option in product.options_with_values
-                if option.name == 'Color'
-                  for value in option.values
-                    assign product_colors = product_colors | append: value.name | append: '|'
-                  endfor
-                endif
-              endfor
-            %}
-
-
-            <div
-              class="catalog-product-item"
-              data-product-item
-              data-product-type="{{ product.type | escape }}"
-              data-product-price="{{ product.price | divided_by: 100.0 }}"
-              data-product-available="{{ product_available }}"
-              data-product-colors="{{ product_colors | escape }}"
-            >
-
-
-              <!-- ================================
-                   VARIANT DATA
-              ================================= -->
-
-              <script
-                type="application/json"
-                data-variant-data
-              >
-                [
-                  {% for variant in product.variants %}
-                    {
-                      "id":
-                        {{ variant.id | json }},
-
-                      "color":
-                        {{ variant.option1 | json }},
-
-                      "price":
-                        {{ variant.price
-                          | divided_by: 100.0
-                          | json }},
-                      "compare_at_price":
-                         {% if variant.compare_at_price %}
-                           {{ variant.compare_at_price
-                            | divided_by: 100.0
-                            | json }}
-                            {% else %}
-                            null
-                          {% endif %},    
-
-                      "available":
-                        {{ variant.available | json }},
-
-                      "url":
-                        {{ variant.url | json }},
-
-                      "image":
-                      {% if variant.featured_image %}
-                        {
-                          "src":
-                            {{ variant.featured_image
-                              | image_url: width: 1200
-                              | json }},
-
-                          "alt":
-                            {{ variant.featured_image.alt
-                              | default: product.title
-                              | json }}
-                        }
-                      {% else %}
-                        null
-                      {% endif %},
-
-                      "images": [
-
-                        {% assign variant_color =
-                          variant.option1
-                          | downcase
-                          | strip
-                        %}
-
-                        {% assign matched_image_count = 0 %}
-
-                        {% for image in product.images %}
-
-                          {% assign image_alt =
-                            image.alt
-                            | default: ''
-                            | downcase
-                          %}
-
-                          {% if image_alt contains variant_color %}
-
-                            {% if matched_image_count > 0 %},{% endif %}
-
-                            {
-                              "src":
-                                {{ image
-                                  | image_url: width: 1200
-                                  | json }},
-
-                              "alt":
-                                {{ image.alt
-                                  | default: product.title
-                                  | json }}
-                            }
-
-                            {% assign matched_image_count =
-                              matched_image_count
-                              | plus: 1
-                            %}
-
-                          {% endif %}
-
-                        {% endfor %}
-
-                      ]
-                    }
-
-                    {% unless forloop.last %},{% endunless %}
-
-                  {% endfor %}
-                ]
-              </script>
-
-
-              <!-- ================================
-                   PRODUCT CARD
-              ================================= -->
-
-              {% render 'product-card',
-                product: product,
-                heading_level: 'h2',
-                sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
-              %}
+                <span class="collection-card__arrow">→</span>
+              </div>
 
             </div>
 
-          {% endfor %}
-
-        </div>
-
-
-        <!-- ================================
-             PAGINATION
-        ================================= -->
-
-        {% if paginate.pages > 1 %}
-
-          {% assign current_title = paginate.current_page | append: '' %}
-
-          <nav
-            class="catalog-page__pagination"
-            aria-label="Pagination"
-          >
-
-            <ul class="hilya-pagination">
-
-              <!-- PREVIOUS -->
-
-              <li>
-                {% if paginate.previous.is_link %}
-                  <a
-                    class="hilya-pagination__item hilya-pagination__item--arrow"
-                    href="{{ paginate.previous.url }}"
-                    aria-label="Previous page"
-                  >
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-                  </a>
-                {% else %}
-                  <span
-                    class="hilya-pagination__item hilya-pagination__item--arrow is-disabled"
-                    aria-hidden="true"
-                  >
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-                  </span>
-                {% endif %}
-              </li>
-
-
-              <!-- PAGE NUMBERS -->
-
-              {% for part in paginate.parts %}
-
-                {% assign part_title = part.title | append: '' %}
-
-                <li>
-                  {% if part.is_link %}
-
-                    <a
-                      class="hilya-pagination__item"
-                      href="{{ part.url }}"
-                      aria-label="Page {{ part.title }}"
-                    >
-                      {{ part.title }}
-                    </a>
-
-                  {% elsif part_title == current_title %}
-
-                    <span
-                      class="hilya-pagination__item is-current"
-                      aria-current="page"
-                    >
-                      {{ part.title }}
-                    </span>
-
-                  {% else %}
-
-                    <span class="hilya-pagination__item is-ellipsis">…</span>
-
-                  {% endif %}
-                </li>
-
-              {% endfor %}
-
-
-              <!-- NEXT -->
-
-              <li>
-                {% if paginate.next.is_link %}
-                  <a
-                    class="hilya-pagination__item hilya-pagination__item--arrow"
-                    href="{{ paginate.next.url }}"
-                    aria-label="Next page"
-                  >
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                  </a>
-                {% else %}
-                  <span
-                    class="hilya-pagination__item hilya-pagination__item--arrow is-disabled"
-                    aria-hidden="true"
-                  >
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                  </span>
-                {% endif %}
-              </li>
-
-            </ul>
-
-          </nav>
-
-        {% endif %}
-
-
-      {% else %}
-
-
-        <!-- ================================
-             EMPTY COLLECTION
-        ================================= -->
-
-        <div class="catalog-page__empty">
-
-          <p>
-            {{ 'collections.empty' | t }}
-          </p>
-
-        </div>
-
-
+          </a>
+        </article>
       {% endif %}
-
-
-    {% endpaginate %}
+    {% endfor %}
 
   </div>
 </section>
 
-
 {% stylesheet %}
 
-/* =========================================
-   COLLECTION PAGE
-========================================= */
+/* =========================
+   COLLECTION SECTION
+========================= */
 
-.catalog-page__inner {
-  width: 100%;
-  padding-inline: clamp(1rem, 5vw, 5.5rem);
+.collection-list {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 20px max(24px, calc((100vw - 1400px) / 2)) 35px;
+  box-sizing: border-box;
+  background: #F7F4EE;
 }
 
 
-/* =========================================
-   COLLECTION HEADER
-========================================= */
+/* =========================
+   INTRO
+========================= */
 
-.catalog-page__header {
-  width: 100%;
-  margin-inline: auto;
-  margin-block-end: .9rem;
+.collection-list__intro {
   text-align: center;
+  margin: 0 auto 28px;
 }
 
-.catalog-page__title {
+.collection-list__heading {
+  margin: 0 0 9px;
+  color: #777;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.collection-list__subheading {
   margin: 0;
-  color: var(--color-foreground);
-  font-family: var(--font-heading-family, Georgia, serif);
-  font-size: clamp(1.55rem, 2.15vw, 1.95rem);
-  font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: .015em;
-  text-transform: none;
-}
-
-.catalog-page__title::after {
-  content: "";
-  display: block;
-  width: 2.1rem;
-  height: 1px;
-  margin: .65rem auto 0;
-  background: #b18a51;
+  color: #151515;
+  font-family: "Cormorant Garamond", "Bodoni Moda", "Didot", serif;
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.01em;
 }
 
 
-.catalog-page__description {
-  max-width: 36rem;
-  margin: .65rem auto 0;
-  color: var(--color-muted);
-  font-size: .78rem;
-  line-height: 1.7;
-}
+/* =========================
+   DESKTOP COLLECTIONS
+========================= */
 
-
-/* =========================================
-   TOOLBAR
-========================================= */
-
-.catalog-page__toolbar {
+.collection-list__grid {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 18px;
   width: 100%;
-  margin: 0;
-}
-
-
-/* =========================================
-   PRODUCT GRID
-========================================= */
-
-.catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(.7rem, 1.5vw, 1.5rem);
-  row-gap: clamp(2.5rem, 4vw, 4.25rem);
-  grid-area: products;
-  align-self: start;
-}
-
-.catalog-product-item.is-filtered-out {
-  display: none;
-}
-
-
-/* =========================================
-   PAGINATION
-   (server-rendered pages + the filtered
-   pagination created by facets-toolbar.liquid
-   share the same look)
-========================================= */
-
-.catalog-page__pagination {
-  grid-area: pagination;
-  display: flex;
-  justify-content: center;
-  margin-block-start: 4.5rem;
-}
-
-.hilya-pagination {
-  display: inline-flex;
   max-width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid rgb(0 0 0 / 14%);
-  border-radius: .6rem;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.hilya-pagination > li {
-  display: flex;
-  margin: 0;
-  padding: 0;
+.collection-card {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  width: 0;
+  box-sizing: border-box;
 }
 
-.hilya-pagination > li + li {
-  border-inline-start: 1px solid rgb(0 0 0 / 14%);
-}
-
-.hilya-pagination__item {
-  display: grid;
-  min-width: 3rem;
-  height: 3rem;
-  place-items: center;
-  margin: 0;
-  padding: 0 .7rem;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .78rem;
-  font-weight: 600;
-  line-height: 1;
+.collection-card__link {
+  display: block;
+  width: 100%;
+  color: inherit;
   text-decoration: none;
-  cursor: pointer;
-  transition: background 160ms ease;
 }
 
-a.hilya-pagination__item:hover,
-button.hilya-pagination__item:hover:not(:disabled) {
-  background: rgb(0 0 0 / 4%);
+.collection-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.15;
+  overflow: hidden;
+  background: #f5f2ed;
 }
 
-.hilya-pagination__item:focus-visible {
-  outline-offset: -.2rem;
-}
-
-.hilya-pagination__item.is-current {
-  outline: 2px solid var(--color-foreground);
-  outline-offset: -2px;
-  cursor: default;
-}
-
-.hilya-pagination__item.is-ellipsis {
-  cursor: default;
-}
-
-.hilya-pagination__item.is-disabled,
-.hilya-pagination__item:disabled {
-  opacity: .3;
-  cursor: default;
+.collection-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.38),
+    rgba(0, 0, 0, 0.08) 40%,
+    transparent 65%
+  );
   pointer-events: none;
 }
 
-.hilya-pagination__item svg {
-  width: 1rem;
-  height: 1rem;
+.collection-card__media img,
+.collection-card__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
 }
 
-[dir='rtl'] .hilya-pagination__item--arrow svg {
-  transform: scaleX(-1);
-}
-
-
-/* =========================================
-   EMPTY COLLECTION
-========================================= */
-
-.catalog-page__empty {
-  max-width: 36rem;
-  margin: 3rem auto;
-  padding: 3rem 1.5rem;
-  border: 1px solid rgb(0 0 0 / 8%);
-  text-align: center;
-  color: var(--color-muted);
+.collection-card__link:hover .collection-card__media img {
+  transform: scale(1.03);
 }
 
 
-/* =========================================
-   DESKTOP
-========================================= */
+/* =========================
+   CARD TEXT
+========================= */
 
-@media (min-width: 40.001rem) {
+.collection-card__overlay {
+  position: absolute;
+  z-index: 2;
+  left: 22px;
+  bottom: 20px;
 
-  .catalog-page {
-    margin-top: -3rem;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 
-  .catalog-page__inner {
-    display: grid;
-    grid-template-columns:
-      minmax(10rem, 11.25rem)
-      minmax(0, 1fr);
+  color: #fff;
+}
 
-    grid-template-areas:
-      "header header"
-      "sidebar toolbar"
-      "sidebar products"
-      "sidebar pagination";
+.collection-card__title {
+  margin: 0;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 
-    column-gap: clamp(1.5rem, 3vw, 3rem);
-    align-items: start;
-  }
+.collection-card__arrow {
+  display: block;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+}
 
-  .catalog-page__header {
-    grid-area: header;
-  }
-
-  .catalog-page__toolbar {
-    display: contents;
-  }
-
-  .hilya-filters {
-    display: contents;
-  }
-
-  .catalog-page__pagination {
-    margin-block-start: 4rem;
-  }
-
+.collection-card__link:hover .collection-card__arrow {
+  transform: translateX(5px);
 }
 
 
-/* =========================================
-   3 COLUMNS
-========================================= */
+/* =========================
+   LARGE DESKTOP
+========================= */
 
-@media (min-width: 46.875rem) {
+@media (min-width: 1500px) {
 
-  .catalog-grid {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
+  .collection-list {
+    padding-left: max(20px, calc((100vw - 1500px) / 2));
+    padding-right: max(32px, calc((100vw - 1500px) / 2));
   }
 
 }
 
 
-/* =========================================
-   4 COLUMNS
-========================================= */
+/* =========================
+   TABLET
+========================= */
 
-@media (min-width: 64rem) {
+@media (min-width: 750px) and (max-width: 1100px) {
 
-  .catalog-grid {
-    grid-template-columns:
-      repeat(4, minmax(0, 1fr));
+  .collection-list {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .collection-list__grid {
+    gap: 14px;
+  }
+
+  .collection-list__intro {
+    margin-bottom: 20px;
+  }
+
+  .collection-card__overlay {
+    left: 17px;
+    bottom: 17px;
   }
 
 }
 
 
-/* =========================================
+/* =========================
    MOBILE
-========================================= */
+========================= */
 
-@media (max-width: 40rem) {
+@media (max-width: 749px) {
 
-  .catalog-page {
-    margin-top: -2rem;
-  }
-  .catalog-page__inner {
-    padding-inline: 1rem;
-  }
-
-  .catalog-page__header {
-    margin-block-end: .55rem;
+  .collection-list {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    padding: 20px 5px 30px;
+    background: #F7F4EE;
   }
 
-  .catalog-page__title {
-    font-size: clamp(1.4rem, 7vw, 1.85rem);
-    letter-spacing: .045em;
+  .collection-list__intro {
+    margin-bottom: 18px;
+    padding-inline: 10px;
   }
 
-  .catalog-page__description {
-    margin-top: .6rem;
-    font-size: .74rem;
+  .collection-list__heading {
+    font-size: 10px;
+    letter-spacing: 0.16em;
   }
 
-  .catalog-page__toolbar {
-    margin-block-end: .65rem;
+  .collection-list__subheading {
+    margin-top: 7px;
+    font-size: 15px;
   }
 
-  .catalog-grid {
-    column-gap: .7rem;
-    row-gap: 2.75rem;
+  .collection-list__grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex-wrap: initial !important;
+    gap: 14px;
   }
 
-  .catalog-page__pagination {
-    margin-block-start: 3.5rem;
+  .collection-card {
+    width: auto;
+    flex: initial !important;
   }
 
-  .hilya-pagination__item {
-    min-width: 2.5rem;
-    height: 2.6rem;
-    padding: 0 .45rem;
-    font-size: .72rem;
+  /* CENTER THE 5TH COLLECTION */
+
+  .collection-card:nth-child(5) {
+    grid-column: 1 / 3;
+    justify-self: center;
+    width: calc((100% - 14px) / 2);
   }
 
-}
-
-
-/* =========================================
-   SMALL MOBILE
-========================================= */
-
-@media (max-width: 27rem) {
-
-  .catalog-page__inner {
-    padding-inline: .8rem;
+  .collection-card__overlay {
+    left: 14px;
+    bottom: 14px;
+    gap: 7px;
   }
 
-  .catalog-grid {
-    column-gap: .6rem;
+  .collection-card__title {
+    font-size: 9px;
+    letter-spacing: 0.11em;
   }
 
-  .hilya-pagination__item {
-    min-width: 2.15rem;
-    padding: 0 .3rem;
-  }
-
-}
-
-
-/* =========================================
-   REDUCED MOTION
-========================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .hilya-pagination__item {
-    transition: none;
+  .collection-card__arrow {
+    font-size: 15px;
   }
 
 }
 
 {% endstylesheet %}
 
-
 {% schema %}
-
 {
-  "name": "t:general.collection",
-
-  "disabled_on": {
-    "groups": [
-      "header",
-      "footer"
-    ]
-  },
-
+  "name": "t:general.collections_grid",
   "settings": [
-
-    {
-      "type": "checkbox",
-      "id": "show_collection_description",
-      "label": "t:labels.show_collection_description",
-      "default": false
-    },
-
     {
       "type": "range",
-      "id": "products_per_page",
+      "id": "grid_gap",
+      "label": "t:labels.grid_gap",
       "min": 12,
       "max": 48,
       "step": 4,
-      "label": "t:labels.products_to_show",
+      "unit": "px",
       "default": 24
     }
-
+  ],
+  "presets": [
+    {
+      "name": "t:general.collections_grid"
+    }
   ]
 }
-
 {% endschema %}
