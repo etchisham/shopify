@@ -602,3 +602,11 @@
     top: calc(var(--hilya-header-height, 64px) + 0.5rem);
   }
 }
+.cart-quantity input:focus-visible,
+.cart-quantity button:focus-visible {
+  outline: none;
+}
+
+.cart-quantity:focus-within {
+  border-color: var(--cart-color);
+}
