@@ -966,7 +966,7 @@ body:has(.site-header--sticky) {
           Home
         </a>
 
-        <a href="{{ routes.all_products_collection_url }}">
+        <a href="{{ section.settings.all_products_collection.url | default: routes.all_products_collection_url }}">
           All Products
         </a>
 
@@ -1132,7 +1132,7 @@ body:has(.site-header--sticky) {
 
         <div class="desktop-dropdown">
 
-          <a href="{{ routes.all_products_collection_url }}">
+          <a href="{{ section.settings.all_products_collection.url | default: routes.all_products_collection_url }}">
             All Products
           </a>
 
