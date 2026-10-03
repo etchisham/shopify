@@ -1,12 +1,40 @@
 {% liquid
   assign locale_root = request.locale.iso_code | split: '-' | first
 
+  assign is_ar = false
+  if locale_root == 'ar'
+    assign is_ar = true
+  endif
+
+  comment
+    English values use the original setting ids, so anything already saved in the Customizer is kept.
+    Arabic values use the *_ar ids and fall back to English when empty.
+  endcomment
+
+  assign eyebrow = section.settings.eyebrow
   assign heading = section.settings.heading_en
   assign intro = section.settings.text_en
+  assign details_eyebrow = section.settings.details_eyebrow
+  assign details_heading = section.settings.details_heading
+  assign email_label = section.settings.email_label_en | default: 'Email'
+  assign phone_label = section.settings.phone_label_en | default: 'Phone'
+  assign form_eyebrow = section.settings.form_eyebrow
+  assign form_heading = section.settings.form_heading
+  assign button_text = section.settings.button_text
+  assign closing_text = section.settings.closing_text
 
-  if locale_root == 'ar'
+  if is_ar
+    assign eyebrow = section.settings.eyebrow_ar | default: eyebrow
     assign heading = section.settings.heading_ar | default: heading
     assign intro = section.settings.text_ar | default: intro
+    assign details_eyebrow = section.settings.details_eyebrow_ar | default: details_eyebrow
+    assign details_heading = section.settings.details_heading_ar | default: details_heading
+    assign email_label = section.settings.email_label_ar | default: email_label
+    assign phone_label = section.settings.phone_label_ar | default: phone_label
+    assign form_eyebrow = section.settings.form_eyebrow_ar | default: form_eyebrow
+    assign form_heading = section.settings.form_heading_ar | default: form_heading
+    assign button_text = section.settings.button_text_ar | default: button_text
+    assign closing_text = section.settings.closing_text_ar | default: closing_text
   endif
 
   assign contact_email = section.settings.email | default: settings.support_email
@@ -19,6 +47,7 @@
 
 <section
   class="hilya-contact full-width"
+  {% if is_ar %}dir="rtl" lang="ar"{% endif %}
   style="
     --contact-background: {{ section.settings.background }};
     --contact-foreground: {{ section.settings.foreground }};
@@ -34,7 +63,7 @@
   <header class="hilya-contact__hero">
 
     <p class="hilya-contact__eyebrow">
-      {{ section.settings.eyebrow }}
+      {{ eyebrow | escape }}
     </p>
 
     <h1 id="ContactHeading-{{ section.id }}">
@@ -66,11 +95,11 @@
       <div class="hilya-contact__details-heading">
 
         <p class="hilya-contact__eyebrow">
-          {{ section.settings.details_eyebrow }}
+          {{ details_eyebrow | escape }}
         </p>
 
         <h2>
-          {{ section.settings.details_heading }}
+          {{ details_heading | escape }}
         </h2>
 
       </div>
@@ -83,7 +112,7 @@
         <div class="hilya-contact__detail">
 
           <span class="hilya-contact__detail-label">
-            Email
+            {{ email_label | escape }}
           </span>
 
           <a href="mailto:{{ contact_email | escape }}">
@@ -102,7 +131,7 @@
         <div class="hilya-contact__detail">
 
           <span class="hilya-contact__detail-label">
-            Phone
+            {{ phone_label | escape }}
           </span>
 
           <a href="tel:{{ phone_link | escape }}">
@@ -114,71 +143,79 @@
       {% endif %}
 
 
-     {% if section.settings.whatsapp != blank
-  or section.settings.instagram != blank
-  or section.settings.facebook != blank %}
+      <!-- SOCIAL BUTTONS -->
 
-  <div class="hilya-contact__social">
+      {% if section.settings.whatsapp != blank
+        or section.settings.instagram != blank
+        or section.settings.facebook != blank %}
 
-    {% if section.settings.whatsapp != blank %}
-      {% assign whatsapp_link = section.settings.whatsapp | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' %}
+        <div class="hilya-contact__social">
 
-      <a
-        class="social-btn social-btn--whatsapp"
-        href="https://wa.me/{{ whatsapp_link }}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span class="social-btn__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        </span>
-        <span class="social-btn__text">
-          <span class="social-btn__label">WhatsApp</span>
-          <span class="social-btn__sub" dir="ltr">{{ section.settings.whatsapp_display }}</span>
-        </span>
-        <svg class="social-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    {% endif %}
+          {% if section.settings.whatsapp != blank %}
 
-    {% if section.settings.instagram != blank %}
-      <a
-        class="social-btn social-btn--instagram"
-        href="{{ section.settings.instagram }}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span class="social-btn__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-        </span>
-        <span class="social-btn__text">
-          <span class="social-btn__label">Instagram</span>
-          <span class="social-btn__sub" dir="ltr">@hilya.insta</span>
-        </span>
-        <svg class="social-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    {% endif %}
+            {% assign whatsapp_link = section.settings.whatsapp | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' %}
 
-    {% if section.settings.facebook != blank %}
-      <a
-        class="social-btn social-btn--facebook"
-        href="{{ section.settings.facebook }}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span class="social-btn__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.8c0-.9.3-1.5 1.6-1.5h1.6V3.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.4H7.6V13h2.7v8h3.2z"/></svg>
-        </span>
-        <span class="social-btn__text">
-          <span class="social-btn__label">Facebook</span>
-          <span class="social-btn__sub">Hilya</span>
-        </span>
-        <svg class="social-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-    {% endif %}
+            <a
+              class="social-btn social-btn--whatsapp"
+              href="https://wa.me/{{ whatsapp_link }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="social-btn__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </span>
+              <span class="social-btn__text">
+                <span class="social-btn__label">WhatsApp</span>
+                <span class="social-btn__sub"><bdi dir="ltr">{{ section.settings.whatsapp_display | escape }}</bdi></span>
+              </span>
+              <svg class="social-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
 
-  </div>
+          {% endif %}
 
-{% endif %}
+          {% if section.settings.instagram != blank %}
+
+            <a
+              class="social-btn social-btn--instagram"
+              href="{{ section.settings.instagram }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="social-btn__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+              </span>
+              <span class="social-btn__text">
+                <span class="social-btn__label">Instagram</span>
+                <span class="social-btn__sub"><bdi dir="ltr">{{ section.settings.instagram_handle | default: '@hilya.insta' | escape }}</bdi></span>
+              </span>
+              <svg class="social-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+
+          {% endif %}
+
+          {% if section.settings.facebook != blank %}
+
+            <a
+              class="social-btn social-btn--facebook"
+              href="{{ section.settings.facebook }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="social-btn__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.2h-3.1V7.8c0-.9.3-1.5 1.6-1.5h1.6V3.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.4H7.6V13h2.7v8h3.2z"/></svg>
+              </span>
+              <span class="social-btn__text">
+                <span class="social-btn__label">Facebook</span>
+                <span class="social-btn__sub">{{ section.settings.facebook_name | default: 'Hilya' | escape }}</span>
+              </span>
+              <svg class="social-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+
+          {% endif %}
+
+        </div>
+
+      {% endif %}
 
 
       <!-- FALLBACK -->
@@ -208,11 +245,11 @@
       <div class="hilya-contact__form-heading">
 
         <p class="hilya-contact__eyebrow">
-          {{ section.settings.form_eyebrow }}
+          {{ form_eyebrow | escape }}
         </p>
 
         <h2>
-          {{ section.settings.form_heading }}
+          {{ form_heading | escape }}
         </h2>
 
       </div>
@@ -335,6 +372,7 @@
                 autocomplete="email"
                 autocapitalize="off"
                 autocorrect="off"
+                dir="ltr"
                 required
                 value="{{ form.email | default: customer.email | escape }}"
 
@@ -374,6 +412,7 @@
                 type="tel"
                 name="contact[phone]"
                 autocomplete="tel"
+                dir="ltr"
                 value="{{ form.phone | escape }}"
               >
 
@@ -410,7 +449,7 @@
             class="hilya-contact__submit"
             type="submit"
           >
-            {{ section.settings.button_text }}
+            {{ button_text | escape }}
           </button>
 
 
@@ -432,7 +471,7 @@
     <div class="hilya-contact__closing-line"></div>
 
     <p>
-      {{ section.settings.closing_text }}
+      {{ closing_text | escape }}
     </p>
 
   </div>
@@ -442,23 +481,16 @@
 
 {% stylesheet %}
 
-
 /* =========================================================
    HILYA CONTACT PAGE
 ========================================================= */
 
 .hilya-contact {
-
   width: 100%;
   box-sizing: border-box;
-
-  padding-block:
-    var(--contact-padding)
-    110px;
-
+  padding-block: var(--contact-padding) 110px;
   background: var(--contact-background);
   color: var(--contact-foreground);
-
 }
 
 
@@ -467,61 +499,35 @@
 ========================================================= */
 
 .hilya-contact__hero {
-
   width: min(850px, calc(100% - 60px));
-
   margin-inline: auto;
-
   padding-bottom: 80px;
-
   text-align: center;
-
 }
-
 
 .hilya-contact__eyebrow {
-
   margin: 0 0 16px;
-
   font-size: 10px;
   line-height: 1.4;
-
   letter-spacing: 0.22em;
-
   text-transform: uppercase;
-
   color: rgba(17, 17, 17, 0.55);
-
 }
-
 
 .hilya-contact__hero h1 {
-
   margin: 0;
-
   font-size: clamp(44px, 5.2vw, 72px);
-
   line-height: 0.98;
-
   font-weight: 400;
-
   letter-spacing: -0.045em;
-
 }
 
-
 .hilya-contact__intro {
-
   max-width: 610px;
-
   margin: 28px auto 0;
-
   font-size: 15px;
-
   line-height: 1.8;
-
   color: rgba(17, 17, 17, 0.62);
-
 }
 
 
@@ -530,21 +536,12 @@
 ========================================================= */
 
 .hilya-contact__layout {
-
   width: min(1180px, calc(100% - 60px));
-
   margin-inline: auto;
-
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 0.78fr)
-    minmax(0, 1.22fr);
-
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
   gap: clamp(70px, 9vw, 115px);
-
   align-items: start;
-
 }
 
 
@@ -553,112 +550,62 @@
 ========================================================= */
 
 .hilya-contact__details {
-
   padding-top: 8px;
-
 }
-
 
 .hilya-contact__details-heading {
-
   margin-bottom: 50px;
-
 }
-
 
 .hilya-contact__details-heading h2,
 .hilya-contact__form-heading h2 {
-
   margin: 0;
-
   font-size: 30px;
-
   line-height: 1.15;
-
   font-weight: 400;
-
   letter-spacing: -0.025em;
-
 }
-
 
 .hilya-contact__detail {
-
   padding: 23px 0;
-
-  border-top:
-    1px solid
-    rgba(17, 17, 17, 0.14);
-
+  border-top: 1px solid rgba(17, 17, 17, 0.14);
   display: flex;
-
   flex-direction: column;
-
   gap: 8px;
-
 }
-
 
 .hilya-contact__detail:last-of-type {
-
-  border-bottom:
-    1px solid
-    rgba(17, 17, 17, 0.14);
-
+  border-bottom: 1px solid rgba(17, 17, 17, 0.14);
 }
-
 
 .hilya-contact__detail-label {
-
   font-size: 9px;
-
   line-height: 1.4;
-
   letter-spacing: 0.18em;
-
   text-transform: uppercase;
-
   color: rgba(17, 17, 17, 0.5);
-
 }
-
 
 .hilya-contact__detail a {
-
   width: fit-content;
-
   color: inherit;
-
   font-size: 14px;
-
   line-height: 1.5;
-
   text-decoration: none;
-
   overflow-wrap: anywhere;
-
-  transition:
-    opacity 0.25s ease;
-
+  transition: opacity 0.25s ease;
 }
-
 
 .hilya-contact__detail a:hover {
-
   opacity: 0.5;
-
 }
-
 
 .hilya-contact__fallback {
-
   font-size: 14px;
-
   line-height: 1.7;
-
   color: rgba(17, 17, 17, 0.6);
-
 }
+
 
 /* =========================================================
    SOCIAL BUTTONS
@@ -765,39 +712,20 @@
 ========================================================= */
 
 .hilya-contact__form {
-
   box-sizing: border-box;
-
-  padding:
-    46px
-    48px
-    50px;
-
+  padding: 46px 48px 50px;
   background: #EEEAE2;
-
 }
-
 
 .hilya-contact__form-heading {
-
   margin-bottom: 38px;
-
 }
 
-
 .hilya-contact__required {
-
-  margin:
-    0
-    0
-    28px;
-
+  margin: 0 0 28px;
   font-size: 11px;
-
   line-height: 1.6;
-
   color: rgba(17, 17, 17, 0.5);
-
 }
 
 
@@ -806,118 +734,63 @@
 ========================================================= */
 
 .hilya-contact__fields {
-
   display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  gap:
-    27px
-    22px;
-
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 27px 22px;
 }
-
 
 .hilya-contact__field {
-
   display: flex;
-
   flex-direction: column;
-
   align-items: stretch;
-
 }
-
 
 .hilya-contact__field--wide {
-
   grid-column: 1 / -1;
-
 }
-
 
 .hilya-contact__field label {
-
   margin-bottom: 10px;
-
   font-size: 9px;
-
   line-height: 1.4;
-
   letter-spacing: 0.16em;
-
   text-transform: uppercase;
-
   color: rgba(17, 17, 17, 0.58);
-
 }
-
 
 .hilya-contact__field input,
 .hilya-contact__field textarea {
-
   width: 100%;
-
   box-sizing: border-box;
-
   padding: 12px 0;
-
   border: 0;
-
-  border-bottom:
-    1px solid
-    rgba(17, 17, 17, 0.22);
-
+  border-bottom: 1px solid rgba(17, 17, 17, 0.22);
   border-radius: 0;
-
   background: transparent;
-
   color: #111;
-
   font-family: inherit;
-
   font-size: 14px;
-
   line-height: 1.5;
-
   outline: none;
-
   box-shadow: none;
-
-  transition:
-    border-color 0.25s ease;
-
+  transition: border-color 0.25s ease;
 }
-
 
 .hilya-contact__field input:focus,
 .hilya-contact__field textarea:focus {
-
   border-bottom-color: #111;
-
 }
-
 
 .hilya-contact__field textarea {
-
   min-height: 135px;
-
   resize: vertical;
-
 }
 
-
 .hilya-contact__field p {
-
   margin: 8px 0 0;
-
   font-size: 11px;
-
   line-height: 1.5;
-
   color: #8a3b32;
-
 }
 
 
@@ -926,52 +799,26 @@
 ========================================================= */
 
 .hilya-contact__submit {
-
   width: 100%;
-
   min-height: 52px;
-
   margin-top: 34px;
-
-  padding:
-    0
-    24px;
-
-  border:
-    1px solid
-    #111;
-
+  padding: 0 24px;
+  border: 1px solid #111;
   border-radius: 0;
-
   background: #111;
-
   color: #fff;
-
   font-family: inherit;
-
   font-size: 10px;
-
   line-height: 1;
-
   letter-spacing: 0.2em;
-
   text-transform: uppercase;
-
   cursor: pointer;
-
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
-
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-
 .hilya-contact__submit:hover {
-
   background: transparent;
-
   color: #111;
-
 }
 
 
@@ -980,61 +827,31 @@
 ========================================================= */
 
 .hilya-contact__message {
-
   margin-bottom: 28px;
-
-  padding:
-    17px
-    18px;
-
-  border:
-    1px solid
-    rgba(17, 17, 17, 0.18);
-
-  background:
-    rgba(255, 255, 255, 0.32);
-
+  padding: 17px 18px;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background: rgba(255, 255, 255, 0.32);
   font-size: 13px;
-
   line-height: 1.7;
-
 }
-
 
 .hilya-contact__message--error {
-
   color: #8a3b32;
-
 }
-
 
 .hilya-contact__message h3 {
-
-  margin:
-    0
-    0
-    10px;
-
+  margin: 0 0 10px;
   font-size: 13px;
-
   font-weight: 500;
-
 }
-
 
 .hilya-contact__message ul {
-
   margin: 0;
-
   padding-inline-start: 18px;
-
 }
 
-
 .hilya-contact__message a {
-
   color: inherit;
-
 }
 
 
@@ -1043,48 +860,58 @@
 ========================================================= */
 
 .hilya-contact__closing {
-
   width: min(1180px, calc(100% - 60px));
-
-  margin:
-    100px
-    auto
-    0;
-
+  margin: 100px auto 0;
   text-align: center;
-
 }
-
 
 .hilya-contact__closing-line {
-
   width: 100%;
-
   height: 1px;
-
   margin-bottom: 30px;
+  background: rgba(17, 17, 17, 0.13);
+}
 
-  background:
-    rgba(17, 17, 17, 0.13);
-
+.hilya-contact__closing p {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(17, 17, 17, 0.55);
+  letter-spacing: 0.015em;
 }
 
 
-.hilya-contact__closing p {
+/* =========================================================
+   ARABIC
+   Letter-spacing and uppercase break Arabic letter joining,
+   and tiny English-sized text is hard to read in Arabic.
+========================================================= */
 
-  max-width: 600px;
+.hilya-contact:lang(ar) * {
+  letter-spacing: 0;
+  text-transform: none;
+}
 
-  margin: 0 auto;
+.hilya-contact:lang(ar) .hilya-contact__hero h1 {
+  line-height: 1.3;
+}
 
-  font-size: 14px;
+.hilya-contact:lang(ar) :is(
+  .hilya-contact__eyebrow,
+  .hilya-contact__detail-label,
+  .hilya-contact__field label,
+  .social-btn__label
+) {
+  font-size: 12px;
+}
 
-  line-height: 1.8;
+.hilya-contact:lang(ar) .hilya-contact__required {
+  font-size: 12px;
+}
 
-  color:
-    rgba(17, 17, 17, 0.55);
-
-  letter-spacing: 0.015em;
-
+.hilya-contact:lang(ar) .hilya-contact__submit {
+  font-size: 13px;
 }
 
 
@@ -1095,18 +922,12 @@
 @media screen and (max-width: 900px) {
 
   .hilya-contact__layout {
-
     grid-template-columns: 1fr;
-
     gap: 70px;
-
   }
 
-
   .hilya-contact__details {
-
     max-width: 650px;
-
   }
 
 }
@@ -1119,131 +940,71 @@
 @media screen and (max-width: 749px) {
 
   .hilya-contact {
-
-    padding-block:
-      min(var(--contact-padding), 60px)
-      75px;
-
+    padding-block: min(var(--contact-padding), 60px) 75px;
   }
-
 
   .hilya-contact__hero {
-
-    width:
-      calc(100% - 40px);
-
+    width: calc(100% - 40px);
     padding-bottom: 55px;
-
   }
-
 
   .hilya-contact__hero h1 {
-
-    font-size:
-      clamp(40px, 11.5vw, 52px);
-
+    font-size: clamp(40px, 11.5vw, 52px);
     letter-spacing: -0.045em;
-
   }
-
 
   .hilya-contact__intro {
-
     margin-top: 22px;
-
     font-size: 14px;
-
     line-height: 1.75;
-
   }
-
 
   .hilya-contact__layout {
-
-    width:
-      calc(100% - 36px);
-
+    width: calc(100% - 36px);
     gap: 55px;
-
   }
-
 
   .hilya-contact__details-heading {
-
     margin-bottom: 36px;
-
   }
-
 
   .hilya-contact__details-heading h2,
   .hilya-contact__form-heading h2 {
-
     font-size: 26px;
-
   }
-
 
   .hilya-contact__detail {
-
     padding: 20px 0;
-
   }
-
 
   .hilya-contact__form {
-
-    padding:
-      31px
-      22px
-      34px;
-
+    padding: 31px 22px 34px;
   }
-
 
   .hilya-contact__form-heading {
-
     margin-bottom: 31px;
-
   }
-
 
   .hilya-contact__fields {
-
     grid-template-columns: 1fr;
-
     gap: 24px;
-
   }
-
 
   .hilya-contact__field--wide {
-
     grid-column: auto;
-
   }
-
 
   .hilya-contact__field textarea {
-
     min-height: 120px;
-
   }
-
 
   .hilya-contact__submit {
-
     margin-top: 30px;
-
   }
 
-
   .hilya-contact__closing {
-
-    width:
-      calc(100% - 36px);
-
+    width: calc(100% - 36px);
     margin-top: 70px;
-
   }
 
 }
@@ -1256,33 +1017,19 @@
 @media screen and (max-width: 479px) {
 
   .hilya-contact__hero {
-
-    width:
-      calc(100% - 32px);
-
+    width: calc(100% - 32px);
   }
-
 
   .hilya-contact__layout {
-
-    width:
-      calc(100% - 28px);
-
+    width: calc(100% - 28px);
   }
-
 
   .hilya-contact__form {
-
     padding-inline: 19px;
-
   }
 
-
   .hilya-contact__closing {
-
-    width:
-      calc(100% - 28px);
-
+    width: calc(100% - 28px);
   }
 
 }
@@ -1302,10 +1049,22 @@
   "settings": [
 
     {
+      "type": "header",
+      "content": "Hero"
+    },
+
+    {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
+      "label": "Eyebrow (EN)",
       "default": "Contact Us"
+    },
+
+    {
+      "type": "text",
+      "id": "eyebrow_ar",
+      "label": "Eyebrow (AR)",
+      "default": "تواصل معنا"
     },
 
     {
@@ -1337,17 +1096,36 @@
     },
 
     {
+      "type": "header",
+      "content": "Contact details"
+    },
+
+    {
       "type": "text",
       "id": "details_eyebrow",
-      "label": "Details eyebrow",
+      "label": "Details eyebrow (EN)",
       "default": "Get in Touch"
     },
 
     {
       "type": "text",
+      "id": "details_eyebrow_ar",
+      "label": "Details eyebrow (AR)",
+      "default": "ابقَ على تواصل"
+    },
+
+    {
+      "type": "text",
       "id": "details_heading",
-      "label": "Details heading",
+      "label": "Details heading (EN)",
       "default": "Let’s Talk."
+    },
+
+    {
+      "type": "text",
+      "id": "details_heading_ar",
+      "label": "Details heading (AR)",
+      "default": "دعنا نتحدث."
     },
 
     {
@@ -1359,21 +1137,42 @@
 
     {
       "type": "text",
+      "id": "email_label_en",
+      "label": "Email label (EN)",
+      "default": "Email"
+    },
+
+    {
+      "type": "text",
+      "id": "email_label_ar",
+      "label": "Email label (AR)",
+      "default": "البريد الإلكتروني"
+    },
+
+    {
+      "type": "text",
       "id": "phone",
       "label": "t:support.phone",
       "info": "t:contact.override_info"
     },
 
     {
-      "type": "url",
-      "id": "instagram",
-      "label": "Instagram URL"
+      "type": "text",
+      "id": "phone_label_en",
+      "label": "Phone label (EN)",
+      "default": "Phone"
     },
 
     {
-      "type": "url",
-      "id": "facebook",
-      "label": "Facebook URL"
+      "type": "text",
+      "id": "phone_label_ar",
+      "label": "Phone label (AR)",
+      "default": "الهاتف"
+    },
+
+    {
+      "type": "header",
+      "content": "Social buttons"
     },
 
     {
@@ -1391,31 +1190,100 @@
     },
 
     {
+      "type": "url",
+      "id": "instagram",
+      "label": "Instagram URL"
+    },
+
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram handle",
+      "default": "@hilya.insta"
+    },
+
+    {
+      "type": "url",
+      "id": "facebook",
+      "label": "Facebook URL"
+    },
+
+    {
+      "type": "text",
+      "id": "facebook_name",
+      "label": "Facebook page name",
+      "default": "Hilya"
+    },
+
+    {
+      "type": "header",
+      "content": "Form"
+    },
+
+    {
       "type": "text",
       "id": "form_eyebrow",
-      "label": "Form eyebrow",
+      "label": "Form eyebrow (EN)",
       "default": "Send a Message"
     },
 
     {
       "type": "text",
+      "id": "form_eyebrow_ar",
+      "label": "Form eyebrow (AR)",
+      "default": "أرسل رسالة"
+    },
+
+    {
+      "type": "text",
       "id": "form_heading",
-      "label": "Form heading",
+      "label": "Form heading (EN)",
       "default": "How Can We Help?"
     },
 
     {
       "type": "text",
+      "id": "form_heading_ar",
+      "label": "Form heading (AR)",
+      "default": "كيف يمكننا مساعدتك؟"
+    },
+
+    {
+      "type": "text",
       "id": "button_text",
-      "label": "Button text",
+      "label": "Button text (EN)",
       "default": "Send Message"
+    },
+
+    {
+      "type": "text",
+      "id": "button_text_ar",
+      "label": "Button text (AR)",
+      "default": "إرسال الرسالة"
+    },
+
+    {
+      "type": "header",
+      "content": "Closing"
     },
 
     {
       "type": "textarea",
       "id": "closing_text",
-      "label": "Closing text",
+      "label": "Closing text (EN)",
       "default": "Every detail matters. And so does every conversation."
+    },
+
+    {
+      "type": "textarea",
+      "id": "closing_text_ar",
+      "label": "Closing text (AR)",
+      "default": "كل تفصيلة تهمّنا، وكل حوار كذلك."
+    },
+
+    {
+      "type": "header",
+      "content": "Style"
     },
 
     {
