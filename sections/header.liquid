@@ -11,6 +11,15 @@
    HILYA HEADER
    ========================================================= */
 
+   :root {
+  --hilya-header-height: {{ section.settings.desktop_height }}px;
+}
+
+@media screen and (max-width: 749px) {
+  :root {
+    --hilya-header-height: {{ section.settings.mobile_height }}px;
+  }
+}
 .site-header {
   --header-bg: {{ section.settings.background_color }};
   --header-text: {{ section.settings.text_color }};
