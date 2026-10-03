@@ -1,86 +1,1058 @@
 {% liquid
   assign locale_root = request.locale.iso_code | split: '-' | first
+
   assign heading = section.settings.heading_en
   assign intro = section.settings.text_en
+
   if locale_root == 'ar'
     assign heading = section.settings.heading_ar | default: heading
     assign intro = section.settings.text_ar | default: intro
   endif
+
   assign contact_email = section.settings.email | default: settings.support_email
   assign contact_phone = section.settings.phone | default: settings.support_phone
+
   assign phone_link = contact_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-'
+
   assign form_id = 'ContactForm-' | append: section.id
 %}
-<section class="contact-page" style="--contact-background: {{ section.settings.background }}; --contact-foreground: {{ section.settings.foreground }}; --contact-padding: {{ section.settings.padding }}px;" aria-labelledby="ContactHeading-{{ section.id }}">
-  <header class="contact-page__header">
-    <h1 id="ContactHeading-{{ section.id }}">{{ heading | escape }}</h1>
-    {% if intro != blank %}<p>{{ intro | escape | newline_to_br }}</p>{% endif %}
+
+
+<section
+  class="hilya-contact"
+  style="
+    --contact-background: {{ section.settings.background }};
+    --contact-foreground: {{ section.settings.foreground }};
+    --contact-padding: {{ section.settings.padding }}px;
+  "
+  aria-labelledby="ContactHeading-{{ section.id }}"
+>
+
+  <!-- HERO -->
+  <header class="hilya-contact__hero">
+
+    <p class="hilya-contact__eyebrow">
+      {{ section.settings.eyebrow }}
+    </p>
+
+    <h1 id="ContactHeading-{{ section.id }}">
+      {{ heading | escape }}
+    </h1>
+
+    {% if intro != blank %}
+      <p class="hilya-contact__intro">
+        {{ intro | escape | newline_to_br }}
+      </p>
+    {% endif %}
+
   </header>
-  <div class="contact-page__layout">
-    <div class="contact-page__details">
-      {% if contact_email != blank %}<div class="contact-page__detail"><h2>{{ 'contact.email_us' | t }}</h2><a href="mailto:{{ contact_email | escape }}"><bdi>{{ contact_email | escape }}</bdi></a></div>{% endif %}
-      {% if contact_phone != blank %}<div class="contact-page__detail"><h2>{{ 'contact.call_us' | t }}</h2><a href="tel:{{ phone_link | escape }}"><bdi dir="ltr">{{ contact_phone | escape }}</bdi></a></div>{% endif %}
-      {% if contact_email == blank and contact_phone == blank %}<p>{{ 'contact.use_form' | t }}</p>{% endif %}
+
+
+  <!-- MAIN -->
+  <div class="hilya-contact__layout">
+
+    <!-- CONTACT DETAILS -->
+    <div class="hilya-contact__details">
+
+      <div class="hilya-contact__details-heading">
+
+        <p class="hilya-contact__eyebrow">
+          {{ section.settings.details_eyebrow }}
+        </p>
+
+        <h2>
+          {{ section.settings.details_heading }}
+        </h2>
+
+      </div>
+
+
+      {% if contact_email != blank %}
+        <div class="hilya-contact__detail">
+
+          <span class="hilya-contact__detail-label">
+            {{ 'contact.email_us' | t }}
+          </span>
+
+          <a href="mailto:{{ contact_email | escape }}">
+            <bdi>{{ contact_email | escape }}</bdi>
+          </a>
+
+        </div>
+      {% endif %}
+
+
+      {% if contact_phone != blank %}
+        <div class="hilya-contact__detail">
+
+          <span class="hilya-contact__detail-label">
+            {{ 'contact.call_us' | t }}
+          </span>
+
+          <a href="tel:{{ phone_link | escape }}">
+            <bdi dir="ltr">{{ contact_phone | escape }}</bdi>
+          </a>
+
+        </div>
+      {% endif %}
+
+
+      {% if section.settings.instagram != blank %}
+        <div class="hilya-contact__detail">
+
+          <span class="hilya-contact__detail-label">
+            Instagram
+          </span>
+
+          <a
+            href="{{ section.settings.instagram }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @hilya.insta
+          </a>
+
+        </div>
+      {% endif %}
+
+
+      {% if section.settings.whatsapp != blank %}
+        {% assign whatsapp_link = section.settings.whatsapp
+          | remove: ' '
+          | remove: '+'
+          | remove: '-'
+          | remove: '('
+          | remove: ')'
+        %}
+
+        <div class="hilya-contact__detail">
+
+          <span class="hilya-contact__detail-label">
+            WhatsApp
+          </span>
+
+          <a
+            href="https://wa.me/{{ whatsapp_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ section.settings.whatsapp_display }}
+          </a>
+
+        </div>
+      {% endif %}
+
+
+      {% if contact_email == blank
+        and contact_phone == blank
+        and section.settings.instagram == blank
+        and section.settings.whatsapp == blank
+      %}
+        <p class="hilya-contact__fallback">
+          {{ 'contact.use_form' | t }}
+        </p>
+      {% endif %}
+
     </div>
-    <div class="contact-page__form">
-      <h2>{{ 'contact.form_heading' | t }}</h2>
+
+
+    <!-- FORM -->
+    <div class="hilya-contact__form">
+
+      <div class="hilya-contact__form-heading">
+
+        <p class="hilya-contact__eyebrow">
+          {{ section.settings.form_eyebrow }}
+        </p>
+
+        <h2>
+          {{ section.settings.form_heading }}
+        </h2>
+
+      </div>
+
+
       {% form 'contact', id: form_id %}
+
         {% if form.posted_successfully? %}
-          <div class="contact-page__message" role="status" tabindex="-1">{{ 'contact.success' | t }}</div>
-        {% else %}
-          {% if form.errors %}
-            <div class="contact-page__message contact-page__message--error" role="alert" tabindex="-1">
-              <h3>{{ 'contact.error_heading' | t }}</h3>
-              <ul>{% for field in form.errors %}<li>{% if field == 'form' %}{{ form.errors.messages[field] }}{% else %}<a href="#{{ form_id }}-{{ field }}">{{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}</a>{% endif %}</li>{% endfor %}</ul>
-            </div>
-          {% endif %}
-          <p class="contact-page__required">{{ 'contact.required_note' | t }}</p>
-          <div class="contact-page__fields">
-            <div class="contact-field"><label for="{{ form_id }}-name">{{ 'contact.name' | t }} <span aria-hidden="true">*</span></label><input id="{{ form_id }}-name" type="text" name="contact[name]" autocomplete="name" required value="{{ form.name | default: customer.name | escape }}"></div>
-            <div class="contact-field"><label for="{{ form_id }}-email">{{ 'contact.email' | t }} <span aria-hidden="true">*</span></label><input id="{{ form_id }}-email" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" autocorrect="off" required value="{{ form.email | default: customer.email | escape }}" {% if form.errors contains 'email' %}aria-invalid="true" aria-describedby="{{ form_id }}-email-error"{% endif %}>{% if form.errors contains 'email' %}<p id="{{ form_id }}-email-error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>{% endif %}</div>
-            <div class="contact-field contact-field--wide"><label for="{{ form_id }}-phone">{{ 'contact.phone' | t }}</label><input id="{{ form_id }}-phone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone | escape }}"></div>
-            <div class="contact-field contact-field--wide"><label for="{{ form_id }}-body">{{ 'contact.message' | t }} <span aria-hidden="true">*</span></label><textarea id="{{ form_id }}-body" name="contact[body]" rows="6" required>{{ form.body | escape }}</textarea></div>
+
+          <div
+            class="hilya-contact__message"
+            role="status"
+            tabindex="-1"
+          >
+            {{ 'contact.success' | t }}
           </div>
-          <button class="button contact-page__submit" type="submit">{{ 'contact.send' | t }}</button>
+
+        {% else %}
+
+          {% if form.errors %}
+
+            <div
+              class="hilya-contact__message hilya-contact__message--error"
+              role="alert"
+              tabindex="-1"
+            >
+
+              <h3>
+                {{ 'contact.error_heading' | t }}
+              </h3>
+
+              <ul>
+                {% for field in form.errors %}
+
+                  <li>
+
+                    {% if field == 'form' %}
+
+                      {{ form.errors.messages[field] }}
+
+                    {% else %}
+
+                      <a href="#{{ form_id }}-{{ field }}">
+                        {{ form.errors.translated_fields[field] | capitalize }}
+                        {{ form.errors.messages[field] }}
+                      </a>
+
+                    {% endif %}
+
+                  </li>
+
+                {% endfor %}
+              </ul>
+
+            </div>
+
+          {% endif %}
+
+
+          <p class="hilya-contact__required">
+            {{ 'contact.required_note' | t }}
+          </p>
+
+
+          <div class="hilya-contact__fields">
+
+            <!-- NAME -->
+            <div class="hilya-contact__field">
+
+              <label for="{{ form_id }}-name">
+                {{ 'contact.name' | t }}
+                <span aria-hidden="true">*</span>
+              </label>
+
+              <input
+                id="{{ form_id }}-name"
+                type="text"
+                name="contact[name]"
+                autocomplete="name"
+                required
+                value="{{ form.name | default: customer.name | escape }}"
+              >
+
+            </div>
+
+
+            <!-- EMAIL -->
+            <div class="hilya-contact__field">
+
+              <label for="{{ form_id }}-email">
+                {{ 'contact.email' | t }}
+                <span aria-hidden="true">*</span>
+              </label>
+
+              <input
+                id="{{ form_id }}-email"
+                type="email"
+                name="contact[email]"
+                autocomplete="email"
+                autocapitalize="off"
+                autocorrect="off"
+                required
+                value="{{ form.email | default: customer.email | escape }}"
+
+                {% if form.errors contains 'email' %}
+                  aria-invalid="true"
+                  aria-describedby="{{ form_id }}-email-error"
+                {% endif %}
+              >
+
+              {% if form.errors contains 'email' %}
+                <p id="{{ form_id }}-email-error">
+                  {{ form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email }}
+                </p>
+              {% endif %}
+
+            </div>
+
+
+            <!-- PHONE -->
+            <div class="hilya-contact__field hilya-contact__field--wide">
+
+              <label for="{{ form_id }}-phone">
+                {{ 'contact.phone' | t }}
+              </label>
+
+              <input
+                id="{{ form_id }}-phone"
+                type="tel"
+                name="contact[phone]"
+                autocomplete="tel"
+                value="{{ form.phone | escape }}"
+              >
+
+            </div>
+
+
+            <!-- MESSAGE -->
+            <div class="hilya-contact__field hilya-contact__field--wide">
+
+              <label for="{{ form_id }}-body">
+                {{ 'contact.message' | t }}
+                <span aria-hidden="true">*</span>
+              </label>
+
+              <textarea
+                id="{{ form_id }}-body"
+                name="contact[body]"
+                rows="6"
+                required
+              >{{ form.body | escape }}</textarea>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="hilya-contact__submit"
+            type="submit"
+          >
+            {{ section.settings.button_text }}
+          </button>
+
         {% endif %}
+
       {% endform %}
+
     </div>
+
   </div>
+
+
+  <!-- CLOSING -->
+  <div class="hilya-contact__closing">
+
+    <div class="hilya-contact__closing-line"></div>
+
+    <p>
+      {{ section.settings.closing_text }}
+    </p>
+
+  </div>
+
 </section>
+
+
 {% stylesheet %}
-  .contact-page { width: 100%; max-width: 78rem; margin-inline: auto; padding-block: var(--contact-padding); background: var(--contact-background); color: var(--contact-foreground); }
-  .contact-page__header { max-width: 45rem; margin-bottom: 3rem; }
-  .contact-page__header h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; text-transform: uppercase; }
-  .contact-page__header p { font-size: 1.125rem; line-height: 1.6; }
-  .contact-page__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 5vw, 5rem); }
-  .contact-page__details { display: grid; align-content: start; gap: 2rem; }
-  .contact-page__detail h2, .contact-page__form > h2 { margin: 0 0 1rem; font-size: 1.4rem; }
-  .contact-page__detail a { color: inherit; text-underline-offset: .2em; overflow-wrap: anywhere; }
-  .contact-page__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
-  .contact-field { display: grid; align-content: start; gap: .5rem; }
-  .contact-field--wide { grid-column: 1 / -1; }
-  .contact-field input, .contact-field textarea { width: 100%; min-height: 48px; padding: .875rem; border: 1px solid currentColor; border-radius: 0; background: transparent; color: inherit; font: inherit; }
-  .contact-field textarea { resize: vertical; }
-  .contact-field p { margin: 0; font-size: .875rem; }
-  .contact-page__required { font-size: .875rem; margin-block: 0 1.5rem; }
-  .contact-page__submit { margin-top: 1.5rem; border-radius: 0; background: var(--contact-foreground); color: var(--contact-background); }
-  .contact-page__message { padding: 1.25rem; border: 1px solid currentColor; margin-bottom: 1.5rem; }
-  .contact-page__message h3 { margin-top: 0; font-size: 1.125rem; }
-  @media (max-width: 749px) { .contact-page { padding-block: min(var(--contact-padding), 3rem); } .contact-page__layout, .contact-page__fields { grid-template-columns: minmax(0, 1fr); } .contact-page__details { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; } }
-  @media (max-width: 479px) { .contact-page__details { grid-template-columns: minmax(0, 1fr); } }
+
+  /* =========================================================
+     HILYA CONTACT
+  ========================================================= */
+
+  .hilya-contact {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding-block: var(--contact-padding) 110px;
+
+    background: var(--contact-background);
+    color: var(--contact-foreground);
+  }
+
+
+  /* =========================================================
+     HERO
+  ========================================================= */
+
+  .hilya-contact__hero {
+    width: min(850px, calc(100% - 60px));
+    margin-inline: auto;
+    padding-bottom: 80px;
+
+    text-align: center;
+  }
+
+
+  .hilya-contact__eyebrow {
+    margin: 0 0 16px;
+
+    font-size: 10px;
+    line-height: 1.4;
+
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+
+    color: rgba(17, 17, 17, 0.55);
+  }
+
+
+  .hilya-contact__hero h1 {
+    margin: 0;
+
+    font-size: clamp(44px, 5.2vw, 72px);
+    line-height: 0.98;
+
+    font-weight: 400;
+    letter-spacing: -0.045em;
+  }
+
+
+  .hilya-contact__intro {
+    max-width: 610px;
+    margin: 28px auto 0;
+
+    font-size: 15px;
+    line-height: 1.8;
+
+    color: rgba(17, 17, 17, 0.62);
+  }
+
+
+  /* =========================================================
+     MAIN LAYOUT
+  ========================================================= */
+
+  .hilya-contact__layout {
+    width: min(1180px, calc(100% - 60px));
+    margin-inline: auto;
+
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+
+    gap: clamp(70px, 9vw, 115px);
+
+    align-items: start;
+  }
+
+
+  /* =========================================================
+     DETAILS
+  ========================================================= */
+
+  .hilya-contact__details {
+    padding-top: 8px;
+  }
+
+
+  .hilya-contact__details-heading {
+    margin-bottom: 50px;
+  }
+
+
+  .hilya-contact__details-heading h2,
+  .hilya-contact__form-heading h2 {
+    margin: 0;
+
+    font-size: 30px;
+    line-height: 1.15;
+
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+
+
+  .hilya-contact__detail {
+    padding: 23px 0;
+
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+
+  .hilya-contact__detail:last-of-type {
+    border-bottom: 1px solid rgba(17, 17, 17, 0.14);
+  }
+
+
+  .hilya-contact__detail-label {
+    font-size: 9px;
+    line-height: 1.4;
+
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+
+    color: rgba(17, 17, 17, 0.5);
+  }
+
+
+  .hilya-contact__detail a {
+    width: fit-content;
+
+    color: inherit;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    text-decoration: none;
+
+    overflow-wrap: anywhere;
+
+    transition: opacity 0.25s ease;
+  }
+
+
+  .hilya-contact__detail a:hover {
+    opacity: 0.5;
+  }
+
+
+  .hilya-contact__fallback {
+    font-size: 14px;
+    line-height: 1.7;
+
+    color: rgba(17, 17, 17, 0.6);
+  }
+
+
+  /* =========================================================
+     FORM PANEL
+  ========================================================= */
+
+  .hilya-contact__form {
+    box-sizing: border-box;
+
+    padding: 46px 48px 50px;
+
+    background: #EEEAE2;
+  }
+
+
+  .hilya-contact__form-heading {
+    margin-bottom: 38px;
+  }
+
+
+  .hilya-contact__required {
+    margin: 0 0 28px;
+
+    font-size: 11px;
+    line-height: 1.6;
+
+    color: rgba(17, 17, 17, 0.5);
+  }
+
+
+  /* =========================================================
+     FORM FIELDS
+  ========================================================= */
+
+  .hilya-contact__fields {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 27px 22px;
+  }
+
+
+  .hilya-contact__field {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+
+  .hilya-contact__field--wide {
+    grid-column: 1 / -1;
+  }
+
+
+  .hilya-contact__field label {
+    margin-bottom: 10px;
+
+    font-size: 9px;
+    line-height: 1.4;
+
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    color: rgba(17, 17, 17, 0.58);
+  }
+
+
+  .hilya-contact__field input,
+  .hilya-contact__field textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 12px 0;
+
+    border: 0;
+    border-bottom: 1px solid rgba(17, 17, 17, 0.22);
+
+    border-radius: 0;
+
+    background: transparent;
+    color: #111;
+
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+
+    outline: none;
+
+    box-shadow: none;
+
+    transition:
+      border-color 0.25s ease;
+  }
+
+
+  .hilya-contact__field input:focus,
+  .hilya-contact__field textarea:focus {
+    border-bottom-color: #111;
+  }
+
+
+  .hilya-contact__field textarea {
+    min-height: 135px;
+
+    resize: vertical;
+  }
+
+
+  .hilya-contact__field p {
+    margin: 8px 0 0;
+
+    font-size: 11px;
+    line-height: 1.5;
+
+    color: #8a3b32;
+  }
+
+
+  /* =========================================================
+     BUTTON
+  ========================================================= */
+
+  .hilya-contact__submit {
+    width: 100%;
+    min-height: 52px;
+
+    margin-top: 34px;
+
+    padding: 0 24px;
+
+    border: 1px solid #111;
+    border-radius: 0;
+
+    background: #111;
+    color: #fff;
+
+    font-family: inherit;
+
+    font-size: 10px;
+    line-height: 1;
+
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition:
+      background 0.3s ease,
+      color 0.3s ease;
+  }
+
+
+  .hilya-contact__submit:hover {
+    background: transparent;
+    color: #111;
+  }
+
+
+  /* =========================================================
+     SUCCESS / ERROR
+  ========================================================= */
+
+  .hilya-contact__message {
+    margin-bottom: 28px;
+
+    padding: 17px 18px;
+
+    border: 1px solid rgba(17, 17, 17, 0.18);
+
+    background: rgba(255, 255, 255, 0.32);
+
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+
+  .hilya-contact__message--error {
+    color: #8a3b32;
+  }
+
+
+  .hilya-contact__message h3 {
+    margin: 0 0 10px;
+
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+
+  .hilya-contact__message ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+
+  .hilya-contact__message a {
+    color: inherit;
+  }
+
+
+  /* =========================================================
+     CLOSING
+  ========================================================= */
+
+  .hilya-contact__closing {
+    width: min(1180px, calc(100% - 60px));
+
+    margin: 100px auto 0;
+
+    text-align: center;
+  }
+
+
+  .hilya-contact__closing-line {
+    width: 100%;
+    height: 1px;
+
+    margin-bottom: 30px;
+
+    background: rgba(17, 17, 17, 0.13);
+  }
+
+
+  .hilya-contact__closing p {
+    max-width: 600px;
+
+    margin: 0 auto;
+
+    font-size: 14px;
+    line-height: 1.8;
+
+    color: rgba(17, 17, 17, 0.55);
+
+    letter-spacing: 0.015em;
+  }
+
+
+  /* =========================================================
+     TABLET
+  ========================================================= */
+
+  @media screen and (max-width: 900px) {
+
+    .hilya-contact__layout {
+      grid-template-columns: 1fr;
+
+      gap: 70px;
+    }
+
+
+    .hilya-contact__details {
+      max-width: 650px;
+    }
+
+  }
+
+
+  /* =========================================================
+     MOBILE
+  ========================================================= */
+
+  @media screen and (max-width: 749px) {
+
+    .hilya-contact {
+      padding-block: min(var(--contact-padding), 60px) 75px;
+    }
+
+
+    .hilya-contact__hero {
+      width: calc(100% - 40px);
+
+      padding-bottom: 55px;
+    }
+
+
+    .hilya-contact__hero h1 {
+      font-size: clamp(40px, 11.5vw, 52px);
+
+      letter-spacing: -0.045em;
+    }
+
+
+    .hilya-contact__intro {
+      margin-top: 22px;
+
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+
+    .hilya-contact__layout {
+      width: calc(100% - 36px);
+
+      gap: 55px;
+    }
+
+
+    .hilya-contact__details-heading {
+      margin-bottom: 36px;
+    }
+
+
+    .hilya-contact__details-heading h2,
+    .hilya-contact__form-heading h2 {
+      font-size: 26px;
+    }
+
+
+    .hilya-contact__detail {
+      padding: 20px 0;
+    }
+
+
+    .hilya-contact__form {
+      padding: 31px 22px 34px;
+    }
+
+
+    .hilya-contact__form-heading {
+      margin-bottom: 31px;
+    }
+
+
+    .hilya-contact__fields {
+      grid-template-columns: 1fr;
+
+      gap: 24px;
+    }
+
+
+    .hilya-contact__field--wide {
+      grid-column: auto;
+    }
+
+
+    .hilya-contact__field textarea {
+      min-height: 120px;
+    }
+
+
+    .hilya-contact__submit {
+      margin-top: 30px;
+    }
+
+
+    .hilya-contact__closing {
+      width: calc(100% - 36px);
+
+      margin-top: 70px;
+    }
+
+  }
+
+
+  /* =========================================================
+     SMALL MOBILE
+  ========================================================= */
+
+  @media screen and (max-width: 479px) {
+
+    .hilya-contact__hero {
+      width: calc(100% - 32px);
+    }
+
+
+    .hilya-contact__layout {
+      width: calc(100% - 28px);
+    }
+
+
+    .hilya-contact__form {
+      padding-inline: 19px;
+    }
+
+
+    .hilya-contact__closing {
+      width: calc(100% - 28px);
+    }
+
+  }
+
 {% endstylesheet %}
+
+
 {% schema %}
 {
-  "name":"t:contact.section","enabled_on":{"templates":["page"]},"settings":[
-    {"type":"text","id":"heading_en","label":"t:labels.heading_en","default":"Contact us"},
-    {"type":"text","id":"heading_ar","label":"t:labels.heading_ar","default":"تواصل معنا"},
-    {"type":"textarea","id":"text_en","label":"t:labels.body_text_en","default":"Questions about an order or finding the right piece? Send us a message. We’re here to help."},
-    {"type":"textarea","id":"text_ar","label":"t:labels.body_text_ar","default":"لديك سؤال عن طلبك أو اختيار اللوحة المناسبة؟ أرسل لنا رسالة. نحن هنا لمساعدتك."},
-    {"type":"text","id":"email","label":"t:support.email","info":"t:contact.override_info"},
-    {"type":"text","id":"phone","label":"t:support.phone","info":"t:contact.override_info"},
-    {"type":"range","id":"padding","label":"t:home.vertical_padding","min":32,"max":96,"step":8,"unit":"px","default":64},
-    {"type":"color","id":"background","label":"t:labels.background","default":"#FFFFFF"},
-    {"type":"color","id":"foreground","label":"t:labels.foreground","default":"#111111"}
+  "name": "t:contact.section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Contact Us"
+    },
+
+    {
+      "type": "text",
+      "id": "heading_en",
+      "label": "t:labels.heading_en",
+      "default": "We’re Here for You."
+    },
+
+    {
+      "type": "text",
+      "id": "heading_ar",
+      "label": "t:labels.heading_ar",
+      "default": "نحن هنا من أجلك."
+    },
+
+    {
+      "type": "textarea",
+      "id": "text_en",
+      "label": "t:labels.body_text_en",
+      "default": "Whether you have a question about an order, a piece, or simply want to say hello, we’d love to hear from you."
+    },
+
+    {
+      "type": "textarea",
+      "id": "text_ar",
+      "label": "t:labels.body_text_ar",
+      "default": "سواء كان لديك سؤال عن طلبك أو عن إحدى قطعنا، يسعدنا أن نسمع منك."
+    },
+
+    {
+      "type": "text",
+      "id": "details_eyebrow",
+      "label": "Details eyebrow",
+      "default": "Get in Touch"
+    },
+
+    {
+      "type": "text",
+      "id": "details_heading",
+      "label": "Details heading",
+      "default": "Let’s Talk."
+    },
+
+    {
+      "type": "text",
+      "id": "email",
+      "label": "t:support.email",
+      "info": "t:contact.override_info"
+    },
+
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "t:support.phone",
+      "info": "t:contact.override_info"
+    },
+
+    {
+      "type": "url",
+      "id": "instagram",
+      "label": "Instagram URL"
+    },
+
+    {
+      "type": "text",
+      "id": "whatsapp",
+      "label": "WhatsApp number",
+      "info": "Include country code. Example: 201XXXXXXXXX"
+    },
+
+    {
+      "type": "text",
+      "id": "whatsapp_display",
+      "label": "WhatsApp display number",
+      "default": "+20 100 000 0000"
+    },
+
+    {
+      "type": "text",
+      "id": "form_eyebrow",
+      "label": "Form eyebrow",
+      "default": "Send a Message"
+    },
+
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "How Can We Help?"
+    },
+
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Send Message"
+    },
+
+    {
+      "type": "textarea",
+      "id": "closing_text",
+      "label": "Closing text",
+      "default": "Every detail matters. And so does every conversation."
+    },
+
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "t:home.vertical_padding",
+      "min": 32,
+      "max": 120,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+
+    {
+      "type": "color",
+      "id": "background",
+      "label": "t:labels.background",
+      "default": "#F7F4EE"
+    },
+
+    {
+      "type": "color",
+      "id": "foreground",
+      "label": "t:labels.foreground",
+      "default": "#111111"
+    }
+
+  ],
+
+  "presets": [
+    {
+      "name": "Hilya Contact"
+    }
   ]
 }
 {% endschema %}
