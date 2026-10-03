@@ -660,6 +660,105 @@
 
 }
 
+/* =========================================================
+   SOCIAL BUTTONS
+========================================================= */
+
+.hilya-contact__social {
+  display: grid;
+  gap: 12px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(17, 17, 17, 0.14);
+}
+
+.social-btn {
+  --brand: #111;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border: 1px solid rgba(17, 17, 17, 0.16);
+  background: rgba(255, 255, 255, 0.35);
+  color: #111;
+  text-decoration: none;
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.social-btn--whatsapp { --brand: #25d366; }
+.social-btn--facebook { --brand: #1877f2; }
+.social-btn--instagram { --brand: #d6249f; }
+
+.social-btn__icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+}
+
+.social-btn--instagram .social-btn__icon {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+}
+
+.social-btn__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.social-btn__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.social-btn__label {
+  font-size: 9px;
+  line-height: 1.4;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.5);
+}
+
+.social-btn__sub {
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.social-btn__arrow {
+  width: 18px;
+  height: 18px;
+  margin-inline-start: auto;
+  flex-shrink: 0;
+  opacity: 0.45;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.social-btn:hover .social-btn__arrow {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+[dir='rtl'] .social-btn__arrow {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .social-btn:hover .social-btn__arrow {
+  transform: scaleX(-1) translateX(4px);
+}
+
 
 /* =========================================================
    FORM PANEL
