@@ -31,9 +31,9 @@
       }
     },
     "collections_pUPfUG": {
-      "type": "collections",
+      "type": "home-categories",
       "custom_css": [],
-      "name": "t:general.collections_grid",
+      "name": "categories",
       "settings": {
         "grid_gap": 48
       }
