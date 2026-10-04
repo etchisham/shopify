@@ -12,7 +12,7 @@
   src: url("https://cdn.shopify.com/s/files/1/0785/2454/7209/files/arbfonts.woff2?v=1791149723") format("woff2");
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 /* =========================================================
    HILYA HEADER
@@ -1209,11 +1209,11 @@ html[lang|="ar"] body .site-header .site-header__brand {
          ===================================================== -->
 
     <a
-      href="{{ routes.root_url }}"
-      class="site-header__brand"
-    >
-      {{ 'general.brand_name' | t }}
-    </a>
+  href="{{ routes.root_url }}"
+  class="site-header__brand{% if request.locale.iso_code == 'ar' %} site-header__brand--ar{% endif %}"
+>
+  {{ 'general.brand_name' | t }}
+</a>
 
 
     <!-- =====================================================
