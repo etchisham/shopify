@@ -1104,11 +1104,6 @@ body:has(.site-header--sticky) {
         {% endif %}
 
 
-        <a href="{{ section.settings.contact_link }}">
-          {{ 'navigation.contact_us' | t }}
-        </a>
-
-
         <!-- INSTAGRAM - NEW TAB -->
 
         <a
@@ -1148,6 +1143,10 @@ body:has(.site-header--sticky) {
           </a>
 
         {% endif %}
+
+        <a href="{{ section.settings.contact_link }}">
+          {{ 'navigation.contact_us' | t }}
+        </a>
 
         <!-- LANGUAGE (mobile) -->
 
