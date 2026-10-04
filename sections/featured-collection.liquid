@@ -1,16 +1,31 @@
 {% assign featured_collection = section.settings.collection %}
 
+{%- liquid
+  assign fc_locale = request.locale.iso_code | split: '-' | first
+  assign fc_eyebrow = section.settings.eyebrow
+  assign fc_heading = section.settings.heading
+
+  if fc_locale == 'ar'
+    if section.settings.eyebrow_ar != blank
+      assign fc_eyebrow = section.settings.eyebrow_ar
+    endif
+    if section.settings.heading_ar != blank
+      assign fc_heading = section.settings.heading_ar
+    endif
+  endif
+-%}
+
 <section class="featured-collection">
   <div class="featured-collection__header">
     <div class="featured-collection__heading">
-      {% if section.settings.eyebrow != blank %}
+      {% if fc_eyebrow != blank %}
         <p class="featured-collection__eyebrow">
-          {{ section.settings.eyebrow | escape }}
+          {{ fc_eyebrow | escape }}
         </p>
       {% endif %}
 
       <h2 class="featured-collection__title">
-        {{ section.settings.heading | default: featured_collection.title | escape }}
+        {{ fc_heading | default: featured_collection.title | escape }}
       </h2>
     </div>
 
@@ -266,7 +281,10 @@
 {
   "name": "t:general.featured_collection",
   "disabled_on": {
-    "groups": ["header", "footer"]
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
   "settings": [
     {
@@ -277,9 +295,22 @@
     },
     {
       "type": "text",
+      "id": "eyebrow_ar",
+      "label": "Eyebrow - Arabic",
+      "info": "Shown on the Arabic site. Leave blank to use the English text.",
+      "default": "الأكثر مبيعًا"
+    },
+    {
+      "type": "text",
       "id": "heading",
       "label": "t:labels.heading",
       "default": "The Pieces Everyone Loves"
+    },
+    {
+      "type": "text",
+      "id": "heading_ar",
+      "label": "Heading - Arabic",
+      "default": "القطع التي يحبها الجميع"
     },
     {
       "type": "collection",
