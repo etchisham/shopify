@@ -571,7 +571,7 @@
   .cart-offer { margin-block-end: 1.5rem; }
   .cart-recommendation { flex-basis: 88%; gap: 0.75rem; }
   .cart-recommendations__header > h3 { font-size: 0.95rem; }
-  .cart-toast, .cart-feedback { top: 0.75rem; right: 0.75rem; max-width: calc(100% - 1.5rem); }
+  .cart-toast, .cart-feedback { top: 0.75rem; inset-inline-end: 0.75rem; max-width: calc(100% - 1.5rem); }
 }
 
 @media (max-height: 600px) {
