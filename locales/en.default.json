@@ -56,7 +56,8 @@
     "all_products": "All products",
     "categories": "Categories",
     "cart": "Cart ({{ count }})",
-    "continue_shopping": "Continue shopping"
+    "continue_shopping": "Continue shopping",
+    "brand_name": "Hilya"
   },
   "products": {
     "product": {
