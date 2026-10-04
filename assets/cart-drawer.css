@@ -1,4 +1,4 @@
-/* Panel stays physically right; text, items, and controls follow storefront direction. */
+/* Panel sits at the inline end: right in English, left in Arabic. */
 .cart-drawer {
   --cart-background: #fff;
   --cart-color: #171717;
