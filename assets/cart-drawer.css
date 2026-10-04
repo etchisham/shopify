@@ -85,7 +85,7 @@
 
 .cart-drawer__close {
   position: absolute;
-  left: 1.5rem;
+  inset-inline-start: 1.5rem;
 }
 
 .cart-drawer__content {
