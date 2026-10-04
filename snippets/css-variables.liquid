@@ -3,9 +3,7 @@
 {%- endcomment -%}
 {%- assign css_locale = request.locale.iso_code | split: '-' | first -%}
 {%- if css_locale == 'ar' -%}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap">
+  {{ 'cairo-arabic.woff' | asset_url | preload_tag: as: 'font', type: 'font/woff', crossorigin: '' }}
 {%- endif -%}
 
 {% style %}
@@ -14,6 +12,14 @@
   {{ settings.type_body_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
   {{ settings.type_heading_font | font_face: font_display: 'swap' }}
   {{ settings.type_heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+
+  @font-face {
+  font-family: "Cairo";
+  src: url("{{ 'cairo-arabic.woff' | asset_url }}") format("woff");
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
 
   :root {
     color-scheme: light;
