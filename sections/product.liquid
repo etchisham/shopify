@@ -481,6 +481,16 @@
   color: #666;
 }
 
+/* Mobile / touch: no gallery arrows, swipe instead */
+@media (max-width: 749px), (hover: none) {
+  [data-product-previous],
+  [data-product-next],
+  [data-product-zoom-previous],
+  [data-product-zoom-next] {
+    display: none !important;
+  }
+}
+
 {% endstylesheet %}
 
 {% schema %}
