@@ -1,16 +1,9 @@
+<!-- langs: {{ localization.available_languages.size }} -->
 {% style %}
 
 @font-face {
   font-family: "Hilya Script";
   src: url("https://cdn.shopify.com/s/files/1/0785/2454/7209/files/allura-regular-webfont.woff2?v=1790688458") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Hilya Arabic";
-  src: url("https://cdn.shopify.com/s/files/1/0785/2454/7209/files/arbfonts.woff2?v=1791149723") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -145,16 +138,6 @@ body:has(.site-header--sticky) {
   white-space: nowrap;
 
   transform: translateY(-1px);
-}
-
-.site-header__brand--arabic {
-  font-family: "Hilya Arabic", serif;
-  font-size: 2.45rem;
-  line-height: 1;
-  letter-spacing: 0;
-  direction: rtl;
-  unicode-bidi: isolate;
-  transform: translateY(-2px);
 }
 
 .site-header__brand:hover {
@@ -577,18 +560,6 @@ body:has(.site-header--sticky) {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
-
-  .site-header__brand--arabic {
-    font-family: "Hilya Arabic", serif;
-    font-size: 2rem;
-    line-height: 1;
-    direction: rtl;
-    unicode-bidi: isolate;
-    transform:
-      translate(-50%, -50%)
-      translateY(-2px);
-  }
-}
 
 
   .site-header__inner {
@@ -1212,16 +1183,11 @@ body:has(.site-header--sticky) {
          ===================================================== -->
 
     <a
-  href="{{ routes.root_url }}"
-  class="site-header__brand{% if localization.language.iso_code == 'ar' %} site-header__brand--arabic{% endif %}"
-  {% if localization.language.iso_code == 'ar' %}lang="ar" dir="rtl"{% endif %}
->
-  {% if localization.language.iso_code == 'ar' %}
-    حِلْية
-  {% else %}
-    Hilya
-  {% endif %}
-</a>
+      href="{{ routes.root_url }}"
+      class="site-header__brand"
+    >
+      Hilya
+    </a>
 
 
     <!-- =====================================================
