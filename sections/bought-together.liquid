@@ -1,6 +1,30 @@
 {% liquid
   assign section_file = 'bought-together'
 
+  assign is_cards_request = false
+  if request.page_type == 'collection'
+    assign is_cards_request = true
+  endif
+
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign heading = section.settings.heading_en
+  if locale_root == 'ar'
+    assign heading = section.settings.heading_ar | default: heading
+  endif
+  if heading == blank
+    assign heading = 'products.bundle.heading' | t
+  endif
+
+  assign add_label = 'products.product.add_to_cart' | t
+  assign sold_out_label = 'products.product.sold_out' | t
+  assign options_label = 'Select options'
+  if locale_root == 'ar'
+    assign options_label = 'اختر الخيارات'
+  endif
+
+  comment
+    Find the first tag of the current product that starts with the prefix (collection-...)
+  endcomment
   assign tag_prefix = section.settings.tag_prefix | default: 'collection-' | downcase | replace: ' ', '-'
   assign prefix_length = tag_prefix | size
   assign group_handle = ''
@@ -14,6 +38,9 @@
     endif
   endfor
 
+  comment
+    Priority: metafield, then same tag, then the products picked in the section settings
+  endcomment
   assign related_products = product.metafields.custom.frequently_bought_together.value
   assign use_tag = false
   if related_products == blank
@@ -24,149 +51,846 @@
     endif
   endif
 
-  assign locale_root = request.locale.iso_code | split: '-' | first
-  assign heading = section.settings.heading_en
-  if locale_root == 'ar'
-    assign heading = section.settings.heading_ar | default: heading
-  endif
-  if heading == blank
-    assign heading = 'products.bundle.heading' | t
-  endif
-
-  assign current_variant = product.selected_or_first_available_variant
-  assign current_minimum = current_variant.quantity_rule.min | default: 1
-  assign bundle_total = 0
-  assign bundle_count = 0
-  if current_variant.available and product.requires_selling_plan == false
-    assign bundle_total = current_variant.price | times: current_minimum
-    assign bundle_count = 1
-  endif
-
-  # count related products (without the current one) to place the current one in the middle
-  assign related_count = 0
-  unless use_tag
-    assign counted_ids = ',' | append: product.id | append: ','
-    for related in related_products limit: 12
-      if related_count >= 4
-        break
-      endif
-      assign counted_token = ',' | append: related.id | append: ','
-      unless counted_ids contains counted_token
-        assign counted_ids = counted_ids | append: counted_token
-        assign related_count = related_count | plus: 1
-      endunless
-    endfor
-  endunless
-  assign middle_index = related_count | divided_by: 2
-
-  assign show_section = false
-  if use_tag or related_count > 0
-    assign show_section = true
+  assign card_source = related_products
+  if is_cards_request
+    assign card_source = collection.products
   endif
 %}
 
-{% if request.page_type == 'collection' %}
+{%- capture cards_html -%}
+  {%- unless use_tag and is_cards_request == false -%}
+    {%- assign seen_ids = ',' | append: product.id | append: ',' -%}
+    {%- assign shown = 0 -%}
 
-  {%- comment -%} الوضع التاني: بيرجّع الكروت بس لما يتطلب بالـ fetch (من غير wrapper) {%- endcomment -%}
-  {%- for related in collection.products limit: 12 -%}
-    {% render 'bundle-product', product: related, section_id: '__SID__' %}
-  {%- endfor -%}
+    {%- for item in card_source limit: 13 -%}
+      {%- if shown >= 12 -%}{%- break -%}{%- endif -%}
+
+      {%- assign item_token = ',' | append: item.id | append: ',' -%}
+      {%- if seen_ids contains item_token -%}{%- continue -%}{%- endif -%}
+      {%- assign seen_ids = seen_ids | append: item_token -%}
+      {%- assign shown = shown | plus: 1 -%}
+
+      {%- liquid
+        assign rating = item.metafields.reviews.rating.value
+        assign rating_count = item.metafields.reviews.rating_count.value | default: 0
+        assign rating_value = rating.rating | default: rating
+        assign rating_maximum = rating.scale_max | default: 5
+        assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
+        assign review_word = 'review'
+        if rating_count != 1
+          assign review_word = 'reviews'
+        endif
+
+        assign variant = item.selected_or_first_available_variant
+        assign min_quantity = variant.quantity_rule.min | default: 1
+        assign form_id = 'ExploreForm-' | append: item.id
+
+        assign go_to_product = false
+        if item.tags contains 'Name' or item.tags contains 'Date' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
+          assign go_to_product = true
+        endif
+
+        assign show_select = false
+        if item.variants.size > 1 and go_to_product == false and item.available
+          assign show_select = true
+        endif
+      -%}
+
+      <article class="explore-collection__item" data-explore-item data-product-id="{{ item.id }}">
+
+        <div class="explore-collection__media">
+
+          <a
+            href="{{ item.url }}"
+            class="explore-collection__image-link"
+            aria-label="{{ item.title | escape }}"
+          >
+            {%- if item.featured_image != blank -%}
+              {{
+                item.featured_image
+                | image_url: width: 900
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '360, 540, 720, 900',
+                  sizes: '(min-width: 990px) 25vw, 70vw',
+                  alt: item.featured_image.alt | default: item.title
+              }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag }}
+            {%- endif -%}
+          </a>
+
+          <div class="explore-collection__quick-wrap">
+
+            {%- if go_to_product -%}
+
+              <a class="explore-collection__quick" href="{{ item.url }}">{{ options_label }}</a>
+
+            {%- elsif item.available -%}
+
+              {% form 'product', item,
+                id: form_id,
+                class: 'explore-collection__form product-form',
+                data-product-title: item.title
+              %}
+                {%- unless show_select -%}
+                  <input type="hidden" name="id" value="{{ variant.id }}">
+                {%- endunless -%}
+                <input type="hidden" name="quantity" value="{{ min_quantity }}">
+
+                <button type="submit" name="add" class="explore-collection__quick" data-explore-add>
+                  + {{ add_label }}
+                </button>
+              {% endform %}
+
+            {%- else -%}
+
+              <span class="explore-collection__quick is-disabled">{{ sold_out_label }}</span>
+
+            {%- endif -%}
+
+          </div>
+
+        </div>
+
+        <div class="explore-collection__info">
+
+          <h3 class="explore-collection__product-title">
+            <a href="{{ item.url }}">{{ item.title | escape }}</a>
+          </h3>
+
+          {%- if show_select -%}
+            <div class="explore-collection__variant">
+              <select
+                class="explore-collection__select"
+                name="id"
+                form="{{ form_id }}"
+                aria-label="{{ item.title | escape }}"
+                data-variant-select
+              >
+                {%- for v in item.variants -%}
+                  <option
+                    value="{{ v.id }}"
+                    {% if v.id == variant.id %}selected{% endif %}
+                    data-available="{{ v.available }}"
+                    data-price="{{ v.price | money | escape }}"
+                    data-compare="{% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | escape }}{% endif %}"
+                    data-image="{% if v.featured_image %}{{ v.featured_image | image_url: width: 900 }}{% endif %}"
+                  >
+                    {{- v.title | escape -}}
+                    {%- unless v.available %} · {{ sold_out_label }}{% endunless -%}
+                  </option>
+                {%- endfor -%}
+              </select>
+              <span class="explore-collection__chevron" aria-hidden="true"></span>
+            </div>
+          {%- endif -%}
+
+          {%- if settings.card_show_rating and rating_value != blank and rating_count > 0 -%}
+            <div
+              class="explore-collection__rating"
+              role="img"
+              aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
+            >
+              <span class="explore-collection__rating-star" aria-hidden="true">★</span>
+              <span class="explore-collection__rating-value">{{ rating_display }}</span>
+              <span class="explore-collection__rating-count">({{ rating_count }} {{ review_word }})</span>
+            </div>
+          {%- endif -%}
+
+          <div class="explore-collection__price" data-card-price>
+            {% render 'price', product: item %}
+          </div>
+
+        </div>
+
+      </article>
+    {%- endfor -%}
+  {%- endunless -%}
+{%- endcapture -%}
+
+{%- assign has_cards = false -%}
+{%- if cards_html contains 'data-explore-item' -%}
+  {%- assign has_cards = true -%}
+{%- endif -%}
+
+{%- assign show_section = false -%}
+{%- if use_tag or has_cards -%}
+  {%- assign show_section = true -%}
+{%- endif -%}
+
+
+{% if is_cards_request %}
+
+  {%- comment -%} Cards only: this is what the fetch below receives from /collections/all/<tag> {%- endcomment -%}
+  {{ cards_html }}
 
 {% elsif show_section %}
 
-  <section class="bought-together section-spacing" data-bought-together data-section-id="{{ section.id }}" data-current-product-id="{{ product.id }}" {% if use_tag %}data-tag-url="{{ routes.all_products_collection_url }}/{{ group_handle }}?section_id={{ section_file }}" hidden{% endif %} data-money-format="{{ shop.money_format | escape }}" data-currency="{{ cart.currency.iso_code | default: shop.currency }}" data-button-label="{{ 'products.bundle.add_selected' | t: count: '__count__' | escape }}" data-empty-label="{{ 'products.bundle.select_products' | t | escape }}" aria-labelledby="BundleHeading-{{ section.id }}">
-    <h2 id="BundleHeading-{{ section.id }}">{{ heading | escape }}</h2>
-    <form action="{{ routes.cart_add_url }}" method="post" data-bought-together-form>
-      <div class="bought-together__cards" data-bundle-cards>
-        {% unless use_tag %}
-          {% assign seen_ids = ',' | append: product.id | append: ',' %}
-          {% assign shown = 0 %}
-          {% for related in related_products limit: 12 %}
-            {% if shown >= 4 %}{% break %}{% endif %}
-            {% assign related_token = ',' | append: related.id | append: ',' %}
-            {% unless seen_ids contains related_token %}
-              {% assign seen_ids = seen_ids | append: related_token %}
-              {% if shown == middle_index %}
-                {% render 'bundle-product', product: product, section_id: section.id, current: true %}
-              {% endif %}
-              {% assign shown = shown | plus: 1 %}
-              {% render 'bundle-product', product: related, section_id: section.id %}
-              {% if related.available and related.requires_selling_plan == false and related.metafields.custom.personalization_required.value != true %}
-                {% assign selected = related.selected_or_first_available_variant %}
-                {% assign minimum_quantity = selected.quantity_rule.min | default: 1 %}
-                {% assign line_total = selected.price | times: minimum_quantity %}
-                {% assign bundle_total = bundle_total | plus: line_total %}
-                {% assign bundle_count = bundle_count | plus: 1 %}
-              {% endif %}
-            {% endunless %}
-          {% endfor %}
-        {% else %}
-          {%- comment -%} وضع التاج: المنتج الحالي يتحط هنا، والـ JS بيوزّع المنتجات المرتبطة حواليه {%- endcomment -%}
-          {% render 'bundle-product', product: product, section_id: section.id, current: true %}
-        {% endunless %}
+  <section
+    class="explore-collection"
+    data-explore-collection
+    data-current-product-id="{{ product.id }}"
+    data-add-label="{{ add_label | escape }}"
+    data-sold-out-label="{{ sold_out_label | escape }}"
+    {% if use_tag %}data-tag-url="{{ routes.all_products_collection_url }}/{{ group_handle }}?section_id={{ section_file }}" hidden{% endif %}
+    aria-labelledby="ExploreHeading-{{ section.id }}"
+  >
+    <div class="explore-collection__inner">
+
+      <div class="explore-collection__header">
+        <h2 class="explore-collection__title" id="ExploreHeading-{{ section.id }}">{{ heading | escape }}</h2>
       </div>
-      <div class="bought-together__summary">
-        <p>{{ 'products.bundle.total' | t }}: <strong><bdi data-bundle-total>{{ bundle_total | money }}</bdi></strong></p>
-        <button class="button button--full" type="submit" name="add" data-bundle-add disabled>
-          <span class="button-spinner" aria-hidden="true"></span>
-          <span data-add-label>{% if bundle_count > 0 %}{{ 'products.bundle.add_selected' | t: count: bundle_count }}{% else %}{{ 'products.bundle.select_products' | t }}{% endif %}</span>
-          <span data-loading-label hidden>{{ 'products.bundle.adding' | t }}</span>
+
+      <div class="explore-collection__carousel">
+
+        <button
+          type="button"
+          class="explore-collection__arrow explore-collection__arrow--prev"
+          data-explore-prev
+          aria-label="Previous products"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
         </button>
-        <noscript><p>{{ 'products.bundle.no_javascript' | t }}</p></noscript>
+
+        <button
+          type="button"
+          class="explore-collection__arrow explore-collection__arrow--next"
+          data-explore-next
+          aria-label="Next products"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+
+        <div class="explore-collection__track" data-explore-track>
+          {{ cards_html }}
+        </div>
+
       </div>
-    </form>
 
-    {% if use_tag %}
-      <script>
-        (function () {
-          var root = document.currentScript.parentElement;
-          if (!root || !root.dataset.tagUrl) return;
+    </div>
 
-          fetch(root.dataset.tagUrl, { credentials: 'same-origin' })
-            .then(function (r) { return r.ok ? r.text() : ''; })
+    <script>
+      (function () {
+        var root = document.currentScript.parentElement;
+        var track = root.querySelector('[data-explore-track]');
+        var previous = root.querySelector('[data-explore-prev]');
+        var next = root.querySelector('[data-explore-next]');
+
+        if (!track) return;
+
+        function isRtl() {
+          return window.getComputedStyle(track).direction === 'rtl';
+        }
+
+        function updateArrows() {
+          var max = track.scrollWidth - track.clientWidth;
+          var fromLeft = isRtl() ? max + track.scrollLeft : track.scrollLeft;
+          var fromRight = max - fromLeft;
+
+          if (previous) previous.setAttribute('data-hidden', fromLeft <= 1 ? 'true' : 'false');
+          if (next) next.setAttribute('data-hidden', fromRight <= 1 ? 'true' : 'false');
+        }
+
+        if (previous) {
+          previous.addEventListener('click', function () {
+            track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
+          });
+        }
+
+        if (next) {
+          next.addEventListener('click', function () {
+            track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+          });
+        }
+
+        track.addEventListener('scroll', updateArrows, { passive: true });
+        window.addEventListener('resize', updateArrows);
+        window.addEventListener('load', updateArrows);
+        updateArrows();
+
+        /* Variant dropdown: update price, image and the add button */
+        root.addEventListener('change', function (event) {
+          var select = event.target.closest ? event.target.closest('[data-variant-select]') : null;
+          if (!select) return;
+
+          var card = select.closest('[data-explore-item]');
+          var option = select.options[select.selectedIndex];
+          if (!card || !option) return;
+
+          var priceBox = card.querySelector('[data-card-price]');
+          var button = card.querySelector('[data-explore-add]');
+          var image = card.querySelector('.explore-collection__image-link img');
+
+          if (priceBox && option.dataset.price) {
+            var wrapper = document.createElement('div');
+            wrapper.className = 'price';
+
+            var current = document.createElement('span');
+            current.className = 'price__current';
+            current.textContent = option.dataset.price;
+            wrapper.appendChild(current);
+
+            if (option.dataset.compare) {
+              var compare = document.createElement('s');
+              compare.className = 'price__compare';
+              compare.textContent = option.dataset.compare;
+              wrapper.appendChild(compare);
+            }
+
+            priceBox.innerHTML = '';
+            priceBox.appendChild(wrapper);
+          }
+
+          if (image && option.dataset.image) {
+            image.removeAttribute('srcset');
+            image.src = option.dataset.image;
+          }
+
+          if (button) {
+            var available = option.dataset.available === 'true';
+            button.disabled = !available;
+            button.textContent = available
+              ? '+ ' + root.getAttribute('data-add-label')
+              : root.getAttribute('data-sold-out-label');
+          }
+        });
+
+        /* Tag mode: bring the products that have the same tag, then show the section */
+        var tagUrl = root.getAttribute('data-tag-url');
+
+        if (tagUrl) {
+          fetch(tagUrl, { credentials: 'same-origin' })
+            .then(function (response) { return response.ok ? response.text() : ''; })
             .then(function (html) {
               if (!html) return;
 
-              /* خلي ids الكروت تطابق id السكشن الحقيقي */
-              html = html.split('__SID__').join(root.dataset.sectionId);
-
               var doc = new DOMParser().parseFromString(html, 'text/html');
-              var current = root.dataset.currentProductId;
+              var currentId = root.getAttribute('data-current-product-id');
 
-              /* كل كارت هو <article data-bundle-item> مباشرة، واستبعد المنتج الحالي */
               var items = Array.prototype.filter.call(
-                doc.querySelectorAll('[data-bundle-item]'),
-                function (el) { return el.dataset.productId !== current; }
-              ).slice(0, 4);
+                doc.querySelectorAll('[data-explore-item]'),
+                function (el) { return el.getAttribute('data-product-id') !== currentId; }
+              ).slice(0, 12);
 
-              /* مفيش منتج تاني بنفس التاج: السكشن يفضل مخفي */
+              /* No other product with the same tag: the section stays hidden */
               if (!items.length) return;
 
-              var cards = root.querySelector('[data-bundle-cards]');
-              var currentCard = cards.querySelector('[data-bundle-current]');
-              var middle = Math.floor(items.length / 2);
-
-              /* نص المنتجات قبل المنتج الحالي والباقي بعده */
-              items.forEach(function (el, i) {
-                if (i < middle && currentCard) cards.insertBefore(el, currentCard);
-                else cards.appendChild(el);
-              });
+              items.forEach(function (el) { track.appendChild(el); });
 
               root.hidden = false;
-              root.dispatchEvent(new CustomEvent('bundle:cards-updated', { bubbles: true }));
+              requestAnimationFrame(updateArrows);
             })
             .catch(function () {});
-        })();
-      </script>
-    {% endif %}
+        }
+      })();
+    </script>
   </section>
 
 {% elsif request.design_mode %}
-  <section class="bought-together section-spacing"><h2>{{ heading | escape }}</h2><p>{{ 'products.bundle.editor_setup' | t }}</p></section>
+
+  <section class="explore-collection">
+    <div class="explore-collection__inner">
+      <div class="explore-collection__header">
+        <h2 class="explore-collection__title">{{ heading | escape }}</h2>
+      </div>
+      <p style="text-align:center">{{ 'products.bundle.editor_setup' | t }}</p>
+    </div>
+  </section>
+
 {% endif %}
 
 {% stylesheet %}
-  [data-bought-together][hidden] { display: none !important; }
+
+[data-explore-collection][hidden] {
+  display: none !important;
+}
+
+.explore-collection,
+.explore-collection *,
+.explore-collection *::before,
+.explore-collection *::after {
+  box-sizing: border-box;
+}
+
+/* Let the section use the full screen width (some themes wrap sections in a narrow container) */
+.shopify-section:has(> .explore-collection) {
+  width: 100% !important;
+  max-width: none !important;
+  margin-inline: 0 !important;
+}
+
+.explore-collection {
+  /* Same value as .product-recommendations so both sections sit the same distance from the section above */
+  --section-gap: 2.5rem;
+
+  width: 100%;
+  max-width: 100%;
+  padding: var(--section-gap) 0 1.5rem;
+  overflow-x: clip;
+}
+
+.explore-collection__inner {
+  width: 100%;
+  max-width: 98rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 4rem);
+}
+
+.explore-collection__header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+
+.explore-collection__title {
+  margin: 0;
+  color: #222;
+  font-family: sans-serif;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+
+/* =========================================
+   CAROUSEL
+   --per-view : cards visible at once
+   --gap      : space between cards
+   --ratio-w / --ratio-h : image shape (3 / 4 = portrait, 2 / 3 = taller)
+========================================= */
+
+.explore-collection__carousel {
+  --per-view: 4;
+  --gap: 1.5rem;
+  --ratio-w: 3;
+  --ratio-h: 4;
+
+  position: relative;
+  container-type: inline-size;
+}
+
+.explore-collection__track {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.explore-collection__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Few products: keep them in the middle under the heading.
+   The auto margins turn into 0 when the row is full, so scrolling still works. */
+.explore-collection__track > :first-child {
+  margin-inline-start: auto;
+}
+
+.explore-collection__track > :last-child {
+  margin-inline-end: auto;
+}
+
+.explore-collection__item {
+  min-width: 0;
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  scroll-snap-align: start;
+}
+
+
+/* =========================================
+   ARROWS (centered on the image)
+========================================= */
+
+.explore-collection__arrow {
+  position: absolute;
+  top: calc(
+    (100cqw - (var(--per-view) - 1) * var(--gap)) / var(--per-view)
+    * var(--ratio-h) / var(--ratio-w) / 2
+  );
+  z-index: 3;
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0.9rem;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition:
+    opacity 200ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.explore-collection__arrow--prev {
+  left: -1.625rem;
+}
+
+.explore-collection__arrow--next {
+  right: -1.625rem;
+}
+
+.explore-collection__arrow[data-hidden="true"] {
+  visibility: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .explore-collection__carousel:hover .explore-collection__arrow,
+  .explore-collection__carousel:focus-within .explore-collection__arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.explore-collection__arrow:hover {
+  background: #222;
+  color: #fff;
+}
+
+
+/* =========================================
+   IMAGE
+========================================= */
+
+.explore-collection__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--product-card-radius, 0);
+  background: #f5f5f1;
+}
+
+.explore-collection__image-link {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ratio-w) / var(--ratio-h);
+  text-decoration: none;
+}
+
+.explore-collection__image-link img,
+.explore-collection__image-link svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.explore-collection__image-link img {
+  transition: transform 400ms ease;
+}
+
+.explore-collection__image-link:hover img {
+  transform: scale(1.025);
+}
+
+
+/* =========================================
+   ADD TO CART (appears on hover)
+========================================= */
+
+.explore-collection__quick-wrap {
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.explore-collection__media:hover .explore-collection__quick-wrap,
+.explore-collection__media:focus-within .explore-collection__quick-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.explore-collection__form {
+  margin: 0;
+}
+
+.explore-collection__quick {
+  display: flex;
+  width: 100%;
+  min-height: 3.1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.85rem;
+  background: var(--color-background, #fffcf7);
+  color: #222;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.explore-collection__quick:hover {
+  background: #222;
+  color: var(--color-background, #fffcf7);
+}
+
+.explore-collection__quick.is-disabled,
+.explore-collection__quick:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.explore-collection__quick.is-disabled:hover,
+.explore-collection__quick:disabled:hover {
+  background: var(--color-background, #fffcf7);
+  color: #222;
+}
+
+/* Touch screens have no hover: keep the button visible and hide the arrows (swipe instead) */
+@media (hover: none) {
+  .explore-collection__arrow {
+    display: none;
+  }
+
+  .explore-collection__quick-wrap {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .explore-collection__quick {
+    min-height: 2.6rem;
+    font-size: 0.82rem;
+  }
+}
+
+
+/* =========================================
+   INFO
+========================================= */
+
+.explore-collection__info {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding-top: 0.8rem;
+  text-align: center;
+}
+
+.explore-collection__product-title {
+  margin: 0;
+  color: #222;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.explore-collection__product-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.explore-collection__product-title a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+
+/* Variant dropdown */
+
+.explore-collection__variant {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.explore-collection__select {
+  min-width: 8.5rem;
+  max-width: 100%;
+  padding: 0.5rem 2.1rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 999px;
+  background: transparent;
+  color: #222;
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.explore-collection__select:hover {
+  border-color: #222;
+}
+
+.explore-collection__chevron {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 0.95rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+
+/* Price */
+
+.explore-collection__price {
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.explore-collection__price .price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  direction: ltr;
+}
+
+html[dir="rtl"] .explore-collection__price .price {
+  justify-content: flex-end;
+}
+
+.explore-collection__price .price__current {
+  order: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.explore-collection__price .price__compare {
+  order: 2;
+  font-size: 0.78rem;
+  text-decoration: line-through;
+}
+
+
+/* Rating */
+
+.explore-collection__rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  line-height: 1;
+}
+
+.explore-collection__rating-star {
+  color: #f5b301;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.explore-collection__rating-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.explore-collection__rating-count {
+  color: #666;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 989px) {
+  .explore-collection__carousel {
+    --per-view: 3;
+  }
+}
+
+
+/* =========================================
+   MOBILE (about 1.5 cards, swipe)
+========================================= */
+
+@media (max-width: 749px) {
+  .explore-collection {
+    padding: 1.75rem 0 1rem;
+  }
+
+  .explore-collection__inner {
+    padding-inline: 1rem;
+  }
+
+  .explore-collection__header {
+    margin-bottom: 1.2rem;
+  }
+
+  .explore-collection__title {
+    font-size: 1.3rem;
+  }
+
+  .explore-collection__carousel {
+    --per-view: 1.55;
+    --gap: 0.75rem;
+    --ratio-w: 1;
+    --ratio-h: 1;
+  }
+
+  .explore-collection__info {
+    padding-top: 0.65rem;
+  }
+
+  .explore-collection__product-title {
+    font-size: 0.95rem;
+  }
+
+  .explore-collection__price {
+    font-size: 0.9rem;
+  }
+
+  .explore-collection__price .price__current {
+    font-size: 1rem;
+  }
+
+  .explore-collection__price .price__compare {
+    font-size: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-collection__track {
+    scroll-behavior: auto;
+  }
+
+  .explore-collection__image-link img,
+  .explore-collection__quick-wrap {
+    transition: none;
+  }
+}
+
 {% endstylesheet %}
 
 {% schema %}
