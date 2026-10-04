@@ -17,13 +17,17 @@
         "image": "shopify://shop_images/ChatGPT_Image_Sep_27_2026_09_26_16_PM.png",
         "overlay_opacity": 10,
         "eyebrow": "TIMELESS JEWELRY",
+        "eyebrow_ar": "مجوهرات خالدة",
         "heading": "Elegance in Every Detail",
         "heading_line_1": "",
         "heading_line_2": "",
         "text": "<p><br/>Modern pieces, Lasting impressions.<br/><br/></p>",
+        "text_ar": "<p></p><p>قطع عصرية تترك أثرًا يدوم.</p><p></p>",
         "button_label": "SHOP NOW",
+        "button_label_ar": "تسوق الآن",
         "button_link": "shopify://collections/all-products",
         "secondary_button_label": "",
+        "secondary_button_label_ar": "",
         "secondary_button_link": "",
         "alignment": "left",
         "text_width": 38
@@ -43,11 +47,17 @@
       "settings": {
         "image": "shopify://shop_images/ChatGPT_Image_Sep_28_2026_10_13_47_PM.png",
         "image_alt": "Hilya jewelry",
+        "image_alt_ar": "عروض حلية الخاصة",
         "eyebrow": "SPECIAL OFFER",
+        "eyebrow_ar": "عرض خاص",
         "heading_line_1": "Limited Time.",
+        "heading_line_1_ar": "لفترة محدودة",
         "heading_line_2": "Up to 30% Off",
+        "heading_line_2_ar": "خصم يصل إلى 30%",
         "description": "<p><em>Discover selected pieces at special prices, made to bring timeless elegance to your everyday style.</em></p>",
+        "description_ar": "<p>اكتشف قطعًا مختارة بأسعار خاصة، لتمنح إطلالتك اليومية أناقة خالدة.</p>",
         "button_label": "SHOP SALE",
+        "button_label_ar": "تسوق التخفيضات",
         "button_link": "shopify://collections/sales"
       }
     },
@@ -56,7 +66,9 @@
       "name": "t:general.featured_collection",
       "settings": {
         "eyebrow": "BEST SELLERS",
+        "eyebrow_ar": "الأكثر مبيعًا",
         "heading": "The Pieces Everyone Loves",
+        "heading_ar": "القطع التي يحبها الجميع",
         "collection": "best-sellers",
         "products_to_show": 5,
         "columns": 5
