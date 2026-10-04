@@ -1,4 +1,3 @@
-<!-- langs: {{ localization.available_languages.size }} -->
 {% style %}
 
 @font-face {
@@ -7,6 +6,13 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+}
+@font-face {
+  font-family: "Hilya Arabic";
+  src: url("https://cdn.shopify.com/s/files/1/0785/2454/7209/files/arbfonts.woff2?v=1791149723") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
 }
 /* =========================================================
    HILYA HEADER
@@ -909,6 +915,25 @@ body:has(.site-header--sticky) {
 }
 
 /* =========================================================
+   ARABIC WORDMARK (حِلْية)
+   Change the two font-size values below to make it bigger or smaller.
+   ========================================================= */
+
+html[lang|="ar"] body .site-header .site-header__brand {
+  font-family: "Hilya Arabic", "Cairo", sans-serif !important;
+  font-size: 2.6rem;
+  line-height: 1.2;
+  transform: none;
+}
+
+@media screen and (max-width: 749px) {
+  html[lang|="ar"] body .site-header .site-header__brand {
+    font-size: 2.1rem;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* =========================================================
    LANGUAGE SWITCHER
    ========================================================= */
 
@@ -1105,6 +1130,11 @@ body:has(.site-header--sticky) {
         {% endif %}
 
 
+        <a href="{{ section.settings.contact_link }}">
+          {{ 'navigation.contact_us' | t }}
+        </a>
+
+
         <!-- INSTAGRAM - NEW TAB -->
 
         <a
@@ -1145,10 +1175,6 @@ body:has(.site-header--sticky) {
 
         {% endif %}
 
-        <a href="{{ section.settings.contact_link }}">
-          {{ 'navigation.contact_us' | t }}
-        </a>
-
         <!-- LANGUAGE (mobile) -->
 
         {%- if localization.available_languages.size > 1 -%}
@@ -1186,7 +1212,7 @@ body:has(.site-header--sticky) {
       href="{{ routes.root_url }}"
       class="site-header__brand"
     >
-      Hilya
+      {{ 'general.brand_name' | t }}
     </a>
 
 
