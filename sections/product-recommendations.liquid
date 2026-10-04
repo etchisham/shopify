@@ -158,7 +158,7 @@
                         class="product-recommendations__quick"
                         data-rec-add
                       >
-                        <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5h11l.8 11H3.2z"/><path d="M7 8.5V7a2.5 2.5 0 0 1 5 0v1.5"/><path d="M19 3v6M16 6h6"/></svg>
+                        <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
                         <span class="product-recommendations__quick-text">+ {{ add_label }}</span>
                       </button>
                     {% endform %}
@@ -282,6 +282,55 @@
     window.addEventListener('resize', updateArrows);
     window.addEventListener('load', updateArrows);
     updateArrows();
+
+    /* Narrow screens: touch already swipes the row; this lets a mouse drag it too */
+    const dragQuery = window.matchMedia('(max-width: 749px)');
+    let drag = null;
+    let suppressClick = false;
+
+    track.addEventListener('pointerdown', (event) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0 || !dragQuery.matches) return;
+      drag = { x: event.clientX, left: track.scrollLeft, moved: false };
+    });
+
+    window.addEventListener('pointermove', (event) => {
+      if (!drag) return;
+      const dx = event.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) < 5) return;
+
+      if (!drag.moved) {
+        drag.moved = true;
+        track.style.scrollSnapType = 'none';
+        track.style.scrollBehavior = 'auto';
+        track.classList.add('is-dragging');
+      }
+
+      track.scrollLeft = drag.left - dx;
+    });
+
+    const endDrag = () => {
+      if (!drag) return;
+
+      if (drag.moved) {
+        suppressClick = true;
+        setTimeout(() => { suppressClick = false; }, 60);
+        track.style.scrollSnapType = '';
+        track.style.scrollBehavior = '';
+        track.classList.remove('is-dragging');
+      }
+
+      drag = null;
+    };
+
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+
+    /* After a drag, do not open the product under the mouse */
+    track.addEventListener('click', (event) => {
+      if (!suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
 
     /* Variant dropdown: update price, image and the add button */
     section.addEventListener('change', (event) => {
@@ -794,9 +843,25 @@ html[dir="rtl"] .product-recommendations__price .price {
   }
 
   /* 1rem space before the first card; set both to 0 to start flush with the screen edge */
+  /* No arrows on mobile: just swipe */
+  .product-recommendations__arrow {
+    display: none;
+  }
+
   .product-recommendations__track {
     padding-inline: 1rem;
     scroll-padding-inline: 1rem;
+    cursor: grab;
+  }
+
+  .product-recommendations__track.is-dragging {
+    cursor: grabbing;
+  }
+
+  .product-recommendations__track img,
+  .product-recommendations__track a {
+    -webkit-user-drag: none;
+    user-select: none;
   }
 
   /* Add / Select options: small icon on the right (same color as the page) */
