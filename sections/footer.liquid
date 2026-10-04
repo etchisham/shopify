@@ -10,7 +10,7 @@
     <div class="hilya-footer__brand">
 
       <a href="{{ routes.root_url }}" class="hilya-footer__logo">
-        Hilya
+        {{ 'general.brand_name' | t }}
       </a>
 
       <p>
@@ -550,9 +550,21 @@
 }
 
 
-.hilya-footer__social a[aria-label="Facebook"] svg {
+.hilya-footer__social a:nth-child(2) svg {
+
   fill: currentColor;
+
   stroke: none;
+
+}
+
+
+.hilya-footer__social a:nth-child(3) svg {
+
+  fill: none;
+
+  stroke: currentColor;
+
 }
 
 
@@ -733,6 +745,12 @@
 }
 
 /* ARABIC / RTL */
+
+[dir="rtl"] .hilya-footer__logo {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.4;
+}
 
 [dir="rtl"] .hilya-newsletter-form button {
   transform: scaleX(-1);
