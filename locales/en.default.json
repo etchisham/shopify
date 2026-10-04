@@ -21,10 +21,29 @@
     "opens_in_new_tab": "Opens in a new tab"
   },
   "announcement": {
-    "default": "BOGO savings — buy 2, get 1 free + free shipping"
+    "default": "Buy 2, get 1 free + free shipping"
   },
   "navigation": {
-    "view_all": "View all {{ title }}"
+    "view_all": "View all {{ title }}",
+    "home": "Home",
+    "all_products": "All Products",
+    "categories": "Categories",
+    "necklaces": "Necklaces",
+    "rings": "Rings",
+    "pendants": "Pendants",
+    "bracelets": "Bracelets",
+    "keychains": "Keychains",
+    "new_arrivals": "New Arrivals",
+    "best_sellers": "Best Sellers",
+    "sale": "Sale",
+    "contact_us": "Contact Us",
+    "our_instagram": "Our Instagram",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "faq": "FAQ",
+    "shop": "Shop",
+    "about": "About",
+    "our_story": "Our Story"
   },
   "general": {
     "announcement": "Announcement",
@@ -109,7 +128,19 @@
       "personalization": "Add personalization",
       "option_error": "Unable to load this option. Check your connection and try again.",
       "previous_media": "Previous media",
-      "next_media": "Next media"
+      "next_media": "Next media",
+      "decrease_quantity": "Decrease quantity",
+      "increase_quantity": "Increase quantity",
+      "personalization_title": "Personalization",
+      "personalization_required": "Required",
+      "personalization_name": "Name",
+      "personalization_name_placeholder": "Enter the name",
+      "personalization_date": "Date",
+      "personalization_name_error": "Please enter the name.",
+      "personalization_date_error": "Please select the date.",
+      "personalization_error": "Please complete the required personalization fields.",
+      "back_to": "Back to {{ title }}",
+      "back_to_search": "Back to search results"
     }
   },
   "collections": {
@@ -147,7 +178,7 @@
   },
   "newsletter": {
     "label": "Email address",
-    "placeholder": "E-mail",
+    "placeholder": "Email",
     "button": "Subscribe",
     "success": "You have been subscribed successfully.",
     "error": "Please check your email address and try again.",
@@ -162,7 +193,12 @@
     "newsletter_heading": "Newsletter",
     "newsletter_text": "Sign up to our newsletter to receive exclusive offers.",
     "privacy_notice": "By signing up, you agree with our privacy policy.",
-    "follow_us": "Follow us"
+    "follow_us": "Follow us",
+    "tagline": "JEWELRY & ACCESSORIES",
+    "join_newsletter": "Join Our Newsletter",
+    "newsletter_tagline": "Be the first to know about new collections and exclusive offers.",
+    "email_placeholder": "Your email address",
+    "copyright": "© {{ year }} Hilya. All rights reserved."
   },
   "cart": {
     "checkout": "Checkout",
@@ -203,7 +239,10 @@
     "placeholder": "Search products, articles, and pages",
     "submit": "Search",
     "no_results_html": "No results found for <strong>{{ terms }}</strong>.",
-    "results_for_html": "{{ count }} results for <strong>{{ terms }}</strong>."
+    "results_for_html": {
+      "one": "{{ count }} result for <strong>{{ terms }}</strong>.",
+      "other": "{{ count }} results for <strong>{{ terms }}</strong>."
+    }
   },
   "blog": {
     "article_comments": "Comments",
@@ -243,7 +282,17 @@
     "pause": "Pause slideshow",
     "play": "Play slideshow",
     "previous_products": "Previous products",
-    "next_products": "Next products"
+    "next_products": "Next products",
+    "hero_title_1": "Elegance",
+    "hero_title_2": "in Every Detail",
+    "categories_heading": "SHOP BY CATEGORY",
+    "categories_subheading": "Find your perfect piece",
+    "new_arrivals_eyebrow": "NEW ARRIVALS",
+    "new_arrivals_heading_1": "Fresh Pieces,",
+    "new_arrivals_heading_2": "For New Moments",
+    "new_arrivals_button": "EXPLORE NEW ARRIVALS",
+    "follow_journey": "Follow Our Journey",
+    "instagram_alt": "Hilya Instagram"
   },
   "contact": {
     "email_us": "Email us",
@@ -270,5 +319,13 @@
     "eyebrow": "Help center",
     "heading": "Frequently asked questions",
     "topics": "Help topics"
+  },
+  "header": {
+    "submit_search": "Submit search",
+    "cart": "Cart"
+  },
+  "meta": {
+    "tagged": "tagged \"{{ tags }}\"",
+    "page": "Page {{ number }}"
   }
 }
