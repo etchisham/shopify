@@ -136,7 +136,8 @@
                   {% if go_to_product %}
 
                     <a class="product-recommendations__quick" href="{{ item.url }}">
-                      {{ options_label }}
+                      <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+                      <span class="product-recommendations__quick-text">{{ options_label }}</span>
                     </a>
 
                   {% elsif item.available %}
@@ -157,14 +158,15 @@
                         class="product-recommendations__quick"
                         data-rec-add
                       >
-                        + {{ add_label }}
+                        <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5h11l.8 11H3.2z"/><path d="M7 8.5V7a2.5 2.5 0 0 1 5 0v1.5"/><path d="M19 3v6M16 6h6"/></svg>
+                        <span class="product-recommendations__quick-text">+ {{ add_label }}</span>
                       </button>
                     {% endform %}
 
                   {% else %}
 
-                    <span class="product-recommendations__quick is-disabled">
-                      {{ sold_out_label }}
+                    <span class="product-recommendations__quick is-disabled is-sold-out">
+                      <span class="product-recommendations__quick-text">{{ sold_out_label }}</span>
                     </span>
 
                   {% endif %}
@@ -321,9 +323,14 @@
       if (button) {
         const available = option.dataset.available === 'true';
         button.disabled = !available;
-        button.textContent = available
-          ? '+ ' + section.dataset.addLabel
-          : section.dataset.soldOutLabel;
+        button.classList.toggle('is-sold-out', !available);
+
+        const text = button.querySelector('.product-recommendations__quick-text');
+        if (text) {
+          text.textContent = available
+            ? '+ ' + section.dataset.addLabel
+            : section.dataset.soldOutLabel;
+        }
       }
     });
 
@@ -575,6 +582,11 @@
   color: var(--color-background, #fffcf7);
 }
 
+/* The icon is only used on mobile */
+.product-recommendations__quick-icon {
+  display: none;
+}
+
 .product-recommendations__quick.is-disabled,
 .product-recommendations__quick:disabled {
   opacity: 0.7;
@@ -745,32 +757,102 @@ html[dir="rtl"] .product-recommendations__price .price {
 
 
 /* =========================================
-   MOBILE (unchanged look: about 1.5 cards, swipe)
+   MOBILE (Artsy style)
+   Full-width swipe row + small icon-only add button on the right of the image
 ========================================= */
 
 @media (max-width: 749px) {
+
   .product-recommendations {
-    margin-top: 0.25rem;
-    padding-top: 0;
+    --section-gap: 1.75rem;
+
+    /* Break out of the page side padding: the row runs from screen edge to screen edge */
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
   }
 
   .product-recommendations__inner {
-    padding-inline: 1rem;
+    padding-inline: 0;
   }
 
   .product-recommendations__header {
     margin-bottom: 1.2rem;
+    padding-inline: 1rem;
   }
 
   .product-recommendations__title {
     font-size: 1.3rem;
   }
 
+  /* Card size: about 1.7 cards visible, tall 2 / 3 image like Artsy */
   .product-recommendations__carousel {
-    --per-view: 1.55;
+    --per-view: 1.7;
     --gap: 0.75rem;
-    --ratio-w: 1;
-    --ratio-h: 1;
+    --ratio-w: 2;
+    --ratio-h: 3;
+  }
+
+  /* 1rem space before the first card; set both to 0 to start flush with the screen edge */
+  .product-recommendations__track {
+    padding-inline: 1rem;
+    scroll-padding-inline: 1rem;
+  }
+
+  /* Add / Select options: small icon on the right (same color as the page) */
+  .product-recommendations__quick-wrap {
+    inset-inline-start: auto;
+    inset-inline-end: 0.6rem;
+    bottom: 0.6rem;
+  }
+
+  .product-recommendations__quick {
+    width: 2.4rem;
+    height: 2.4rem;
+    min-height: 0;
+    padding: 0;
+    border: 1px solid rgb(34 34 34 / 85%);
+    border-radius: 0.35rem;
+    box-shadow: none;
+  }
+
+  .product-recommendations__quick-icon {
+    display: block;
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  /* The words stay for screen readers only */
+  .product-recommendations__quick-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Sold out keeps a small text label (an icon alone would not say it) */
+  .product-recommendations__quick.is-sold-out {
+    width: auto;
+    height: auto;
+    min-height: 2rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.72rem;
+  }
+
+  .product-recommendations__quick.is-sold-out .product-recommendations__quick-icon {
+    display: none;
+  }
+
+  .product-recommendations__quick.is-sold-out .product-recommendations__quick-text {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
   }
 
   .product-recommendations__info {
@@ -781,17 +863,23 @@ html[dir="rtl"] .product-recommendations__price .price {
     font-size: 0.95rem;
   }
 
+  /* Price on one line, like Artsy */
   .product-recommendations__price {
-    margin-top: 0.3rem;
     font-size: 0.9rem;
   }
 
+  .product-recommendations__price .price {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.4rem;
+  }
+
   .product-recommendations__price .price__current {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .product-recommendations__price .price__compare {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 }
 
