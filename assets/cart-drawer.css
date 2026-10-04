@@ -476,7 +476,7 @@
   position: fixed;
   z-index: 1000;
   top: 1.25rem;
-  right: 1.25rem;
+  inset-inline-end: 1.25rem;
   width: max-content;
   max-width: calc(100% - 2.5rem);
   margin: 0;
