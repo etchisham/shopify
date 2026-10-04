@@ -11,16 +11,15 @@
   "sections": {
     "hero_N4mypj": {
       "type": "hero",
-      "custom_css": [
-        ".hero__content,.hero__content h1,.hero__content .hero__text,.hero__content .eyebrow {color: #fff !important;}",
-        ".hero__content .button {background: #fff !important; color: #000 !important; border-color: #fff !important;}"
-      ],
+      "custom_css": [],
       "name": "t:general.hero",
       "settings": {
         "image": "shopify://shop_images/ChatGPT_Image_Sep_27_2026_09_26_16_PM.png",
         "overlay_opacity": 10,
         "eyebrow": "TIMELESS JEWELRY",
         "heading": "Elegance in Every Detail",
+        "heading_line_1": "",
+        "heading_line_2": "",
         "text": "<p><br/>Modern pieces, Lasting impressions.<br/><br/></p>",
         "button_label": "SHOP NOW",
         "button_link": "shopify://collections/all-products",
