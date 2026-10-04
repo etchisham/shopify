@@ -1,3 +1,5 @@
+{%- assign instagram_alt = 'home.instagram_alt' | t -%}
+
 <section class="hilya-social">
 
   <div class="hilya-social__inner">
@@ -7,7 +9,7 @@
     <div class="hilya-social__intro">
 
       <p class="hilya-social__title">
-        Follow Our Journey
+        {{ 'home.follow_journey' | t }}
       </p>
 
       <a
@@ -60,7 +62,7 @@
               loading: 'lazy',
               widths: '300, 500, 700, 800',
               sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: 'Hilya Instagram'
+              alt: instagram_alt
           }}
         </a>
       {% endif %}
@@ -80,7 +82,7 @@
               loading: 'lazy',
               widths: '300, 500, 700, 800',
               sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: 'Hilya Instagram'
+              alt: instagram_alt
           }}
         </a>
       {% endif %}
@@ -100,7 +102,7 @@
               loading: 'lazy',
               widths: '300, 500, 700, 800',
               sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: 'Hilya Instagram'
+              alt: instagram_alt
           }}
         </a>
       {% endif %}
@@ -120,7 +122,7 @@
               loading: 'lazy',
               widths: '300, 500, 700, 800',
               sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: 'Hilya Instagram'
+              alt: instagram_alt
           }}
         </a>
       {% endif %}
@@ -295,6 +297,17 @@
     transition: none;
   }
 
+}
+
+/* ARABIC / RTL */
+
+[dir="rtl"] .hilya-social__title {
+  font-size: 26px;
+  line-height: 1.4;
+}
+
+[dir="rtl"] .hilya-social__instagram {
+  font-size: 15px;
 }
 
 {% endstylesheet %}
