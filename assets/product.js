@@ -350,45 +350,233 @@
         { signal }
       );
 
-            /* Swipe left / right to change the image (only when it is not zoomed in) */
-      let touchStart = null;
+        const SLIDE_MS = 260;   /* speed of the slide after you let go */
+      const SLIDE_GAP = 24;   /* space between two images while sliding (px) */
+      const SWIPE_DISTANCE = 0.25; /* how far (share of the width) counts as a swipe */
+
+      let swipe = null;
+      let swipeBusy = false;
+
+      const zoomSource = (index) => {
+        const slide = images[index];
+        const link = slide && slide.querySelector('[data-product-zoom]');
+
+        if (!link) return null;
+
+        return {
+          src: link.dataset.zoomSrc || link.getAttribute('href') || '',
+          alt: link.dataset.zoomAlt || ''
+        };
+      };
+
+      const targetFor = (dx) => {
+        /* Swipe left shows the next image (the opposite on the Arabic version) */
+        const goNext = (dx < 0) !== isRtl();
+        const index = zoomIndex + (goNext ? 1 : -1);
+
+        return {
+          index,
+          valid: index >= 0 && index < images.length
+        };
+      };
+
+      const setNeighbour = (state, side, index) => {
+        if (state.neighbour && state.neighbour.dataset.target === String(index)) return;
+
+        state.neighbour?.remove();
+        state.neighbour = null;
+
+        const source = zoomSource(index);
+
+        if (!source) return;
+
+        const neighbour = state.image.cloneNode(false);
+
+        neighbour.src = source.src;
+        neighbour.alt = source.alt;
+        neighbour.removeAttribute('srcset');
+        neighbour.removeAttribute('sizes');
+        neighbour.setAttribute('aria-hidden', 'true');
+        neighbour.dataset.target = String(index);
+
+        Object.assign(neighbour.style, {
+          position: 'absolute',
+          left: state.image.offsetLeft + 'px',
+          top: state.image.offsetTop + 'px',
+          width: state.image.offsetWidth + 'px',
+          height: state.image.offsetHeight + 'px',
+          objectFit: 'contain',
+          pointerEvents: 'none',
+          transition: 'none'
+        });
+
+        canvas.appendChild(neighbour);
+
+        state.neighbour = neighbour;
+        state.side = side;
+      };
 
       canvas?.addEventListener(
         'touchstart',
         (event) => {
-          if (event.touches.length !== 1 || canvas.classList.contains('is-zoomed')) {
-            touchStart = null;
+          const image = canvas.querySelector('img');
+
+          if (
+            swipeBusy ||
+            !image ||
+            event.touches.length !== 1 ||
+            canvas.classList.contains('is-zoomed')
+          ) {
+            swipe = null;
             return;
           }
 
-          touchStart = {
+          swipe = {
             x: event.touches[0].clientX,
-            y: event.touches[0].clientY
+            y: event.touches[0].clientY,
+            time: Date.now(),
+            dx: 0,
+            started: false,
+            image,
+            neighbour: null,
+            side: 0,
+            width: canvas.clientWidth
           };
         },
         { passive: true, signal }
       );
 
       canvas?.addEventListener(
-        'touchend',
+        'touchmove',
         (event) => {
-          if (!touchStart) return;
+          if (!swipe) return;
 
-          const touch = event.changedTouches[0];
-          const dx = touch.clientX - touchStart.x;
-          const dy = touch.clientY - touchStart.y;
+          const dx = event.touches[0].clientX - swipe.x;
+          const dy = event.touches[0].clientY - swipe.y;
 
-          touchStart = null;
+          if (!swipe.started) {
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
 
-          if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+            /* Mostly vertical: not a swipe */
+            if (Math.abs(dy) > Math.abs(dx)) {
+              swipe = null;
+              return;
+            }
 
-          /* Swipe left shows the next image (the opposite on the Arabic version) */
-          const goNext = (dx < 0) !== isRtl();
+            swipe.started = true;
+            swipe.previousOverflow = canvas.style.overflow;
+            swipe.previousPosition = canvas.style.position;
 
-          (goNext ? zoomNext : zoomPrevious)?.click();
+            if (window.getComputedStyle(canvas).position === 'static') {
+              canvas.style.position = 'relative';
+            }
+
+            canvas.style.overflow = 'hidden';
+
+            swipe.image.style.transition = 'none';
+            swipe.image.style.willChange = 'transform';
+          }
+
+          swipe.dx = dx;
+
+          const side = dx < 0 ? 1 : -1;
+          const target = targetFor(dx);
+
+          if (target.valid) {
+            setNeighbour(swipe, side, target.index);
+          } else if (swipe.neighbour) {
+            swipe.neighbour.remove();
+            swipe.neighbour = null;
+          }
+
+          /* First / last image: pull is harder, like a rubber band */
+          const move = target.valid ? dx : dx * 0.3;
+
+          swipe.image.style.transform = 'translateX(' + move + 'px)';
+
+          if (swipe.neighbour) {
+            swipe.neighbour.style.transform =
+              'translateX(' + (move + side * (swipe.width + SLIDE_GAP)) + 'px)';
+          }
         },
         { passive: true, signal }
       );
+
+      const finishSwipe = () => {
+        if (!swipe) return;
+
+        const current = swipe;
+
+        swipe = null;
+
+        if (!current.started) return;
+
+        const elapsed = Math.max(1, Date.now() - current.time);
+        const velocity = Math.abs(current.dx) / elapsed;
+        const target = targetFor(current.dx);
+        const side = current.dx < 0 ? 1 : -1;
+
+        const passed =
+          Math.abs(current.dx) > current.width * SWIPE_DISTANCE ||
+          (velocity > 0.45 && Math.abs(current.dx) > 30);
+
+        const moves = target.valid && passed && Boolean(current.neighbour);
+        const ease = 'transform ' + SLIDE_MS + 'ms cubic-bezier(0.22, 0.61, 0.36, 1)';
+
+        swipeBusy = true;
+
+        current.image.style.transition = ease;
+
+        if (current.neighbour) {
+          current.neighbour.style.transition = ease;
+        }
+
+        if (moves) {
+          /* Finish the slide: the old image leaves, the new one lands in the middle */
+          current.image.style.transform =
+            'translateX(' + -side * (current.width + SLIDE_GAP) + 'px)';
+          current.neighbour.style.transform = 'translateX(0)';
+        } else {
+          /* Not far enough: everything goes back */
+          current.image.style.transform = 'translateX(0)';
+
+          if (current.neighbour) {
+            current.neighbour.style.transform =
+              'translateX(' + side * (current.width + SLIDE_GAP) + 'px)';
+          }
+        }
+
+        window.setTimeout(() => {
+          if (moves) {
+            const shown = current.neighbour;
+
+            current.image.remove();
+
+            shown.removeAttribute('style');
+            shown.removeAttribute('aria-hidden');
+            delete shown.dataset.target;
+
+            zoomIndex = target.index;
+
+            /* Updates the counter, the buttons and the alt text. The picture is already loaded. */
+            renderZoom();
+          } else {
+            current.neighbour?.remove();
+
+            current.image.style.transition = '';
+            current.image.style.transform = '';
+            current.image.style.willChange = '';
+          }
+
+          canvas.style.overflow = current.previousOverflow;
+          canvas.style.position = current.previousPosition;
+
+          swipeBusy = false;
+        }, SLIDE_MS + 20);
+      };
+
+      canvas?.addEventListener('touchend', finishSwipe, { passive: true, signal });
+      canvas?.addEventListener('touchcancel', finishSwipe, { passive: true, signal });
 
       dialog.addEventListener(
         'keydown',
