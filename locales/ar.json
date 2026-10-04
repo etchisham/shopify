@@ -24,7 +24,26 @@
     "default": "عرض اشترِ 2 واحصل على 1 مجانًا + شحن مجاني"
   },
   "navigation": {
-    "view_all": "عرض كل {{ title }}"
+    "view_all": "عرض كل {{ title }}",
+    "home": "الرئيسية",
+    "all_products": "كل المنتجات",
+    "categories": "الفئات",
+    "necklaces": "القلائد",
+    "rings": "الخواتم",
+    "pendants": "الدلايات",
+    "bracelets": "الأساور",
+    "keychains": "ميداليات المفاتيح",
+    "new_arrivals": "وصل حديثًا",
+    "best_sellers": "الأكثر مبيعًا",
+    "sale": "التخفيضات",
+    "contact_us": "تواصل معنا",
+    "our_instagram": "حسابنا على إنستجرام",
+    "shipping": "الشحن",
+    "returns": "الاسترجاع",
+    "faq": "الأسئلة الشائعة",
+    "shop": "تسوق",
+    "about": "عن حلية",
+    "our_story": "قصتنا"
   },
   "general": {
     "announcement": "إعلان",
@@ -50,8 +69,12 @@
       "sale_price": "سعر التخفيض",
       "rating": "{{ rating }} من {{ maximum }} نجوم",
       "rating_count": {
+        "zero": "لا توجد تقييمات",
         "one": "تقييم واحد",
-        "other": "{{ count }} تقييمات"
+        "two": "تقييمان",
+        "few": "{{ count }} تقييمات",
+        "many": "{{ count }} تقييمًا",
+        "other": "{{ count }} تقييم"
       },
       "discount": "خصم {{ percent }}٪",
       "inventory_low": "متبقي {{ count }} فقط",
@@ -109,7 +132,19 @@
       "personalization": "أضف تخصيصًا",
       "option_error": "تعذر تحميل هذا الخيار. تحقق من اتصالك وحاول مرة أخرى.",
       "previous_media": "الوسائط السابقة",
-      "next_media": "الوسائط التالية"
+      "next_media": "الوسائط التالية",
+      "decrease_quantity": "تقليل الكمية",
+      "increase_quantity": "زيادة الكمية",
+      "personalization_title": "التخصيص",
+      "personalization_required": "مطلوب",
+      "personalization_name": "الاسم",
+      "personalization_name_placeholder": "اكتب الاسم",
+      "personalization_date": "التاريخ",
+      "personalization_name_error": "من فضلك أدخل الاسم.",
+      "personalization_date_error": "من فضلك اختر التاريخ.",
+      "personalization_error": "من فضلك أكمل حقول التخصيص المطلوبة.",
+      "back_to": "العودة إلى {{ title }}",
+      "back_to_search": "العودة إلى نتائج البحث"
     }
   },
   "collections": {
@@ -135,8 +170,12 @@
     "all_filters": "كل عوامل التصفية",
     "active_count": "تم تحديد {{ count }}",
     "items_count": {
+      "zero": "لا توجد منتجات",
       "one": "منتج واحد",
-      "other": "{{ count }} منتجات"
+      "two": "منتجان",
+      "few": "{{ count }} منتجات",
+      "many": "{{ count }} منتجًا",
+      "other": "{{ count }} منتج"
     },
     "apply": "تطبيق عوامل التصفية",
     "clear_all": "مسح الكل",
@@ -162,7 +201,12 @@
     "newsletter_heading": "النشرة البريدية",
     "newsletter_text": "اشترك في نشرتنا البريدية لتصلك العروض الحصرية.",
     "privacy_notice": "باشتراكك، فإنك توافق على سياسة الخصوصية.",
-    "follow_us": "تابعنا"
+    "follow_us": "تابعنا",
+    "tagline": "مجوهرات وإكسسوارات",
+    "join_newsletter": "انضم إلى نشرتنا البريدية",
+    "newsletter_tagline": "كن أول من يعرف عن المجموعات الجديدة والعروض الحصرية.",
+    "email_placeholder": "بريدك الإلكتروني",
+    "copyright": "© {{ year }} حلية. جميع الحقوق محفوظة."
   },
   "cart": {
     "checkout": "إتمام الشراء",
@@ -203,7 +247,14 @@
     "placeholder": "ابحث في المنتجات والمقالات والصفحات",
     "submit": "بحث",
     "no_results_html": "لا توجد نتائج لـ <strong>{{ terms }}</strong>.",
-    "results_for_html": "{{ count }} نتيجة لـ <strong>{{ terms }}</strong>."
+    "results_for_html": {
+      "zero": "لا توجد نتائج لـ <strong>{{ terms }}</strong>.",
+      "one": "نتيجة واحدة لـ <strong>{{ terms }}</strong>.",
+      "two": "نتيجتان لـ <strong>{{ terms }}</strong>.",
+      "few": "{{ count }} نتائج لـ <strong>{{ terms }}</strong>.",
+      "many": "{{ count }} نتيجة لـ <strong>{{ terms }}</strong>.",
+      "other": "{{ count }} نتيجة لـ <strong>{{ terms }}</strong>."
+    }
   },
   "blog": {
     "article_comments": "التعليقات",
@@ -243,7 +294,17 @@
     "pause": "إيقاف العرض مؤقتًا",
     "play": "تشغيل العرض",
     "previous_products": "المنتجات السابقة",
-    "next_products": "المنتجات التالية"
+    "next_products": "المنتجات التالية",
+    "hero_title_1": "أناقة",
+    "hero_title_2": "في كل تفصيلة",
+    "categories_heading": "تسوق حسب الفئة",
+    "categories_subheading": "اعثر على قطعتك المثالية",
+    "new_arrivals_eyebrow": "وصل حديثًا",
+    "new_arrivals_heading_1": "قطع جديدة،",
+    "new_arrivals_heading_2": "للحظات جديدة",
+    "new_arrivals_button": "اكتشف الجديد",
+    "follow_journey": "تابع رحلتنا",
+    "instagram_alt": "إنستجرام حلية"
   },
   "contact": {
     "email_us": "راسلنا بالبريد",
@@ -270,5 +331,13 @@
     "eyebrow": "مركز المساعدة",
     "heading": "الأسئلة الشائعة",
     "topics": "مواضيع المساعدة"
+  },
+  "header": {
+    "submit_search": "إرسال البحث",
+    "cart": "السلة"
+  },
+  "meta": {
+    "tagged": "الوسم: {{ tags }}",
+    "page": "صفحة {{ number }}"
   }
 }
