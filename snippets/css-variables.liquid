@@ -1,3 +1,13 @@
+{%- comment -%}
+  Arabic font (Cairo). Loaded only on Arabic pages, so English pages stay as fast as before.
+{%- endcomment -%}
+{%- assign css_locale = request.locale.iso_code | split: '-' | first -%}
+{%- if css_locale == 'ar' -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap">
+{%- endif -%}
+
 {% style %}
   {{ settings.type_body_font | font_face: font_display: 'swap' }}
   {{ settings.type_body_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
@@ -44,6 +54,29 @@
     --catalog-columns: {{ settings.catalog_columns }};
     --shadow-card: 0 0.75rem 2rem rgb(17 24 39 / 8%);
     --transition-fast: 160ms ease;
+  }
+
+  /*
+    Arabic / RTL typography.
+    - Letter-spacing breaks the joined Arabic letters, so it is always 0.
+    - Arabic has no italic: browsers fake a slant that looks broken.
+  */
+  html[dir="rtl"] *,
+  html[dir="rtl"] *::before,
+  html[dir="rtl"] *::after {
+    letter-spacing: 0 !important;
+    font-style: normal !important;
+  }
+
+  /* One Arabic font everywhere (the brand wordmark keeps its own font) */
+  html[lang|="ar"] {
+    --font-body-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+    --font-heading-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+  }
+
+  html[lang|="ar"] body,
+  html[lang|="ar"] body *:not(.site-header__brand):not(.hilya-footer__logo) {
+    font-family: "Cairo", "Segoe UI", Tahoma, sans-serif !important;
   }
 
 {% endstyle %}
