@@ -366,7 +366,7 @@ body:has(.site-header--sticky) {
    ========================================================= */
 
 .header-actions {
-  margin-left: auto;
+  margin-inline-start: auto;
 
   display: flex;
   align-items: center;
@@ -401,7 +401,7 @@ body:has(.site-header--sticky) {
   position: absolute;
 
   top: -8px;
-  right: -9px;
+  inset-inline-end: -9px;
 
   min-width: 15px;
   height: 15px;
@@ -447,7 +447,7 @@ body:has(.site-header--sticky) {
 .header-search__panel {
   position: absolute;
 
-  right: 0;
+  inset-inline-end: 0;
   top: calc(100% + 18px);
 
   width: 270px;
@@ -818,7 +818,7 @@ body:has(.site-header--sticky) {
 
     transform: rotate(45deg);
 
-    margin-right: 3px;
+    margin-inline-end: 3px;
     margin-top: -4px;
 
     transition:
@@ -839,8 +839,8 @@ body:has(.site-header--sticky) {
   .mobile-categories__items {
     width: 100%;
 
-    padding:
-      0 0 5px 14px;
+    padding: 0 0 5px;
+    padding-inline-start: 14px;
   }
 
   .mobile-categories__items a {
@@ -869,7 +869,7 @@ body:has(.site-header--sticky) {
      ======================================================= */
 
   .header-actions {
-    margin-left: auto;
+    margin-inline-start: auto;
 
     gap: 14px;
   }
@@ -907,6 +907,66 @@ body:has(.site-header--sticky) {
 
 }
 
+/* =========================================================
+   LANGUAGE SWITCHER
+   ========================================================= */
+
+.header-language {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.header-language__button {
+  padding: 6px 8px;
+
+  border: 0;
+  background: transparent;
+  color: var(--header-text);
+
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.06em;
+
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.header-language__button:hover {
+  opacity: 0.6;
+}
+
+.header-language__button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.header-language--mobile {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .header-language--desktop {
+    display: none;
+  }
+
+  .header-language--mobile {
+    display: block;
+  }
+
+  .header-language--mobile .header-language__button {
+    width: 100%;
+    padding: 15px 2px;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+    font-size: 0.82rem;
+    text-align: start;
+  }
+}
+
 
 /* =========================================================
    DESKTOP / MOBILE DISPLAY
@@ -935,6 +995,8 @@ body:has(.site-header--sticky) {
 
 {% endstyle %}
 
+{%- assign language_label = 'general.language' | t -%}
+
 
 <header
   class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
@@ -949,7 +1011,7 @@ body:has(.site-header--sticky) {
 
     <details class="mobile-menu">
 
-      <summary aria-label="Open menu">
+      <summary aria-label="{{ 'accessibility.open_menu' | t | escape }}">
 
         <span class="mobile-menu__icon">
           <span></span>
@@ -963,11 +1025,11 @@ body:has(.site-header--sticky) {
       <nav class="mobile-menu__panel">
 
         <a href="{{ routes.root_url }}">
-          Home
+          {{ 'navigation.home' | t }}
         </a>
 
         <a href="{{ section.settings.all_products_collection.url | default: routes.all_products_collection_url }}">
-          All Products
+          {{ 'navigation.all_products' | t }}
         </a>
 
 
@@ -978,7 +1040,7 @@ body:has(.site-header--sticky) {
           <summary>
 
             <span>
-              Categories
+              {{ 'navigation.categories' | t }}
             </span>
 
             <span class="mobile-categories__arrow"></span>
@@ -989,23 +1051,23 @@ body:has(.site-header--sticky) {
           <div class="mobile-categories__items">
 
             <a href="{{ routes.collections_url }}/necklaces">
-              Necklaces
+              {{ 'navigation.necklaces' | t }}
             </a>
 
             <a href="{{ routes.collections_url }}/rings">
-              Rings
+              {{ 'navigation.rings' | t }}
             </a>
 
             <a href="{{ routes.collections_url }}/pendants">
-              Pendants
+              {{ 'navigation.pendants' | t }}
             </a>
 
             <a href="{{ routes.collections_url }}/bracelets">
-              Bracelets
+              {{ 'navigation.bracelets' | t }}
             </a>
 
             <a href="{{ routes.collections_url }}/keychains">
-              Keychains
+              {{ 'navigation.keychains' | t }}
             </a>
 
           </div>
@@ -1017,7 +1079,7 @@ body:has(.site-header--sticky) {
           and section.settings.new_arrivals_link != blank %}
 
           <a href="{{ section.settings.new_arrivals_link }}">
-            New Arrivals
+            {{ 'navigation.new_arrivals' | t }}
           </a>
 
         {% endif %}
@@ -1027,7 +1089,7 @@ body:has(.site-header--sticky) {
           and section.settings.best_sellers_link != blank %}
 
           <a href="{{ section.settings.best_sellers_link }}">
-            Best Sellers
+            {{ 'navigation.best_sellers' | t }}
           </a>
 
         {% endif %}
@@ -1036,14 +1098,14 @@ body:has(.site-header--sticky) {
           and section.settings.sales_link != blank %}
 
           <a href="{{ section.settings.sales_link }}">
-          Sales
+          {{ 'navigation.sale' | t }}
           </a>
 
         {% endif %}
 
 
         <a href="{{ section.settings.contact_link }}">
-          Contact Us
+          {{ 'navigation.contact_us' | t }}
         </a>
 
 
@@ -1054,7 +1116,7 @@ body:has(.site-header--sticky) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Our Instagram
+          {{ 'navigation.our_instagram' | t }}
         </a>
 
 
@@ -1062,7 +1124,7 @@ body:has(.site-header--sticky) {
           and section.settings.shipping_page != blank %}
 
           <a href="{{ section.settings.shipping_page.url }}">
-            Shipping
+            {{ 'navigation.shipping' | t }}
           </a>
 
         {% endif %}
@@ -1072,7 +1134,7 @@ body:has(.site-header--sticky) {
           and section.settings.returns_page != blank %}
 
           <a href="{{ section.settings.returns_page.url }}">
-            Returns
+            {{ 'navigation.returns' | t }}
           </a>
 
         {% endif %}
@@ -1082,10 +1144,34 @@ body:has(.site-header--sticky) {
           and section.settings.faq_page != blank %}
 
           <a href="{{ section.settings.faq_page.url }}">
-            FAQ
+            {{ 'navigation.faq' | t }}
           </a>
 
         {% endif %}
+
+        <!-- LANGUAGE (mobile) -->
+
+        {%- if localization.available_languages.size > 1 -%}
+          {% form 'localization',
+            id: 'HeaderLanguageMobile',
+            class: 'header-language header-language--mobile',
+            aria-label: language_label
+          %}
+        {%- for language in localization.available_languages -%}
+            {%- unless language.iso_code == localization.language.iso_code -%}
+              <button
+                type="submit"
+                class="header-language__button"
+                name="language_code"
+                value="{{ language.iso_code }}"
+                lang="{{ language.iso_code }}"
+              >
+                {{ language.endonym_name | escape }}
+              </button>
+            {%- endunless -%}
+          {%- endfor -%}
+          {% endform %}
+        {%- endif -%}
 
       </nav>
 
@@ -1118,7 +1204,7 @@ body:has(.site-header--sticky) {
         <button
           class="desktop-menu__trigger"
           type="button"
-          aria-label="Menu"
+          aria-label="{{ 'general.menu' | t | escape }}"
         >
 
           <span class="desktop-menu__icon">
@@ -1133,7 +1219,7 @@ body:has(.site-header--sticky) {
         <div class="desktop-dropdown">
 
           <a href="{{ section.settings.all_products_collection.url | default: routes.all_products_collection_url }}">
-            All Products
+            {{ 'navigation.all_products' | t }}
           </a>
 
 
@@ -1141,7 +1227,7 @@ body:has(.site-header--sticky) {
             and section.settings.new_arrivals_link != blank %}
 
             <a href="{{ section.settings.new_arrivals_link }}">
-              New Arrivals
+              {{ 'navigation.new_arrivals' | t }}
             </a>
 
           {% endif %}
@@ -1151,7 +1237,7 @@ body:has(.site-header--sticky) {
             and section.settings.best_sellers_link != blank %}
 
             <a href="{{ section.settings.best_sellers_link }}">
-              Best Sellers
+              {{ 'navigation.best_sellers' | t }}
             </a>
 
           {% endif %}
@@ -1160,7 +1246,7 @@ body:has(.site-header--sticky) {
             and section.settings.sales_link != blank %}
 
             <a href="{{ section.settings.sales_link }}">
-            Sales
+            {{ 'navigation.sale' | t }}
             </a>
 
           {% endif %}
@@ -1174,7 +1260,7 @@ body:has(.site-header--sticky) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Our Instagram
+            {{ 'navigation.our_instagram' | t }}
           </a>
 
 
@@ -1182,7 +1268,7 @@ body:has(.site-header--sticky) {
             and section.settings.shipping_page != blank %}
 
             <a href="{{ section.settings.shipping_page.url }}">
-              Shipping
+              {{ 'navigation.shipping' | t }}
             </a>
 
           {% endif %}
@@ -1192,7 +1278,7 @@ body:has(.site-header--sticky) {
             and section.settings.returns_page != blank %}
 
             <a href="{{ section.settings.returns_page.url }}">
-              Returns
+              {{ 'navigation.returns' | t }}
             </a>
 
           {% endif %}
@@ -1202,7 +1288,7 @@ body:has(.site-header--sticky) {
             and section.settings.faq_page != blank %}
 
             <a href="{{ section.settings.faq_page.url }}">
-              FAQ
+              {{ 'navigation.faq' | t }}
             </a>
 
           {% endif %}
@@ -1215,7 +1301,7 @@ body:has(.site-header--sticky) {
       <!-- HOME -->
 
       <a href="{{ routes.root_url }}">
-        Home
+        {{ 'navigation.home' | t }}
       </a>
 
 
@@ -1227,30 +1313,30 @@ body:has(.site-header--sticky) {
           class="desktop-categories__trigger"
           type="button"
         >
-          Categories
+          {{ 'navigation.categories' | t }}
         </button>
 
 
         <div class="desktop-dropdown">
 
           <a href="{{ routes.collections_url }}/necklaces">
-            Necklaces
+            {{ 'navigation.necklaces' | t }}
           </a>
 
           <a href="{{ routes.collections_url }}/rings">
-            Rings
+            {{ 'navigation.rings' | t }}
           </a>
 
           <a href="{{ routes.collections_url }}/pendants">
-            Pendants
+            {{ 'navigation.pendants' | t }}
           </a>
 
           <a href="{{ routes.collections_url }}/bracelets">
-            Bracelets
+            {{ 'navigation.bracelets' | t }}
           </a>
 
           <a href="{{ routes.collections_url }}/keychains">
-            Keychains
+            {{ 'navigation.keychains' | t }}
           </a>
 
         </div>
@@ -1261,7 +1347,7 @@ body:has(.site-header--sticky) {
       <!-- CONTACT -->
 
       <a href="{{ section.settings.contact_link }}">
-        Contact Us
+        {{ 'navigation.contact_us' | t }}
       </a>
 
     </nav>
@@ -1273,6 +1359,31 @@ body:has(.site-header--sticky) {
 
     <div class="header-actions">
 
+      <!-- LANGUAGE (desktop) -->
+
+      {%- if localization.available_languages.size > 1 -%}
+        {% form 'localization',
+          id: 'HeaderLanguageDesktop',
+          class: 'header-language header-language--desktop',
+          aria-label: language_label
+        %}
+        {%- for language in localization.available_languages -%}
+          {%- unless language.iso_code == localization.language.iso_code -%}
+            <button
+              type="submit"
+              class="header-language__button"
+              name="language_code"
+              value="{{ language.iso_code }}"
+              lang="{{ language.iso_code }}"
+            >
+              {{ language.endonym_name | escape }}
+            </button>
+          {%- endunless -%}
+        {%- endfor -%}
+        {% endform %}
+      {%- endif -%}
+
+
 
       <!-- SEARCH -->
 
@@ -1282,7 +1393,7 @@ body:has(.site-header--sticky) {
 
           <summary
             class="header-action"
-            aria-label="Search"
+            aria-label="{{ 'general.search' | t | escape }}"
           >
 
             <svg
@@ -1320,15 +1431,15 @@ body:has(.site-header--sticky) {
                 class="header-search__input"
                 type="search"
                 name="q"
-                placeholder="Search"
-                aria-label="Search"
+                placeholder="{{ 'general.search' | t | escape }}"
+                aria-label="{{ 'general.search' | t | escape }}"
               >
 
 
               <button
                 class="header-search__submit"
                 type="submit"
-                aria-label="Submit search"
+                aria-label="{{ 'header.submit_search' | t | escape }}"
               >
 
                 <svg
@@ -1369,7 +1480,7 @@ body:has(.site-header--sticky) {
         <a
           href="{{ routes.account_url }}"
           class="header-action"
-          aria-label="Account"
+          aria-label="{{ 'general.account' | t | escape }}"
         >
 
           <svg
@@ -1402,7 +1513,7 @@ body:has(.site-header--sticky) {
       <a
         href="{{ routes.cart_url }}"
         class="header-action"
-        aria-label="Cart"
+        aria-label="{{ 'header.cart' | t | escape }}"
         data-cart-open
       >
 
