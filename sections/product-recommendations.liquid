@@ -1,5 +1,13 @@
 {% liquid
   assign recommendation_collection = section.settings.collection
+
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign add_label = 'products.product.add_to_cart' | t
+  assign sold_out_label = 'products.product.sold_out' | t
+  assign options_label = 'Select options'
+  if locale_root == 'ar'
+    assign options_label = 'اختر الخيارات'
+  endif
 %}
 
 <section
@@ -18,36 +26,38 @@
 
       <div class="product-recommendations__carousel">
 
-        {% if recommendation_collection.products_count > 4 %}
-          <button
-            type="button"
-            class="product-recommendations__arrow product-recommendations__arrow--prev"
-            data-recommendations-prev
-            aria-label="Previous products"
-          >
-            <span aria-hidden="true">←</span>
-          </button>
+        <button
+          type="button"
+          class="product-recommendations__arrow product-recommendations__arrow--prev"
+          data-recommendations-prev
+          aria-label="Previous products"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        </button>
 
-          <button
-            type="button"
-            class="product-recommendations__arrow product-recommendations__arrow--next"
-            data-recommendations-next
-            aria-label="Next products"
-          >
-            <span aria-hidden="true">→</span>
-          </button>
-        {% endif %}
+        <button
+          type="button"
+          class="product-recommendations__arrow product-recommendations__arrow--next"
+          data-recommendations-next
+          aria-label="Next products"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
 
         <div
           class="product-recommendations__track"
           data-recommendations-track
         >
 
-          {% for product in recommendation_collection.products limit: 12 %}
+          {% for item in recommendation_collection.products limit: 13 %}
+
+            {% if item.id == product.id %}
+              {% continue %}
+            {% endif %}
 
             {% liquid
-              assign rating = product.metafields.reviews.rating.value
-              assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+              assign rating = item.metafields.reviews.rating.value
+              assign rating_count = item.metafields.reviews.rating_count.value | default: 0
               assign rating_value = rating.rating | default: rating
               assign rating_maximum = rating.scale_max | default: 5
               assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
@@ -55,41 +65,98 @@
               if rating_count != 1
                 assign review_word = 'reviews'
               endif
+
+              assign variant = item.selected_or_first_available_variant
+              assign min_quantity = variant.quantity_rule.min | default: 1
+              assign form_id = 'RecForm-' | append: item.id
+
+              comment
+                Products that need the customer to choose something first
+                (personalization / selling plan) open the product page instead.
+              endcomment
+              assign go_to_product = false
+              if item.tags contains 'Name' or item.tags contains 'Date' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
+                assign go_to_product = true
+              endif
+              if item.variants.size > 1 and section.settings.quick_add == 'view_product'
+                assign go_to_product = true
+              endif
             %}
 
             <article class="product-recommendations__item">
 
-              <a
-                href="{{ product.url }}"
-                class="product-recommendations__image-link"
-                aria-label="{{ product.title | escape }}"
-              >
+              <div class="product-recommendations__media">
 
-                {% if product.featured_image != blank %}
+                <a
+                  href="{{ item.url }}"
+                  class="product-recommendations__image-link"
+                  aria-label="{{ item.title | escape }}"
+                >
 
-                  {{
-                    product.featured_image
-                    | image_url: width: 900
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '360, 540, 720, 900',
-                      sizes: '(min-width: 990px) 25vw, 70vw',
-                      alt: product.featured_image.alt | default: product.title
-                    }}
+                  {% if item.featured_image != blank %}
 
-                {% else %}
+                    {{
+                      item.featured_image
+                      | image_url: width: 900
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '360, 540, 720, 900',
+                        sizes: '(min-width: 990px) 25vw, 70vw',
+                        alt: item.featured_image.alt | default: item.title
+                      }}
 
-                  {{ 'product-1' | placeholder_svg_tag }}
+                  {% else %}
 
-                {% endif %}
+                    {{ 'product-1' | placeholder_svg_tag }}
 
-              </a>
+                  {% endif %}
+
+                </a>
+
+                <div class="product-recommendations__quick-wrap">
+
+                  {% if go_to_product %}
+
+                    <a class="product-recommendations__quick" href="{{ item.url }}">
+                      {{ options_label }}
+                    </a>
+
+                  {% elsif item.available %}
+
+                    {% form 'product', item,
+                      id: form_id,
+                      class: 'product-recommendations__form product-form',
+                      data-product-title: item.title
+                    %}
+                      <input type="hidden" name="id" value="{{ variant.id }}">
+                      <input type="hidden" name="quantity" value="{{ min_quantity }}">
+
+                      <button
+                        type="submit"
+                        name="add"
+                        class="product-recommendations__quick"
+                      >
+                        + {{ add_label }}
+                      </button>
+                    {% endform %}
+
+                  {% else %}
+
+                    <span class="product-recommendations__quick is-disabled">
+                      {{ sold_out_label }}
+                    </span>
+
+                  {% endif %}
+
+                </div>
+
+              </div>
 
               <div class="product-recommendations__info">
 
                 <h3 class="product-recommendations__product-title">
-                  <a href="{{ product.url }}">
-                    {{ product.title | escape }}
+                  <a href="{{ item.url }}">
+                    {{ item.title | escape }}
                   </a>
                 </h3>
 
@@ -106,7 +173,7 @@
                 {% endif %}
 
                 <div class="product-recommendations__price">
-                  {% render 'price', product: product %}
+                  {% render 'price', product: item %}
                 </div>
 
               </div>
@@ -168,6 +235,7 @@
 
   })();
 </script>
+
 {% stylesheet %}
 
 .product-recommendations,
@@ -175,6 +243,13 @@
 .product-recommendations *::before,
 .product-recommendations *::after {
   box-sizing: border-box;
+}
+
+/* Let the section use the full screen width (some themes wrap sections in a narrow container) */
+.shopify-section:has(> .product-recommendations) {
+  width: 100% !important;
+  max-width: none !important;
+  margin-inline: 0 !important;
 }
 
 .product-recommendations {
@@ -187,9 +262,9 @@
 
 .product-recommendations__inner {
   width: 100%;
-  max-width: 87.5rem;
+  max-width: 98rem;
   margin: 0 auto;
-  padding: 0 clamp(1rem, 3vw, 2.25rem);
+  padding: 0 clamp(1rem, 4vw, 4rem);
 }
 
 .product-recommendations__header {
@@ -209,44 +284,89 @@
   line-height: 1.2;
 }
 
+
+/* =========================================
+   CAROUSEL
+   Card size is controlled from these 4 values:
+   --per-view : cards visible at once
+   --gap      : space between cards
+   --ratio-w / --ratio-h : image shape (3 / 4 = portrait, 2 / 3 = taller)
+========================================= */
+
 .product-recommendations__carousel {
+  --per-view: 4;
+  --gap: 1.5rem;
+  --ratio-w: 3;
+  --ratio-h: 4;
+
   position: relative;
   container-type: inline-size;
 }
 
+.product-recommendations__track {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.product-recommendations__track::-webkit-scrollbar {
+  display: none;
+}
+
+.product-recommendations__item {
+  min-width: 0;
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  scroll-snap-align: start;
+}
+
+
+/* =========================================
+   ARROWS (centered on the image)
+========================================= */
+
 .product-recommendations__arrow {
   position: absolute;
-  top: calc((100cqw - 3rem) / 8);
-  z-index: 2;
+
+  /* half of the image height = exact middle of the image */
+  top: calc(
+    (100cqw - (var(--per-view) - 1) * var(--gap)) / var(--per-view)
+    * var(--ratio-h) / var(--ratio-w) / 2
+  );
+
+  z-index: 3;
   display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
+  width: 3.25rem;
+  height: 3.25rem;
   place-items: center;
   padding: 0;
-  border: 1px solid #d8d8d8;
-  border-radius: 50%;
+  border: 0;
+  border-radius: 0.9rem;
   background: #fff;
   color: #222;
   cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-50%);
   transition:
     opacity 200ms ease,
     background-color 160ms ease,
-    color 160ms ease,
-    border-color 160ms ease;
+    color 160ms ease;
 }
 
 .product-recommendations__arrow--prev {
-  left: -1.325rem;
+  left: -1.625rem;
 }
 
 .product-recommendations__arrow--next {
-  right: -1.325rem;
+  right: -1.625rem;
 }
 
 .product-recommendations__arrow[data-hidden="true"] {
@@ -262,46 +382,26 @@
 }
 
 .product-recommendations__arrow:hover {
-  border-color: #222;
   background: #222;
   color: #fff;
 }
 
-/* Touch devices: no arrows, swipe instead */
-@media (hover: none) {
-  .product-recommendations__arrow {
-    display: none;
-  }
-}
 
-.product-recommendations__track {
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  gap: 1rem;
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
-}
+/* =========================================
+   IMAGE
+========================================= */
 
-.product-recommendations__track::-webkit-scrollbar {
-  display: none;
-}
-
-.product-recommendations__item {
-  min-width: 0;
-  flex: 0 0 calc((100% - 3rem) / 4);
-  scroll-snap-align: start;
+.product-recommendations__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--product-card-radius, 0);
+  background: #f5f5f1;
 }
 
 .product-recommendations__image-link {
   display: block;
   width: 100%;
-  overflow: hidden;
-  background: #f5f5f1;
+  aspect-ratio: var(--ratio-w) / var(--ratio-h);
   text-decoration: none;
 }
 
@@ -309,7 +409,7 @@
 .product-recommendations__image-link svg {
   display: block;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -320,6 +420,98 @@
 .product-recommendations__image-link:hover img {
   transform: scale(1.025);
 }
+
+
+/* =========================================
+   ADD TO CART (appears on hover)
+========================================= */
+
+.product-recommendations__quick-wrap {
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.product-recommendations__media:hover .product-recommendations__quick-wrap,
+.product-recommendations__media:focus-within .product-recommendations__quick-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.product-recommendations__form {
+  margin: 0;
+}
+
+.product-recommendations__quick {
+  display: flex;
+  width: 100%;
+  min-height: 3.1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.85rem;
+  background: #fff;
+  color: #222;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.product-recommendations__quick:hover {
+  background: #222;
+  color: #fff;
+}
+
+.product-recommendations__quick.is-disabled,
+.product-recommendations__quick:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.product-recommendations__quick.is-disabled:hover,
+.product-recommendations__quick:disabled:hover {
+  background: #fff;
+  color: #222;
+}
+
+/* Touch screens have no hover: keep the button visible and hide the arrows (swipe instead) */
+@media (hover: none) {
+  .product-recommendations__arrow {
+    display: none;
+  }
+
+  .product-recommendations__quick-wrap {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .product-recommendations__quick {
+    min-height: 2.6rem;
+    font-size: 0.82rem;
+  }
+}
+
+
+/* =========================================
+   INFO
+========================================= */
 
 .product-recommendations__info {
   padding-top: 0.8rem;
@@ -400,11 +592,21 @@ html[dir="rtl"] .product-recommendations__price .price {
   white-space: nowrap;
 }
 
-.product-recommendations__empty {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 989px) {
+  .product-recommendations__carousel {
+    --per-view: 3;
+  }
 }
+
+
+/* =========================================
+   MOBILE (unchanged look: about 1.5 cards, swipe)
+========================================= */
 
 @media (max-width: 749px) {
   .product-recommendations {
@@ -423,13 +625,11 @@ html[dir="rtl"] .product-recommendations__price .price {
     font-size: 1.3rem;
   }
 
-  .product-recommendations__track {
-    gap: 0.75rem;
-  }
-
-  /* About 1.5 cards visible: bigger products, and the next one peeks in to invite swiping */
-  .product-recommendations__item {
-    flex: 0 0 calc((100% - 0.75rem) / 1.55);
+  .product-recommendations__carousel {
+    --per-view: 1.55;
+    --gap: 0.75rem;
+    --ratio-w: 1;
+    --ratio-h: 1;
   }
 
   .product-recommendations__info {
@@ -459,7 +659,8 @@ html[dir="rtl"] .product-recommendations__price .price {
     scroll-behavior: auto;
   }
 
-  .product-recommendations__image-link img {
+  .product-recommendations__image-link img,
+  .product-recommendations__quick-wrap {
     transition: none;
   }
 }
@@ -480,6 +681,16 @@ html[dir="rtl"] .product-recommendations__price .price {
       "id": "heading",
       "label": "Heading",
       "default": "You May Also Like"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "label": "Add to cart on products with several variants",
+      "options": [
+        { "value": "add_default", "label": "Add the first available variant" },
+        { "value": "view_product", "label": "Open the product page instead" }
+      ],
+      "default": "add_default"
     }
   ],
   "presets": [
