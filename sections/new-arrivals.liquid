@@ -35,7 +35,9 @@
           class="new-arrivals-banner__button"
         >
           <span>{{ 'home.new_arrivals_button' | t }}</span>
-          <span class="new-arrivals-banner__arrow" aria-hidden="true">→</span>
+          <span class="new-arrivals-banner__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>
+          </span>
         </a>
 
       </div>
@@ -259,9 +261,8 @@
   justify-content: center;
 
   position: relative;
-  top: -3px;
+  top: 0;
 
-  font-size: 12px;
   line-height: 1;
 
   transition: transform .3s ease;
@@ -393,8 +394,7 @@
 }
 
 .new-arrivals-banner__arrow {
-  font-size: 11px;
-  top: -2px;
+  top: 0;
 }
 
 }
