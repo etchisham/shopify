@@ -332,7 +332,7 @@
         'click',
         () => {
           if (zoomIndex > 0) {
-            zoomIndex--;
+            zoomIndex--;  
             renderZoom();
           }
         },
@@ -348,6 +348,46 @@
           }
         },
         { signal }
+      );
+
+            /* Swipe left / right to change the image (only when it is not zoomed in) */
+      let touchStart = null;
+
+      canvas?.addEventListener(
+        'touchstart',
+        (event) => {
+          if (event.touches.length !== 1 || canvas.classList.contains('is-zoomed')) {
+            touchStart = null;
+            return;
+          }
+
+          touchStart = {
+            x: event.touches[0].clientX,
+            y: event.touches[0].clientY
+          };
+        },
+        { passive: true, signal }
+      );
+
+      canvas?.addEventListener(
+        'touchend',
+        (event) => {
+          if (!touchStart) return;
+
+          const touch = event.changedTouches[0];
+          const dx = touch.clientX - touchStart.x;
+          const dy = touch.clientY - touchStart.y;
+
+          touchStart = null;
+
+          if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+
+          /* Swipe left shows the next image (the opposite on the Arabic version) */
+          const goNext = (dx < 0) !== isRtl();
+
+          (goNext ? zoomNext : zoomPrevious)?.click();
+        },
+        { passive: true, signal }
       );
 
       dialog.addEventListener(
