@@ -7,6 +7,28 @@
     assign image_fetchpriority = 'high'
   endif
 
+  assign hero_locale = request.locale.iso_code | split: '-' | first
+
+  assign hero_eyebrow = section.settings.eyebrow
+  assign hero_text = section.settings.text
+  assign hero_button = section.settings.button_label
+  assign hero_button_2 = section.settings.secondary_button_label
+
+  if hero_locale == 'ar'
+    if section.settings.eyebrow_ar != blank
+      assign hero_eyebrow = section.settings.eyebrow_ar
+    endif
+    if section.settings.text_ar != blank
+      assign hero_text = section.settings.text_ar
+    endif
+    if section.settings.button_label_ar != blank
+      assign hero_button = section.settings.button_label_ar
+    endif
+    if section.settings.secondary_button_label_ar != blank
+      assign hero_button_2 = section.settings.secondary_button_label_ar
+    endif
+  endif
+
   assign hero_line_1 = section.settings.heading_line_1
   if hero_line_1 == blank
     assign hero_line_1 = 'home.hero_title_1' | t
@@ -39,8 +61,8 @@
 
   <div class="hero__content">
 
-    {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% if hero_eyebrow != blank %}
+      <p class="eyebrow">{{ hero_eyebrow | escape }}</p>
     {% endif %}
 
     <h1 class="hero__heading">
@@ -48,31 +70,31 @@
       <span>{{ hero_line_2 | escape }}</span>
     </h1>
 
-    {% if section.settings.text != blank %}
+    {% if hero_text != blank %}
       <div class="hero__text rte">
-        {{ section.settings.text }}
+        {{ hero_text }}
       </div>
     {% endif %}
 
-    {% if section.settings.button_label != blank or section.settings.secondary_button_label != blank %}
+    {% if hero_button != blank or hero_button_2 != blank %}
       <div class="hero__actions">
 
-        {% if section.settings.button_label != blank %}
+        {% if hero_button != blank %}
           <a
             class="hero__button"
             href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
           >
-            <span>{{ section.settings.button_label | escape }}</span>
+            <span>{{ hero_button | escape }}</span>
             <span class="hero__button-arrow" aria-hidden="true"></span>
           </a>
         {% endif %}
 
-        {% if section.settings.secondary_button_label != blank %}
+        {% if hero_button_2 != blank %}
           <a
             class="hero__button hero__button--secondary"
             href="{{ section.settings.secondary_button_link | default: routes.root_url }}"
           >
-            <span>{{ section.settings.secondary_button_label | escape }}</span>
+            <span>{{ hero_button_2 | escape }}</span>
             <span class="hero__button-arrow" aria-hidden="true"></span>
           </a>
         {% endif %}
@@ -497,7 +519,10 @@
 {
   "name": "t:general.hero",
   "disabled_on": {
-    "groups": ["header", "footer"]
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
   "settings": [
     {
@@ -520,6 +545,13 @@
       "id": "eyebrow",
       "label": "t:labels.eyebrow",
       "default": "Made for real life"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_ar",
+      "label": "Eyebrow - Arabic",
+      "info": "Shown on the Arabic site. Leave blank to use the English text (or its Translate & Adapt translation).",
+      "default": "مجوهرات خالدة"
     },
     {
       "type": "text",
@@ -546,10 +578,22 @@
       "default": "<p>Clear value, thoughtful details, and an easy path from discovery to checkout.</p>"
     },
     {
+      "type": "richtext",
+      "id": "text_ar",
+      "label": "Text - Arabic",
+      "default": "<p>قطع عصرية تترك أثرًا يدوم.</p>"
+    },
+    {
       "type": "text",
       "id": "button_label",
       "label": "t:labels.button_label",
       "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "button_label_ar",
+      "label": "Button label - Arabic",
+      "default": "تسوق الآن"
     },
     {
       "type": "url",
@@ -560,6 +604,11 @@
       "type": "text",
       "id": "secondary_button_label",
       "label": "t:labels.secondary_button_label"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label_ar",
+      "label": "Secondary button label - Arabic"
     },
     {
       "type": "url",
