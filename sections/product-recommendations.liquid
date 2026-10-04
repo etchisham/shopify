@@ -1,6 +1,9 @@
 {% liquid
   assign recommendation_collection = section.settings.collection
 
+  assign max_products = section.settings.max_products | default: 12
+  assign loop_limit = max_products | plus: 1
+
   assign locale_root = request.locale.iso_code | split: '-' | first
   assign add_label = 'products.product.add_to_cart' | t
   assign sold_out_label = 'products.product.sold_out' | t
@@ -13,6 +16,8 @@
 <section
   class="product-recommendations"
   data-product-recommendations
+  data-add-label="{{ add_label | escape }}"
+  data-sold-out-label="{{ sold_out_label | escape }}"
 >
   <div class="product-recommendations__inner">
 
@@ -49,11 +54,19 @@
           data-recommendations-track
         >
 
-          {% for item in recommendation_collection.products limit: 13 %}
+          {% assign shown = 0 %}
+
+          {% for item in recommendation_collection.products limit: loop_limit %}
 
             {% if item.id == product.id %}
               {% continue %}
             {% endif %}
+
+            {% if shown >= max_products %}
+              {% break %}
+            {% endif %}
+
+            {% assign shown = shown | plus: 1 %}
 
             {% liquid
               assign rating = item.metafields.reviews.rating.value
@@ -81,9 +94,14 @@
               if item.variants.size > 1 and section.settings.quick_add == 'view_product'
                 assign go_to_product = true
               endif
+
+              assign show_select = false
+              if item.variants.size > 1 and go_to_product == false and item.available
+                assign show_select = true
+              endif
             %}
 
-            <article class="product-recommendations__item">
+            <article class="product-recommendations__item" data-rec-item>
 
               <div class="product-recommendations__media">
 
@@ -128,13 +146,16 @@
                       class: 'product-recommendations__form product-form',
                       data-product-title: item.title
                     %}
-                      <input type="hidden" name="id" value="{{ variant.id }}">
+                      {% unless show_select %}
+                        <input type="hidden" name="id" value="{{ variant.id }}">
+                      {% endunless %}
                       <input type="hidden" name="quantity" value="{{ min_quantity }}">
 
                       <button
                         type="submit"
                         name="add"
                         class="product-recommendations__quick"
+                        data-rec-add
                       >
                         + {{ add_label }}
                       </button>
@@ -160,6 +181,33 @@
                   </a>
                 </h3>
 
+                {% if show_select %}
+                  <div class="product-recommendations__variant">
+                    <select
+                      class="product-recommendations__select"
+                      name="id"
+                      form="{{ form_id }}"
+                      aria-label="{{ item.title | escape }}"
+                      data-variant-select
+                    >
+                      {%- for v in item.variants -%}
+                        <option
+                          value="{{ v.id }}"
+                          {% if v.id == variant.id %}selected{% endif %}
+                          data-available="{{ v.available }}"
+                          data-price="{{ v.price | money | escape }}"
+                          data-compare="{% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | escape }}{% endif %}"
+                          data-image="{% if v.featured_image %}{{ v.featured_image | image_url: width: 900 }}{% endif %}"
+                        >
+                          {{- v.title | escape -}}
+                          {%- unless v.available %} · {{ sold_out_label }}{% endunless -%}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                    <span class="product-recommendations__chevron" aria-hidden="true"></span>
+                  </div>
+                {% endif %}
+
                 {% if settings.card_show_rating and rating_value != blank and rating_count > 0 %}
                   <div
                     class="product-recommendations__rating"
@@ -172,7 +220,7 @@
                   </div>
                 {% endif %}
 
-                <div class="product-recommendations__price">
+                <div class="product-recommendations__price" data-card-price>
                   {% render 'price', product: item %}
                 </div>
 
@@ -233,6 +281,52 @@
     window.addEventListener('load', updateArrows);
     updateArrows();
 
+    /* Variant dropdown: update price, image and the add button */
+    section.addEventListener('change', (event) => {
+      const select = event.target.closest?.('[data-variant-select]');
+      if (!select) return;
+
+      const card = select.closest('[data-rec-item]');
+      const option = select.options[select.selectedIndex];
+      if (!card || !option) return;
+
+      const priceBox = card.querySelector('[data-card-price]');
+      const button = card.querySelector('[data-rec-add]');
+      const image = card.querySelector('.product-recommendations__image-link img');
+
+      if (priceBox && option.dataset.price) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'price';
+
+        const current = document.createElement('span');
+        current.className = 'price__current';
+        current.textContent = option.dataset.price;
+        wrapper.appendChild(current);
+
+        if (option.dataset.compare) {
+          const compare = document.createElement('s');
+          compare.className = 'price__compare';
+          compare.textContent = option.dataset.compare;
+          wrapper.appendChild(compare);
+        }
+
+        priceBox.replaceChildren(wrapper);
+      }
+
+      if (image && option.dataset.image) {
+        image.removeAttribute('srcset');
+        image.src = option.dataset.image;
+      }
+
+      if (button) {
+        const available = option.dataset.available === 'true';
+        button.disabled = !available;
+        button.textContent = available
+          ? '+ ' + section.dataset.addLabel
+          : section.dataset.soldOutLabel;
+      }
+    });
+
   })();
 </script>
 
@@ -253,10 +347,13 @@
 }
 
 .product-recommendations {
+  /* Same value as .explore-collection so both sections sit the same distance from the section above */
+  --section-gap: 2.5rem;
+
   width: 100%;
   max-width: 100%;
-  margin-top: 0.5rem;
-  padding: 0 0 1rem;
+  margin-top: 0;
+  padding: var(--section-gap) 0 1rem;
   overflow-x: clip;
 }
 
@@ -459,7 +556,7 @@
   padding: 0.5rem 1rem;
   border: 0;
   border-radius: 0.85rem;
-  background: #fff;
+  background: var(--color-background, #fffcf7);
   color: #222;
   font: inherit;
   font-size: 0.9rem;
@@ -475,7 +572,7 @@
 
 .product-recommendations__quick:hover {
   background: #222;
-  color: #fff;
+  color: var(--color-background, #fffcf7);
 }
 
 .product-recommendations__quick.is-disabled,
@@ -486,7 +583,7 @@
 
 .product-recommendations__quick.is-disabled:hover,
 .product-recommendations__quick:disabled:hover {
-  background: #fff;
+  background: var(--color-background, #fffcf7);
   color: #222;
 }
 
@@ -534,6 +631,49 @@
 .product-recommendations__product-title a:hover {
   text-decoration: underline;
   text-underline-offset: 0.2rem;
+}
+
+/* Variant dropdown (Gold Plated / Silver Plated ...) */
+
+.product-recommendations__variant {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin-top: 0.5rem;
+}
+
+.product-recommendations__select {
+  min-width: 8.5rem;
+  max-width: 100%;
+  padding: 0.5rem 2.1rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 999px;
+  background: transparent;
+  color: #222;
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.product-recommendations__select:hover {
+  border-color: #222;
+}
+
+.product-recommendations__chevron {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 0.95rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
 }
 
 .product-recommendations__price {
@@ -611,6 +751,7 @@ html[dir="rtl"] .product-recommendations__price .price {
 @media (max-width: 749px) {
   .product-recommendations {
     margin-top: 0.25rem;
+    padding-top: 0;
   }
 
   .product-recommendations__inner {
@@ -691,6 +832,15 @@ html[dir="rtl"] .product-recommendations__price .price {
         { "value": "view_product", "label": "Open the product page instead" }
       ],
       "default": "add_default"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Maximum products to show",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "default": 12
     }
   ],
   "presets": [
