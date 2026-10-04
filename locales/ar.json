@@ -56,7 +56,8 @@
     "all_products": "كل المنتجات",
     "categories": "الفئات",
     "cart": "السلة ({{ count }})",
-    "continue_shopping": "متابعة التسوق"
+    "continue_shopping": "متابعة التسوق",
+    "brand_name": "حِلْية"
   },
   "products": {
     "product": {
