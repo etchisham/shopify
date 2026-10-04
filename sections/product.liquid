@@ -489,6 +489,11 @@
   [data-product-zoom-next] {
     display: none !important;
   }
+
+  /* Lets the swipe code take the sideways drag */
+  [data-product-zoom-canvas]:not(.is-zoomed) {
+    touch-action: pan-y;
+  }
 }
 
 {% endstylesheet %}
