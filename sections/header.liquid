@@ -1212,11 +1212,16 @@ body:has(.site-header--sticky) {
          ===================================================== -->
 
     <a
-      href="{{ routes.root_url }}"
-      class="site-header__brand"
-    >
-      Hilya
-    </a>
+  href="{{ routes.root_url }}"
+  class="site-header__brand{% if localization.language.iso_code == 'ar' %} site-header__brand--arabic{% endif %}"
+  {% if localization.language.iso_code == 'ar' %}lang="ar" dir="rtl"{% endif %}
+>
+  {% if localization.language.iso_code == 'ar' %}
+    حِلْية
+  {% else %}
+    Hilya
+  {% endif %}
+</a>
 
 
     <!-- =====================================================
