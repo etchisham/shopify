@@ -351,7 +351,7 @@
       );
 
         const SLIDE_MS = 260;   /* speed of the slide after you let go */
-      const SLIDE_GAP = 24;   /* space between two images while sliding (px) */
+      const SLIDE_GAP = 0;   /* space between two images while sliding (px) */
       const SWIPE_DISTANCE = 0.25; /* how far (share of the width) counts as a swipe */
 
       let swipe = null;
