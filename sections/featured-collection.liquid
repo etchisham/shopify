@@ -343,10 +343,17 @@
     overflow-x: clip;
   }
 
-    .featured-collection__header {
-    gap: 12px;
+  .featured-collection__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
     margin-bottom: 18px;
     padding-inline: 1rem;
+  }
+
+  .featured-collection__heading {
+    grid-column: auto;
   }
 
   .featured-collection__eyebrow {
