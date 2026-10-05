@@ -320,7 +320,6 @@
   }
 }
 
-/* MOBILE */
 
 /* MOBILE */
 
@@ -331,27 +330,20 @@
     overflow-x: clip;
   }
 
-  .featured-collection__header {
-    /* حجم العنوان بيصغر مع عرض الشاشة، والـ eyebrow بياخد نسبة منه */
-    --fs: clamp(17px, 5.6vw, 22px);
-
-    align-items: flex-start;
+    .featured-collection__header {
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
     padding-inline: 1rem;
   }
 
   .featured-collection__eyebrow {
-    margin-bottom: 7px;
-    font-size: calc(var(--fs) * 0.4);
+    font-size: 10px;
+    letter-spacing: 0.16em;
   }
 
   .featured-collection__heading .featured-collection__title {
-    font-size: var(--fs) !important;
-    font-weight: 300 !important;
-    letter-spacing: -0.035em !important;
-    line-height: 1.08 !important;
-    white-space: nowrap;
+    margin-top: 7px !important;
+    font-size: 15px !important;
   }
 
   .featured-collection__view-all {
