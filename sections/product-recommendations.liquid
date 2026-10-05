@@ -4,20 +4,13 @@
   assign max_products = section.settings.max_products | default: 12
   assign loop_limit = max_products | plus: 1
 
-  assign locale_root = request.locale.iso_code | split: '-' | first
   assign add_label = 'products.product.add_to_cart' | t
   assign sold_out_label = 'products.product.sold_out' | t
-  assign options_label = 'Select options'
-  if locale_root == 'ar'
-    assign options_label = 'اختر الخيارات'
-  endif
 %}
 
 <section
   class="product-recommendations"
   data-product-recommendations
-  data-add-label="{{ add_label | escape }}"
-  data-sold-out-label="{{ sold_out_label | escape }}"
 >
   <div class="product-recommendations__inner">
 
@@ -79,26 +72,6 @@
                 assign review_word = 'reviews'
               endif
 
-              assign variant = item.selected_or_first_available_variant
-              assign min_quantity = variant.quantity_rule.min | default: 1
-              assign form_id = 'RecForm-' | append: item.id
-
-              comment
-                Products that need the customer to choose something first
-                (personalization / selling plan) open the product page instead.
-              endcomment
-              assign go_to_product = false
-              if item.tags contains 'Name' or item.tags contains 'Date' or item.tags contains 'Letter' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
-                assign go_to_product = true
-              endif
-              if item.variants.size > 1 and section.settings.quick_add == 'view_product'
-                assign go_to_product = true
-              endif
-
-              assign show_select = false
-              if item.variants.size > 1 and go_to_product == false and item.available
-                assign show_select = true
-              endif
             %}
 
             <article class="product-recommendations__item" data-rec-item>
@@ -133,35 +106,12 @@
 
                 <div class="product-recommendations__quick-wrap">
 
-                  {% if go_to_product %}
+                  {% if item.available %}
 
                     <a class="product-recommendations__quick" href="{{ item.url }}" data-quick-view>
-                      <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
-                      <span class="product-recommendations__quick-text">{{ options_label }}</span>
+                      <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+                      <span class="product-recommendations__quick-text">+ {{ add_label }}</span>
                     </a>
-
-                  {% elsif item.available %}
-
-                    {% form 'product', item,
-                      id: form_id,
-                      class: 'product-recommendations__form product-form',
-                      data-product-title: item.title
-                    %}
-                      {% unless show_select %}
-                        <input type="hidden" name="id" value="{{ variant.id }}">
-                      {% endunless %}
-                      <input type="hidden" name="quantity" value="{{ min_quantity }}">
-
-                      <button
-                        type="submit"
-                        name="add"
-                        class="product-recommendations__quick"
-                        data-rec-add
-                      >
-                        <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-                        <span class="product-recommendations__quick-text">+ {{ add_label }}</span>
-                      </button>
-                    {% endform %}
 
                   {% else %}
 
@@ -182,33 +132,6 @@
                     {{ item.title | escape }}
                   </a>
                 </h3>
-
-                {% if show_select %}
-                  <div class="product-recommendations__variant">
-                    <select
-                      class="product-recommendations__select"
-                      name="id"
-                      form="{{ form_id }}"
-                      aria-label="{{ item.title | escape }}"
-                      data-variant-select
-                    >
-                      {%- for v in item.variants -%}
-                        <option
-                          value="{{ v.id }}"
-                          {% if v.id == variant.id %}selected{% endif %}
-                          data-available="{{ v.available }}"
-                          data-price="{{ v.price | money | escape }}"
-                          data-compare="{% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | escape }}{% endif %}"
-                          data-image="{% if v.featured_image %}{{ v.featured_image | image_url: width: 900 }}{% endif %}"
-                        >
-                          {{- v.title | escape -}}
-                          {%- unless v.available %} · {{ sold_out_label }}{% endunless -%}
-                        </option>
-                      {%- endfor -%}
-                    </select>
-                    <span class="product-recommendations__chevron" aria-hidden="true"></span>
-                  </div>
-                {% endif %}
 
                 {% if settings.card_show_rating and rating_value != blank and rating_count > 0 %}
                   <div
@@ -332,57 +255,6 @@
       event.stopPropagation();
     }, true);
 
-    /* Variant dropdown: update price, image and the add button */
-    section.addEventListener('change', (event) => {
-      const select = event.target.closest?.('[data-variant-select]');
-      if (!select) return;
-
-      const card = select.closest('[data-rec-item]');
-      const option = select.options[select.selectedIndex];
-      if (!card || !option) return;
-
-      const priceBox = card.querySelector('[data-card-price]');
-      const button = card.querySelector('[data-rec-add]');
-      const image = card.querySelector('.product-recommendations__image-link img');
-
-      if (priceBox && option.dataset.price) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'price';
-
-        const current = document.createElement('span');
-        current.className = 'price__current';
-        current.textContent = option.dataset.price;
-        wrapper.appendChild(current);
-
-        if (option.dataset.compare) {
-          const compare = document.createElement('s');
-          compare.className = 'price__compare';
-          compare.textContent = option.dataset.compare;
-          wrapper.appendChild(compare);
-        }
-
-        priceBox.replaceChildren(wrapper);
-      }
-
-      if (image && option.dataset.image) {
-        image.removeAttribute('srcset');
-        image.src = option.dataset.image;
-      }
-
-      if (button) {
-        const available = option.dataset.available === 'true';
-        button.disabled = !available;
-        button.classList.toggle('is-sold-out', !available);
-
-        const text = button.querySelector('.product-recommendations__quick-text');
-        if (text) {
-          text.textContent = available
-            ? '+ ' + section.dataset.addLabel
-            : section.dataset.soldOutLabel;
-        }
-      }
-    });
-
   })();
 </script>
 
@@ -449,8 +321,8 @@
 .product-recommendations__carousel {
   --per-view: 4;
   --gap: 1.5rem;
-  --ratio-w: 3;
-  --ratio-h: 4;
+  --ratio-w: var(--card-ratio-w, 3);
+  --ratio-h: var(--card-ratio-h, 4);
 
   position: relative;
   container-type: inline-size;
@@ -682,16 +554,26 @@
 ========================================= */
 
 .product-recommendations__info {
-  padding-top: 0.8rem;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding-top: 12px;
   text-align: center;
 }
 
 .product-recommendations__product-title {
+  min-width: 0;
+  width: 100%;
   margin: 0;
-  color: #222;
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1.4;
+  overflow: hidden;
+  color: var(--color-foreground, #222);
+  font-family: var(--font-body-family);
+  font-size: clamp(0.78rem, 0.82vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .product-recommendations__product-title a {
@@ -699,91 +581,51 @@
   text-decoration: none;
 }
 
-.product-recommendations__product-title a:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2rem;
-}
 
-/* Variant dropdown (Gold Plated / Silver Plated ...) */
-
-.product-recommendations__variant {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-  margin-top: 0.5rem;
-}
-
-.product-recommendations__select {
-  min-width: 8.5rem;
-  max-width: 100%;
-  padding: 0.5rem 2.1rem;
-  border: 1px solid #d8d8d8;
-  border-radius: 999px;
-  background: transparent;
-  color: #222;
-  font: inherit;
-  font-size: 0.8rem;
-  line-height: 1.2;
-  text-align: center;
-  text-align-last: center;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.product-recommendations__select:hover {
-  border-color: #222;
-}
-
-.product-recommendations__chevron {
-  position: absolute;
-  top: 50%;
-  inset-inline-end: 0.95rem;
-  width: 0.4rem;
-  height: 0.4rem;
-  border-right: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  transform: translateY(-70%) rotate(45deg);
-  pointer-events: none;
-}
+/* Price (same sizes as the product card on every page) */
 
 .product-recommendations__price {
-  margin-top: 0.35rem;
-  color: #555;
-  font-size: 0.85rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
 }
 
 .product-recommendations__price .price {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  direction: ltr;
-}
-
-html[dir="rtl"] .product-recommendations__price .price {
-  justify-content: flex-end;
+  gap: 7px;
+  width: 100%;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  text-align: center;
 }
 
 .product-recommendations__price .price__current {
-  order: 1;
-  font-size: 0.9rem;
+  color: var(--color-foreground, #222);
+  font-size: 0.88rem;
   font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .product-recommendations__price .price__compare {
-  order: 2;
-  font-size: 0.78rem;
+  color: var(--color-muted, #777);
+  font-size: 0.74rem;
+  text-decoration: line-through;
 }
+
+
+/* Rating */
 
 .product-recommendations__rating {
   display: flex;
+  min-height: 1.35rem;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3rem;
-  margin-top: 0.3rem;
-  line-height: 1;
   justify-content: center;
+  gap: 0.3rem;
+  line-height: 1;
 }
 
 .product-recommendations__rating-star {
@@ -793,12 +635,12 @@ html[dir="rtl"] .product-recommendations__price .price {
 }
 
 .product-recommendations__rating-value {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
 .product-recommendations__rating-count {
-  color: #666;
+  color: var(--color-muted, #777);
   font-size: 0.8rem;
   white-space: nowrap;
 }
@@ -817,7 +659,7 @@ html[dir="rtl"] .product-recommendations__price .price {
 
 /* =========================================
    MOBILE (Artsy style)
-   Full-width swipe row + small icon-only add button on the right of the image
+   Full-width swipe row + small cart icon on the right of the image
 ========================================= */
 
 @media (max-width: 749px) {
@@ -844,15 +686,12 @@ html[dir="rtl"] .product-recommendations__price .price {
     font-size: 1.3rem;
   }
 
-  /* Card size: about 1.7 cards visible, tall 2 / 3 image like Artsy */
+  /* Card size: about 1.7 cards visible (same image shape as every other card) */
   .product-recommendations__carousel {
     --per-view: 1.7;
     --gap: 0.75rem;
-    --ratio-w: 2;
-    --ratio-h: 3;
   }
 
-  /* 1rem space before the first card; set both to 0 to start flush with the screen edge */
   /* No arrows on mobile: just swipe */
   .product-recommendations__arrow {
     display: none;
@@ -874,7 +713,7 @@ html[dir="rtl"] .product-recommendations__price .price {
     user-select: none;
   }
 
-  /* Add / Select options: small icon on the right (same color as the page) */
+  /* Cart icon on the right of the image (same color as the page, no border) */
   .product-recommendations__quick-wrap {
     inset-inline-start: auto;
     inset-inline-end: 0.6rem;
@@ -886,9 +725,9 @@ html[dir="rtl"] .product-recommendations__price .price {
     height: 2.4rem;
     min-height: 0;
     padding: 0;
-    border: 1px solid rgb(34 34 34 / 85%);
+    border: 0;
     border-radius: 0.35rem;
-    box-shadow: none;
+    box-shadow: 0 1px 8px rgb(0 0 0 / 14%);
   }
 
   .product-recommendations__quick-icon {
@@ -929,32 +768,32 @@ html[dir="rtl"] .product-recommendations__price .price {
     overflow: visible;
     clip-path: none;
   }
+}
 
+@media (max-width: 27rem) {
   .product-recommendations__info {
-    padding-top: 0.65rem;
+    padding-top: 9px;
+    gap: 4px;
   }
 
   .product-recommendations__product-title {
-    font-size: 0.95rem;
-  }
-
-  /* Price on one line, like Artsy */
-  .product-recommendations__price {
-    font-size: 0.9rem;
-  }
-
-  .product-recommendations__price .price {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.1rem 0.4rem;
+    font-size: 0.78rem;
   }
 
   .product-recommendations__price .price__current {
-    font-size: 0.95rem;
+    font-size: 0.82rem;
   }
 
   .product-recommendations__price .price__compare {
-    font-size: 0.8rem;
+    font-size: 0.68rem;
+  }
+
+  .product-recommendations__rating-star {
+    font-size: 0.92rem;
+  }
+
+  .product-recommendations__rating-count {
+    font-size: 0.72rem;
   }
 }
 
@@ -985,16 +824,6 @@ html[dir="rtl"] .product-recommendations__price .price {
       "id": "heading",
       "label": "Heading",
       "default": "You May Also Like"
-    },
-    {
-      "type": "select",
-      "id": "quick_add",
-      "label": "Add to cart on products with several variants",
-      "options": [
-        { "value": "add_default", "label": "Add the first available variant" },
-        { "value": "view_product", "label": "Open the product page instead" }
-      ],
-      "default": "add_default"
     },
     {
       "type": "range",
