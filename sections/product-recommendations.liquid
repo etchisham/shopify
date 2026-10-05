@@ -88,7 +88,7 @@
                 (personalization / selling plan) open the product page instead.
               endcomment
               assign go_to_product = false
-              if item.tags contains 'Name' or item.tags contains 'Date' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
+              if item.tags contains 'Name' or item.tags contains 'Date' or item.tags contains 'Letter' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
                 assign go_to_product = true
               endif
               if item.variants.size > 1 and section.settings.quick_add == 'view_product'
@@ -135,7 +135,7 @@
 
                   {% if go_to_product %}
 
-                    <a class="product-recommendations__quick" href="{{ item.url }}">
+                    <a class="product-recommendations__quick" href="{{ item.url }}" data-quick-view>
                       <svg class="product-recommendations__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
                       <span class="product-recommendations__quick-text">{{ options_label }}</span>
                     </a>
@@ -527,8 +527,12 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .product-recommendations__carousel:hover .product-recommendations__arrow,
-  .product-recommendations__carousel:focus-within .product-recommendations__arrow {
+  .product-recommendations__carousel:hover .product-recommendations__arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .product-recommendations__carousel:has(:focus-visible) .product-recommendations__arrow {
     opacity: 1;
     pointer-events: auto;
   }
@@ -592,8 +596,14 @@
     transform 220ms ease;
 }
 
-.product-recommendations__media:hover .product-recommendations__quick-wrap,
-.product-recommendations__media:focus-within .product-recommendations__quick-wrap {
+.product-recommendations__media:hover .product-recommendations__quick-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* Keyboard focus only (a mouse click must not keep the button visible) */
+.product-recommendations__media:has(:focus-visible) .product-recommendations__quick-wrap {
   opacity: 1;
   pointer-events: auto;
   transform: none;
