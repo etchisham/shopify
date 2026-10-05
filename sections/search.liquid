@@ -23,24 +23,17 @@
     </header>
 
     {% if search.performed %}
-      {% capture search_clear_url %}{{ routes.search_url }}?q={{ search.terms | url_encode }}&type=product{% endcapture %}
 
       {% paginate search.results by 24 %}
 
         <div class="catalog-page__toolbar">
-          {% render 'facets-toolbar',
-            filters: search.filters,
-            sort_options: search.sort_options,
-            sort_by: search.sort_by,
-            default_sort_by: search.default_sort_by,
-            results_url: routes.search_url,
-            clear_url: search_clear_url,
-            results_count: search.results_count,
-            section_id: section.id,
-            search_terms: search.terms,
-            is_search: true
-          %}
-        </div>
+  {% render 'facets-toolbar',
+    sort_options: search.sort_options,
+    sort_by: search.sort_by,
+    default_sort_by: search.default_sort_by,
+    results_count: search.results_count
+  %}
+</div>
 
         {% if search.results_count == 0 %}
           <p class="search-page__empty">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
