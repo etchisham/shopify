@@ -29,8 +29,7 @@
       {%- if social_image != blank -%}
         <a
           href="{{ section.settings.instagram_url }}"
-          class="hilya-social__image"
-          style="grid-column: {{ i }};"
+          class="hilya-social__image hilya-social__image--{{ i }}"
           target="_blank"
           rel="noopener"
         >
@@ -40,45 +39,51 @@
             | image_tag:
               loading: 'lazy',
               widths: '300, 500, 700, 900',
-              sizes: '(min-width: 750px) 20vw, 25vw',
+              sizes: '(min-width: 750px) 33vw, 50vw',
               alt: instagram_alt
           }}
         </a>
       {%- else -%}
-        <span class="hilya-social__image" style="grid-column: {{ i }};"></span>
+        <span class="hilya-social__image hilya-social__image--{{ i }}"></span>
       {%- endif -%}
     {%- endfor -%}
 
-    <div class="hilya-social__panel">
+    <div class="hilya-social__head">
 
       <p class="hilya-social__eyebrow">{{ 'home.follow_journey' | t }}</p>
 
       <p class="hilya-social__brand">
         <svg class="hilya-social__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="hilya-ig-grad" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#f9a43a"></stop>
+              <stop offset=".5" stop-color="#e1306c"></stop>
+              <stop offset="1" stop-color="#833ab4"></stop>
+            </linearGradient>
+          </defs>
           <rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect>
           <circle cx="12" cy="12" r="4"></circle>
           <circle cx="17.5" cy="6.5" r="1"></circle>
         </svg>
-        <span>{{ hs_name | escape }}</span>
+        <span>{{ hs_name | remove: '@' | escape }}</span>
       </p>
 
       {%- if hs_text != blank -%}
         <p class="hilya-social__text">{{ hs_text | escape }}</p>
       {%- endif -%}
 
-      {%- if hs_button != blank -%}
-        <a
-          class="hilya-social__button"
-          href="{{ section.settings.instagram_url }}"
-          target="_blank"
-          rel="noopener"
-        >
-          <span>{{ hs_button | escape }}</span>
-          <span class="hilya-social__arrow" aria-hidden="true">→</span>
-        </a>
-      {%- endif -%}
-
     </div>
+
+    {%- if hs_button != blank -%}
+      <a
+        class="hilya-social__button"
+        href="{{ section.settings.instagram_url }}"
+        target="_blank"
+        rel="noopener"
+      >
+        <span>{{ hs_button | escape }}</span>
+      </a>
+    {%- endif -%}
 
   </div>
 
@@ -98,11 +103,22 @@
   overflow-x: clip;
 }
 
+
+/* =========================
+   DESKTOP + TABLET
+   3 columns: [image 1, image 2] [title, image 3, image 4, button] [image 5]
+========================= */
+
 .hilya-social__grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  grid-template-rows: minmax(0, 1fr);
-  height: clamp(300px, 28vw, 420px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  /* title row, 9 equal picture rows, button row */
+  grid-template-rows: auto repeat(9, minmax(0, 1fr)) auto;
+  column-gap: 10px;
+  row-gap: 0;
+  height: clamp(420px, 40vw, 600px);
+  padding: 28px 32px 24px;
+  box-sizing: border-box;
   background: #f4f1eb;
 }
 
@@ -112,10 +128,19 @@
 .hilya-social__image {
   position: relative;
   display: block;
-  grid-row: 1;
   min-width: 0;
+  margin-bottom: 10px;
   overflow: hidden;
+  isolation: isolate;
+  border-radius: 16px;
+  background: #e4dbcf;
 }
+
+.hilya-social__image--1 { grid-column: 1; grid-row: 1 / 6; }
+.hilya-social__image--2 { grid-column: 1; grid-row: 6 / 11; }
+.hilya-social__image--3 { grid-column: 2; grid-row: 2 / 6; }
+.hilya-social__image--4 { grid-column: 2; grid-row: 6 / 11; }
+.hilya-social__image--5 { grid-column: 3; grid-row: 4 / 11; }
 
 .hilya-social__image img {
   position: absolute;
@@ -132,34 +157,28 @@
 }
 
 
-/* TEXT (over the center image) */
+/* TITLE (top of the center column) */
 
-.hilya-social__panel {
-  position: relative;
-  z-index: 2;
-  grid-column: 3;
+.hilya-social__head {
+  grid-column: 2;
   grid-row: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 20px;
-  background: rgba(0, 0, 0, 0.32); /* غطاء خفيف عشان الكلام يتقري، زوّده أو قلّله */
-  color: #fff;
+  padding-bottom: 14px;
   text-align: center;
-  pointer-events: none; /* الضغط على الصورة نفسها يفتح الإنستجرام */
 }
 
 .hilya-social__eyebrow {
-  margin: 0 0 14px;
-  color: #fff;
+  margin: 0 0 8px;
+  color: #2a2420;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: .3em;
   text-transform: uppercase;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
 }
 
 .hilya-social__brand {
@@ -167,64 +186,57 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 0 0 14px;
-  color: #fff;
+  margin: 0;
+  color: #2a2420;
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: clamp(26px, 2.4vw, 34px);
+  font-size: clamp(26px, 2.6vw, 38px);
   line-height: 1.1;
   font-weight: 400;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
 }
 
 .hilya-social__icon {
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   fill: none;
-  stroke: #fff;
+  stroke: url(#hilya-ig-grad);
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
+/* The description is not shown in the new design.
+   Delete this rule if you want it to appear under the name again. */
 .hilya-social__text {
-  max-width: 230px;
-  margin: 0 0 22px;
-  color: #fff;
-  font-size: 13px;
-  line-height: 1.6;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  display: none;
 }
 
+
+/* BUTTON (bottom of the center column) */
+
 .hilya-social__button {
+  grid-column: 2;
+  grid-row: 11;
+  justify-self: center;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 13px 28px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  justify-content: center;
+  padding: 14px 36px;
+  border: 1px solid #b8975a;
+  border-radius: 10px;
+  background: #2a2420;
   color: #fff;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .03em;
-  pointer-events: auto;
   transition: background-color .3s ease, color .3s ease;
 }
 
 .hilya-social__button:hover {
-  background: #fff;
-  color: #111;
-}
-
-.hilya-social__arrow {
-  display: inline-flex;
-  font-size: 15px;
-  transition: transform .3s ease;
-}
-
-.hilya-social__button:hover .hilya-social__arrow {
-  transform: translateX(4px);
+  background: #b8975a;
+  color: #fff;
 }
 
 
@@ -245,29 +257,22 @@
     padding-left: 28px;
     padding-right: 28px;
   }
-}
-
-
-/* TABLET + MOBILE: الكلام على الصور الخمسة كلها */
-
-@media (max-width: 1100px) {
 
   .hilya-social__grid {
-    height: 300px;
+    padding: 22px 20px 20px;
   }
 
-  .hilya-social__panel {
-    grid-column: 1 / -1;
-    background: rgba(0, 0, 0, 0.38);
-  }
-
-  .hilya-social__text {
-    max-width: 300px;
+  .hilya-social__eyebrow {
+    font-size: 10px;
+    letter-spacing: .22em;
   }
 }
 
 
-/* MOBILE */
+/* =========================
+   MOBILE
+   2 columns: title on top, 5 pictures, one button at the bottom
+========================= */
 
 @media (max-width: 749px) {
 
@@ -276,38 +281,44 @@
   }
 
   .hilya-social__grid {
-    height: 270px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* title row, 7 picture rows, button row */
+    grid-template-rows: auto repeat(7, clamp(56px, 18vw, 90px)) auto;
+    height: auto;
+    padding: 24px 14px 18px;
   }
 
-  .hilya-social__panel {
-    padding: 20px 16px;
+  .hilya-social__head {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding-bottom: 16px;
   }
 
   .hilya-social__eyebrow {
-    margin-bottom: 11px;
-    font-size: 10px;
+    margin-bottom: 8px;
+    font-size: 11px;
   }
 
   .hilya-social__brand {
     gap: 8px;
-    margin-bottom: 11px;
-    font-size: 26px;
+    font-size: 34px;
   }
 
   .hilya-social__icon {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
   }
 
-  .hilya-social__text {
-    max-width: 260px;
-    margin-bottom: 18px;
-    font-size: 12px;
-  }
+  .hilya-social__image--1 { grid-column: 1; grid-row: 2 / 5; }
+  .hilya-social__image--3 { grid-column: 1; grid-row: 5 / 7; }
+  .hilya-social__image--5 { grid-column: 1; grid-row: 7 / 9; }
+  .hilya-social__image--2 { grid-column: 2; grid-row: 2 / 5; }
+  .hilya-social__image--4 { grid-column: 2; grid-row: 5 / 9; }
 
   .hilya-social__button {
-    padding: 11px 22px;
-    font-size: 12px;
+    grid-column: 1 / -1;
+    grid-row: 9;
+    padding: 14px 36px;
   }
 }
 
@@ -323,22 +334,9 @@
   font-size: 30px;
 }
 
-[dir="rtl"] .hilya-social__text {
-  font-size: 15px;
-  line-height: 1.8;
-}
-
 [dir="rtl"] .hilya-social__button {
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0;
-}
-
-[dir="rtl"] .hilya-social__arrow {
-  transform: scaleX(-1);
-}
-
-[dir="rtl"] .hilya-social__button:hover .hilya-social__arrow {
-  transform: scaleX(-1) translateX(4px);
 }
 
 @media (max-width: 749px) {
@@ -347,15 +345,11 @@
   }
 
   [dir="rtl"] .hilya-social__brand {
-    font-size: 26px;
-  }
-
-  [dir="rtl"] .hilya-social__text {
-    font-size: 14px;
+    font-size: 28px;
   }
 
   [dir="rtl"] .hilya-social__button {
-    font-size: 13px;
+    font-size: 14px;
   }
 }
 
@@ -383,27 +377,27 @@
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1 (far left)"
+      "label": "Image 1 (desktop: left, tall / mobile: top left, tall)"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Image 2"
+      "label": "Image 2 (desktop: left, bottom / mobile: top right)"
     },
     {
       "type": "image_picker",
       "id": "image_3",
-      "label": "Image 3 (center, the text sits on it)"
+      "label": "Image 3 (desktop: center, top / mobile: left, middle)"
     },
     {
       "type": "image_picker",
       "id": "image_4",
-      "label": "Image 4"
+      "label": "Image 4 (desktop: center, bottom / mobile: right, tall)"
     },
     {
       "type": "image_picker",
       "id": "image_5",
-      "label": "Image 5 (far right)"
+      "label": "Image 5 (desktop: right, tall / mobile: left, bottom)"
     },
     {
       "type": "header",
@@ -424,13 +418,13 @@
     {
       "type": "text",
       "id": "description",
-      "label": "Description",
+      "label": "Description (hidden in this design)",
       "default": "For more inspiration, behind the scenes and special moments."
     },
     {
       "type": "text",
       "id": "description_ar",
-      "label": "Description - Arabic",
+      "label": "Description - Arabic (hidden in this design)",
       "default": "لمزيد من الإلهام وكواليس العمل واللحظات المميزة."
     },
     {
