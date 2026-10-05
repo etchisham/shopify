@@ -24,11 +24,14 @@
 
     {%- for i in (1..6) -%}
       {%- assign image_key = 'image_' | append: i -%}
+      {%- assign x_key = image_key | append: '_x' -%}
+      {%- assign y_key = image_key | append: '_y' -%}
       {%- assign social_image = section.settings[image_key] -%}
 
       {%- if social_image != blank -%}
-        {%- assign focal = social_image.presentation.focal_point | default: '50% 50%' -%}
-        {%- assign focal_style = 'object-position: ' | append: focal -%}
+        {%- assign pos_x = section.settings[x_key] | default: 50 -%}
+        {%- assign pos_y = section.settings[y_key] | default: 50 -%}
+        {%- capture pos_style -%}object-position: {{ pos_x }}% {{ pos_y }}%;{%- endcapture -%}
         <a
           href="{{ section.settings.instagram_url }}"
           class="hilya-social__image hilya-social__image--{{ i }}"
@@ -43,7 +46,7 @@
               widths: '300, 500, 700, 900',
               sizes: '(min-width: 750px) 25vw, 50vw',
               alt: instagram_alt,
-              style: focal_style
+              style: pos_style
           }}
         </a>
       {%- else -%}
@@ -115,7 +118,8 @@
    4 columns:
    row 1: [image 1] [   title (2 cols)   ] [image 2]
    row 2: [image 5] [image 3] [image 4] [image 6]
-   row 3: [image 5] [  Follow Us button  ] [image 6]
+   row 3: [        Follow Us button (centered)       ]
+   All 4 bottom images end on the same line.
 ========================= */
 
 .hilya-social__grid {
@@ -148,8 +152,8 @@
 .hilya-social__image--2 { grid-column: 4; grid-row: 1; }
 .hilya-social__image--3 { grid-column: 2; grid-row: 2; }
 .hilya-social__image--4 { grid-column: 3; grid-row: 2; }
-.hilya-social__image--5 { grid-column: 1; grid-row: 2 / 4; }
-.hilya-social__image--6 { grid-column: 4; grid-row: 2 / 4; }
+.hilya-social__image--5 { grid-column: 1; grid-row: 2; }
+.hilya-social__image--6 { grid-column: 4; grid-row: 2; }
 
 .hilya-social__image img {
   position: absolute;
@@ -221,10 +225,10 @@
 }
 
 
-/* BUTTON (bottom of the center) - Instagram colors */
+/* BUTTON (bottom, centered under all images) - Instagram colors */
 
 .hilya-social__button {
-  grid-column: 2 / 4;
+  grid-column: 1 / -1;
   grid-row: 3;
   justify-self: center;
   position: relative;
@@ -307,7 +311,9 @@
 
 /* =========================
    MOBILE
-   2 columns, 6 pictures staggered big / small, title on top, button at the bottom
+   2 columns, 6 pictures. Different heights, but both columns
+   start on the same line and end on the same line (17 rows each).
+   left: 6 + 5 + 6   |   right: 5 + 7 + 5
 ========================= */
 
 @media (max-width: 749px) {
@@ -346,15 +352,15 @@
     height: 30px;
   }
 
-  /* left column: big, small, big */
+  /* left column: 6 + 5 + 6 */
   .hilya-social__image--1 { grid-column: 1; grid-row: 2 / 8; }
   .hilya-social__image--3 { grid-column: 1; grid-row: 8 / 13; }
   .hilya-social__image--5 { grid-column: 1; grid-row: 13 / 19; }
 
-  /* right column: small, big, small */
+  /* right column: 5 + 7 + 5 */
   .hilya-social__image--2 { grid-column: 2; grid-row: 2 / 7; }
-  .hilya-social__image--4 { grid-column: 2; grid-row: 7 / 13; }
-  .hilya-social__image--6 { grid-column: 2; grid-row: 13 / 18; }
+  .hilya-social__image--4 { grid-column: 2; grid-row: 7 / 14; }
+  .hilya-social__image--6 { grid-column: 2; grid-row: 14 / 19; }
 
   .hilya-social__button {
     grid-column: 1 / -1;
@@ -417,40 +423,187 @@
       "id": "instagram_url",
       "label": "Instagram link"
     },
+
     {
       "type": "header",
-      "content": "Images (set focal point to control crop)"
+      "content": "Image 1"
     },
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1 (desktop: top left / mobile: left, big)"
+      "label": "Image 1 (desktop: top left / mobile: left, 1st)"
+    },
+    {
+      "type": "range",
+      "id": "image_1_x",
+      "label": "Image 1 - horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_1_y",
+      "label": "Image 1 - vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "Image 2"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Image 2 (desktop: top right / mobile: right, small)"
+      "label": "Image 2 (desktop: top right / mobile: right, 1st)"
+    },
+    {
+      "type": "range",
+      "id": "image_2_x",
+      "label": "Image 2 - horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_2_y",
+      "label": "Image 2 - vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "Image 3"
     },
     {
       "type": "image_picker",
       "id": "image_3",
-      "label": "Image 3 (desktop: under title, left / mobile: left, small)"
+      "label": "Image 3 (desktop: under title, left / mobile: left, 2nd)"
+    },
+    {
+      "type": "range",
+      "id": "image_3_x",
+      "label": "Image 3 - horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_3_y",
+      "label": "Image 3 - vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "Image 4"
     },
     {
       "type": "image_picker",
       "id": "image_4",
-      "label": "Image 4 (desktop: under title, right / mobile: right, big)"
+      "label": "Image 4 (desktop: under title, right / mobile: right, 2nd)"
+    },
+    {
+      "type": "range",
+      "id": "image_4_x",
+      "label": "Image 4 - horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_4_y",
+      "label": "Image 4 - vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "Image 5"
     },
     {
       "type": "image_picker",
       "id": "image_5",
-      "label": "Image 5 (desktop: far left, tall / mobile: left, big)"
+      "label": "Image 5 (desktop: far left / mobile: left, 3rd)"
+    },
+    {
+      "type": "range",
+      "id": "image_5_x",
+      "label": "Image 5 - horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_5_y",
+      "label": "Image 5 - vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "Image 6"
     },
     {
       "type": "image_picker",
       "id": "image_6",
-      "label": "Image 6 (desktop: far right, tall / mobile: right, small)"
+      "label": "Image 6 (desktop: far right / mobile: right, 3rd)"
     },
+    {
+      "type": "range",
+      "id": "image_6_x",
+      "label": "Image 6 - horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_6_y",
+      "label": "Image 6 - vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+
     {
       "type": "header",
       "content": "Text"
