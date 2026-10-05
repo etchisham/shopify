@@ -9,6 +9,11 @@
   assign co_heading = section.settings.heading
   assign co_text = section.settings.description
   assign co_button = section.settings.button_label
+  assign co_image = section.settings.image
+  assign co_flip = false
+  assign co_f1 = section.settings.feature_1
+  assign co_f2 = section.settings.feature_2
+  assign co_f3 = section.settings.feature_3
 
   if co_ar
     if section.settings.eyebrow_ar != blank
@@ -22,6 +27,19 @@
     endif
     if section.settings.button_label_ar != blank
       assign co_button = section.settings.button_label_ar
+    endif
+        if section.settings.image_ar != blank
+      assign co_image = section.settings.image_ar
+      assign co_flip = true
+    endif
+    if section.settings.feature_1_ar != blank
+      assign co_f1 = section.settings.feature_1_ar
+    endif
+    if section.settings.feature_2_ar != blank
+      assign co_f2 = section.settings.feature_2_ar
+    endif
+    if section.settings.feature_3_ar != blank
+      assign co_f3 = section.settings.feature_3_ar
     endif
   endif
 
@@ -72,18 +90,21 @@
   endif
 -%}
 
-<section class="custom-order">
+<section
+  class="custom-order{% if co_flip %} custom-order--flip{% endif %}"
+  style="--co-bg: {{ section.settings.bg_color | default: '#CBB9A5' }};"
+>
 
   <div class="custom-order__inner">
 
     <div class="custom-order__media">
-      {% if section.settings.image != blank %}
+      {% if co_image != blank %}
         {{
-          section.settings.image
-          | image_url: width: 1600
+          co_image
+          | image_url: width: 2400
           | image_tag:
-            widths: '600, 900, 1200, 1600',
-            sizes: '(min-width: 750px) 50vw, 100vw',
+            widths: '800, 1200, 1600, 2000, 2400',
+            sizes: '100vw',
             loading: 'lazy',
             alt: ''
         }}
@@ -112,6 +133,31 @@
           <span class="custom-order__arrow" aria-hidden="true">→</span>
         </button>
       {% endif %}
+
+      <ul class="custom-order__features">
+
+        {% if co_f1 != blank %}
+          <li class="custom-order__feature">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20M10 3L8 9l4 12 4-12-2-6"/></svg>
+            <span>{{ co_f1 | escape }}</span>
+          </li>
+        {% endif %}
+
+        {% if co_f2 != blank %}
+          <li class="custom-order__feature">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5L16 9.5"/></svg>
+            <span>{{ co_f2 | escape }}</span>
+          </li>
+        {% endif %}
+
+        {% if co_f3 != blank %}
+          <li class="custom-order__feature">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/></svg>
+            <span>{{ co_f3 | escape }}</span>
+          </li>
+        {% endif %}
+
+      </ul>
 
     </div>
 
