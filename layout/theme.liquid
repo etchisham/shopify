@@ -23,6 +23,37 @@
     {{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
     <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'newsletter.js' | asset_url }}" defer="defer"></script>
+    {{ 'quick-view.css' | asset_url | stylesheet_tag }}
+    <script>
+      window.hilyaQuickView = {
+        root: {{ routes.root_url | json }},
+        cartAddUrl: {{ routes.cart_add_url | json }},
+        moneyFormat: {{ shop.money_format | json }},
+        text: {
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          quantity: {{ 'products.product.quantity' | t | json }}
+          {%- if request.locale.iso_code contains 'ar' -%},
+          title: "اختر الخيارات",
+          close: "إغلاق",
+          viewDetails: "عرض التفاصيل",
+          decrease: "تقليل الكمية",
+          increase: "زيادة الكمية",
+          personalization: "التخصيص",
+          required: "مطلوب",
+          name: "الاسم",
+          namePlaceholder: "اكتب الاسم",
+          date: "التاريخ",
+          letter: "الحرف",
+          letterPlaceholder: "حرف واحد",
+          letterError: "من فضلك اكتب حرفًا واحدًا (عربي أو إنجليزي).",
+          loading: "جارٍ التحميل..."
+          {%- endif -%}
+        }
+      };
+    </script>
+    <script src="{{ 'quick-view.js' | asset_url }}" defer="defer"></script>
+
     {% if request.page_type == 'product' %}
       {{ 'product.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
