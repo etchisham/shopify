@@ -41,6 +41,29 @@
         "grid_gap": 48
       }
     },
+    "customize_your_own_dtb9nD": {
+      "type": "customize-your-own",
+      "name": "Customize Your Own",
+      "settings": {
+        "image": "shopify://shop_images/08_New_Arrivals.jpg",
+        "eyebrow": "Made for You",
+        "eyebrow_ar": "صُمّمت لأجلك",
+        "heading": "Customize Your Own",
+        "heading_ar": "خصّص قطعتك الخاصة",
+        "description": "Have an idea in mind? Share it with us and we will turn it into a piece made just for you.",
+        "description_ar": "هل لديك فكرة؟ شاركها معنا وسنحوّلها إلى قطعة مصنوعة خصيصًا لك.",
+        "button_label": "Start Customizing",
+        "button_label_ar": "ابدأ التخصيص",
+        "feature_1": "Your Design Your Story",
+        "feature_1_ar": "تصميمك قصتك",
+        "feature_2": "Premium Quality Materials",
+        "feature_2_ar": "خامات عالية الجودة",
+        "feature_3": "Made With Love",
+        "feature_3_ar": "صُنعت بحب",
+        "webhook_url": "",
+        "whatsapp_number": ""
+      }
+    },
     "featured_collection_CinWF3": {
       "type": "featured-collection",
       "name": "t:general.featured_collection",
@@ -96,29 +119,6 @@
         "button_link": "shopify://collections/new-arrivals"
       }
     },
-    "customize_your_own_dtb9nD": {
-      "type": "customize-your-own",
-      "name": "Customize Your Own",
-      "settings": {
-        "image": "shopify://shop_images/08_New_Arrivals.jpg",
-        "eyebrow": "Made for You",
-        "eyebrow_ar": "صُمّمت لأجلك",
-        "heading": "Customize Your Own",
-        "heading_ar": "خصّص قطعتك الخاصة",
-        "description": "Have an idea in mind? Share it with us and we will turn it into a piece made just for you.",
-        "description_ar": "هل لديك فكرة؟ شاركها معنا وسنحوّلها إلى قطعة مصنوعة خصيصًا لك.",
-        "button_label": "Start Customizing",
-        "button_label_ar": "ابدأ التخصيص",
-        "feature_1": "Your Design Your Story",
-        "feature_1_ar": "تصميمك قصتك",
-        "feature_2": "Premium Quality Materials",
-        "feature_2_ar": "خامات عالية الجودة",
-        "feature_3": "Made With Love",
-        "feature_3_ar": "صُنعت بحب",
-        "webhook_url": "",
-        "whatsapp_number": ""
-      }
-    },
     "follow_our_journey_fFyeaN": {
       "type": "follow-our-journey",
       "name": "Hilya Social",
@@ -154,11 +154,11 @@
   "order": [
     "hero_N4mypj",
     "collections_pUPfUG",
+    "customize_your_own_dtb9nD",
     "featured_collection_CinWF3",
     "custom_section_ETjLrM",
     "featured_collection_84KnBQ",
     "new_arrivals_DPpLqt",
-    "customize_your_own_dtb9nD",
     "follow_our_journey_fFyeaN"
   ]
 }
