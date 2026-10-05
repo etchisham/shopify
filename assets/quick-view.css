@@ -300,7 +300,7 @@ html[dir="rtl"] .quick-view__price .price {
 .quick-view__field input:focus-visible {
   outline: 0;
   box-shadow: none;
-}
+} 
 
 .quick-view__letter {
   max-width: 6rem;
