@@ -100,7 +100,7 @@
       "type": "customize-your-own",
       "name": "Customize Your Own",
       "settings": {
-        "bg_color": "#cbb9a5",
+        "image": "shopify://shop_images/08_New_Arrivals.jpg",
         "eyebrow": "Made for You",
         "eyebrow_ar": "صُمّمت لأجلك",
         "heading": "Customize Your Own",
