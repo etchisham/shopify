@@ -1,59 +1,79 @@
-{%- assign instagram_alt = 'home.instagram_alt' | t -%}
+{%- liquid
+  assign hs_locale = request.locale.iso_code | split: '-' | first
+  assign hs_handle = section.settings.handle
+  assign hs_text = section.settings.description
+  assign hs_button = section.settings.button_label
+  assign instagram_alt = 'home.instagram_alt' | t
+
+  if hs_locale == 'ar'
+    if section.settings.description_ar != blank
+      assign hs_text = section.settings.description_ar
+    endif
+    if section.settings.button_label_ar != blank
+      assign hs_button = section.settings.button_label_ar
+    endif
+  endif
+-%}
 
 <section class="hilya-social">
 
-  <div class="hilya-social__inner">
+  <div class="hilya-social__grid">
 
-    <div class="hilya-social__grid">
-      {%- for i in (1..4) -%}
-        {%- assign image_key = 'image_' | append: i -%}
-        {%- assign social_image = section.settings[image_key] -%}
+    {%- for i in (1..4) -%}
 
-        {%- if social_image != blank -%}
-          <a
-            href="{{ section.settings.instagram_url }}"
-            class="hilya-social__image"
-            target="_blank"
-            rel="noopener"
-          >
-            {{
-              social_image
-              | image_url: width: 800
-              | image_tag:
-                loading: 'lazy',
-                widths: '300, 500, 700, 800',
-                sizes: '25vw',
-                alt: instagram_alt
-            }}
-          </a>
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
+      {%- if i == 3 -%}
+        <div class="hilya-social__panel">
 
-    <div class="hilya-social__overlay"></div>
+          <p class="hilya-social__eyebrow">{{ 'home.follow_journey' | t }}</p>
 
-    <div class="hilya-social__intro">
+          {%- if hs_handle != blank -%}
+            <p class="hilya-social__handle" dir="ltr">{{ hs_handle | escape }}</p>
+          {%- endif -%}
 
-      <p class="hilya-social__title">
-        {{ 'home.follow_journey' | t }}
-      </p>
+          {%- if hs_text != blank -%}
+            <p class="hilya-social__text">{{ hs_text | escape }}</p>
+          {%- endif -%}
 
-      <a
-        href="{{ section.settings.instagram_url }}"
-        class="hilya-social__instagram"
-        target="_blank"
-        rel="noopener"
-      >
-        <svg class="hilya-social__instagram-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect>
-          <circle cx="12" cy="12" r="4"></circle>
-          <circle cx="17.5" cy="6.5" r="1"></circle>
-        </svg>
+          {%- if hs_button != blank -%}
+            <a
+              class="hilya-social__button"
+              href="{{ section.settings.instagram_url }}"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>{{ hs_button | escape }}</span>
+              <span class="hilya-social__arrow" aria-hidden="true">→</span>
+            </a>
+          {%- endif -%}
 
-        <span>Hilya</span>
-      </a>
+        </div>
+      {%- endif -%}
 
-    </div>
+      {%- assign image_key = 'image_' | append: i -%}
+      {%- assign social_image = section.settings[image_key] -%}
+
+      {%- if social_image != blank -%}
+        <a
+          href="{{ section.settings.instagram_url }}"
+          class="hilya-social__image"
+          target="_blank"
+          rel="noopener"
+        >
+          {{
+            social_image
+            | image_url: width: 900
+            | image_tag:
+              loading: 'lazy',
+              widths: '300, 500, 700, 900',
+              sizes: '(min-width: 750px) 22vw, 25vw',
+              alt: instagram_alt
+          }}
+        </a>
+      {%- else -%}
+        <span class="hilya-social__image hilya-social__image--empty"></span>
+      {%- endif -%}
+
+    {%- endfor -%}
 
   </div>
 
@@ -62,44 +82,39 @@
 
 {% stylesheet %}
 
-/* SECTION (same container as New Arrivals) */
+/* SECTION (full width, like the design) */
 
 .hilya-social {
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 8px max(24px, calc((100vw - 1400px) / 2)) 25px;
+  margin-block: 30px;
+  padding: 0; /* لو عايزه بنفس عرض باقي السكاشن: padding-inline: max(24px, calc((100vw - 1400px) / 2)) */
   box-sizing: border-box;
+  overflow-x: clip;
 }
-
-.hilya-social__inner {
-  position: relative;
-  width: 100%;
-  height: 270px;
-  overflow: hidden;
-  isolation: isolate;
-  background: #f4f1eb;
-}
-
-
-/* IMAGES (background) */
 
 .hilya-social__grid {
-  position: absolute;
-  inset: 0;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  gap: 3px;
+  grid-template-columns: 1fr 1fr 1.15fr 1fr 1fr;
+  height: clamp(300px, 30vw, 440px);
+  background: #3a2e26;
 }
 
+
+/* IMAGES */
+
 .hilya-social__image {
+  position: relative;
   display: block;
   min-width: 0;
   overflow: hidden;
+  background: #4a3b31;
 }
 
 .hilya-social__image img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -107,157 +122,185 @@
   transition: transform .5s ease;
 }
 
+.hilya-social__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 28, 20, 0.22);
+  pointer-events: none;
+}
+
 .hilya-social__image:hover img {
   transform: scale(1.04);
 }
 
 
-/* OVERLAY */
+/* CENTER PANEL */
 
-.hilya-social__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(0, 0, 0, 0.38);
-  pointer-events: none;
-}
-
-
-/* TEXT ON TOP */
-
-.hilya-social__intro {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
+.hilya-social__panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-  text-align: center;
+  padding: 24px 22px;
+  background: #3a2e26;
   color: #fff;
-  pointer-events: none;
+  text-align: center;
 }
 
-.hilya-social__title {
+.hilya-social__eyebrow {
   margin: 0 0 14px;
   color: #fff;
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: clamp(30px, 3.2vw, 44px);
-  line-height: 1;
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: .01em;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.3);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: .3em;
+  text-transform: uppercase;
 }
 
-.hilya-social__instagram {
+.hilya-social__handle {
+  margin: 0 0 16px;
+  color: #fff;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.hilya-social__text {
+  max-width: 230px;
+  margin: 0 0 24px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.hilya-social__button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
+  padding: 13px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
   color: #fff;
   text-decoration: none;
-  font-family: Arial, sans-serif;
   font-size: 13px;
   line-height: 1;
-  font-weight: 400;
-  letter-spacing: .02em;
-  pointer-events: auto;
+  font-weight: 500;
+  letter-spacing: .03em;
+  transition: background-color .3s ease, color .3s ease;
 }
 
-.hilya-social__instagram:hover {
-  opacity: .8;
+.hilya-social__button:hover {
+  background: #fff;
+  color: #3a2e26;
 }
 
-.hilya-social__instagram-icon {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.hilya-social__arrow {
+  display: inline-flex;
+  font-size: 15px;
+  transition: transform .3s ease;
 }
 
-
-/* LARGE DESKTOP */
-
-@media (min-width: 1500px) {
-  .hilya-social {
-    padding-left: max(32px, calc((100vw - 1500px) / 2));
-    padding-right: max(32px, calc((100vw - 1500px) / 2));
-  }
+.hilya-social__button:hover .hilya-social__arrow {
+  transform: translateX(4px);
 }
 
 
 /* TABLET */
 
 @media (min-width: 750px) and (max-width: 1100px) {
-  .hilya-social {
-    padding-left: 28px;
-    padding-right: 28px;
+  .hilya-social__grid {
+    grid-template-columns: 1fr 1fr 1.4fr 1fr 1fr;
+    height: 340px;
   }
 
-  .hilya-social__inner {
-    height: 250px;
+  .hilya-social__panel {
+    padding: 20px 14px;
+  }
+
+  .hilya-social__text {
+    font-size: 12px;
   }
 }
 
 
-/* MOBILE */
+/* MOBILE: اللوحة فوق والصور في صف تحتها */
 
 @media (max-width: 749px) {
 
   .hilya-social {
-    padding: 25px 1rem 34px;
-    overflow-x: clip;
-  }
-
-  .hilya-social__inner {
-    height: 200px;
+    margin-block: 20px;
   }
 
   .hilya-social__grid {
-    gap: 2px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto 120px;
+    height: auto;
   }
 
-  .hilya-social__title {
-    margin-bottom: 11px;
-    font-size: 24px;
+  .hilya-social__panel {
+    grid-column: 1 / -1;
+    order: -1;
+    padding: 32px 1rem;
   }
 
-  .hilya-social__instagram {
-    gap: 8px;
-    font-size: 11px;
+  .hilya-social__eyebrow {
+    font-size: 10px;
   }
 
-  .hilya-social__instagram-icon {
-    width: 20px;
-    height: 20px;
+  .hilya-social__handle {
+    font-size: 28px;
+  }
+
+  .hilya-social__text {
+    max-width: 280px;
+    margin-bottom: 20px;
+  }
+
+  .hilya-social__button {
+    padding: 12px 24px;
+    font-size: 12px;
   }
 }
 
 
 /* ARABIC / RTL */
 
-[dir="rtl"] .hilya-social__title {
-  font-size: clamp(26px, 2.8vw, 36px);
-  line-height: 1.4;
+[dir="rtl"] .hilya-social__eyebrow {
+  font-size: 13px;
+  letter-spacing: 0;
 }
 
-[dir="rtl"] .hilya-social__instagram {
+[dir="rtl"] .hilya-social__text {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+[dir="rtl"] .hilya-social__button {
   font-size: 14px;
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .hilya-social__arrow {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .hilya-social__button:hover .hilya-social__arrow {
+  transform: scaleX(-1) translateX(4px);
 }
 
 @media (max-width: 749px) {
-  [dir="rtl"] .hilya-social__title {
-    font-size: 20px;
+  [dir="rtl"] .hilya-social__eyebrow {
+    font-size: 12px;
   }
 
-  [dir="rtl"] .hilya-social__instagram {
-    font-size: 12px;
+  [dir="rtl"] .hilya-social__text {
+    font-size: 14px;
+  }
+
+  [dir="rtl"] .hilya-social__button {
+    font-size: 13px;
   }
 }
 
@@ -285,22 +328,56 @@
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Instagram image 1"
+      "label": "Image 1 (far left)"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Instagram image 2"
+      "label": "Image 2"
     },
     {
       "type": "image_picker",
       "id": "image_3",
-      "label": "Instagram image 3"
+      "label": "Image 3"
     },
     {
       "type": "image_picker",
       "id": "image_4",
-      "label": "Instagram image 4"
+      "label": "Image 4 (far right)"
+    },
+    {
+      "type": "header",
+      "content": "Center panel"
+    },
+    {
+      "type": "text",
+      "id": "handle",
+      "label": "Instagram handle",
+      "default": "@hilya.jewelry"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "For more inspiration, behind the scenes and special moments."
+    },
+    {
+      "type": "text",
+      "id": "description_ar",
+      "label": "Description - Arabic",
+      "default": "لمزيد من الإلهام وكواليس العمل واللحظات المميزة."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Follow Us"
+    },
+    {
+      "type": "text",
+      "id": "button_label_ar",
+      "label": "Button label - Arabic",
+      "default": "تابعنا"
     }
   ],
   "presets": [
