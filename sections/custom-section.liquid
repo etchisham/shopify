@@ -1,3 +1,35 @@
+{%- liquid
+  assign story_locale = request.locale.iso_code | split: '-' | first
+
+  assign story_eyebrow = section.settings.eyebrow
+  assign story_line_1 = section.settings.heading_line_1
+  assign story_line_2 = section.settings.heading_line_2
+  assign story_description = section.settings.description
+  assign story_button = section.settings.button_label
+  assign story_alt = section.settings.image_alt
+
+  if story_locale == 'ar'
+    if section.settings.eyebrow_ar != blank
+      assign story_eyebrow = section.settings.eyebrow_ar
+    endif
+    if section.settings.heading_line_1_ar != blank
+      assign story_line_1 = section.settings.heading_line_1_ar
+    endif
+    if section.settings.heading_line_2_ar != blank
+      assign story_line_2 = section.settings.heading_line_2_ar
+    endif
+    if section.settings.description_ar != blank
+      assign story_description = section.settings.description_ar
+    endif
+    if section.settings.button_label_ar != blank
+      assign story_button = section.settings.button_label_ar
+    endif
+    if section.settings.image_alt_ar != blank
+      assign story_alt = section.settings.image_alt_ar
+    endif
+  endif
+-%}
+
 <section class="story-section">
 
   <div class="story-section__inner">
@@ -11,7 +43,7 @@
             widths: '600, 900, 1200, 1500, 1800',
             sizes: '(min-width: 750px) 60vw, 100vw',
             loading: 'lazy',
-            alt: section.settings.image_alt
+            alt: story_alt
         }}
       {% else %}
         {{ 'lifestyle-1' | placeholder_svg_tag: 'story-section__placeholder' }}
@@ -20,36 +52,36 @@
 
     <div class="story-section__content">
 
-      {% if section.settings.eyebrow != blank %}
+      {% if story_eyebrow != blank %}
         <p class="story-section__eyebrow">
-          {{ section.settings.eyebrow | escape }}
+          {{ story_eyebrow | escape }}
         </p>
       {% endif %}
 
-      {% if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank %}
+      {% if story_line_1 != blank or story_line_2 != blank %}
         <h2 class="story-section__heading">
-          {% if section.settings.heading_line_1 != blank %}
-            <span>{{ section.settings.heading_line_1 | escape }}</span>
+          {% if story_line_1 != blank %}
+            <span>{{ story_line_1 | escape }}</span>
           {% endif %}
 
-          {% if section.settings.heading_line_2 != blank %}
-            <span>{{ section.settings.heading_line_2 | escape }}</span>
+          {% if story_line_2 != blank %}
+            <span>{{ story_line_2 | escape }}</span>
           {% endif %}
         </h2>
       {% endif %}
 
-      {% if section.settings.description != blank %}
+      {% if story_description != blank %}
         <div class="story-section__text">
-          {{ section.settings.description }}
+          {{ story_description }}
         </div>
       {% endif %}
 
-      {% if section.settings.button_label != blank %}
+      {% if story_button != blank %}
         <a
           class="story-section__link"
           href="{{ section.settings.button_link | default: '#' }}"
         >
-          <span>{{ section.settings.button_label | escape }}</span>
+          <span>{{ story_button | escape }}</span>
           <span class="story-section__arrow" aria-hidden="true">→</span>
         </a>
       {% endif %}
@@ -236,12 +268,12 @@
 
 @media (max-width: 749px) {
   .story-section {
-    width: 100%;
-    max-width: none;
-    margin-inline: 0;
-    padding: 25px 5px 35px;
-    background: #F7F4EE;
-  }
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding: 25px 16px 35px;
+  background: #F7F4EE;
+}
 
   .story-section__inner {
     display: flex;
@@ -365,7 +397,9 @@
 {
   "name": "Special Offers",
   "enabled_on": {
-    "templates": ["index"]
+    "templates": [
+      "index"
+    ]
   },
   "settings": [
     {
@@ -381,9 +415,22 @@
     },
     {
       "type": "text",
+      "id": "image_alt_ar",
+      "label": "Image description - Arabic",
+      "default": "عروض حلية الخاصة"
+    },
+    {
+      "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
       "default": "Special Offers"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_ar",
+      "label": "Eyebrow - Arabic",
+      "info": "Shown on the Arabic site. Leave blank to use the English text.",
+      "default": "عرض خاص"
     },
     {
       "type": "text",
@@ -393,9 +440,21 @@
     },
     {
       "type": "text",
+      "id": "heading_line_1_ar",
+      "label": "Heading line 1 - Arabic",
+      "default": "لفترة محدودة"
+    },
+    {
+      "type": "text",
       "id": "heading_line_2",
       "label": "Heading - Line 2",
       "default": "Made for You."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2_ar",
+      "label": "Heading line 2 - Arabic",
+      "default": "خصم يصل إلى 30%"
     },
     {
       "type": "richtext",
@@ -404,10 +463,22 @@
       "default": "<p>Discover selected pieces at special prices, made to bring timeless elegance to your everyday style.</p>"
     },
     {
+      "type": "richtext",
+      "id": "description_ar",
+      "label": "Description - Arabic",
+      "default": "<p>اكتشف قطعًا مختارة بأسعار خاصة، لتمنح إطلالتك اليومية أناقة خالدة.</p>"
+    },
+    {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
       "default": "Shop Offers"
+    },
+    {
+      "type": "text",
+      "id": "button_label_ar",
+      "label": "Button label - Arabic",
+      "default": "تسوق التخفيضات"
     },
     {
       "type": "url",
