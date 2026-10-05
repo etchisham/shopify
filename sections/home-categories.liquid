@@ -5,6 +5,13 @@
     <p class="collection-list__subheading">{{ 'home.categories_subheading' | t }}</p>
   </div>
 
+<div class="collection-list__slider">
+
+  <button type="button" class="collection-list__nav collection-list__nav--prev" aria-label="Previous">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M15 6l-6 6 6 6"/>
+    </svg>
+  </button>
   <div class="collection-list__grid">
 
     {% assign allowed_collections = 'necklaces,rings,pendants,bracelets,keychains' | split: ',' %}
@@ -41,32 +48,21 @@
 
             </div>
 
-            <div class="collection-list__slider">
-
-              <button type="button" class="collection-list__nav collection-list__nav--prev" aria-label="Previous">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M15 6l-6 6 6 6"/>
-                </svg>
-              </button>
-
-              <div class="collection-list__grid">
-                {# ... نفس الكروت اللي عندك من غير تغيير ... #}
-              </div>
-
-            <button type="button" class="collection-list__nav collection-list__nav--next" aria-label="Next">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9 6l6 6-6 6"/>
-              </svg>
-            </button>
-
-          </div>
-
           </a>
         </article>
       {% endif %}
     {% endfor %}
 
   </div>
+
+  <button type="button" class="collection-list__nav collection-list__nav--next" aria-label="Next">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M9 6l6 6-6 6"/>
+    </svg>
+  </button>
+
+</div>
+
 </section>
 
 <script>
