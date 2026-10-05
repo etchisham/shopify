@@ -8,21 +8,7 @@
   @param {string} [default_sort_by] - Default sort value
 {% enddoc %}
 
-<div
-  class="hilya-filters"
-  data-hilya-filters-text
-  data-regular-price="{{ 'products.product.regular_price' | t | escape }}"
-  data-percent-off="{{ 'products.product.discount' | t: percent: '__PERCENT__' | escape }}"
-  data-sold-out="{{ 'products.product.sold_out' | t | escape }}"
-  data-previous-page="{{ 'collections.previous_page' | t | escape }}"
-  data-next-page="{{ 'collections.next_page' | t | escape }}"
-  data-page="{{ 'meta.page' | t: number: '__NUMBER__' | escape }}"
-  data-filtered-by="{{ 'facets.filtered_by' | t | escape }}"
-  data-clear-all="{{ 'facets.clear_all_caps' | t | escape }}"
-  data-remove-filter="{{ 'facets.remove_filter' | t: label: '__LABEL__' | escape }}"
-  data-from="{{ 'facets.from' | t | escape }}"
-  data-to="{{ 'facets.to' | t | escape }}"
->
+<div class="hilya-filters">
 
   <!-- =========================================
        MOBILE FILTER / PRODUCTS / SORT BAR
@@ -43,7 +29,7 @@
       </span>
 
       <span class="hilya-filters__filter-text">
-        {{ 'facets.filters_caps' | t }}
+        FILTERS
       </span>
 
       <span class="hilya-filters__count" data-filter-count hidden>
@@ -55,7 +41,7 @@
       <span data-filter-results>
         {{ results_count }}
       </span>
-      {{ 'facets.products_caps' | t }}
+      PRODUCTS
     </span>
 
     <div
@@ -64,7 +50,7 @@
     >
 
       <span class="hilya-filters__sort-label">
-        {{ 'collections.sort_by' | t }}
+        Sort by
       </span>
 
       {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
@@ -124,7 +110,7 @@
   <aside class="hilya-filter-sidebar">
 
     <div class="hilya-filter-sidebar__heading">
-      <h2>{{ 'facets.filters' | t }}</h2>
+      <h2>Filters</h2>
     </div>
 
     <div class="hilya-filters__active" data-active-filters hidden></div>
@@ -136,7 +122,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.availability' | t }}</span>
+          <span>Availability</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -144,12 +130,12 @@
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="availability" value="in_stock">
-            <span>{{ 'facets.in_stock' | t }}</span>
+            <span>In stock</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="availability" value="out_of_stock">
-            <span>{{ 'facets.out_of_stock' | t }}</span>
+            <span>Out of stock</span>
           </label>
 
         </div>
@@ -162,7 +148,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.price' | t }}</span>
+          <span>Price</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -182,7 +168,7 @@
               value="0"
               step="1"
               data-price-min
-              aria-label="{{ 'facets.minimum_price' | t | escape }}"
+              aria-label="Minimum price"
             >
 
             <input
@@ -193,7 +179,7 @@
               value="1000"
               step="1"
               data-price-max
-              aria-label="{{ 'facets.maximum_price' | t | escape }}"
+              aria-label="Maximum price"
             >
 
           </div>
@@ -211,12 +197,12 @@
                 value="0"
                 inputmode="numeric"
                 data-price-min-input
-                aria-label="{{ 'facets.minimum_price' | t | escape }}"
+                aria-label="Minimum price"
               >
             </label>
 
             <span class="hilya-price-values__to">
-              {{ 'facets.price_to' | t }}
+              to
             </span>
 
             <label class="hilya-price-input hilya-price-input--max">
@@ -230,7 +216,7 @@
                 value="1000"
                 inputmode="numeric"
                 data-price-max-input
-                aria-label="{{ 'facets.maximum_price' | t | escape }}"
+                aria-label="Maximum price"
               >
             </label>
 
@@ -246,7 +232,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.color' | t }}</span>
+          <span>Color</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -254,12 +240,12 @@
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="color" value="Gold Plated">
-            <span>{{ 'facets.gold_plated' | t }}</span>
+            <span>Gold Plated</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="color" value="Silver Plated">
-            <span>{{ 'facets.silver_plated' | t }}</span>
+            <span>Silver Plated</span>
           </label>
 
         </div>
@@ -272,7 +258,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.product_type' | t }}</span>
+          <span>Product Type</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -280,27 +266,27 @@
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Necklaces">
-            <span>{{ 'navigation.necklaces' | t }}</span>
+            <span>Necklaces</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Rings">
-            <span>{{ 'navigation.rings' | t }}</span>
+            <span>Rings</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Pendants">
-            <span>{{ 'navigation.pendants' | t }}</span>
+            <span>Pendants</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Bracelets">
-            <span>{{ 'navigation.bracelets' | t }}</span>
+            <span>Bracelets</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Keychains">
-            <span>{{ 'navigation.keychains' | t }}</span>
+            <span>Keychains</span>
           </label>
 
         </div>
@@ -335,11 +321,11 @@
         <div class="hilya-filter-drawer__title">
 
           <span class="hilya-filter-drawer__eyebrow">
-            {{ 'facets.collection_eyebrow' | t }}
+            COLLECTION
           </span>
 
           <h2>
-            {{ 'facets.filters_caps' | t }}
+            FILTERS
           </h2>
 
         </div>
@@ -350,7 +336,7 @@
         type="button"
         class="hilya-filter-drawer__close"
         data-filter-close
-        aria-label="{{ 'accessibility.close_filters' | t | escape }}"
+        aria-label="Close filters"
       >
         ×
       </button>
@@ -383,7 +369,7 @@
         {{ results_count }}
       </span>
 
-      {{ 'facets.products_caps' | t }}
+      PRODUCTS
 
     </span>
 
@@ -393,7 +379,7 @@
     >
 
       <span class="hilya-filters__sort-label">
-        {{ 'collections.sort_by' | t }}
+        Sort by
       </span>
 
       {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
