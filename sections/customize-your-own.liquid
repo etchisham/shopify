@@ -692,24 +692,12 @@
 }
 
 
-/* LARGE DESKTOP */
-
-@media (min-width: 1500px) {
-  .custom-order {
-    padding-inline: max(32px, calc((100vw - 1500px) / 2));
-  }
-}
-
-
 /* TABLET */
 
 @media (min-width: 750px) and (max-width: 1100px) {
-  .custom-order {
-    padding-inline: 28px;
-  }
-
+  
   .custom-order__inner {
-    min-height: 380px;
+    min-height: 520px;
     padding: 34px 24px;
   }
 
@@ -735,13 +723,16 @@
 
   /* the picture now runs edge to edge on phones */
   .custom-order {
-    padding: 10px 0;
+    padding: 0;
   }
 
+  /* على الموبايل ارتفاع ثابت أطول بدل ما يتحسب من الصورة */
   .custom-order__inner {
-    gap: 14px;
-    min-height: 0;
-    padding: 22px 14px;
+    aspect-ratio: auto;
+    max-height: none;
+    min-height: 560px;
+    gap: 18px;
+    padding: 28px 14px;
   }
 
   .custom-order__content {
@@ -772,30 +763,31 @@
     font-size: 13px;
   }
 
-  /* three small rounded cards instead of circles */
   .custom-order__features {
     width: 100%;
-    gap: 10px;
+    gap: clamp(8px, 3vw, 14px);
   }
 
   .custom-order__feature {
-    flex: 1 1 0;
-    width: auto;
-    min-width: 0;
+    flex: 0 0 auto;
+    width: clamp(80px, 26vw, 104px);
     height: auto;
-    min-height: 84px;
-    padding: 10px 6px;
-    border-radius: 18px;
+    aspect-ratio: 1;
+    min-height: 0;
+    gap: 5px;
+    padding: 8px;
+    border-radius: 50%;
   }
 
   .custom-order__feature svg {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
 
   .custom-order__feature span {
-    max-width: none;
-    font-size: 10.5px;
+    max-width: 72px;
+    font-size: 10px;
+    line-height: 1.25;
   }
 }
 
