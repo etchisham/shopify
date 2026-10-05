@@ -6,7 +6,7 @@
     <header class="search-page__header">
       <h1 class="search-page__title">
         {%- if search.performed and search.terms != blank -%}
-          Results for "{{ search.terms | escape }}"
+          {{ 'search.results_for_html' | t: terms: search.terms }}
         {%- else -%}
           {{ 'search.title' | t }}
         {%- endif -%}
