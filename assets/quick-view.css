@@ -209,8 +209,9 @@ html[dir="rtl"] .quick-view__price .price {
   font-size: 0.9rem;
   cursor: pointer;
   transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease;
+  background-color 150ms ease,
+  border-color 150ms ease,
+  color 150ms ease;
 }
 
 .quick-view__pill:hover {
