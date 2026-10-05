@@ -1,0 +1,1024 @@
+{%- liquid
+  assign co_locale = request.locale.iso_code | split: '-' | first
+  assign co_ar = false
+  if co_locale == 'ar'
+    assign co_ar = true
+  endif
+
+  assign co_eyebrow = section.settings.eyebrow
+  assign co_heading = section.settings.heading
+  assign co_text = section.settings.description
+  assign co_button = section.settings.button_label
+
+  if co_ar
+    if section.settings.eyebrow_ar != blank
+      assign co_eyebrow = section.settings.eyebrow_ar
+    endif
+    if section.settings.heading_ar != blank
+      assign co_heading = section.settings.heading_ar
+    endif
+    if section.settings.description_ar != blank
+      assign co_text = section.settings.description_ar
+    endif
+    if section.settings.button_label_ar != blank
+      assign co_button = section.settings.button_label_ar
+    endif
+  endif
+
+  comment
+    Drawer / form texts. Edit them here if you want different wording.
+  endcomment
+
+  if co_ar
+    assign s_title = 'خصّص قطعتك'
+    assign s_intro = 'شاركنا فكرتك وسنتواصل معك قريبًا.'
+    assign s_phone = 'رقم هاتفك'
+    assign s_phone_ph = 'مثال: 01012345678'
+    assign s_message = 'رسالتك'
+    assign s_message_ph = 'اشرح لنا ما تريد تصميمه'
+    assign s_image = 'ارفع صورة (اختياري)'
+    assign s_choose = 'اختر صورة'
+    assign s_no_file = 'لم يتم اختيار صورة'
+    assign s_submit = 'إرسال'
+    assign s_sending = 'جارٍ الإرسال...'
+    assign s_err_phone = 'من فضلك أدخل رقم هاتف صحيح.'
+    assign s_err_message = 'من فضلك اكتب رسالتك.'
+    assign s_err_type = 'من فضلك اختر ملف صورة.'
+    assign s_err_size = 'حجم الصورة كبير جدًا (الحد الأقصى 8 ميجابايت).'
+    assign s_err_send = 'حدث خطأ ما، حاول مرة أخرى.'
+    assign s_ok_title = 'شكرًا لك!'
+    assign s_ok_text = 'استلمنا طلبك وسنتواصل معك قريبًا.'
+    assign s_close = 'إغلاق'
+  else
+    assign s_title = 'Customize your own'
+    assign s_intro = 'Share your idea and we will get back to you soon.'
+    assign s_phone = 'Your number'
+    assign s_phone_ph = 'e.g. 01012345678'
+    assign s_message = 'Your message'
+    assign s_message_ph = 'Describe what you would like us to make'
+    assign s_image = 'Upload a picture (optional)'
+    assign s_choose = 'Choose image'
+    assign s_no_file = 'No image selected'
+    assign s_submit = 'Submit'
+    assign s_sending = 'Sending...'
+    assign s_err_phone = 'Please enter a valid phone number.'
+    assign s_err_message = 'Please write your message.'
+    assign s_err_type = 'Please choose an image file.'
+    assign s_err_size = 'The image is too large (max 8 MB).'
+    assign s_err_send = 'Something went wrong, please try again.'
+    assign s_ok_title = 'Thank you!'
+    assign s_ok_text = 'We received your request and will contact you soon.'
+    assign s_close = 'Close'
+  endif
+-%}
+
+<section class="custom-order">
+
+  <div class="custom-order__inner">
+
+    <div class="custom-order__media">
+      {% if section.settings.image != blank %}
+        {{
+          section.settings.image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '600, 900, 1200, 1600',
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'custom-order__placeholder' }}
+      {% endif %}
+    </div>
+
+    <div class="custom-order__content">
+
+      {% if co_eyebrow != blank %}
+        <p class="custom-order__eyebrow">{{ co_eyebrow | escape }}</p>
+      {% endif %}
+
+      {% if co_heading != blank %}
+        <h2 class="custom-order__heading">{{ co_heading | escape }}</h2>
+      {% endif %}
+
+      {% if co_text != blank %}
+        <p class="custom-order__text">{{ co_text | escape }}</p>
+      {% endif %}
+
+      {% if co_button != blank %}
+        <button type="button" class="custom-order__button" data-co-open aria-haspopup="dialog">
+          <span>{{ co_button | escape }}</span>
+          <span class="custom-order__arrow" aria-hidden="true">→</span>
+        </button>
+      {% endif %}
+
+    </div>
+
+    {%- comment -%} The drawer is moved to the end of <body> by the script below {%- endcomment -%}
+    <div class="co-drawer" data-co-drawer aria-hidden="true">
+
+      <div class="co-drawer__overlay" data-co-close></div>
+
+      <div
+        class="co-drawer__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="co-title-{{ section.id }}"
+      >
+
+        <button type="button" class="co-drawer__close" data-co-close aria-label="{{ s_close | escape }}">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+
+        <div class="co-drawer__body">
+
+          <h3 class="co-drawer__title" id="co-title-{{ section.id }}">{{ s_title | escape }}</h3>
+          <p class="co-drawer__intro">{{ s_intro | escape }}</p>
+
+          <form
+            class="co-form"
+            novalidate
+            data-co-form
+            data-webhook="{{ section.settings.webhook_url | escape }}"
+            data-whatsapp="{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' | escape }}"
+            data-store="{{ shop.name | escape }}"
+            data-submit="{{ s_submit | escape }}"
+            data-sending="{{ s_sending | escape }}"
+            data-no-file="{{ s_no_file | escape }}"
+            data-err-phone="{{ s_err_phone | escape }}"
+            data-err-message="{{ s_err_message | escape }}"
+            data-err-type="{{ s_err_type | escape }}"
+            data-err-size="{{ s_err_size | escape }}"
+            data-err-send="{{ s_err_send | escape }}"
+          >
+
+            <div class="co-field">
+              <label class="co-label" for="co-phone-{{ section.id }}">{{ s_phone | escape }} *</label>
+              <input
+                class="co-input co-input--phone"
+                id="co-phone-{{ section.id }}"
+                name="phone"
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel"
+                dir="ltr"
+                placeholder="{{ s_phone_ph | escape }}"
+              >
+              <p class="co-error" data-error-for="phone" hidden></p>
+            </div>
+
+            <div class="co-field">
+              <label class="co-label" for="co-message-{{ section.id }}">{{ s_message | escape }} *</label>
+              <textarea
+                class="co-input co-input--message"
+                id="co-message-{{ section.id }}"
+                name="message"
+                rows="5"
+                placeholder="{{ s_message_ph | escape }}"
+              ></textarea>
+              <p class="co-error" data-error-for="message" hidden></p>
+            </div>
+
+            <div class="co-field">
+              <span class="co-label">{{ s_image | escape }}</span>
+
+              <label class="co-file">
+                <input class="co-file__input" type="file" name="image" accept="image/*">
+                <span class="co-file__button">{{ s_choose | escape }}</span>
+                <span class="co-file__name" data-co-file-name>{{ s_no_file | escape }}</span>
+              </label>
+
+              <p class="co-error" data-error-for="image" hidden></p>
+            </div>
+
+            {%- comment -%} Spam trap: real people never see or fill this {%- endcomment -%}
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="co-trap" aria-hidden="true">
+
+            <p class="co-error co-error--form" data-error-for="form" hidden></p>
+
+            <button type="submit" class="co-submit">{{ s_submit | escape }}</button>
+
+          </form>
+
+          <div class="co-success" data-co-success hidden>
+            <h4 class="co-success__title">{{ s_ok_title | escape }}</h4>
+            <p class="co-success__text">{{ s_ok_text | escape }}</p>
+            <button type="button" class="co-submit" data-co-close>{{ s_close | escape }}</button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+    if (!section) return;
+
+    const openButton = section.querySelector('[data-co-open]');
+    const drawer = section.querySelector('[data-co-drawer]');
+
+    if (!openButton || !drawer) return;
+
+    /* Move the drawer out of the section so no parent can break position: fixed */
+    document.body.appendChild(drawer);
+
+    const panel = drawer.querySelector('.co-drawer__panel');
+    const form = drawer.querySelector('[data-co-form]');
+    const success = drawer.querySelector('[data-co-success]');
+    const fileName = drawer.querySelector('[data-co-file-name]');
+    const submit = form.querySelector('[type="submit"]');
+    const phone = form.elements.phone;
+    const message = form.elements.message;
+    const file = form.elements.image;
+    const text = form.dataset;
+
+    const MAX_SIZE = 8 * 1024 * 1024;
+
+    /* Arabic-Indic digits -> 0-9, so ٠١٠١٢٣٤٥٦٧٨ works too */
+    const normalize = (value) => value
+      .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+      .replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+
+    const setError = (name, textValue) => {
+      const el = form.querySelector('[data-error-for="' + name + '"]');
+      const field = form.elements[name];
+
+      if (el) {
+        el.textContent = textValue || '';
+        el.hidden = !textValue;
+      }
+
+      if (field && field.toggleAttribute) field.toggleAttribute('aria-invalid', !!textValue);
+    };
+
+    const checkPhone = () => {
+      const value = normalize(phone.value).trim();
+      const digits = value.replace(/\D/g, '');
+      const valid = /^[+\d\s\-()]+$/.test(value) && digits.length >= 8 && digits.length <= 15;
+
+      setError('phone', valid ? '' : text.errPhone);
+      return valid;
+    };
+
+    const checkMessage = () => {
+      const valid = message.value.trim().length > 0;
+
+      setError('message', valid ? '' : text.errMessage);
+      return valid;
+    };
+
+    const checkFile = () => {
+      const picked = file.files[0];
+
+      setError('image', '');
+
+      if (!picked) {
+        fileName.textContent = text.noFile;
+        return true;
+      }
+
+      if (!picked.type.startsWith('image/')) {
+        setError('image', text.errType);
+        file.value = '';
+        fileName.textContent = text.noFile;
+        return false;
+      }
+
+      if (picked.size > MAX_SIZE) {
+        setError('image', text.errSize);
+        file.value = '';
+        fileName.textContent = text.noFile;
+        return false;
+      }
+
+      fileName.textContent = picked.name;
+      return true;
+    };
+
+    const resetForm = () => {
+      form.reset();
+      fileName.textContent = text.noFile;
+      ['phone', 'message', 'image', 'form'].forEach((name) => setError(name, ''));
+      form.hidden = false;
+      success.hidden = true;
+      drawer.querySelector('.co-drawer__intro').hidden = false;
+    };
+
+    const showSuccess = () => {
+      form.hidden = true;
+      drawer.querySelector('.co-drawer__intro').hidden = true;
+      success.hidden = false;
+    };
+
+    /* Open / close */
+    const open = () => {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('co-lock');
+      setTimeout(() => (form.hidden ? panel : phone).focus && (form.hidden ? panel : phone).focus(), 350);
+    };
+
+    const close = () => {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('co-lock');
+
+      if (!success.hidden) setTimeout(resetForm, 350);
+
+      openButton.focus();
+    };
+
+    openButton.addEventListener('click', open);
+
+    drawer.querySelectorAll('[data-co-close]').forEach((el) => el.addEventListener('click', close));
+
+    document.addEventListener('keydown', (event) => {
+      if (!drawer.classList.contains('is-open')) return;
+
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const items = Array.from(panel.querySelectorAll('button, input:not(.co-trap), textarea, a[href]'))
+        .filter((el) => !el.disabled && el.offsetParent !== null);
+
+      if (!items.length) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    /* Live checks */
+    file.addEventListener('change', checkFile);
+    phone.addEventListener('blur', () => { if (phone.value) checkPhone(); });
+
+    /* Submit */
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setError('form', '');
+
+      /* Honeypot: a bot filled the hidden field, pretend it worked */
+      if (form.elements.website.value) {
+        showSuccess();
+        return;
+      }
+
+      const okPhone = checkPhone();
+      const okMessage = checkMessage();
+      const okFile = checkFile();
+
+      if (!okPhone || !okMessage || !okFile) {
+        (!okPhone ? phone : !okMessage ? message : file).focus();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = text.sending;
+
+      try {
+        const phoneValue = normalize(phone.value).trim();
+        const messageValue = message.value.trim();
+
+        if (text.webhook) {
+          const data = new FormData();
+
+          data.append('phone', phoneValue);
+          data.append('message', messageValue);
+          if (file.files[0]) data.append('image', file.files[0]);
+          data.append('language', document.documentElement.lang || '');
+          data.append('page', window.location.href);
+          data.append('store', text.store);
+          data.append('submitted_at', new Date().toISOString());
+
+          /* no-cors: the request is sent even if the receiving service has no CORS headers */
+          await fetch(text.webhook, { method: 'POST', body: data, mode: 'no-cors' });
+        } else if (text.whatsapp) {
+          const body = messageValue + '\n\n' + phoneValue;
+          window.open('https://wa.me/' + text.whatsapp + '?text=' + encodeURIComponent(body), '_blank', 'noopener');
+        } else {
+          throw new Error('No destination set');
+        }
+
+        showSuccess();
+      } catch (error) {
+        setError('form', text.errSend);
+      } finally {
+        submit.disabled = false;
+        submit.textContent = text.submit;
+      }
+    });
+  })();
+</script>
+
+{% stylesheet %}
+
+/* =========================
+   SECTION
+========================= */
+
+.custom-order {
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding: 35px max(24px, calc((100vw - 1400px) / 2)) 45px;
+  box-sizing: border-box;
+  background: #F7F4EE;
+}
+
+.custom-order__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(40px, 4vw, 65px);
+}
+
+.custom-order__media {
+  order: 2;
+  position: relative;
+  overflow: hidden;
+  background: #f4f1eb;
+}
+
+.custom-order__media img,
+.custom-order__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1.6 / 1;
+  object-fit: cover;
+}
+
+.custom-order__content {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 480px;
+  padding: 20px 0;
+}
+
+.custom-order__eyebrow {
+  margin: 0 0 20px;
+  color: #C8B28A;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.custom-order__heading {
+  margin: 0 0 22px;
+  color: #151515;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: clamp(38px, 4vw, 58px);
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.02em;
+}
+
+.custom-order__text {
+  max-width: 380px;
+  margin: 0 0 30px;
+  color: #8b8b8b;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.custom-order__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  border: 1px solid #151515;
+  background: #151515;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color .3s ease, color .3s ease;
+}
+
+.custom-order__button:hover {
+  background: transparent;
+  color: #151515;
+}
+
+.custom-order__arrow {
+  display: inline-flex;
+  font-size: 14px;
+  transition: transform .3s ease;
+}
+
+.custom-order__button:hover .custom-order__arrow {
+  transform: translateX(4px);
+}
+
+@media (min-width: 1500px) {
+  .custom-order {
+    padding-left: max(32px, calc((100vw - 1500px) / 2));
+    padding-right: max(32px, calc((100vw - 1500px) / 2));
+  }
+}
+
+@media (min-width: 750px) and (max-width: 1100px) {
+  .custom-order {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .custom-order__inner {
+    gap: 35px;
+  }
+}
+
+@media (max-width: 749px) {
+  .custom-order {
+    padding: 25px 1rem 35px;
+    overflow-x: clip;
+  }
+
+  .custom-order__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .custom-order__media {
+    order: 1;
+    width: 100%;
+  }
+
+  .custom-order__media img,
+  .custom-order__placeholder {
+    aspect-ratio: 2 / 1;
+  }
+
+  .custom-order__content {
+    order: 2;
+    max-width: none;
+    padding: 0 0 6px;
+  }
+
+  .custom-order__eyebrow {
+    margin-bottom: 14px;
+    font-size: 9px;
+  }
+
+  .custom-order__heading {
+    margin-bottom: 16px;
+    font-size: 36px;
+  }
+
+  .custom-order__text {
+    margin-bottom: 24px;
+    font-size: 12px;
+  }
+
+  .custom-order__button {
+    padding: 13px 26px;
+    font-size: 9px;
+  }
+}
+
+
+/* =========================
+   DRAWER
+========================= */
+
+html.co-lock {
+  overflow: hidden;
+}
+
+.co-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear .35s;
+}
+
+.co-drawer.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.co-drawer__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+
+.co-drawer.is-open .co-drawer__overlay {
+  opacity: 1;
+}
+
+/* English: slides from the right */
+.co-drawer__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-end: 0;
+  width: min(100%, 440px);
+  overflow-y: auto;
+  background: #FBF8F2;
+  color: #151515;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.18);
+  transform: translateX(100%);
+  transition: transform .35s ease;
+}
+
+/* Arabic: slides from the left */
+[dir="rtl"] .co-drawer__panel {
+  transform: translateX(-100%);
+}
+
+.co-drawer.is-open .co-drawer__panel,
+[dir="rtl"] .co-drawer.is-open .co-drawer__panel {
+  transform: none;
+}
+
+.co-drawer__close {
+  position: absolute;
+  top: 14px;
+  inset-inline-end: 14px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #151515;
+  cursor: pointer;
+}
+
+.co-drawer__body {
+  padding: 64px 28px 32px;
+}
+
+.co-drawer__title {
+  margin: 0 0 10px;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.co-drawer__intro {
+  margin: 0 0 26px;
+  color: #8b8b8b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* FORM */
+
+.co-field {
+  margin-bottom: 20px;
+}
+
+.co-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.co-input {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 0;
+  background: #fff;
+  color: #151515;
+  font-family: inherit;
+  font-size: 16px; /* 16px stops the zoom on iPhone */
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.co-input:focus {
+  outline: none;
+  border-color: #C8B28A;
+}
+
+.co-input[aria-invalid],
+.co-file[aria-invalid] {
+  border-color: #b3261e;
+}
+
+.co-input--message {
+  min-height: 130px;
+  resize: vertical;
+}
+
+[dir="rtl"] .co-input--phone {
+  text-align: right;
+}
+
+.co-error {
+  margin: 6px 0 0;
+  color: #b3261e;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.co-error--form {
+  margin: 0 0 14px;
+}
+
+.co-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+
+/* FILE PICKER */
+
+.co-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.co-file__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.co-file__button {
+  flex-shrink: 0;
+  padding: 11px 16px;
+  border: 1px solid #151515;
+  color: #151515;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: background-color .3s ease, color .3s ease;
+}
+
+.co-file:hover .co-file__button,
+.co-file__input:focus-visible + .co-file__button {
+  background: #151515;
+  color: #fff;
+}
+
+.co-file__name {
+  min-width: 0;
+  overflow: hidden;
+  color: #8b8b8b;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* SUBMIT / SUCCESS */
+
+.co-submit {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #151515;
+  background: #151515;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color .3s ease, color .3s ease;
+}
+
+.co-submit:hover {
+  background: transparent;
+  color: #151515;
+}
+
+.co-submit:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.co-success {
+  padding-top: 10px;
+  text-align: center;
+}
+
+.co-success__title {
+  margin: 0 0 10px;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.co-success__text {
+  margin: 0 0 26px;
+  color: #8b8b8b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* =========================
+   ARABIC / RTL
+========================= */
+
+[dir="rtl"] .custom-order__eyebrow {
+  font-size: 13px;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .custom-order__heading {
+  line-height: 1.3;
+}
+
+[dir="rtl"] .custom-order__text {
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+[dir="rtl"] .custom-order__button,
+[dir="rtl"] .co-submit {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .custom-order__arrow {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .custom-order__button:hover .custom-order__arrow {
+  transform: scaleX(-1) translateX(4px);
+}
+
+[dir="rtl"] .co-label,
+[dir="rtl"] .co-file__button {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .co-drawer__title,
+[dir="rtl"] .co-success__title {
+  font-style: normal;
+  line-height: 1.4;
+}
+
+[dir="rtl"] .co-drawer__intro,
+[dir="rtl"] .co-success__text {
+  font-size: 15px;
+}
+
+@media (max-width: 749px) {
+  [dir="rtl"] .custom-order__eyebrow {
+    font-size: 12px;
+  }
+
+  [dir="rtl"] .custom-order__text {
+    font-size: 14px;
+  }
+
+  [dir="rtl"] .custom-order__button {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .co-drawer__panel,
+  .co-drawer__overlay {
+    transition: none;
+  }
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Customize Your Own",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Made for You"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_ar",
+      "label": "Eyebrow - Arabic",
+      "default": "صُمّمت لأجلك"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customize Your Own"
+    },
+    {
+      "type": "text",
+      "id": "heading_ar",
+      "label": "Heading - Arabic",
+      "default": "خصّص قطعتك الخاصة"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Have an idea in mind? Share it with us and we will turn it into a piece made just for you."
+    },
+    {
+      "type": "textarea",
+      "id": "description_ar",
+      "label": "Description - Arabic",
+      "default": "هل لديك فكرة؟ شاركها معنا وسنحوّلها إلى قطعة مصنوعة خصيصًا لك."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Start Customizing"
+    },
+    {
+      "type": "text",
+      "id": "button_label_ar",
+      "label": "Button label - Arabic",
+      "default": "ابدأ التخصيص"
+    },
+    {
+      "type": "header",
+      "content": "Where the requests go"
+    },
+    {
+      "type": "text",
+      "id": "webhook_url",
+      "label": "Webhook URL",
+      "info": "Make / Zapier / n8n link that receives the request and forwards it to your phone (see instructions)."
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number (backup)",
+      "info": "With country code, e.g. 201012345678. Used only if the Webhook URL is empty: opens WhatsApp with the message ready (without the picture)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customize Your Own"
+    }
+  ]
+}
+{% endschema %}
