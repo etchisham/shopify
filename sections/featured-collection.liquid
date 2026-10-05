@@ -320,7 +320,7 @@
   }
 
   .featured-collection__slider {
-    --per-view: 3.3;
+    --per-view: 3.3;  
     --gap: 14px;
   }
 
@@ -341,9 +341,17 @@
   }
 
   .featured-collection__header {
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
     margin-bottom: 18px;
     padding-inline: 1rem;
+  }
+
+  .featured-collection__heading {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .featured-collection__eyebrow {
