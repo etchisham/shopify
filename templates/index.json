@@ -106,6 +106,22 @@
         "image_3": "shopify://shop_images/8.png",
         "image_4": "shopify://shop_images/ChatGPTImageSep16_2026_09_20_34AM_8.png"
       }
+    },
+    "customize_your_own_dtb9nD": {
+      "type": "customize-your-own",
+      "name": "Customize Your Own",
+      "settings": {
+        "eyebrow": "Made for You",
+        "eyebrow_ar": "صُمّمت لأجلك",
+        "heading": "Customize Your Own",
+        "heading_ar": "خصّص قطعتك الخاصة",
+        "description": "Have an idea in mind? Share it with us and we will turn it into a piece made just for you.",
+        "description_ar": "هل لديك فكرة؟ شاركها معنا وسنحوّلها إلى قطعة مصنوعة خصيصًا لك.",
+        "button_label": "Start Customizing",
+        "button_label_ar": "ابدأ التخصيص",
+        "webhook_url": "",
+        "whatsapp_number": ""
+      }
     }
   },
   "order": [
@@ -115,6 +131,7 @@
     "custom_section_ETjLrM",
     "featured_collection_84KnBQ",
     "new_arrivals_DPpLqt",
+    "customize_your_own_dtb9nD",
     "follow_our_journey_fFyeaN"
   ]
 }
