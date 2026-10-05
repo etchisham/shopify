@@ -30,6 +30,30 @@
     assign discount_amount = compare_price | minus: current_price
     assign discount_percentage = discount_amount | times: 100.0 | divided_by: compare_price | round
   endif
+
+  comment
+    Add to cart / Select options on the image, variant dropdown under the title
+  endcomment
+  assign card_variant = product.selected_or_first_available_variant
+  assign card_min_quantity = card_variant.quantity_rule.min | default: 1
+
+  assign locale_root = request.locale.iso_code | split: '-' | first
+  assign card_add_label = 'products.product.add_to_cart' | t
+  assign card_sold_out_label = 'products.product.sold_out' | t
+  assign card_options_label = 'Select options'
+  if locale_root == 'ar'
+    assign card_options_label = 'اختر الخيارات'
+  endif
+
+  assign card_needs_options = false
+  if product.tags contains 'Name' or product.tags contains 'Date' or product.tags contains 'Letter' or product.requires_selling_plan or product.metafields.custom.personalization_required.value == true
+    assign card_needs_options = true
+  endif
+
+  assign card_show_select = false
+  if product.variants.size > 1 and card_needs_options == false and product.available
+    assign card_show_select = true
+  endif
 %}
 
 
@@ -37,6 +61,8 @@
   class="product-card{% if secondary_image %} product-card--has-secondary{% endif %}"
   data-product-card
 >
+
+  <div class="product-card__media-wrap">
 
   <a
     class="product-card__media"
@@ -118,6 +144,38 @@
   </a>
 
 
+    <div class="product-card__quick-wrap">
+
+      {%- if card_needs_options -%}
+
+        <a class="product-card__quick" href="{{ product.url }}" data-quick-view>
+          <svg class="product-card__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+          <span class="product-card__quick-text">{{ card_options_label }}</span>
+        </a>
+
+      {%- elsif product.available -%}
+
+        <button
+          type="button"
+          class="product-card__quick"
+          data-card-add
+          data-variant-id="{{ card_variant.id }}"
+          data-quantity="{{ card_min_quantity }}"
+          data-product-title="{{ product.title | escape }}"
+          data-add-label="{{ card_add_label | escape }}"
+          data-sold-out-label="{{ card_sold_out_label | escape }}"
+        >
+          <svg class="product-card__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+          <span class="product-card__quick-text">+ {{ card_add_label }}</span>
+        </button>
+
+      {%- endif -%}
+
+    </div>
+
+  </div>
+
+
   <div class="product-card__content">
 
     {% if heading_level == 'h2' %}
@@ -141,6 +199,39 @@
       </h3>
 
     {% endif %}
+
+
+    {%- if card_show_select -%}
+
+      <div class="product-card__variant">
+
+        <select
+          class="product-card__select"
+          aria-label="{{ product.title | escape }}"
+          data-card-variant-select
+        >
+          {%- for v in product.variants -%}
+            <option
+              value="{{ v.id }}"
+              {% if v.id == card_variant.id %}selected{% endif %}
+              data-label="{{ v.title | escape }}"
+              data-available="{{ v.available }}"
+              data-price-cents="{{ v.price }}"
+              data-compare-cents="{{ v.compare_at_price | default: 0 }}"
+              data-url="{{ v.url }}"
+              data-image="{% if v.featured_image %}{{ v.featured_image | image_url: width: 1200 }}{% endif %}"
+            >
+              {{- v.title | escape -}}
+              {%- unless v.available %} · {{ card_sold_out_label }}{% endunless -%}
+            </option>
+          {%- endfor -%}
+        </select>
+
+        <span class="product-card__chevron" aria-hidden="true"></span>
+
+      </div>
+
+    {%- endif -%}
 
 
     {% if settings.card_show_rating and rating_value != blank and rating_count > 0 %}
@@ -444,6 +535,196 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
+}
+
+
+/* ================================
+   QUICK ADD / SELECT OPTIONS
+================================ */
+
+.product-card__media-wrap {
+  position: relative;
+}
+
+.product-card__quick-wrap {
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.product-card__media-wrap:hover .product-card__quick-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* Keyboard focus only (a mouse click must not keep the button visible) */
+.product-card__media-wrap:has(:focus-visible) .product-card__quick-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.product-card__quick {
+  display: flex;
+  width: 100%;
+  min-height: 3.1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.85rem;
+  background: var(--color-background, #fffcf7);
+  color: #222;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.product-card__quick:hover {
+  background: #222;
+  color: var(--color-background, #fffcf7);
+}
+
+.product-card__quick:disabled,
+.product-card__quick.is-sold-out {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.product-card__quick:disabled:hover {
+  background: var(--color-background, #fffcf7);
+  color: #222;
+}
+
+/* The icon is only used on mobile */
+.product-card__quick-icon {
+  display: none;
+}
+
+/* Touch screens: no hover, so the small button stays visible */
+@media (hover: none) {
+  .product-card__quick-wrap {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 749px) {
+  .product-card__quick-wrap {
+    inset-inline-start: auto;
+    inset-inline-end: 0.6rem;
+    bottom: 0.6rem;
+  }
+
+  .product-card__quick {
+    width: 2.4rem;
+    height: 2.4rem;
+    min-height: 0;
+    padding: 0;
+    border: 1px solid rgb(34 34 34 / 85%);
+    border-radius: 0.35rem;
+    box-shadow: none;
+  }
+
+  .product-card__quick-icon {
+    display: block;
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  /* The words stay for screen readers only */
+  .product-card__quick-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .product-card__quick.is-sold-out {
+    width: auto;
+    height: auto;
+    min-height: 2rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.72rem;
+  }
+
+  .product-card__quick.is-sold-out .product-card__quick-icon {
+    display: none;
+  }
+
+  .product-card__quick.is-sold-out .product-card__quick-text {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip-path: none;
+  }
+}
+
+
+/* ================================
+   VARIANT DROPDOWN (Gold Plated / Silver Plated ...)
+================================ */
+
+.product-card__variant {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin-block: 2px;
+}
+
+.product-card__select {
+  min-width: 8.5rem;
+  max-width: 100%;
+  padding: 0.5rem 2.1rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.product-card__select:hover {
+  border-color: #222;
+}
+
+.product-card__chevron {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 0.95rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
 }
 
 
