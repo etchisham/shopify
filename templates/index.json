@@ -74,6 +74,19 @@
         "columns": 5
       }
     },
+    "featured_collection_84KnBQ": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
+      "settings": {
+        "eyebrow": "NEW ARRIVLAS",
+        "eyebrow_ar": "وصل حديثًا",
+        "heading": "Fresh Pieces, For New Moments",
+        "heading_ar": "قطع جديدة، للحظات جديدة",
+        "collection": "new-arrivals",
+        "products_to_show": 10,
+        "columns": 5
+      }
+    },
     "new_arrivals_DPpLqt": {
       "type": "new-arrivals",
       "name": "New Arrivals",
@@ -99,6 +112,7 @@
     "collections_pUPfUG",
     "custom_section_ETjLrM",
     "featured_collection_CinWF3",
+    "featured_collection_84KnBQ",
     "new_arrivals_DPpLqt",
     "follow_our_journey_fFyeaN"
   ]
