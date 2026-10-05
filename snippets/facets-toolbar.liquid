@@ -1,6 +1,11 @@
 {% doc %}
   Hilya custom collection filters.
   Client-side filtering without Shopify Search & Discovery.
+
+  @param {number} [results_count] - Total number of products/results
+  @param {object} [sort_options] - Available sort options
+  @param {string} [sort_by] - Current sort value
+  @param {string} [default_sort_by] - Default sort value
 {% enddoc %}
 
 <div class="hilya-filters">
@@ -34,7 +39,7 @@
 
     <span class="hilya-filters__mobile-results">
       <span data-filter-results>
-        {{ collection.products_count }}
+        {{ results_count }}
       </span>
       PRODUCTS
     </span>
@@ -48,7 +53,7 @@
         Sort by
       </span>
 
-      {% assign current_sort = collection.sort_by | default: 'manual' %}
+      {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
 
       <button
         type="button"
@@ -58,7 +63,7 @@
         aria-haspopup="listbox"
       >
         <span data-hilya-sort-current>
-          {% for option in collection.sort_options %}
+          {% for option in sort_options %}
             {% if option.value == current_sort %}
               {{ option.name }}
             {% endif %}
@@ -74,7 +79,7 @@
         role="listbox"
         hidden
       >
-        {% for option in collection.sort_options %}
+        {% for option in sort_options %}
           <button
             type="button"
             class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
@@ -361,7 +366,7 @@
     <span class="hilya-filters__results">
 
       <span data-filter-results>
-        {{ collection.products_count }}
+        {{ results_count }}
       </span>
 
       PRODUCTS
@@ -377,7 +382,7 @@
         Sort by
       </span>
 
-      {% assign current_sort = collection.sort_by | default: 'manual' %}
+      {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
 
       <button
         type="button"
@@ -389,7 +394,7 @@
 
         <span data-hilya-sort-current>
 
-          {% for option in collection.sort_options %}
+          {% for option in sort_options %}
 
             {% if option.value == current_sort %}
               {{ option.name }}
@@ -410,7 +415,7 @@
         hidden
       >
 
-        {% for option in collection.sort_options %}
+        {% for option in sort_options %}
 
           <button
             type="button"
