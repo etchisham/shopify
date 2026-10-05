@@ -372,7 +372,6 @@
     font-size: 11px;
   }
 
-  /* الصف: حوالي 2.2 كارت ظاهرين والباقي بيدخل من حرف الشاشة */
   .featured-collection__slider {
     --per-view: 2.2;
     --gap: 0.75rem;
@@ -415,7 +414,18 @@
 }
 
 [dir="rtl"] .featured-collection__view-all {
+  grid-column: 1;
+  justify-self: start;
   font-size: 13px;
+  letter-spacing: 0; 
+}
+
+[dir="rtl"] .featured-collection__view-all span {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .featured-collection__view-all:hover span {
+  transform: scaleX(-1) translateX(5px);
 }
 
 @media (max-width: 749px) {
