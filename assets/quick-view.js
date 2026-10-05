@@ -1,3 +1,13 @@
+/*
+  Hilya quick view
+  ----------------
+  1. The "Add to cart" button on every card (any link with data-quick-view)
+     opens a drawer with the
+     options, the personalization fields (Name / Date / Letter) and Add to cart.
+  2. Fixes the hover button that stayed visible after coming back to a page.
+
+  Needs the window.hilyaQuickView settings from theme.liquid.
+*/
 (() => {
   if (window.hilyaQuickViewLoaded) return;
   window.hilyaQuickViewLoaded = true;
@@ -503,11 +513,16 @@
     const handle = decodeURIComponent(match[1]);
     let variantId = url.searchParams.get('variant');
 
-    /* A product card with its own variant dropdown: use what is selected there */
-    const card = link.closest('[data-product-card], [data-explore-item], [data-rec-item]');
-    const select = card && card.querySelector('[data-card-variant-select], [data-variant-select]');
+    /* A card that the color filter switched to Silver / Gold: open that variant */
+    const card = link.closest('[data-product-card]');
+    const cardLink = card && card.querySelector('[data-product-link]');
 
-    if (select && select.value) variantId = select.value;
+    if (cardLink) {
+      try {
+        const cardVariant = new URL(cardLink.href, window.location.href).searchParams.get('variant');
+        if (cardVariant) variantId = cardVariant;
+      } catch (error) {}
+    }
 
     opener = link;
     requestId += 1;
@@ -544,52 +559,11 @@
 
 
   /* =========================================
-     PRODUCT CARDS: ADD TO CART BUTTON
-     Uses the same cart request as the product page,
-     so the cart drawer opens its message and updates.
+     OPEN FROM ANY CARD
   ========================================= */
-
-  function addFromCard(button) {
-    if (button.disabled) return;
-
-    const form = el(
-      'form',
-      {
-        action: config.cartAddUrl || root + 'cart/add',
-        method: 'post',
-        hidden: true,
-        'data-product-title': button.dataset.productTitle || ''
-      },
-      [
-        el('input', { type: 'hidden', name: 'id', value: button.dataset.variantId }),
-        el('input', { type: 'hidden', name: 'quantity', value: button.dataset.quantity || 1 })
-      ]
-    );
-
-    const submit = el('button', { type: 'submit', name: 'add' });
-
-    form.append(submit);
-    document.body.append(form);
-
-    button.disabled = true;
-    window.setTimeout(() => { button.disabled = false; }, 1500);
-
-    if (typeof form.requestSubmit === 'function') form.requestSubmit(submit);
-    else form.submit();
-
-    window.setTimeout(() => form.remove(), 1500);
-  }
 
   document.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
-
-    const add = event.target.closest('[data-card-add]');
-
-    if (add) {
-      event.preventDefault();
-      addFromCard(add);
-      return;
-    }
 
     const trigger = event.target.closest('[data-quick-view]');
 
@@ -606,122 +580,6 @@
 
     event.preventDefault();
     open(trigger);
-  });
-
-
-  /* =========================================
-     PRODUCT CARDS: VARIANT DROPDOWN
-  ========================================= */
-
-  const updateCardAddButton = (card, option) => {
-    const button = card.querySelector('[data-card-add]');
-    if (!button || !option) return;
-
-    const available = option.dataset.available === 'true';
-    const label = button.querySelector('.product-card__quick-text');
-
-    button.dataset.variantId = option.value;
-    button.disabled = !available;
-    button.classList.toggle('is-sold-out', !available);
-
-    if (label) {
-      label.textContent = available ? '+ ' + button.dataset.addLabel : button.dataset.soldOutLabel;
-    }
-  };
-
-  function applyCardVariant(select) {
-    const card = select.closest('[data-product-card]');
-    const option = select.options[select.selectedIndex];
-
-    if (!card || !option) return;
-
-    /* Price */
-
-    const priceBox = card.querySelector('[data-product-price]');
-
-    if (priceBox && option.dataset.priceCents) {
-      priceBox.replaceChildren(priceNode(option.dataset.priceCents, option.dataset.compareCents));
-    }
-
-    /* Image */
-
-    const image = card.querySelector('[data-product-image-primary] img');
-
-    if (image && option.dataset.image) {
-      image.removeAttribute('srcset');
-      image.removeAttribute('sizes');
-      image.src = option.dataset.image;
-    }
-
-    /* Links: open the product on this variant */
-
-    if (option.dataset.url) {
-      card
-        .querySelectorAll('[data-product-link], [data-product-media], [data-quick-view]')
-        .forEach((link) => link.setAttribute('href', option.dataset.url));
-    }
-
-    /* Discount badge */
-
-    const media = card.querySelector('[data-product-media]');
-
-    if (media) {
-      const price = Number(option.dataset.priceCents);
-      const compare = Number(option.dataset.compareCents);
-      let badge = media.querySelector('.product-card__discount');
-
-      if (compare > price && price >= 0) {
-        const percent = Math.round(((compare - price) / compare) * 100);
-
-        if (!badge) {
-          badge = el('span', { class: 'product-card__discount' });
-          media.append(badge);
-        }
-
-        badge.textContent = percent + '% OFF';
-      } else if (badge) {
-        badge.remove();
-      }
-    }
-
-    updateCardAddButton(card, option);
-  }
-
-  document.addEventListener('change', (event) => {
-    if (!(event.target instanceof Element)) return;
-
-    const select = event.target.closest('[data-card-variant-select]');
-    if (select) applyCardVariant(select);
-  });
-
-  /*
-    The color filter on collection pages changes a card by itself and marks it
-    with data-applied-color. Keep the dropdown and the button in step with it.
-  */
-  new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      const item = mutation.target;
-      const select = item.querySelector && item.querySelector('[data-card-variant-select]');
-      const card = item.querySelector && item.querySelector('[data-product-card]');
-
-      if (!select || !card) return;
-
-      const color = String(item.dataset.appliedColor || '').trim().toLowerCase();
-      const options = [...select.options];
-
-      const index = color
-        ? options.findIndex((option) => String(option.dataset.label || '').trim().toLowerCase() === color)
-        : options.findIndex((option) => option.defaultSelected);
-
-      if (index < 0) return;
-
-      select.selectedIndex = index;
-      updateCardAddButton(card, options[index]);
-    });
-  }).observe(document.body, {
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['data-applied-color']
   });
 
 
