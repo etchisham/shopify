@@ -239,6 +239,7 @@
     "title": "Search",
     "placeholder": "Search products, articles, and pages",
     "submit": "Search",
+    "results_heading_html": "Results for \"{{ terms }}\"",
     "no_results_html": "No results found for <strong>{{ terms }}</strong>.",
     "results_for_html": {
       "one": "{{ count }} result for <strong>{{ terms }}</strong>.",
