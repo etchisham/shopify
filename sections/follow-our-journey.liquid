@@ -256,11 +256,12 @@
 @media (max-width: 749px) {
 
   .hilya-social {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 25px 5px 34px;
-}
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding: 25px 1rem 34px;
+    overflow-x: clip;
+  }
 
   .hilya-social__inner {
     display: flex;
