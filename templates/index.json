@@ -41,6 +41,19 @@
         "grid_gap": 48
       }
     },
+    "featured_collection_CinWF3": {
+      "type": "featured-collection",
+      "name": "t:general.featured_collection",
+      "settings": {
+        "eyebrow": "BEST SELLERS",
+        "eyebrow_ar": "الأكثر مبيعًا",
+        "heading": "The Pieces Everyone Loves",
+        "heading_ar": "القطع التي يحبها الجميع",
+        "collection": "best-sellers",
+        "products_to_show": 10,
+        "columns": 5
+      }
+    },
     "custom_section_ETjLrM": {
       "type": "custom-section",
       "name": "Special Offers",
@@ -59,19 +72,6 @@
         "button_label": "SHOP SALE",
         "button_label_ar": "تسوق التخفيضات",
         "button_link": "shopify://collections/sales"
-      }
-    },
-    "featured_collection_CinWF3": {
-      "type": "featured-collection",
-      "name": "t:general.featured_collection",
-      "settings": {
-        "eyebrow": "BEST SELLERS",
-        "eyebrow_ar": "الأكثر مبيعًا",
-        "heading": "The Pieces Everyone Loves",
-        "heading_ar": "القطع التي يحبها الجميع",
-        "collection": "best-sellers",
-        "products_to_show": 10,
-        "columns": 5
       }
     },
     "featured_collection_84KnBQ": {
@@ -111,8 +111,8 @@
   "order": [
     "hero_N4mypj",
     "collections_pUPfUG",
-    "custom_section_ETjLrM",
     "featured_collection_CinWF3",
+    "custom_section_ETjLrM",
     "featured_collection_84KnBQ",
     "new_arrivals_DPpLqt",
     "follow_our_journey_fFyeaN"
