@@ -44,7 +44,7 @@
             | image_tag:
               loading: 'lazy',
               widths: '300, 500, 700, 900',
-              sizes: '(min-width: 750px) 25vw, 50vw',
+              sizes: '(min-width: 750px) 33vw, 50vw',
               alt: instagram_alt,
               style: pos_style
           }}
@@ -100,13 +100,13 @@
 
 {% stylesheet %}
 
-/* SECTION (same width as Best Sellers) */
+/* SECTION - smaller side spacing */
 
 .hilya-social {
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 15px max(14px, calc((100vw - 1400px) / 2));
+  padding: 15px max(12px, calc((100vw - 1660px) / 2));
   box-sizing: border-box;
   overflow-x: clip;
   background: #f4f1eb;
@@ -115,21 +115,21 @@
 
 /* =========================
    DESKTOP + TABLET
-   4 columns:
-   row 1: [image 1] [   title (2 cols)   ] [image 2]
-   row 2: [image 5] [image 3] [image 4] [image 6]
-   row 3: [        Follow Us button (centered)       ]
-   All 4 bottom images end on the same line.
+   3 columns, every column ends on the same bottom line
+   left   : image 1 (tall) + image 3
+   center : title + image 2 + image 4, button under it
+   right  : image 5 (starts lower) + image 6
 ========================= */
 
 .hilya-social__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1.5fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+  /* 12 equal picture rows + button row */
+  grid-template-rows: repeat(12, minmax(0, 1fr)) auto;
   column-gap: 10px;
   row-gap: 0;
-  height: clamp(440px, 42vw, 620px);
-  padding: 22px 10px 20px;
+  height: clamp(440px, 40vw, 680px);
+  padding: 22px 8px 20px;
   box-sizing: border-box;
   background: #f4f1eb;
 }
@@ -148,12 +148,17 @@
   background: #e4dbcf;
 }
 
-.hilya-social__image--1 { grid-column: 1; grid-row: 1; }
-.hilya-social__image--2 { grid-column: 4; grid-row: 1; }
-.hilya-social__image--3 { grid-column: 2; grid-row: 2; }
-.hilya-social__image--4 { grid-column: 3; grid-row: 2; }
-.hilya-social__image--5 { grid-column: 1; grid-row: 2; }
-.hilya-social__image--6 { grid-column: 4; grid-row: 2; }
+/* left column */
+.hilya-social__image--1 { grid-column: 1; grid-row: 1 / 8; }
+.hilya-social__image--3 { grid-column: 1; grid-row: 8 / 13; }
+
+/* center column */
+.hilya-social__image--2 { grid-column: 2; grid-row: 4 / 8; }
+.hilya-social__image--4 { grid-column: 2; grid-row: 8 / 13; }
+
+/* right column */
+.hilya-social__image--5 { grid-column: 3; grid-row: 6 / 10; }
+.hilya-social__image--6 { grid-column: 3; grid-row: 10 / 13; }
 
 .hilya-social__image img {
   position: absolute;
@@ -170,16 +175,16 @@
 }
 
 
-/* TITLE (top of the center) */
+/* TITLE (top of the center column) */
 
 .hilya-social__head {
-  grid-column: 2 / 4;
-  grid-row: 1;
+  grid-column: 2;
+  grid-row: 1 / 4;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 14px;
+  padding-bottom: 10px;
   text-align: center;
 }
 
@@ -225,11 +230,11 @@
 }
 
 
-/* BUTTON (bottom, centered under all images) - Instagram colors */
+/* BUTTON (under the center column) - Instagram colors */
 
 .hilya-social__button {
-  grid-column: 1 / -1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 13;
   justify-self: center;
   position: relative;
   display: inline-flex;
@@ -277,16 +282,6 @@
   background: none;
   -webkit-text-fill-color: #fff;
   color: #fff;
-}
-
-
-/* LARGE DESKTOP */
-
-@media (min-width: 1500px) {
-  .hilya-social {
-    padding-left: max(14px, calc((100vw - 1500px) / 2));
-    padding-right: max(14px, calc((100vw - 1500px) / 2));
-  }
 }
 
 
@@ -431,7 +426,7 @@
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1 (desktop: top left / mobile: left, 1st)"
+      "label": "Image 1 (desktop: left, tall / mobile: left, 1st)"
     },
     {
       "type": "range",
@@ -461,7 +456,7 @@
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Image 2 (desktop: top right / mobile: right, 1st)"
+      "label": "Image 2 (desktop: center, top / mobile: right, 1st)"
     },
     {
       "type": "range",
@@ -491,7 +486,7 @@
     {
       "type": "image_picker",
       "id": "image_3",
-      "label": "Image 3 (desktop: under title, left / mobile: left, 2nd)"
+      "label": "Image 3 (desktop: left, bottom / mobile: left, 2nd)"
     },
     {
       "type": "range",
@@ -521,7 +516,7 @@
     {
       "type": "image_picker",
       "id": "image_4",
-      "label": "Image 4 (desktop: under title, right / mobile: right, 2nd)"
+      "label": "Image 4 (desktop: center, bottom / mobile: right, 2nd)"
     },
     {
       "type": "range",
@@ -551,7 +546,7 @@
     {
       "type": "image_picker",
       "id": "image_5",
-      "label": "Image 5 (desktop: far left / mobile: left, 3rd)"
+      "label": "Image 5 (desktop: right, top / mobile: left, 3rd)"
     },
     {
       "type": "range",
@@ -581,7 +576,7 @@
     {
       "type": "image_picker",
       "id": "image_6",
-      "label": "Image 6 (desktop: far right / mobile: right, 3rd)"
+      "label": "Image 6 (desktop: right, bottom / mobile: right, 3rd)"
     },
     {
       "type": "range",
