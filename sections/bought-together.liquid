@@ -86,7 +86,7 @@
         assign form_id = 'ExploreForm-' | append: item.id
 
         assign go_to_product = false
-        if item.tags contains 'Name' or item.tags contains 'Date' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
+        if item.tags contains 'Name' or item.tags contains 'Date' or item.tags contains 'Letter' or item.requires_selling_plan or item.metafields.custom.personalization_required.value == true
           assign go_to_product = true
         endif
 
@@ -124,7 +124,7 @@
 
             {%- if go_to_product -%}
 
-              <a class="explore-collection__quick" href="{{ item.url }}">
+              <a class="explore-collection__quick" href="{{ item.url }}" data-quick-view>
                 <svg class="explore-collection__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
                 <span class="explore-collection__quick-text">{{ options_label }}</span>
               </a>
@@ -142,7 +142,7 @@
                 <input type="hidden" name="quantity" value="{{ min_quantity }}">
 
                 <button type="submit" name="add" class="explore-collection__quick" data-explore-add>
-                  <svg class="explore-collection__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5h11l.8 11H3.2z"/><path d="M7 8.5V7a2.5 2.5 0 0 1 5 0v1.5"/><path d="M19 3v6M16 6h6"/></svg>
+                  <svg class="explore-collection__quick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
                   <span class="explore-collection__quick-text">+ {{ add_label }}</span>
                 </button>
               {% endform %}
@@ -314,6 +314,55 @@
         window.addEventListener('resize', updateArrows);
         window.addEventListener('load', updateArrows);
         updateArrows();
+
+        /* Narrow screens: touch already swipes the row; this lets a mouse drag it too */
+        var dragQuery = window.matchMedia('(max-width: 749px)');
+        var drag = null;
+        var suppressClick = false;
+
+        track.addEventListener('pointerdown', function (event) {
+          if (event.pointerType !== 'mouse' || event.button !== 0 || !dragQuery.matches) return;
+          drag = { x: event.clientX, left: track.scrollLeft, moved: false };
+        });
+
+        window.addEventListener('pointermove', function (event) {
+          if (!drag) return;
+          var dx = event.clientX - drag.x;
+          if (!drag.moved && Math.abs(dx) < 5) return;
+
+          if (!drag.moved) {
+            drag.moved = true;
+            track.style.scrollSnapType = 'none';
+            track.style.scrollBehavior = 'auto';
+            track.classList.add('is-dragging');
+          }
+
+          track.scrollLeft = drag.left - dx;
+        });
+
+        function endDrag() {
+          if (!drag) return;
+
+          if (drag.moved) {
+            suppressClick = true;
+            setTimeout(function () { suppressClick = false; }, 60);
+            track.style.scrollSnapType = '';
+            track.style.scrollBehavior = '';
+            track.classList.remove('is-dragging');
+          }
+
+          drag = null;
+        }
+
+        window.addEventListener('pointerup', endDrag);
+        window.addEventListener('pointercancel', endDrag);
+
+        /* After a drag, do not open the product under the mouse */
+        track.addEventListener('click', function (event) {
+          if (!suppressClick) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
 
         /* Variant dropdown: update price, image and the add button */
         root.addEventListener('change', function (event) {
@@ -561,8 +610,12 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .explore-collection__carousel:hover .explore-collection__arrow,
-  .explore-collection__carousel:focus-within .explore-collection__arrow {
+  .explore-collection__carousel:hover .explore-collection__arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .explore-collection__carousel:has(:focus-visible) .explore-collection__arrow {
     opacity: 1;
     pointer-events: auto;
   }
@@ -626,8 +679,14 @@
     transform 220ms ease;
 }
 
-.explore-collection__media:hover .explore-collection__quick-wrap,
-.explore-collection__media:focus-within .explore-collection__quick-wrap {
+.explore-collection__media:hover .explore-collection__quick-wrap {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* Keyboard focus only (a mouse click must not keep the button visible) */
+.explore-collection__media:has(:focus-visible) .explore-collection__quick-wrap {
   opacity: 1;
   pointer-events: auto;
   transform: none;
@@ -886,9 +945,25 @@ html[dir="rtl"] .explore-collection__price .price {
   }
 
   /* 1rem space before the first card; set both to 0 to start flush with the screen edge */
+  /* No arrows on mobile: just swipe */
+  .explore-collection__arrow {
+    display: none;
+  }
+
   .explore-collection__track {
     padding-inline: 1rem;
     scroll-padding-inline: 1rem;
+    cursor: grab;
+  }
+
+  .explore-collection__track.is-dragging {
+    cursor: grabbing;
+  }
+
+  .explore-collection__track img,
+  .explore-collection__track a {
+    -webkit-user-drag: none;
+    user-select: none;
   }
 
   /* Add / Select options: small icon on the right (same color as the page) */
