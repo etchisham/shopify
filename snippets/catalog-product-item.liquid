@@ -1,0 +1,64 @@
+{% doc %}
+  One product card wrapped with the data the Hilya filters need.
+  Used by the collection page and the search page.
+
+  @param {product} product - Product object.
+{% enddoc %}
+
+{% liquid
+  assign product_colors = ''
+  assign product_available = product.available
+
+  for option in product.options_with_values
+    if option.name == 'Color'
+      for value in option.values
+        assign product_colors = product_colors | append: value.name | append: '|'
+      endfor
+    endif
+  endfor
+%}
+
+<div
+  class="catalog-product-item"
+  data-product-item
+  data-product-type="{{ product.type | escape }}"
+  data-product-price="{{ product.price | divided_by: 100.0 }}"
+  data-product-available="{{ product_available }}"
+  data-product-colors="{{ product_colors | escape }}"
+>
+
+  <script type="application/json" data-variant-data>
+    [
+      {% for variant in product.variants %}
+        {
+          "id": {{ variant.id | json }},
+          "color": {{ variant.option1 | json }},
+          "price": {{ variant.price | divided_by: 100.0 | json }},
+          "compare_at_price": {% if variant.compare_at_price %}{{ variant.compare_at_price | divided_by: 100.0 | json }}{% else %}null{% endif %},
+          "available": {{ variant.available | json }},
+          "url": {{ variant.url | json }},
+          "image": {% if variant.featured_image %}{ "src": {{ variant.featured_image | image_url: width: 1200 | json }}, "alt": {{ variant.featured_image.alt | default: product.title | json }} }{% else %}null{% endif %},
+          "images": [
+            {%- assign variant_color = variant.option1 | downcase | strip -%}
+            {%- assign matched_image_count = 0 -%}
+            {%- for image in product.images -%}
+              {%- assign image_alt = image.alt | default: '' | downcase -%}
+              {%- if image_alt contains variant_color -%}
+                {%- if matched_image_count > 0 -%},{%- endif -%}
+                { "src": {{ image | image_url: width: 1200 | json }}, "alt": {{ image.alt | default: product.title | json }} }
+                {%- assign matched_image_count = matched_image_count | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+          ]
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  </script>
+
+  {% render 'product-card',
+    product: product,
+    heading_level: 'h2',
+    sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw'
+  %}
+
+</div>
