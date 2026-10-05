@@ -159,6 +159,59 @@
 {% stylesheet %}
 
 /* =========================
+   SLIDER ARROWS
+========================= */
+
+.collection-list__slider {
+  position: relative;
+}
+
+.collection-list__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  background: #F7F4EE;
+  color: #151515;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transform: translateY(-50%);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.collection-list__nav--prev { left: 8px; }
+.collection-list__nav--next { right: 8px; }
+
+.collection-list__nav.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.collection-list__nav svg {
+  display: block;
+}
+
+@media (max-width: 749px) {
+  .collection-list__nav {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* =========================
    COLLECTION SECTION
 ========================= */
 
