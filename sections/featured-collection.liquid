@@ -370,14 +370,22 @@
   }
 
   .featured-collection__view-all {
-    gap: 5px;
-    padding-bottom: 3px;
-    font-size: 8px;
-    letter-spacing: .12em;
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: auto;
+    align-self: flex-end;
+    gap: 6px;
+    padding-bottom: 4px;
+    font-size: 9px;
+    letter-spacing: .14em;
   }
 
   .featured-collection__view-all span {
-    font-size: 11px;
+    font-size: 12px;
+  }
+
+  [dir="rtl"] .featured-collection__view-all {
+    align-self: flex-start; /* في العربي start هي اليمين */
   }
 
   .featured-collection__slider {
