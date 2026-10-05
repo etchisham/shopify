@@ -314,6 +314,8 @@
 
 /* MOBILE */
 
+/* MOBILE */
+
 @media (max-width: 749px) {
 
   .featured-collection {
@@ -322,21 +324,26 @@
   }
 
   .featured-collection__header {
+    /* حجم العنوان بيصغر مع عرض الشاشة، والـ eyebrow بياخد نسبة منه */
+    --fs: clamp(17px, 5.6vw, 22px);
+
     align-items: flex-start;
+    gap: 12px;
     margin-bottom: 24px;
     padding-inline: 1rem;
   }
 
   .featured-collection__eyebrow {
-    margin-bottom: 8px;
-    font-size: 9px;
+    margin-bottom: 7px;
+    font-size: calc(var(--fs) * 0.4);
   }
 
   .featured-collection__heading .featured-collection__title {
-    font-size: 25px !important;
+    font-size: var(--fs) !important;
     font-weight: 300 !important;
     letter-spacing: -0.035em !important;
     line-height: 1.08 !important;
+    white-space: nowrap;
   }
 
   .featured-collection__view-all {
@@ -350,18 +357,35 @@
   }
 
   /* الصف: حوالي 2.2 كارت ظاهرين والباقي بيدخل من حرف الشاشة */
-  .featured-collection__grid {
+  .featured-collection__slider {
     --per-view: 2.2;
     --gap: 0.75rem;
+  }
 
+  .featured-collection__grid {
     padding-inline: 1rem;
     scroll-padding-inline: 1rem;
   }
 
+  /* أسهم الموبايل: دايرة صغيرة */
   .featured-collection__nav {
+    top: 38%; /* زوّده أو قلّله حسب طول الصورة */
     width: 30px;
     height: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    background: #F7F4EE; /* نفس لون خلفية الصفحة */
+    opacity: 1;
+    pointer-events: auto;
   }
+
+  .featured-collection__nav svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .featured-collection__nav--prev { left: 8px; }
+  .featured-collection__nav--next { right: 8px; }
 }
 
 /* ARABIC / RTL */
