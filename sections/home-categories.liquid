@@ -100,6 +100,30 @@
     window.addEventListener('load', update);
     update();
 
+        /* موبايل: يبدأ والكارت اللي في النص متوسّط */
+    let touched = false;
+    grid.addEventListener('pointerdown', () => { touched = true; }, { once: true });
+
+    const centerMiddle = () => {
+      if (touched || !window.matchMedia('(max-width: 749px)').matches) return;
+
+      const cards = grid.querySelectorAll('.collection-card');
+      if (cards.length < 3) return;
+
+      const mid = cards[Math.floor((cards.length - 1) / 2)];
+      const g = grid.getBoundingClientRect();
+      const c = mid.getBoundingClientRect();
+
+      grid.scrollBy({
+        left: (c.left + c.width / 2) - (g.left + g.width / 2),
+        behavior: 'auto'
+      });
+      update();
+    };
+
+    centerMiddle();
+    window.addEventListener('load', centerMiddle);
+
     /* ---------- Mouse drag (narrow desktop window) ---------- */
     const narrow = window.matchMedia('(max-width: 749px)');
     let drag = null;
