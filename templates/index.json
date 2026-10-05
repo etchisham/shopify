@@ -89,6 +89,7 @@
     },
     "new_arrivals_DPpLqt": {
       "type": "new-arrivals",
+      "disabled": true,
       "name": "New Arrivals",
       "settings": {
         "image": "shopify://shop_images/08_New_Arrivals.jpg",
