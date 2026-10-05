@@ -4,7 +4,33 @@
 
   <div class="hilya-social__inner">
 
-    <!-- TEXT -->
+    <div class="hilya-social__grid">
+      {%- for i in (1..4) -%}
+        {%- assign image_key = 'image_' | append: i -%}
+        {%- assign social_image = section.settings[image_key] -%}
+
+        {%- if social_image != blank -%}
+          <a
+            href="{{ section.settings.instagram_url }}"
+            class="hilya-social__image"
+            target="_blank"
+            rel="noopener"
+          >
+            {{
+              social_image
+              | image_url: width: 800
+              | image_tag:
+                loading: 'lazy',
+                widths: '300, 500, 700, 800',
+                sizes: '25vw',
+                alt: instagram_alt
+            }}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="hilya-social__overlay"></div>
 
     <div class="hilya-social__intro">
 
@@ -18,114 +44,14 @@
         target="_blank"
         rel="noopener"
       >
-
-        <svg
-  class="hilya-social__instagram-icon"
-  viewBox="0 0 24 24"
-  aria-hidden="true"
->
-  <defs>
-    <linearGradient id="instagram-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#F58529"/>
-      <stop offset="35%" stop-color="#DD2A7B"/>
-      <stop offset="65%" stop-color="#8134AF"/>
-      <stop offset="100%" stop-color="#515BD4"/>
-    </linearGradient>
-  </defs>
+        <svg class="hilya-social__instagram-icon" viewBox="0 0 24 24" aria-hidden="true">
           <rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect>
           <circle cx="12" cy="12" r="4"></circle>
           <circle cx="17.5" cy="6.5" r="1"></circle>
         </svg>
 
         <span>Hilya</span>
-
       </a>
-
-    </div>
-
-
-    <!-- FOUR IMAGES -->
-
-    <div class="hilya-social__grid">
-
-      {% if section.settings.image_1 != blank %}
-        <a
-          href="{{ section.settings.instagram_url }}"
-          class="hilya-social__image"
-          target="_blank"
-          rel="noopener"
-        >
-          {{
-            section.settings.image_1
-            | image_url: width: 800
-            | image_tag:
-              loading: 'lazy',
-              widths: '300, 500, 700, 800',
-              sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: instagram_alt
-          }}
-        </a>
-      {% endif %}
-
-
-      {% if section.settings.image_2 != blank %}
-        <a
-          href="{{ section.settings.instagram_url }}"
-          class="hilya-social__image"
-          target="_blank"
-          rel="noopener"
-        >
-          {{
-            section.settings.image_2
-            | image_url: width: 800
-            | image_tag:
-              loading: 'lazy',
-              widths: '300, 500, 700, 800',
-              sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: instagram_alt
-          }}
-        </a>
-      {% endif %}
-
-
-      {% if section.settings.image_3 != blank %}
-        <a
-          href="{{ section.settings.instagram_url }}"
-          class="hilya-social__image"
-          target="_blank"
-          rel="noopener"
-        >
-          {{
-            section.settings.image_3
-            | image_url: width: 800
-            | image_tag:
-              loading: 'lazy',
-              widths: '300, 500, 700, 800',
-              sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: instagram_alt
-          }}
-        </a>
-      {% endif %}
-
-
-      {% if section.settings.image_4 != blank %}
-        <a
-          href="{{ section.settings.instagram_url }}"
-          class="hilya-social__image"
-          target="_blank"
-          rel="noopener"
-        >
-          {{
-            section.settings.image_4
-            | image_url: width: 800
-            | image_tag:
-              loading: 'lazy',
-              widths: '300, 500, 700, 800',
-              sizes: '(min-width: 750px) 16vw, 24vw',
-              alt: instagram_alt
-          }}
-        </a>
-      {% endif %}
 
     </div>
 
@@ -136,90 +62,41 @@
 
 {% stylesheet %}
 
-/* SECTION */
+/* SECTION (same container as New Arrivals) */
 
 .hilya-social {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 8px 0 25px;
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding: 8px max(24px, calc((100vw - 1400px) / 2)) 25px;
   box-sizing: border-box;
 }
 
-
-/* LAYOUT */
-
 .hilya-social__inner {
-  display: grid;
-  grid-template-columns: 1fr 2.4fr;
-  align-items: center;
-  gap: 35px;
+  position: relative;
+  width: 100%;
+  height: 270px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f4f1eb;
 }
 
 
-/* TEXT */
-
-.hilya-social__intro {
-  text-align: center;
-}
-
-.hilya-social__title {
-  margin: 0 0 9px;
-  color: #222222;
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: 22px;
-  line-height: 1;
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: .01em;
-}
-
-
-/* INSTAGRAM LINK */
-
-.hilya-social__instagram {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #555555;
-  text-decoration: none;
-  font-family: Arial, sans-serif;
-  font-size: 13px;
-  line-height: 1;
-  font-weight: 400;
-  letter-spacing: .02em;
-}
-
-.hilya-social__instagram:hover {
-  color: #111111;
-}
-
-.hilya-social__instagram-icon {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: url(#instagram-gradient);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-
-/* IMAGES */
+/* IMAGES (background) */
 
 .hilya-social__grid {
+  position: absolute;
+  inset: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 3px;
 }
 
 .hilya-social__image {
   display: block;
-  width: 100%;
-  aspect-ratio: 1.45 / 1;
+  min-width: 0;
   overflow: hidden;
-  background: #f4f1eb;
 }
 
 .hilya-social__image img {
@@ -235,19 +112,97 @@
 }
 
 
+/* OVERLAY */
+
+.hilya-social__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.38);
+  pointer-events: none;
+}
+
+
+/* TEXT ON TOP */
+
+.hilya-social__intro {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.hilya-social__title {
+  margin: 0 0 14px;
+  color: #fff;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.3);
+}
+
+.hilya-social__instagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: .02em;
+  pointer-events: auto;
+}
+
+.hilya-social__instagram:hover {
+  opacity: .8;
+}
+
+.hilya-social__instagram-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* LARGE DESKTOP */
+
+@media (min-width: 1500px) {
+  .hilya-social {
+    padding-left: max(32px, calc((100vw - 1500px) / 2));
+    padding-right: max(32px, calc((100vw - 1500px) / 2));
+  }
+}
+
+
 /* TABLET */
 
 @media (min-width: 750px) and (max-width: 1100px) {
-
   .hilya-social {
     padding-left: 28px;
     padding-right: 28px;
   }
 
   .hilya-social__inner {
-    gap: 35px;
+    height: 250px;
   }
-
 }
 
 
@@ -256,59 +211,63 @@
 @media (max-width: 749px) {
 
   .hilya-social {
-    width: 100vw;
-    max-width: 100vw;
-    margin-inline: calc(50% - 50vw);
     padding: 25px 1rem 34px;
     overflow-x: clip;
   }
 
   .hilya-social__inner {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .hilya-social__intro {
-    width: 100%;
-  }
-
-  .hilya-social__title {
-    font-size: 18px;
-  }
-
-  .hilya-social__instagram {
-    font-size: 8px;
+    height: 200px;
   }
 
   .hilya-social__grid {
-    width: 100%;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
+    gap: 2px;
   }
 
+  .hilya-social__title {
+    margin-bottom: 11px;
+    font-size: 24px;
+  }
+
+  .hilya-social__instagram {
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .hilya-social__instagram-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+
+/* ARABIC / RTL */
+
+[dir="rtl"] .hilya-social__title {
+  font-size: clamp(26px, 2.8vw, 36px);
+  line-height: 1.4;
+}
+
+[dir="rtl"] .hilya-social__instagram {
+  font-size: 14px;
+}
+
+@media (max-width: 749px) {
+  [dir="rtl"] .hilya-social__title {
+    font-size: 20px;
+  }
+
+  [dir="rtl"] .hilya-social__instagram {
+    font-size: 12px;
+  }
 }
 
 
 /* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
-
   .hilya-social__image img {
     transition: none;
   }
-
-}
-
-/* ARABIC / RTL */
-
-[dir="rtl"] .hilya-social__title {
-  font-size: 21px;
-  line-height: 1.4;
-}
-
-[dir="rtl"] .hilya-social__instagram {
-  font-size: 13px;
 }
 
 {% endstylesheet %}
