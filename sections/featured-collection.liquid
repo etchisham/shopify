@@ -39,35 +39,31 @@
 
   {% if featured_collection != blank and featured_collection.products_count > 0 %}
 
-    <div class="featured-collection__slider">
+    <div
+      class="featured-collection__slider"
+      style="--product-columns: {{ section.settings.columns }};"
+      >
 
-  <button type="button" class="featured-collection__nav featured-collection__nav--prev" aria-label="Previous">
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M15 6l-6 6 6 6"/>
-    </svg>
-  </button>
+      <button type="button" class="featured-collection__nav featured-collection__nav--prev" aria-label="Previous products">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </button>
 
-  <div
-    class="featured-collection__grid"
-    style="--product-columns: {{ section.settings.columns }};"
-  >
-    {% for product in featured_collection.products limit: section.settings.products_to_show %}
-      <div class="featured-collection__product">
-        {% render 'product-card',
-          product: product,
-          sizes: '(min-width: 990px) 20vw, 50vw'
-        %}
+      <div class="featured-collection__grid">
+        {% for product in featured_collection.products limit: section.settings.products_to_show %}
+          <div class="featured-collection__product">
+            {% render 'product-card',
+              product: product,
+              sizes: '(min-width: 990px) 20vw, 50vw'
+            %}
+          </div>
+        {% endfor %}
       </div>
-    {% endfor %}
-  </div>
 
-  <button type="button" class="featured-collection__nav featured-collection__nav--next" aria-label="Next">
-    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M9 6l6 6-6 6"/>
-    </svg>
-  </button>
+      <button type="button" class="featured-collection__nav featured-collection__nav--next" aria-label="Next products">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
 
-</div>
+    </div>
 
   {% else %}
 
