@@ -191,10 +191,8 @@
   justify-content: center;
   position: relative;
   top: 0;
-
   font-size: 13px;
   line-height: 1;
-
   transition: transform .3s ease;
 }
 
@@ -202,16 +200,36 @@
   transform: translateX(4px);
 }
 
-/* PRODUCTS */
+/* SLIDER */
+
+.featured-collection__slider {
+  position: relative;
+  --nav-top: 38%; /* ارتفاع الأسهم: زوّده أو قلّله حسب طول صورة المنتج */
+}
 
 .featured-collection__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px 14px;
+  --per-view: var(--product-columns, 5);
+  --gap: 18px;
+
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gap);
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  box-sizing: border-box;
+}
+
+.featured-collection__grid::-webkit-scrollbar {
+  display: none;
 }
 
 .featured-collection__product {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
   min-width: 0;
+  scroll-snap-align: start;
 }
 
 .featured-collection__empty {
@@ -219,13 +237,44 @@
   text-align: center;
 }
 
-/* DESKTOP */
+/* ARROWS */
 
-@media (min-width: 750px) {
-  .featured-collection__grid {
-    grid-template-columns: repeat(var(--product-columns), minmax(0, 1fr));
-    gap: 34px 18px;
-  }
+.featured-collection__nav {
+  position: absolute;
+  top: var(--nav-top);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  background: #F7F4EE; /* غيّره لنفس لون خلفية الصفحة لو مختلف */
+  color: #151515;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transform: translateY(-50%);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .25s ease, visibility .25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.featured-collection__nav--prev { left: 8px; }
+.featured-collection__nav--next { right: 8px; }
+
+.featured-collection__nav.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.featured-collection__nav svg {
+  display: block;
 }
 
 /* LARGE DESKTOP */
@@ -246,7 +295,8 @@
   }
 
   .featured-collection__grid {
-    gap: 26px 14px;
+    --per-view: 3.3;
+    --gap: 14px;
   }
 }
 
@@ -255,15 +305,14 @@
 @media (max-width: 749px) {
 
   .featured-collection {
-    width: 100%;
-    max-width: none;
-    margin-inline: 0;
-    padding: 30px 5px 0;
+    padding: 30px 0 0;
+    overflow-x: clip;
   }
 
   .featured-collection__header {
     align-items: flex-start;
     margin-bottom: 24px;
+    padding-inline: 1rem;
   }
 
   .featured-collection__eyebrow {
@@ -279,22 +328,27 @@
   }
 
   .featured-collection__view-all {
-  gap: 4px;
-  font-size: 9px;
-}
-
-.featured-collection__view-all span {
-  font-size: 12px;
-  top: -2px;
-}
-
-  .featured-collection__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 14px;
+    gap: 4px;
+    font-size: 9px;
   }
 
-  .featured-collection__product--mobile-hidden {
-    display: none;
+  .featured-collection__view-all span {
+    font-size: 12px;
+    top: -2px;
+  }
+
+  /* الصف: حوالي 2.2 كارت ظاهرين والباقي بيدخل من حرف الشاشة */
+  .featured-collection__grid {
+    --per-view: 2.2;
+    --gap: 0.75rem;
+
+    padding-inline: 1rem;
+    scroll-padding-inline: 1rem;
+  }
+
+  .featured-collection__nav {
+    width: 30px;
+    height: 30px;
   }
 }
 
