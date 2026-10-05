@@ -1033,14 +1033,29 @@
     const form = root.querySelector('.product-form');
     if (!form) return;
 
+    const letterError = 'Please enter one letter (Arabic or English).';
+
+    const isOneLetter = (value) => /^\p{L}$/u.test(value);
+
+    /* Keep only the first letter while typing */
+    const cleanLetter = (input) => {
+      const first = Array.from(input.value.replace(/[^\p{L}]/gu, ''))[0] || '';
+
+      if (input.value !== first) input.value = first;
+
+      input.setCustomValidity('');
+    };
+
     form.addEventListener(
       'submit',
       (event) => {
         const nameRequired = root.dataset.nameRequired === 'true';
         const dateRequired = root.dataset.dateRequired === 'true';
+        const letterRequired = root.dataset.letterRequired === 'true';
 
         const name = form.querySelector('[data-personalization-name]');
         const date = form.querySelector('[data-personalization-date]');
+        const letter = form.querySelector('[data-personalization-letter]');
 
         if (nameRequired && name && !name.value.trim()) {
           event.preventDefault();
@@ -1059,6 +1074,15 @@
         }
 
         if (date) date.setCustomValidity('');
+
+        if (letterRequired && letter && !isOneLetter(letter.value.trim())) {
+          event.preventDefault();
+          letter.setCustomValidity(letterError);
+          letter.reportValidity();
+          return;
+        }
+
+        if (letter) letter.setCustomValidity('');
       },
       { capture: true, signal }
     );
@@ -1066,6 +1090,12 @@
     form.addEventListener(
       'input',
       (event) => {
+        if (event.target.matches('[data-personalization-letter]')) {
+          /* Do not touch the text while an Arabic keyboard is still composing it */
+          if (!event.isComposing) cleanLetter(event.target);
+          return;
+        }
+
         if (
           event.target.matches(
             '[data-personalization-name], [data-personalization-date]'
@@ -1076,7 +1106,18 @@
       },
       { signal }
     );
+
+    form.addEventListener(
+      'compositionend',
+      (event) => {
+        if (event.target.matches('[data-personalization-letter]')) {
+          cleanLetter(event.target);
+        }
+      },
+      { signal }
+    );
   }
+
 
   /* =========================================================
      DESCRIPTION
