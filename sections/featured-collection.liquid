@@ -16,7 +16,7 @@
 -%}
 
 <section class="featured-collection">
-  <div class="featured-collection__header">
+    <div class="featured-collection__header">
     <div class="featured-collection__heading">
       {% if fc_eyebrow != blank %}
         <p class="featured-collection__eyebrow">
@@ -28,6 +28,13 @@
         {{ fc_heading | default: featured_collection.title | escape }}
       </h2>
     </div>
+
+    {% if featured_collection != blank %}
+      <a class="featured-collection__view-all" href="{{ featured_collection.url }}">
+        {{ 'collections.view_all' | t }}
+        <span aria-hidden="true">→</span>
+      </a>
+    {% endif %}
   </div>
 
   {% if featured_collection != blank and featured_collection.products_count > 0 %}
@@ -56,13 +63,6 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
 
-    </div>
-
-    <div class="featured-collection__footer">
-      <a class="featured-collection__view-all" href="{{ featured_collection.url }}">
-        {{ 'collections.view_all' | t }}
-        <span aria-hidden="true">→</span>
-      </a>
     </div>
 
   {% else %}
