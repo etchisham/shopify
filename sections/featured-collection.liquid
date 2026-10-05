@@ -28,13 +28,6 @@
         {{ fc_heading | default: featured_collection.title | escape }}
       </h2>
     </div>
-
-    {% if featured_collection != blank %}
-      <a class="featured-collection__view-all" href="{{ featured_collection.url }}">
-        {{ 'collections.view_all' | t }}
-        <span aria-hidden="true">→</span>
-      </a>
-    {% endif %}
   </div>
 
   {% if featured_collection != blank and featured_collection.products_count > 0 %}
@@ -63,6 +56,13 @@
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
 
+    </div>
+
+    <div class="featured-collection__footer">
+      <a class="featured-collection__view-all" href="{{ featured_collection.url }}">
+        {{ 'collections.view_all' | t }}
+        <span aria-hidden="true">→</span>
+      </a>
     </div>
 
   {% else %}
@@ -161,33 +161,48 @@
 
 /* VIEW ALL */
 
+.featured-collection__footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
 .featured-collection__view-all {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  color: inherit;
-  text-decoration: none;
+  justify-content: center;
+  gap: 10px;
+  min-width: 200px;
+  padding: 15px 34px;
+  border: 1px solid #151515;
+  background: transparent;
+  color: #151515;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
-  letter-spacing: .14em;
+  letter-spacing: .2em;
   text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color .3s ease, color .3s ease;
 }
 
 .featured-collection__view-all span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  top: 0;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
   transition: transform .3s ease;
 }
 
+.featured-collection__view-all:hover {
+  background: #151515;
+  color: #fff;
+}
+
 .featured-collection__view-all:hover span {
-  transform: translateX(4px);
+  transform: translateX(5px);
 }
 
 /* SLIDER */
@@ -346,14 +361,20 @@
     font-size: 15px !important;
   }
 
+  .featured-collection__footer {
+    margin-top: 26px;
+    padding-bottom: 10px;
+  }
+
   .featured-collection__view-all {
-    gap: 4px;
+    min-width: 170px;
+    padding: 13px 28px;
     font-size: 9px;
+    gap: 8px;
   }
 
   .featured-collection__view-all span {
-    font-size: 12px;
-    top: -2px;
+    font-size: 13px;
   }
 
   /* الصف: حوالي 2.2 كارت ظاهرين والباقي بيدخل من حرف الشاشة */
