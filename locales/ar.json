@@ -14,7 +14,7 @@
     "back_to_shopping": "العودة إلى التسوق"
   },
   "accessibility": {
-    "skip_to_content": "تخطَّ إلى المحتوى",
+    "skip_to_content": "تخطَّ إلى المحتوى",
     "open_menu": "فتح القائمة",
     "close_menu": "إغلاق القائمة",
     "close_filters": "إغلاق عوامل التصفية",
@@ -247,6 +247,7 @@
     "title": "بحث",
     "placeholder": "ابحث في المنتجات والمقالات والصفحات",
     "submit": "بحث",
+    "results_heading_html": "نتائج البحث عن \"{{ terms }}\"",
     "no_results_html": "لا توجد نتائج لـ <strong>{{ terms }}</strong>.",
     "results_for_html": {
       "zero": "لا توجد نتائج لـ <strong>{{ terms }}</strong>.",
