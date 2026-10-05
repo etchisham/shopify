@@ -1,13 +1,24 @@
+{% render 'catalog-styles' %}
+
 <section class="catalog-page search-page full-width section-spacing">
-  <div class="search-page__inner">
+  <div class="catalog-page__inner search-page__inner">
+
     <header class="search-page__header">
-      <h1>{{ 'search.title' | t }}</h1>
+      <h1 class="search-page__title">
+        {%- if search.performed and search.terms != blank -%}
+          Results for "{{ search.terms | escape }}"
+        {%- else -%}
+          {{ 'search.title' | t }}
+        {%- endif -%}
+      </h1>
 
       <form class="search-page__form" action="{{ routes.search_url }}" method="get" role="search">
         <input type="hidden" name="type" value="product">
         <label class="visually-hidden" for="SearchInput-{{ section.id }}">{{ 'search.placeholder' | t }}</label>
         <input id="SearchInput-{{ section.id }}" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}">
-        <button class="button" type="submit">{{ 'search.submit' | t }}</button>
+        <button class="search-page__submit" type="submit" aria-label="{{ 'search.submit' | t }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
       </form>
     </header>
 
@@ -15,18 +26,21 @@
       {% capture search_clear_url %}{{ routes.search_url }}?q={{ search.terms | url_encode }}&type=product{% endcapture %}
 
       {% paginate search.results by 24 %}
-        {% render 'facets-toolbar',
-          filters: search.filters,
-          sort_options: search.sort_options,
-          sort_by: search.sort_by,
-          default_sort_by: search.default_sort_by,
-          results_url: routes.search_url,
-          clear_url: search_clear_url,
-          results_count: search.results_count,
-          section_id: section.id,
-          search_terms: search.terms,
-          is_search: true
-        %}
+
+        <div class="catalog-page__toolbar">
+          {% render 'facets-toolbar',
+            filters: search.filters,
+            sort_options: search.sort_options,
+            sort_by: search.sort_by,
+            default_sort_by: search.default_sort_by,
+            results_url: routes.search_url,
+            clear_url: search_clear_url,
+            results_count: search.results_count,
+            section_id: section.id,
+            search_terms: search.terms,
+            is_search: true
+          %}
+        </div>
 
         {% if search.results_count == 0 %}
           <p class="search-page__empty">{{ 'search.no_results_html' | t: terms: search.terms }}</p>
@@ -34,7 +48,7 @@
           <div class="catalog-grid">
             {% for result in search.results %}
               {% if result.object_type == 'product' %}
-                {% render 'product-card', product: result, heading_level: 'h2', sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw' %}
+                {% render 'catalog-product-item', product: result %}
               {% else %}
                 <article class="search-card">
                   {% assign featured_image = result.image %}
@@ -48,7 +62,7 @@
               {% endif %}
             {% endfor %}
           </div>
-          <div class="search-page__pagination">{{ paginate | default_pagination }}</div>
+          <div class="search-page__pagination catalog-page__pagination">{{ paginate | default_pagination }}</div>
         {% endif %}
       {% endpaginate %}
     {% endif %}
@@ -61,25 +75,79 @@
     padding-inline: clamp(1rem, 5.2vw, 6.25rem);
   }
 
-  .search-page__header {
-    display: grid;
-    gap: var(--space-5);
-    max-width: 52rem;
-    margin-block-end: clamp(2rem, 4vw, 3.5rem);
+  /* Page starts right under the header (the collection page pulls itself up) */
+  .catalog-page.search-page {
+    margin-top: 0;
   }
 
-  .search-page__header h1 {
-    font-size: clamp(2.2rem, 5vw, 4rem);
+  /* Centered header: title, then a small search box */
+  .search-page__header {
+    grid-area: header;
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    width: 100%;
+    margin-inline: auto;
+    margin-block-end: clamp(1.5rem, 3vw, 2.5rem);
+    text-align: center;
+  }
+
+  .search-page__title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
   }
 
   .search-page__form {
     display: flex;
-    max-width: 44rem;
-    gap: var(--space-2);
+    align-items: center;
+    width: 100%;
+    max-width: 24rem;
+    height: 3.2rem;
+    padding-inline: 1.1rem 0.4rem;
+    border: 2px solid var(--color-foreground, #111);
+    border-radius: 1.1rem;
+    background: var(--color-background, #fffcf7);
   }
 
   .search-page__form input[type='search'] {
+    flex: 1;
     min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: inherit;
+    font: inherit;
+    font-size: 0.95rem;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .search-page__form input[type='search']::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .search-page__submit {
+    display: grid;
+    width: 2.6rem;
+    height: 2.6rem;
+    flex: 0 0 auto;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .search-page__submit svg {
+    width: 1.15rem;
+    height: 1.15rem;
   }
 
   .search-card {
@@ -127,6 +195,7 @@
   }
 
   .search-page__empty {
+    grid-area: products;
     border: 1px dashed var(--color-border);
     border-radius: var(--radius-large);
     padding: var(--space-7);
@@ -136,13 +205,6 @@
   @media (max-width: 40rem) {
     .search-page__inner {
       padding-inline: 1rem;
-    }
-  }
-
-  @media (max-width: 30rem) {
-    .search-page__form {
-      align-items: stretch;
-      flex-direction: column;
     }
   }
 {% endstylesheet %}
