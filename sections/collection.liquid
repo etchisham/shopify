@@ -45,15 +45,11 @@
       <div class="catalog-page__toolbar">
 
         {% render 'facets-toolbar',
-          filters: collection.filters,
-          sort_options: collection.sort_options,
-          sort_by: collection.sort_by,
-          default_sort_by: collection.default_sort_by,
-          results_url: collection.url,
-          clear_url: collection.url,
-          results_count: collection.products_count,
-          section_id: section.id
-        %}
+  sort_options: collection.sort_options,
+  sort_by: collection.sort_by,
+  default_sort_by: collection.default_sort_by,
+  results_count: collection.products_count
+%}
 
       </div>
 
