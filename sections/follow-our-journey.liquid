@@ -22,11 +22,13 @@
 
   <div class="hilya-social__grid">
 
-    {%- for i in (1..5) -%}
+    {%- for i in (1..6) -%}
       {%- assign image_key = 'image_' | append: i -%}
       {%- assign social_image = section.settings[image_key] -%}
 
       {%- if social_image != blank -%}
+        {%- assign focal = social_image.presentation.focal_point | default: '50% 50%' -%}
+        {%- assign focal_style = 'object-position: ' | append: focal -%}
         <a
           href="{{ section.settings.instagram_url }}"
           class="hilya-social__image hilya-social__image--{{ i }}"
@@ -39,8 +41,9 @@
             | image_tag:
               loading: 'lazy',
               widths: '300, 500, 700, 900',
-              sizes: '(min-width: 750px) 33vw, 50vw',
-              alt: instagram_alt
+              sizes: '(min-width: 750px) 25vw, 50vw',
+              alt: instagram_alt,
+              style: focal_style
           }}
         </a>
       {%- else -%}
@@ -56,9 +59,11 @@
         <svg class="hilya-social__icon" viewBox="0 0 24 24" aria-hidden="true">
           <defs>
             <linearGradient id="hilya-ig-grad" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0" stop-color="#f9a43a"></stop>
-              <stop offset=".5" stop-color="#e1306c"></stop>
-              <stop offset="1" stop-color="#833ab4"></stop>
+              <stop offset="0" stop-color="#feda75"></stop>
+              <stop offset=".3" stop-color="#fa7e1e"></stop>
+              <stop offset=".55" stop-color="#d62976"></stop>
+              <stop offset=".8" stop-color="#962fbf"></stop>
+              <stop offset="1" stop-color="#4f5bd5"></stop>
             </linearGradient>
           </defs>
           <rect x="3.5" y="3.5" width="17" height="17" rx="4"></rect>
@@ -98,7 +103,7 @@
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 15px max(24px, calc((100vw - 1400px) / 2));
+  padding: 15px max(14px, calc((100vw - 1400px) / 2));
   box-sizing: border-box;
   overflow-x: clip;
   background: #f4f1eb;
@@ -107,18 +112,20 @@
 
 /* =========================
    DESKTOP + TABLET
-   3 columns: [image 1, image 2] [title, image 3, image 4, button] [image 5]
+   4 columns:
+   row 1: [image 1] [   title (2 cols)   ] [image 2]
+   row 2: [image 5] [image 3] [image 4] [image 6]
+   row 3: [image 5] [  Follow Us button  ] [image 6]
 ========================= */
 
 .hilya-social__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
-  /* title row, 9 equal picture rows, button row */
-  grid-template-rows: auto repeat(9, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1.5fr) auto;
   column-gap: 10px;
   row-gap: 0;
-  height: clamp(420px, 40vw, 600px);
-  padding: 28px 32px 24px;
+  height: clamp(440px, 42vw, 620px);
+  padding: 22px 10px 20px;
   box-sizing: border-box;
   background: #f4f1eb;
 }
@@ -137,11 +144,12 @@
   background: #e4dbcf;
 }
 
-.hilya-social__image--1 { grid-column: 1; grid-row: 1 / 6; }
-.hilya-social__image--2 { grid-column: 1; grid-row: 6 / 11; }
-.hilya-social__image--3 { grid-column: 2; grid-row: 2 / 6; }
-.hilya-social__image--4 { grid-column: 2; grid-row: 6 / 11; }
-.hilya-social__image--5 { grid-column: 3; grid-row: 4 / 11; }
+.hilya-social__image--1 { grid-column: 1; grid-row: 1; }
+.hilya-social__image--2 { grid-column: 4; grid-row: 1; }
+.hilya-social__image--3 { grid-column: 2; grid-row: 2; }
+.hilya-social__image--4 { grid-column: 3; grid-row: 2; }
+.hilya-social__image--5 { grid-column: 1; grid-row: 2 / 4; }
+.hilya-social__image--6 { grid-column: 4; grid-row: 2 / 4; }
 
 .hilya-social__image img {
   position: absolute;
@@ -158,10 +166,10 @@
 }
 
 
-/* TITLE (top of the center column) */
+/* TITLE (top of the center) */
 
 .hilya-social__head {
-  grid-column: 2;
+  grid-column: 2 / 4;
   grid-row: 1;
   display: flex;
   flex-direction: column;
@@ -206,37 +214,64 @@
   stroke-linejoin: round;
 }
 
-/* The description is not shown in the new design.
+/* The description is not shown in this design.
    Delete this rule if you want it to appear under the name again. */
 .hilya-social__text {
   display: none;
 }
 
 
-/* BUTTON (bottom of the center column) */
+/* BUTTON (bottom of the center) - Instagram colors */
 
 .hilya-social__button {
-  grid-column: 2;
-  grid-row: 11;
+  grid-column: 2 / 4;
+  grid-row: 3;
   justify-self: center;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 36px;
-  border: 1px solid #b8975a;
+  padding: 13px 38px;
+  border: 2px solid transparent;
   border-radius: 10px;
-  background: #2a2420;
-  color: #fff;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5) border-box;
+  overflow: hidden;
+  isolation: isolate;
   text-decoration: none;
   font-size: 14px;
   line-height: 1;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: .03em;
-  transition: background-color .3s ease, color .3s ease;
 }
 
-.hilya-social__button:hover {
-  background: #b8975a;
+.hilya-social__button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.hilya-social__button span {
+  background: linear-gradient(45deg, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: color .3s ease, -webkit-text-fill-color .3s ease;
+}
+
+.hilya-social__button:hover::before {
+  opacity: 1;
+}
+
+.hilya-social__button:hover span {
+  background: none;
+  -webkit-text-fill-color: #fff;
   color: #fff;
 }
 
@@ -245,8 +280,8 @@
 
 @media (min-width: 1500px) {
   .hilya-social {
-    padding-left: max(32px, calc((100vw - 1500px) / 2));
-    padding-right: max(32px, calc((100vw - 1500px) / 2));
+    padding-left: max(14px, calc((100vw - 1500px) / 2));
+    padding-right: max(14px, calc((100vw - 1500px) / 2));
   }
 }
 
@@ -255,12 +290,12 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .hilya-social {
-    padding-left: 28px;
-    padding-right: 28px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .hilya-social__grid {
-    padding: 22px 20px 20px;
+    padding: 20px 6px 18px;
   }
 
   .hilya-social__eyebrow {
@@ -272,21 +307,22 @@
 
 /* =========================
    MOBILE
-   2 columns: title on top, 5 pictures, one button at the bottom
+   2 columns, 6 pictures staggered big / small, title on top, button at the bottom
 ========================= */
 
 @media (max-width: 749px) {
 
   .hilya-social {
-    padding: 10px 1rem;
+    padding: 10px 6px;
   }
 
   .hilya-social__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    /* title row, 7 picture rows, button row */
-    grid-template-rows: auto repeat(7, clamp(56px, 18vw, 90px)) auto;
+    /* title row, 17 picture rows, button row */
+    grid-template-rows: auto repeat(17, clamp(26px, 9.5vw, 48px)) auto;
     height: auto;
-    padding: 24px 14px 18px;
+    padding: 20px 4px 16px;
+    column-gap: 8px;
   }
 
   .hilya-social__head {
@@ -310,16 +346,20 @@
     height: 30px;
   }
 
-  .hilya-social__image--1 { grid-column: 1; grid-row: 2 / 5; }
-  .hilya-social__image--3 { grid-column: 1; grid-row: 5 / 7; }
-  .hilya-social__image--5 { grid-column: 1; grid-row: 7 / 9; }
-  .hilya-social__image--2 { grid-column: 2; grid-row: 2 / 5; }
-  .hilya-social__image--4 { grid-column: 2; grid-row: 5 / 9; }
+  /* left column: big, small, big */
+  .hilya-social__image--1 { grid-column: 1; grid-row: 2 / 8; }
+  .hilya-social__image--3 { grid-column: 1; grid-row: 8 / 13; }
+  .hilya-social__image--5 { grid-column: 1; grid-row: 13 / 19; }
+
+  /* right column: small, big, small */
+  .hilya-social__image--2 { grid-column: 2; grid-row: 2 / 7; }
+  .hilya-social__image--4 { grid-column: 2; grid-row: 7 / 13; }
+  .hilya-social__image--6 { grid-column: 2; grid-row: 13 / 18; }
 
   .hilya-social__button {
     grid-column: 1 / -1;
-    grid-row: 9;
-    padding: 14px 36px;
+    grid-row: 19;
+    padding: 13px 38px;
   }
 }
 
@@ -358,7 +398,9 @@
 /* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
-  .hilya-social__image img {
+  .hilya-social__image img,
+  .hilya-social__button::before,
+  .hilya-social__button span {
     transition: none;
   }
 }
@@ -376,29 +418,38 @@
       "label": "Instagram link"
     },
     {
+      "type": "header",
+      "content": "Images (set focal point to control crop)"
+    },
+    {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1 (desktop: left, tall / mobile: top left, tall)"
+      "label": "Image 1 (desktop: top left / mobile: left, big)"
     },
     {
       "type": "image_picker",
       "id": "image_2",
-      "label": "Image 2 (desktop: left, bottom / mobile: top right)"
+      "label": "Image 2 (desktop: top right / mobile: right, small)"
     },
     {
       "type": "image_picker",
       "id": "image_3",
-      "label": "Image 3 (desktop: center, top / mobile: left, middle)"
+      "label": "Image 3 (desktop: under title, left / mobile: left, small)"
     },
     {
       "type": "image_picker",
       "id": "image_4",
-      "label": "Image 4 (desktop: center, bottom / mobile: right, tall)"
+      "label": "Image 4 (desktop: under title, right / mobile: right, big)"
     },
     {
       "type": "image_picker",
       "id": "image_5",
-      "label": "Image 5 (desktop: right, tall / mobile: left, bottom)"
+      "label": "Image 5 (desktop: far left, tall / mobile: left, big)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image 6 (desktop: far right, tall / mobile: right, small)"
     },
     {
       "type": "header",
