@@ -78,6 +78,46 @@
   {% endif %}
 </section>
 
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+    const grid = section && section.querySelector('.featured-collection__grid');
+
+    if (!grid) return;
+
+    const prev = section.querySelector('.featured-collection__nav--prev');
+    const next = section.querySelector('.featured-collection__nav--next');
+
+    const update = () => {
+      const max = grid.scrollWidth - grid.clientWidth;
+      const rtl = getComputedStyle(grid).direction === 'rtl';
+      /* المسافة من الحافة الشمال الفعلية (شغال في العربي والإنجليزي) */
+      const x = rtl ? max + grid.scrollLeft : grid.scrollLeft;
+
+      if (prev) prev.classList.toggle('is-visible', max > 4 && x > 4);
+      if (next) next.classList.toggle('is-visible', max > 4 && x < max - 4);
+    };
+
+    /* بيحرّك بعدد كروت كاملة بحجم الشاشة الظاهرة (كارت واحد على الأقل) */
+    const step = () => {
+      const card = grid.querySelector('.featured-collection__product');
+      if (!card) return grid.clientWidth * 0.8;
+
+      const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+      const cardStep = card.getBoundingClientRect().width + gap;
+      return Math.max(1, Math.floor(grid.clientWidth / cardStep)) * cardStep;
+    };
+
+    if (prev) prev.addEventListener('click', () => grid.scrollBy({ left: -step(), behavior: 'smooth' }));
+    if (next) next.addEventListener('click', () => grid.scrollBy({ left: step(), behavior: 'smooth' }));
+
+    grid.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    window.addEventListener('load', update);
+    update();
+  })();
+</script>
+
 {% stylesheet %}
 
 /* SECTION */
