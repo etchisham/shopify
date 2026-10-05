@@ -489,25 +489,27 @@
 </script>
 
 {% stylesheet %}
+```css
 /* =========================
    SECTION
-   Same outer width as before: full-width band, content centered up to 1400px.
 ========================= */
 
 .custom-order {
   position: relative;
-  display: grid;
   width: 100%;
   max-width: 1920px;
   margin-inline: auto;
-  aspect-ratio: 1920 / 600;
   padding: 15px 0;
   box-sizing: border-box;
   isolation: isolate;
   overflow: hidden;
 }
 
-/* hero: الارتفاع بيتحسب من شكل الصورة، فبتكبر وتصغر مع الشاشة بنفس النسبة */
+
+/* =========================
+   MAIN IMAGE / HERO
+========================= */
+
 .custom-order__inner {
   position: relative;
   display: flex;
@@ -515,18 +517,33 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  aspect-ratio: 2.6 / 1;
+
+  width: 100%;
+  min-width: 0;
+
+  /*
+    The image now controls the section height.
+    No conflicting aspect-ratio on the parent.
+  */
+  aspect-ratio: 1920 / 600;
+
   min-height: 0;
-  max-height: none;
   padding: 32px 28px;
+
   overflow: hidden;
   background: #d9d0c2;
   box-sizing: border-box;
 }
 
+
+/* =========================
+   BACKGROUND IMAGE
+========================= */
+
 .custom-order__media {
   position: absolute;
   inset: 0;
+  z-index: 0;
   overflow: hidden;
 }
 
@@ -534,9 +551,12 @@
 .custom-order__placeholder {
   position: absolute;
   inset: 0;
+
   display: block;
+
   width: 100%;
   height: 100%;
+
   object-fit: cover;
   object-position: center;
 }
@@ -549,69 +569,104 @@
 .custom-order__content {
   position: relative;
   z-index: 1;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
   width: min(100%, 540px);
+
   padding: 30px 40px 32px;
+
   box-sizing: border-box;
+
   border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 12px;
+
   background: rgba(247, 244, 238, 0.28);
+
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
+
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+
   color: #111;
   text-align: center;
-  /* soft light halo keeps the dark text readable on a see-through panel */
-  text-shadow: 0 0 14px rgba(255, 252, 247, 0.7), 0 0 4px rgba(255, 252, 247, 0.5);
+
+  text-shadow:
+    0 0 14px rgba(255, 252, 247, 0.7),
+    0 0 4px rgba(255, 252, 247, 0.5);
 }
 
 .custom-order__eyebrow {
   margin: 0 0 14px;
+
   color: #111;
+
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   line-height: 1.2;
   font-weight: 500;
+
   letter-spacing: .3em;
   text-transform: uppercase;
 }
 
 .custom-order__heading {
   margin: 0 0 12px;
+
   color: #111;
+
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   font-size: clamp(30px, 3vw, 42px);
   font-weight: 400;
   line-height: 1.15;
+
   letter-spacing: -.01em;
 }
 
 .custom-order__text {
   max-width: 420px;
+
   margin: 0 0 22px;
+
   color: #111;
+
   font-size: 15px;
   line-height: 1.7;
 }
+
+
+/* =========================
+   MAIN BUTTON
+========================= */
 
 .custom-order__button {
   display: inline-flex;
   align-items: center;
   gap: 12px;
+
   padding: 16px 30px;
+
   border: 1px solid #111;
+
   background: #111;
   color: #fff;
+
   font-family: inherit;
   font-size: 14px;
   line-height: 1;
   font-weight: 500;
+
   letter-spacing: .03em;
+
   text-shadow: none;
+
   cursor: pointer;
-  transition: background-color .3s ease, color .3s ease;
+
+  transition:
+    background-color .3s ease,
+    color .3s ease;
 }
 
 .custom-order__button:hover {
@@ -626,6 +681,7 @@
 
 .custom-order__arrow {
   flex-shrink: 0;
+
   transition: transform .3s ease;
 }
 
@@ -635,18 +691,22 @@
 
 
 /* =========================
-   THREE ROUND BADGES (on the picture, under the panel)
+   THREE ROUND FEATURES
 ========================= */
 
 .custom-order__features {
   position: relative;
   z-index: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 26px;
+
   margin: 0;
   padding: 0;
+
   list-style: none;
 }
 
@@ -655,20 +715,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
+
   width: 110px;
   height: 110px;
+
   padding: 12px;
+
   box-sizing: border-box;
+
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 50%;
+
   background: rgba(247, 244, 238, 0.24);
+
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
   text-align: center;
-  text-shadow: 0 0 12px rgba(255, 252, 247, 0.7), 0 0 4px rgba(255, 252, 247, 0.5);
-  transition: transform .3s ease, box-shadow .3s ease;
+
+  text-shadow:
+    0 0 12px rgba(255, 252, 247, 0.7),
+    0 0 4px rgba(255, 252, 247, 0.5);
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
 }
 
 .custom-order__feature:hover {
@@ -678,36 +753,56 @@
 
 .custom-order__feature svg {
   flex-shrink: 0;
+
   width: 26px;
   height: 26px;
+
   fill: none;
   stroke: #111;
+
   stroke-width: 1.2;
+
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .custom-order__feature span {
   max-width: 88px;
+
   color: #111;
+
   font-size: 11.5px;
   line-height: 1.3;
+
   letter-spacing: .02em;
 }
 
 
-/* TABLET */
+/* =========================
+   TABLET
+========================= */
 
 @media (min-width: 750px) and (max-width: 1100px) {
 
+  .custom-order {
+    padding: 12px 0;
+  }
+
   .custom-order__inner {
+    /*
+      Slightly taller ratio for tablet screens
+      so the content has enough vertical space.
+    */
     aspect-ratio: 2.15 / 1;
-    min-height: 0;
+
     padding: 28px 24px;
+
+    gap: 18px;
   }
 
   .custom-order__content {
     width: min(100%, 480px);
+
     padding: 24px 30px 26px;
   }
 
@@ -722,27 +817,39 @@
 }
 
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 749px) {
 
-  /* the picture now runs edge to edge on phones */
   .custom-order {
+    width: 100%;
+    max-width: none;
+
     padding: 0;
   }
 
-  /* على الموبايل ارتفاع ثابت أطول بدل ما يتحسب من الصورة */
   .custom-order__inner {
-  aspect-ratio: 1 / 1.08;
-  max-height: none;
-  min-height: 0;
-  gap: 14px;
-  padding: 22px 14px;
-}
+    width: 100%;
+
+    /*
+      Keep the taller mobile composition.
+    */
+    aspect-ratio: 1 / 1.08;
+
+    min-height: 0;
+
+    gap: 14px;
+
+    padding: 22px 14px;
+  }
 
   .custom-order__content {
     width: 100%;
+
     padding: 20px 18px 22px;
+
     border-radius: 14px;
   }
 
@@ -753,12 +860,14 @@
 
   .custom-order__heading {
     margin-bottom: 8px;
+
     font-size: 25px;
     line-height: 1.2;
   }
 
   .custom-order__text {
     margin-bottom: 16px;
+
     font-size: 13px;
     line-height: 1.6;
   }
@@ -770,17 +879,24 @@
 
   .custom-order__features {
     width: 100%;
+
     gap: clamp(8px, 3vw, 14px);
   }
 
   .custom-order__feature {
     flex: 0 0 auto;
+
     width: clamp(80px, 26vw, 104px);
+
     height: auto;
     aspect-ratio: 1;
+
     min-height: 0;
+
     gap: 5px;
+
     padding: 8px;
+
     border-radius: 50%;
   }
 
@@ -791,6 +907,7 @@
 
   .custom-order__feature span {
     max-width: 72px;
+
     font-size: 10px;
     line-height: 1.25;
   }
@@ -798,8 +915,7 @@
 
 
 /* =========================
-   POP-UP (center of the screen)
-   z-index is above the sticky header (99999) and the mobile menu (100000).
+   POP-UP
 ========================= */
 
 html.co-lock {
@@ -809,47 +925,69 @@ html.co-lock {
 .co-drawer {
   position: fixed;
   inset: 0;
+
   z-index: 2147483000;
+
   display: grid;
   place-items: center;
+
   padding: 16px;
+
   box-sizing: border-box;
+
   visibility: hidden;
   opacity: 0;
+
   pointer-events: none;
-  transition: opacity .3s ease, visibility 0s linear .3s;
+
+  transition:
+    opacity .3s ease,
+    visibility 0s linear .3s;
 }
 
 .co-drawer.is-open {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
+
   transition-delay: 0s;
 }
 
 .co-drawer__overlay {
   position: absolute;
   inset: 0;
+
   background: rgba(17, 17, 17, 0.5);
+
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
 }
 
 .co-drawer__panel {
   position: relative;
+
   width: min(100%, 460px);
+
   max-height: calc(100vh - 32px);
   max-height: calc(100dvh - 32px);
+
   overflow-x: hidden;
   overflow-y: auto;
+
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 20px;
+
   background: rgba(251, 248, 242, 0.9);
+
   -webkit-backdrop-filter: blur(18px) saturate(1.1);
   backdrop-filter: blur(18px) saturate(1.1);
+
   color: #111;
+
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+
   transform: translateY(14px) scale(.97);
+
   transition: transform .3s ease;
 }
 
@@ -863,19 +1001,30 @@ html.co-lock {
 
 .co-drawer__close {
   position: absolute;
+
   top: 14px;
   inset-inline-end: 14px;
+
   z-index: 1;
+
   display: grid;
+
   width: 34px;
   height: 34px;
+
   place-items: center;
+
   padding: 0;
+
   border: 0;
   border-radius: 50%;
+
   background: rgba(17, 17, 17, 0.07);
+
   color: #111;
+
   cursor: pointer;
+
   transition: background-color .2s ease;
 }
 
@@ -894,9 +1043,13 @@ html.co-lock {
 
 .co-drawer__title {
   margin: 0 0 10px;
+
   padding-inline-end: 24px;
+
   color: #111;
+
   font-family: "Cormorant Garamond", "Times New Roman", serif;
+
   font-size: 32px;
   font-weight: 400;
   font-style: italic;
@@ -905,13 +1058,17 @@ html.co-lock {
 
 .co-drawer__intro {
   margin: 0 0 24px;
+
   color: #444;
+
   font-size: 13px;
   line-height: 1.7;
 }
 
 
-/* FORM */
+/* =========================
+   FORM
+========================= */
 
 .co-field {
   margin-bottom: 18px;
@@ -919,33 +1076,47 @@ html.co-lock {
 
 .co-label {
   display: block;
+
   margin-bottom: 8px;
+
   color: #111;
+
   font-family: Arial, Helvetica, sans-serif;
+
   font-size: 10px;
   line-height: 1.3;
   font-weight: 500;
+
   letter-spacing: .14em;
+
   text-transform: uppercase;
 }
 
 .co-input {
   display: block;
+
   width: 100%;
+
   padding: 14px;
+
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+
   background: #fff;
   color: #111;
+
   font-family: inherit;
-  font-size: 16px; /* 16px stops the zoom on iPhone */
+  font-size: 16px;
   line-height: 1.4;
+
   box-sizing: border-box;
 }
 
 .co-input:focus {
   outline: none;
+
   border-color: #111;
+
   box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
 }
 
@@ -965,7 +1136,9 @@ html.co-lock {
 
 .co-error {
   margin: 6px 0 0;
+
   color: #b3261e;
+
   font-size: 12px;
   line-height: 1.4;
 }
@@ -974,50 +1147,76 @@ html.co-lock {
   margin: 0 0 14px;
 }
 
-/* Spam trap: kept inside the panel so it never creates a sideways scroll */
+
+/* =========================
+   SPAM TRAP
+========================= */
+
 .co-trap {
   position: absolute;
+
   top: 0;
   left: 0;
+
   width: 1px;
   height: 1px;
+
   overflow: hidden;
+
   opacity: 0;
+
   pointer-events: none;
 }
 
 
-/* FILE PICKER */
+/* =========================
+   FILE PICKER
+========================= */
 
 .co-file {
   display: flex;
   align-items: center;
+
   gap: 12px;
+
   cursor: pointer;
 }
 
 .co-file__input {
   position: absolute;
+
   width: 1px;
   height: 1px;
+
   overflow: hidden;
+
   opacity: 0;
 }
 
 .co-file__button {
   flex-shrink: 0;
+
   padding: 11px 16px;
+
   border: 1px solid #111;
   border-radius: 8px;
+
   background: #111;
   color: #fff;
+
   font-family: Arial, Helvetica, sans-serif;
+
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
+
   letter-spacing: .14em;
+
   text-transform: uppercase;
-  transition: background-color .3s ease, color .3s ease;
+
+  transition:
+    background-color .3s ease,
+    color .3s ease;
 }
 
 .co-file:hover .co-file__button,
@@ -1028,32 +1227,50 @@ html.co-lock {
 
 .co-file__name {
   min-width: 0;
+
   overflow: hidden;
+
   color: #555;
+
   font-size: 12px;
+
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 
-/* SUBMIT / SUCCESS */
+/* =========================
+   SUBMIT / SUCCESS
+========================= */
 
 .co-submit {
   display: block;
+
   width: 100%;
+
   padding: 16px;
+
   border: 1px solid #111;
   border-radius: 10px;
+
   background: #111;
   color: #fff;
+
   font-family: Arial, Helvetica, sans-serif;
+
   font-size: 11px;
   line-height: 1;
   font-weight: 500;
+
   letter-spacing: .18em;
+
   text-transform: uppercase;
+
   cursor: pointer;
-  transition: background-color .3s ease, color .3s ease;
+
+  transition:
+    background-color .3s ease,
+    color .3s ease;
 }
 
 .co-submit:hover {
@@ -1068,13 +1285,17 @@ html.co-lock {
 
 .co-success {
   padding-top: 6px;
+
   text-align: center;
 }
 
 .co-success__title {
   margin: 0 0 10px;
+
   color: #111;
+
   font-family: "Cormorant Garamond", "Times New Roman", serif;
+
   font-size: 28px;
   font-weight: 400;
   font-style: italic;
@@ -1082,12 +1303,20 @@ html.co-lock {
 
 .co-success__text {
   margin: 0 0 26px;
+
   color: #444;
+
   font-size: 13px;
   line-height: 1.7;
 }
 
+
+/* =========================
+   POP-UP MOBILE
+========================= */
+
 @media (max-width: 749px) {
+
   .co-drawer {
     padding: 12px;
   }
@@ -1144,6 +1373,7 @@ html.co-lock {
 }
 
 @media (max-width: 749px) {
+
   [dir="rtl"] .custom-order__eyebrow {
     font-size: 12px;
   }
@@ -1167,7 +1397,10 @@ html.co-lock {
   }
 }
 
-/* pop-up */
+
+/* =========================
+   POP-UP RTL
+========================= */
 
 [dir="rtl"] .co-submit {
   font-size: 13px;
@@ -1191,7 +1424,13 @@ html.co-lock {
   font-size: 15px;
 }
 
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
 @media (prefers-reduced-motion: reduce) {
+
   .co-drawer,
   .co-drawer__panel,
   .custom-order__feature,
@@ -1199,6 +1438,8 @@ html.co-lock {
     transition: none;
   }
 }
+```
+
 
 {% endstylesheet %}
 
