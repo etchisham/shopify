@@ -8,7 +8,21 @@
   @param {string} [default_sort_by] - Default sort value
 {% enddoc %}
 
-<div class="hilya-filters">
+<div
+  class="hilya-filters"
+  data-hilya-filters-text
+  data-regular-price="{{ 'products.product.regular_price' | t | escape }}"
+  data-percent-off="{{ 'products.product.discount' | t: percent: '__PERCENT__' | escape }}"
+  data-sold-out="{{ 'products.product.sold_out' | t | escape }}"
+  data-previous-page="{{ 'collections.previous_page' | t | escape }}"
+  data-next-page="{{ 'collections.next_page' | t | escape }}"
+  data-page="{{ 'meta.page' | t: number: '__NUMBER__' | escape }}"
+  data-filtered-by="{{ 'facets.filtered_by' | t | escape }}"
+  data-clear-all="{{ 'facets.clear_all_caps' | t | escape }}"
+  data-remove-filter="{{ 'facets.remove_filter' | t: label: '__LABEL__' | escape }}"
+  data-from="{{ 'facets.from' | t | escape }}"
+  data-to="{{ 'facets.to' | t | escape }}"
+>
 
   <!-- =========================================
        MOBILE FILTER / PRODUCTS / SORT BAR
@@ -29,7 +43,7 @@
       </span>
 
       <span class="hilya-filters__filter-text">
-        FILTERS
+        {{ 'facets.filters_caps' | t }}
       </span>
 
       <span class="hilya-filters__count" data-filter-count hidden>
@@ -41,7 +55,7 @@
       <span data-filter-results>
         {{ results_count }}
       </span>
-      PRODUCTS
+      {{ 'facets.products_caps' | t }}
     </span>
 
     <div
@@ -50,7 +64,7 @@
     >
 
       <span class="hilya-filters__sort-label">
-        Sort by
+        {{ 'collections.sort_by' | t }}
       </span>
 
       {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
@@ -110,7 +124,7 @@
   <aside class="hilya-filter-sidebar">
 
     <div class="hilya-filter-sidebar__heading">
-      <h2>Filters</h2>
+      <h2>{{ 'facets.filters' | t }}</h2>
     </div>
 
     <div class="hilya-filters__active" data-active-filters hidden></div>
@@ -122,7 +136,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>Availability</span>
+          <span>{{ 'facets.availability' | t }}</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -130,12 +144,12 @@
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="availability" value="in_stock">
-            <span>In stock</span>
+            <span>{{ 'facets.in_stock' | t }}</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="availability" value="out_of_stock">
-            <span>Out of stock</span>
+            <span>{{ 'facets.out_of_stock' | t }}</span>
           </label>
 
         </div>
@@ -148,7 +162,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>Price</span>
+          <span>{{ 'facets.price' | t }}</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -168,7 +182,7 @@
               value="0"
               step="1"
               data-price-min
-              aria-label="Minimum price"
+              aria-label="{{ 'facets.minimum_price' | t | escape }}"
             >
 
             <input
@@ -179,7 +193,7 @@
               value="1000"
               step="1"
               data-price-max
-              aria-label="Maximum price"
+              aria-label="{{ 'facets.maximum_price' | t | escape }}"
             >
 
           </div>
@@ -197,12 +211,12 @@
                 value="0"
                 inputmode="numeric"
                 data-price-min-input
-                aria-label="Minimum price"
+                aria-label="{{ 'facets.minimum_price' | t | escape }}"
               >
             </label>
 
             <span class="hilya-price-values__to">
-              to
+              {{ 'facets.price_to' | t }}
             </span>
 
             <label class="hilya-price-input hilya-price-input--max">
@@ -216,7 +230,7 @@
                 value="1000"
                 inputmode="numeric"
                 data-price-max-input
-                aria-label="Maximum price"
+                aria-label="{{ 'facets.maximum_price' | t | escape }}"
               >
             </label>
 
@@ -232,7 +246,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>Color</span>
+          <span>{{ 'facets.color' | t }}</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -240,12 +254,12 @@
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="color" value="Gold Plated">
-            <span>Gold Plated</span>
+            <span>{{ 'facets.gold_plated' | t }}</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="color" value="Silver Plated">
-            <span>Silver Plated</span>
+            <span>{{ 'facets.silver_plated' | t }}</span>
           </label>
 
         </div>
@@ -258,7 +272,7 @@
       <div class="hilya-filter-group is-open">
 
         <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>Product Type</span>
+          <span>{{ 'facets.product_type' | t }}</span>
           <span class="hilya-filter-chevron" aria-hidden="true"></span>
         </button>
 
@@ -266,27 +280,27 @@
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Necklaces">
-            <span>Necklaces</span>
+            <span>{{ 'navigation.necklaces' | t }}</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Rings">
-            <span>Rings</span>
+            <span>{{ 'navigation.rings' | t }}</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Pendants">
-            <span>Pendants</span>
+            <span>{{ 'navigation.pendants' | t }}</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Bracelets">
-            <span>Bracelets</span>
+            <span>{{ 'navigation.bracelets' | t }}</span>
           </label>
 
           <label class="hilya-filter-option">
             <input type="checkbox" name="product_type" value="Keychains">
-            <span>Keychains</span>
+            <span>{{ 'navigation.keychains' | t }}</span>
           </label>
 
         </div>
@@ -321,11 +335,11 @@
         <div class="hilya-filter-drawer__title">
 
           <span class="hilya-filter-drawer__eyebrow">
-            COLLECTION
+            {{ 'facets.collection_eyebrow' | t }}
           </span>
 
           <h2>
-            FILTERS
+            {{ 'facets.filters_caps' | t }}
           </h2>
 
         </div>
@@ -336,7 +350,7 @@
         type="button"
         class="hilya-filter-drawer__close"
         data-filter-close
-        aria-label="Close filters"
+        aria-label="{{ 'accessibility.close_filters' | t | escape }}"
       >
         ×
       </button>
@@ -369,7 +383,7 @@
         {{ results_count }}
       </span>
 
-      PRODUCTS
+      {{ 'facets.products_caps' | t }}
 
     </span>
 
@@ -379,7 +393,7 @@
     >
 
       <span class="hilya-filters__sort-label">
-        Sort by
+        {{ 'collections.sort_by' | t }}
       </span>
 
       {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
@@ -470,6 +484,43 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!form) {
     return;
   }
+
+  /* =========================================
+     TEXTS (translated in Liquid, read from the page)
+  ========================================= */
+
+  const textRoot = document.querySelector('[data-hilya-filters-text]');
+  const textData = textRoot ? textRoot.dataset : {};
+
+  const T = {
+    regularPrice: textData.regularPrice || 'Regular price',
+    percentOff: textData.percentOff || '__PERCENT__% OFF',
+    soldOut: textData.soldOut || 'Sold out',
+    previousPage: textData.previousPage || 'Previous page',
+    nextPage: textData.nextPage || 'Next page',
+    page: textData.page || 'Page __NUMBER__',
+    filteredBy: textData.filteredBy || 'FILTERED BY',
+    clearAll: textData.clearAll || 'CLEAR ALL',
+    removeFilter: textData.removeFilter || 'Remove __LABEL__',
+    from: textData.from || 'From',
+    to: textData.to || 'To'
+  };
+
+  /* Label of a filter option as shown on the page (so chips use the translated text) */
+  function labelFor(inputName, value, fallback) {
+    const wanted = String(value || '').trim().toLowerCase();
+    const input = Array.from(
+      form.querySelectorAll('input[name="' + inputName + '"]')
+    ).find(function (candidate) {
+      return String(candidate.value || '').trim().toLowerCase() === wanted;
+    });
+    const span = input && input.parentElement
+      ? input.parentElement.querySelector('span')
+      : null;
+
+    return (span && span.textContent.trim()) || fallback;
+  }
+
 
 
   /* =========================================
@@ -881,7 +932,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       html +=
         '<span class="visually-hidden">' +
-          'Regular price' +
+          T.regularPrice +
         '</span>' +
 
         '<s class="price__compare">' +
@@ -947,7 +998,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     badge.dataset.variantDiscount = '';
 
-    badge.textContent = percentage + '% OFF';
+    badge.textContent = T.percentOff.replace('__PERCENT__', percentage);
 
     media.appendChild(badge);
 
@@ -986,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       badge.dataset.variantSoldOut = '';
 
-      badge.textContent = 'Sold out';
+      badge.textContent = T.soldOut;
 
       media.appendChild(badge);
 
@@ -2082,7 +2133,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '<li><button type="button"' +
       ' class="hilya-pagination__item hilya-pagination__item--arrow"' +
       ' data-page="' + (current - 1) + '"' +
-      ' aria-label="Previous page"' +
+      ' aria-label="' + T.previousPage + '"' +
       (current <= 1 ? ' disabled' : '') +
       '>' + ARROW_LEFT + '</button></li>';
 
@@ -2105,7 +2156,7 @@ document.addEventListener('DOMContentLoaded', function () {
         html +=
           '<li><button type="button" class="hilya-pagination__item"' +
           ' data-page="' + entry + '"' +
-          ' aria-label="Page ' + entry + '">' +
+          ' aria-label="' + T.page.replace('__NUMBER__', entry) + '">' +
           entry +
           '</button></li>';
 
@@ -2117,7 +2168,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '<li><button type="button"' +
       ' class="hilya-pagination__item hilya-pagination__item--arrow"' +
       ' data-page="' + (current + 1) + '"' +
-      ' aria-label="Next page"' +
+      ' aria-label="' + T.nextPage + '"' +
       (current >= total ? ' disabled' : '') +
       '>' + ARROW_RIGHT + '</button></li>';
 
@@ -2534,7 +2585,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       title.className = 'hilya-filters__active-label';
 
-      title.textContent = 'FILTERED BY';
+      title.textContent = T.filteredBy;
 
       container.appendChild(title);
 
@@ -2543,7 +2594,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addChip(
           container,
-          value === 'in_stock' ? 'In stock' : 'Out of stock',
+          labelFor('availability', value, value === 'in_stock' ? 'In stock' : 'Out of stock'),
           'availability',
           value
         );
@@ -2555,7 +2606,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addChip(
           container,
-          value === 'gold plated' ? 'Gold Plated' : 'Silver Plated',
+          labelFor('color', value, value === 'gold plated' ? 'Gold Plated' : 'Silver Plated'),
           'color',
           value
         );
@@ -2567,7 +2618,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addChip(
           container,
-          value.charAt(0).toUpperCase() + value.slice(1),
+          labelFor('product_type', value, value.charAt(0).toUpperCase() + value.slice(1)),
           'product_type',
           value
         );
@@ -2579,7 +2630,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addChip(
           container,
-          'From EGP ' + minPrice.toLocaleString('en-US'),
+          T.from + ' EGP ' + minPrice.toLocaleString('en-US'),
           'price_min',
           '0'
         );
@@ -2591,7 +2642,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addChip(
           container,
-          'To EGP ' + maxPrice.toLocaleString('en-US'),
+          T.to + ' EGP ' + maxPrice.toLocaleString('en-US'),
           'price_max',
           String(filterPriceMax)
         );
@@ -2605,7 +2656,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       clear.className = 'hilya-filters__clear';
 
-      clear.textContent = 'CLEAR ALL';
+      clear.textContent = T.clearAll;
 
       clear.addEventListener('click', clearFilters);
 
@@ -2643,7 +2694,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     chip.appendChild(removeSpan);
 
-    chip.setAttribute('aria-label', 'Remove ' + label);
+    chip.setAttribute('aria-label', T.removeFilter.replace('__LABEL__', label));
 
 
     chip.addEventListener('click', function () {
@@ -4178,6 +4229,75 @@ body.hilya-filter-lock {
     transition: none;
   }
 
+}
+
+/* =========================================
+   ARABIC / RTL
+========================================= */
+
+/* Price slider and the two price boxes stay left-to-right (min on the left) */
+[dir="rtl"] .hilya-price-slider,
+[dir="rtl"] .hilya-price-values {
+  direction: ltr;
+}
+
+[dir="rtl"] .hilya-filter-group__toggle,
+[dir="rtl"] .hilya-filters__sort-trigger,
+[dir="rtl"] .hilya-filters__sort-option {
+  text-align: right;
+}
+
+/* The sort menu opens toward the inside of the page */
+[dir="rtl"] .hilya-filters__sort-menu {
+  right: auto;
+  left: 0;
+}
+
+/* Filter drawer on phones slides in from the right in Arabic */
+[dir="rtl"] .hilya-filter-drawer {
+  right: 0;
+  left: auto;
+  transform: translateX(100%);
+}
+
+[dir="rtl"] .hilya-filter-drawer.is-open {
+  transform: translateX(0);
+}
+
+/* Arabic needs bigger letters than these very small English sizes */
+html[dir="rtl"] .hilya-filter-sidebar__heading h2 { font-size: 1.15rem; }
+html[dir="rtl"] .hilya-filters__active-label { font-size: .75rem; }
+html[dir="rtl"] .hilya-filter-chip { font-size: .8rem; }
+html[dir="rtl"] .hilya-filter-chip__remove { font-size: .95rem; }
+html[dir="rtl"] .hilya-filters__clear { font-size: .8rem; }
+html[dir="rtl"] .hilya-filter-group__toggle { font-size: .95rem; }
+html[dir="rtl"] .hilya-filter-option { font-size: .92rem; }
+html[dir="rtl"] .hilya-price-values { font-size: .85rem; }
+html[dir="rtl"] .hilya-price-input span { font-size: .75rem; }
+html[dir="rtl"] .hilya-price-input input { font-size: .85rem; }
+html[dir="rtl"] .hilya-price-values__to { font-size: .8rem; }
+html[dir="rtl"] .hilya-filters__results { font-size: .85rem; }
+html[dir="rtl"] .hilya-filters__sort-label { font-size: .82rem; }
+html[dir="rtl"] .hilya-filters__sort-trigger { font-size: .85rem; }
+html[dir="rtl"] .hilya-filters__sort-option { font-size: .85rem; }
+html[dir="rtl"] .hilya-filter-drawer__eyebrow { font-size: .75rem; }
+html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
+
+@media (max-width: 40rem) {
+  html[dir="rtl"] .hilya-filters__mobile-button { font-size: .8rem; }
+  html[dir="rtl"] .hilya-filters__mobile-results { font-size: .78rem; }
+  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-label,
+  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-trigger { font-size: .75rem; }
+  html[dir="rtl"] .hilya-filter-drawer__header .hilya-filters__active-label { font-size: .72rem; }
+  html[dir="rtl"] .hilya-filter-drawer__header .hilya-filter-chip { font-size: .78rem; }
+  html[dir="rtl"] .hilya-filter-drawer__header .hilya-filters__clear { font-size: .78rem; }
+}
+
+@media (max-width: 27rem) {
+  html[dir="rtl"] .hilya-filters__mobile-button { font-size: .75rem; }
+  html[dir="rtl"] .hilya-filters__mobile-results { font-size: .72rem; }
+  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-label,
+  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-trigger { font-size: .7rem; }
 }
 
 {% endstylesheet %}
