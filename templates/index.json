@@ -15,7 +15,7 @@
       "name": "t:general.hero",
       "settings": {
         "image": "shopify://shop_images/ChatGPT_Image_Sep_27_2026_09_26_16_PM.png",
-        "overlay_opacity": 10,
+        "overlay_opacity": 0,
         "eyebrow": "TIMELESS JEWELRY",
         "eyebrow_ar": "مجوهرات خالدة",
         "heading": "Elegance in Every Detail",
