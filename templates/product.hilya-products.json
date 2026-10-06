@@ -112,7 +112,8 @@
       "settings": {
         "collection": "best-sellers",
         "heading": "You May Also Like",
-        "quick_add": "add_default"
+        "heading_ar": "قد يعجبك أيضًا",
+        "max_products": 12
       }
     },
     "1789423886655db41b": {
@@ -140,28 +141,36 @@
           "type": "item",
           "settings": {
             "heading": "Secure checkout",
-            "text": "Protected by Shopify"
+            "text": "Protected by Shopify",
+            "heading_ar": "دفع آمن",
+            "text_ar": "محمي عبر  Shopify"
           }
         },
         "secure": {
           "type": "item",
           "settings": {
             "heading": "Quality Assured",
-            "text": "Carefully crafted for lasting elegance"
+            "text": "Carefully crafted for lasting elegance",
+            "heading_ar": "",
+            "text_ar": ""
           }
         },
         "details": {
           "type": "item",
           "settings": {
             "heading": "Clear product details",
-            "text": "Know what you are choosing"
+            "text": "Know what you are choosing",
+            "heading_ar": "",
+            "text_ar": ""
           }
         },
         "support": {
           "type": "item",
           "settings": {
             "heading": "Questions?",
-            "text": "Contact us before ordering"
+            "text": "Contact us before ordering",
+            "heading_ar": "",
+            "text_ar": ""
           }
         }
       },
@@ -172,7 +181,8 @@
         "support"
       ],
       "settings": {
-        "heading": "Purchase information"
+        "heading": "Purchase information",
+        "heading_ar": "لماذا تتسوق معنا"
       }
     }
   },
