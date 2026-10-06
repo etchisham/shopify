@@ -95,7 +95,7 @@
         "columns": 5,
         "section_space_desktop": 0,
         "section_space_mobile": 0,
-        "content_space_desktop": 0,
+        "content_space_desktop": 10,
         "content_space_mobile": 24
       }
     },
