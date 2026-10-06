@@ -9,10 +9,37 @@
   assign product_colors = ''
   assign product_available = product.available
 
+  # The filters compare colours by their English names. The names are normalised here,
+  # so the Color filter keeps working on the Arabic site even if the option name or
+  # values were translated.
   for option in product.options_with_values
-    if option.name == 'Color'
+    assign is_color_option = false
+
+    if option.name == 'Color' or option.name == 'اللون'
+      assign is_color_option = true
+    endif
+
+    for value in option.values
+      assign color_lower = value.name | downcase
+      if color_lower contains 'gold plated' or color_lower contains 'silver plated'
+        assign is_color_option = true
+      elsif color_lower contains 'ذهب' or color_lower contains 'فض'
+        assign is_color_option = true
+      endif
+    endfor
+
+    if is_color_option
       for value in option.values
-        assign product_colors = product_colors | append: value.name | append: '|'
+        assign color_lower = value.name | downcase
+        assign color_key = value.name
+
+        if color_lower contains 'gold plated' or color_lower contains 'ذهب'
+          assign color_key = 'Gold Plated'
+        elsif color_lower contains 'silver plated' or color_lower contains 'فض'
+          assign color_key = 'Silver Plated'
+        endif
+
+        assign product_colors = product_colors | append: color_key | append: '|'
       endfor
     endif
   endfor
@@ -30,20 +57,27 @@
   <script type="application/json" data-variant-data>
     [
       {% for variant in product.variants %}
+        {%- assign variant_lower = variant.option1 | downcase | strip -%}
+        {%- assign variant_color = variant.option1 -%}
+        {%- if variant_lower contains 'gold plated' or variant_lower contains 'ذهب' -%}
+          {%- assign variant_color = 'Gold Plated' -%}
+        {%- elsif variant_lower contains 'silver plated' or variant_lower contains 'فض' -%}
+          {%- assign variant_color = 'Silver Plated' -%}
+        {%- endif -%}
         {
           "id": {{ variant.id | json }},
-          "color": {{ variant.option1 | json }},
+          "color": {{ variant_color | json }},
           "price": {{ variant.price | divided_by: 100.0 | json }},
           "compare_at_price": {% if variant.compare_at_price %}{{ variant.compare_at_price | divided_by: 100.0 | json }}{% else %}null{% endif %},
           "available": {{ variant.available | json }},
           "url": {{ variant.url | json }},
           "image": {% if variant.featured_image %}{ "src": {{ variant.featured_image | image_url: width: 1200 | json }}, "alt": {{ variant.featured_image.alt | default: product.title | json }} }{% else %}null{% endif %},
           "images": [
-            {%- assign variant_color = variant.option1 | downcase | strip -%}
+            {%- assign variant_match = variant_color | downcase | strip -%}
             {%- assign matched_image_count = 0 -%}
             {%- for image in product.images -%}
               {%- assign image_alt = image.alt | default: '' | downcase -%}
-              {%- if image_alt contains variant_color -%}
+              {%- if image_alt contains variant_match -%}
                 {%- if matched_image_count > 0 -%},{%- endif -%}
                 { "src": {{ image | image_url: width: 1200 | json }}, "alt": {{ image.alt | default: product.title | json }} }
                 {%- assign matched_image_count = matched_image_count | plus: 1 -%}
