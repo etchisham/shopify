@@ -41,19 +41,28 @@
 %}
 
 <section
-  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}"
-  style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem;"
+  class="hero full-width hero--{{ section.settings.alignment }}{% if section.settings.image == blank %} hero--no-image{% endif %}{% if section.settings.show_text_mobile %} hero--show-text-mobile{% endif %}"
+  style="--hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text-width: {{ section.settings.text_width }}rem; --hero-pos-x: {{ section.settings.desktop_position_x }}%; --hero-pos-y: {{ section.settings.desktop_position_y }}%; --hero-mobile-pos-x: {{ section.settings.mobile_position_x }}%; --hero-mobile-pos-y: {{ section.settings.mobile_position_y }}%;"
 >
   {% if section.settings.image != blank %}
     <div class="hero__media">
-      {{ section.settings.image
-        | image_url: width: 2400
-        | image_tag:
-          widths: '640, 960, 1280, 1600, 2000, 2400',
-          sizes: '100vw',
-          loading: image_loading,
-          fetchpriority: image_fetchpriority
-      }}
+      <picture>
+        {% if section.settings.mobile_image != blank %}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ section.settings.mobile_image | image_url: width: 750 }} 750w, {{ section.settings.mobile_image | image_url: width: 1125 }} 1125w, {{ section.settings.mobile_image | image_url: width: 1500 }} 1500w"
+            sizes="100vw"
+          >
+        {% endif %}
+        {{ section.settings.image
+          | image_url: width: 2400
+          | image_tag:
+            widths: '640, 960, 1280, 1600, 2000, 2400',
+            sizes: '100vw',
+            loading: image_loading,
+            fetchpriority: image_fetchpriority
+        }}
+      </picture>
     </div>
   {% endif %}
 
@@ -112,6 +121,12 @@
 ========================= */
 
 .hero {
+  /* ---- Easy tweaks ---- */
+  --hero-ratio: 1920 / 720;            /* desktop height (was 1920 / 600) */
+  --hero-mobile-min-height: 72svh;     /* mobile height (was 62svh) */
+  --hero-heading-mobile: clamp(2.5rem, 11vw, 3.3rem); /* mobile heading size */
+  --hero-ink: #000;                    /* text + button color */
+
   position: relative;
   display: grid;
 
@@ -120,7 +135,7 @@
 
   margin-inline: auto;
 
-  aspect-ratio: 1920 / 600;
+  aspect-ratio: var(--hero-ratio);
 
   isolation: isolate;
   overflow: hidden;
@@ -142,6 +157,13 @@
   inset: 0;
 }
 
+.hero__media picture {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+}
+
 .hero__media img {
   display: block;
 
@@ -149,7 +171,7 @@
   height: 100%;
 
   object-fit: cover;
-  object-position: center;
+  object-position: var(--hero-pos-x, 50%) var(--hero-pos-y, 50%);
 }
 
 
@@ -183,7 +205,7 @@
 
   padding-block: 48px;
 
-  color: #fff;
+  color: var(--hero-ink);
 
   text-align: start;
 }
@@ -192,7 +214,7 @@
 .hero__heading {
   margin-block: var(--space-3);
 
-  color: #fff;
+  color: var(--hero-ink);
 }
 
 .hero__heading span {
@@ -200,7 +222,7 @@
 }
 
 .hero__content .eyebrow {
-  color: #fff;
+  color: var(--hero-ink);
 }
 
 .hero__text {
@@ -211,7 +233,7 @@
   font-size:
     clamp(1rem, 1.5vw, 1.15rem);
 
-  color: #fff;
+  color: var(--hero-ink);
 }
 
 
@@ -226,9 +248,9 @@
 
   justify-content: flex-start;
 
-  gap: 12px;
+  gap: 14px;
 
-  margin-top: 26px;
+  margin-top: 30px;
 }
 
 .hero__button {
@@ -236,28 +258,28 @@
 
   align-items: center;
 
-  gap: 15px;
+  gap: 18px;
 
-  padding: 13px 19px;
+  padding: 16px 28px;
 
-  background: #fff;
-  color: #000;
+  background: var(--hero-ink);
+  color: #fff;
 
-  border: 1px solid #fff;
+  border: 1px solid var(--hero-ink);
 
   text-decoration: none;
 
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
   font-weight: 500;
 
-  letter-spacing: .12em;
+  letter-spacing: .18em;
   text-transform: uppercase;
 
   transition:
-    background .3s ease,
-    color .3s ease,
-    border-color .3s ease;
+    background .35s ease,
+    color .35s ease,
+    border-color .35s ease;
 }
 
 .hero__button-arrow {
@@ -301,15 +323,15 @@
 
   transform: rotate(45deg);
 
-  transition: transform .3s ease;
+  transition: transform .35s ease;
 }
 
 .hero__button:hover {
   background: transparent;
 
-  color: #fff;
+  color: var(--hero-ink);
 
-  border-color: #fff;
+  border-color: var(--hero-ink);
 }
 
 .hero__button:hover
@@ -317,6 +339,11 @@
   transform:
     translateX(4px)
     rotate(45deg);
+}
+
+.hero__button:focus-visible {
+  outline: 2px solid var(--hero-ink);
+  outline-offset: 3px;
 }
 
 
@@ -327,18 +354,17 @@
 .hero__button--secondary {
   background: transparent;
 
-  color: #fff;
+  color: var(--hero-ink);
 
-  border-color:
-    rgb(255 255 255 / 70%);
+  border-color: var(--hero-ink);
 }
 
 .hero__button--secondary:hover {
-  background: #fff;
+  background: var(--hero-ink);
 
-  color: #000;
+  color: #fff;
 
-  border-color: #fff;
+  border-color: var(--hero-ink);
 }
 
 
@@ -405,11 +431,6 @@
         32px,
         calc((100% - 1500px) / 2)
       );
-      
-  }
-
-  .hero__media img {
-    object-position: center;
   }
 }
 
@@ -421,8 +442,8 @@
 @media (min-width: 750px) and (max-width: 1100px) {
 
   .hero {
-  aspect-ratio: 1920 / 600;
-}
+    aspect-ratio: var(--hero-ratio);
+  }
 
   .hero__content {
     width:
@@ -443,13 +464,13 @@
 @media (max-width: 749px) {
 
   .hero {
-    min-height: 62svh;
+    min-height: var(--hero-mobile-min-height);
     aspect-ratio: auto;
     max-width: 100%;
   }
 
   .hero__media img {
-    object-position: 58% center;
+    object-position: var(--hero-mobile-pos-x, 58%) var(--hero-mobile-pos-y, 50%);
   }
 
   .hero__content {
@@ -463,25 +484,35 @@
   }
 
   .hero__heading {
-    max-width: 21rem;
+    max-width: none;
+
+    font-size: var(--hero-heading-mobile);
+    line-height: 1.05;
   }
 
+  /* small description hidden on mobile unless enabled in the editor */
   .hero__text {
+    display: none;
+
     max-width: 21rem;
 
     font-size: .95rem;
   }
 
+  .hero--show-text-mobile .hero__text {
+    display: block;
+  }
+
   .hero__actions {
-    margin-top: 24px;
+    margin-top: 28px;
   }
 
   .hero__button {
-    padding: 12px 17px;
+    padding: 15px 24px;
 
-    gap: 13px;
+    gap: 15px;
 
-    font-size: 10px;
+    font-size: 11px;
   }
 
 }
@@ -495,6 +526,7 @@
 
 [dir="rtl"] .hero__button {
   font-size: 13px;
+  letter-spacing: 0;
 }
 
 [dir="rtl"] .hero__content .eyebrow {
@@ -527,6 +559,68 @@
       "type": "image_picker",
       "id": "image",
       "label": "t:labels.image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional portrait image (4:5 or 3:4) used on mobile. Leave blank to use the main image."
+    },
+    {
+      "type": "header",
+      "content": "Image crop - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "desktop_position_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "info": "0% = left, 100% = right",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "desktop_position_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "info": "0% = top, 100% = bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Image crop - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_position_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "info": "0% = left, 100% = right",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "mobile_position_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "info": "0% = top, 100% = bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Content"
     },
     {
       "type": "range",
@@ -580,6 +674,12 @@
       "id": "text_ar",
       "label": "Text - Arabic",
       "default": "<p>قطع عصرية تترك أثرًا يدوم.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_mobile",
+      "label": "Show text on mobile",
+      "default": false
     },
     {
       "type": "text",
