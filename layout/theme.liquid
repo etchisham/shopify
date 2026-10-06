@@ -7,9 +7,8 @@
   endif
 %}
 <!doctype html>
-<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ text_direction }}" translate="no">
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ text_direction }}">
   <head>
-    <meta name="google" content="notranslate">
     {% render 'css-variables' %}
 
     <script>document.documentElement.classList.remove('no-js');</script>
@@ -49,13 +48,13 @@
           viewDetails: "عرض التفاصيل",
           decrease: "تقليل الكمية",
           increase: "زيادة الكمية",
-          personalization: "تفاصيل قطعتك",
+          personalization: "التخصيص",
           required: "مطلوب",
-          name: "الاسم على القطعة",
-          namePlaceholder: "الاسم الذي تريده على قطعتك",
-          date: "التاريخ على القطعة",
-          letter: "الحرف على القطعة",
-          letterPlaceholder: "حرف واحد فقط",
+          name: "الاسم",
+          namePlaceholder: "اكتب الاسم",
+          date: "التاريخ",
+          letter: "الحرف",
+          letterPlaceholder: "حرف واحد",
           letterError: "من فضلك اكتب حرفًا واحدًا (عربي أو إنجليزي).",
           loading: "جارٍ التحميل..."
           {%- endif -%}
