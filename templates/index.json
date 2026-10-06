@@ -119,15 +119,6 @@
         "columns": 5
       }
     },
-    "new_arrivals_DPpLqt": {
-      "type": "new-arrivals",
-      "disabled": true,
-      "name": "New Arrivals",
-      "settings": {
-        "image": "shopify://shop_images/08_New_Arrivals.jpg",
-        "button_link": "shopify://collections/new-arrivals"
-      }
-    },
     "follow_our_journey_fFyeaN": {
       "type": "follow-our-journey",
       "name": "Hilya Social",
@@ -167,7 +158,6 @@
     "featured_collection_CinWF3",
     "custom_section_ETjLrM",
     "featured_collection_84KnBQ",
-    "new_arrivals_DPpLqt",
     "follow_our_journey_fFyeaN"
   ]
 }
