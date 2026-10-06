@@ -145,7 +145,10 @@
       "personalization_date_error": "من فضلك اختر التاريخ.",
       "personalization_error": "من فضلك أكمل حقول التخصيص المطلوبة.",
       "back_to": "العودة إلى {{ title }}",
-      "back_to_search": "العودة إلى نتائج البحث"
+      "back_to_search": "العودة إلى نتائج البحث",
+      "personalization_letter": "الحرف",
+      "personalization_letter_placeholder": "اكتب حرفًا واحدًا",
+      "personalization_letter_error": "من فضلك أدخل حرفًا واحدًا."
     }
   },
   "collections": {
@@ -286,6 +289,10 @@
       "few": "{{ count }} نتائج لـ <strong>{{ terms }}</strong>.",
       "many": "{{ count }} نتيجة لـ <strong>{{ terms }}</strong>.",
       "other": "{{ count }} نتيجة لـ <strong>{{ terms }}</strong>."
+    },
+    "result_types": {
+      "article": "مقال",
+      "page": "صفحة"
     }
   },
   "blog": {

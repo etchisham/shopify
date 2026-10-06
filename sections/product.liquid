@@ -8,10 +8,6 @@
   assign rating_maximum = rating.scale_max | default: 5
 
   assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
-  assign review_word = 'review'
-  if rating_count != 1
-    assign review_word = 'reviews'
-  endif
 
   assign browsing_collection = collection | default: product.collections.first
   assign checkout_url = routes.root_url | append: '/checkout' | replace: '//', '/'
@@ -55,7 +51,13 @@
   data-name-required="{{ has_name_tag }}"
   data-date-required="{{ has_date_tag }}"
   data-letter-required="{{ has_letter_tag }}"
-  data-personalization-error="Please complete the required personalization fields."
+  data-personalization-error="{{ 'products.details.personalization_error' | t | escape }}"
+  data-name-error="{{ 'products.details.personalization_name_error' | t | escape }}"
+  data-date-error="{{ 'products.details.personalization_date_error' | t | escape }}"
+  data-letter-error="{{ 'products.details.personalization_letter_error' | t | escape }}"
+  data-back-to="{{ 'products.details.back_to' | t: title: '__TITLE__' | escape }}"
+  data-back-search="{{ 'products.details.back_to_search' | t | escape }}"
+  data-search-title="{{ 'search.title' | t | escape }}"
   style="
     --product-image-ratio: {{ section.settings.image_ratio }};
     --product-image-fit: {{ section.settings.image_fit }};
@@ -121,11 +123,11 @@
             <span
               class="product-page__rating"
               role="img"
-              aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
+              aria-label="{{ 'products.product.rating' | t: rating: rating_display, maximum: rating_maximum | escape }}, {{ 'products.product.rating_count' | t: count: rating_count | escape }}"
             >
               <span class="product-page__rating-star" aria-hidden="true">★</span>
               <span class="product-page__rating-value">{{ rating_display }}</span>
-              <span class="product-page__rating-count">({{ rating_count }} {{ review_word }})</span>
+              <span class="product-page__rating-count">({{ 'products.product.rating_count' | t: count: rating_count }})</span>
             </span>
           {% endif %}
 
@@ -243,15 +245,15 @@
             <div class="product-personalization">
 
               <div class="product-personalization__heading">
-                <span>Personalization</span>
-                <span class="product-personalization__required">Required</span>
+                <span>{{ 'products.details.personalization_title' | t }}</span>
+                <span class="product-personalization__required">{{ 'products.details.personalization_required' | t }}</span>
               </div>
 
               {% if has_name_tag %}
 
                 <div class="product-form__field">
                   <label for="ProductName-{{ section.id }}">
-                    Name
+                    {{ 'products.details.personalization_name' | t }}
                   </label>
 
                   <input
@@ -262,7 +264,7 @@
                     autocomplete="name"
                     required
                     data-personalization-name
-                    placeholder="Enter the name"
+                    placeholder="{{ 'products.details.personalization_name_placeholder' | t | escape }}"
                   >
                 </div>
 
@@ -272,7 +274,7 @@
 
                 <div class="product-form__field">
                   <label for="ProductDate-{{ section.id }}">
-                    Date
+                    {{ 'products.details.personalization_date' | t }}
                   </label>
 
                   <input
@@ -290,7 +292,7 @@
 
                 <div class="product-form__field">
                   <label for="ProductLetter-{{ section.id }}">
-                    Letter
+                    {{ 'products.details.personalization_letter' | t }}
                   </label>
 
                   <input
@@ -301,7 +303,7 @@
                     autocomplete="off"
                     required
                     data-personalization-letter
-                    placeholder="Enter one letter"
+                    placeholder="{{ 'products.details.personalization_letter_placeholder' | t | escape }}"
                   >
                 </div>
 
@@ -325,7 +327,7 @@
                   type="button"
                   class="quantity-selector__button"
                   data-quantity-minus
-                  aria-label="Decrease quantity"
+                  aria-label="{{ 'products.details.decrease_quantity' | t | escape }}"
                 >
                   −
                 </button>
@@ -349,7 +351,7 @@
                   type="button"
                   class="quantity-selector__button"
                   data-quantity-plus
-                  aria-label="Increase quantity"
+                  aria-label="{{ 'products.details.increase_quantity' | t | escape }}"
                 >
                   +
                 </button>
@@ -385,7 +387,7 @@
                   disabled
                 {% endunless %}
               >
-                Buy it now
+                {{ 'products.details.buy_now' | t }}
               </button>
 
             {% elsif section.settings.show_dynamic_checkout and current_variant.available %}
