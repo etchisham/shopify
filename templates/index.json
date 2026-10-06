@@ -62,7 +62,7 @@
         "mobile_position_x": 50,
         "mobile_position_y": 50,
         "card_opacity": 50,
-        "extra_space_desktop": 0,
+        "extra_space_desktop": 10,
         "extra_space_mobile": 24,
         "eyebrow": "Made for You",
         "eyebrow_ar": "صُمّمت لأجلك",
