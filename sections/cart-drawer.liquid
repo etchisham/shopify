@@ -76,7 +76,17 @@
                 </a>
                 <div class="drawer-item__details">
                   <h3><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h3>
-                  {% unless item.product.has_only_default_variant %}<p class="drawer-item__variant">{{ item.variant.title | escape }}</p>{% endunless %}
+                  {% unless item.product.has_only_default_variant %}
+  {%- assign variant_parts = item.variant.title | split: ' / ' -%}
+  <p class="drawer-item__variant">
+    {%- for part in variant_parts -%}
+      {%- assign part_key = part | handleize | replace: '-', '_' -%}
+      {%- assign translation_key = 'products.option_values.' | append: part_key -%}
+      {{- translation_key | t: default: part | escape -}}
+      {%- unless forloop.last %} / {% endunless -%}
+    {%- endfor -%}
+  </p>
+{% endunless %}
                   {% if item.selling_plan_allocation %}<p class="drawer-item__variant">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
                   {% for property in item.properties %}
                     {% assign property_first_character = property.first | slice: 0 %}
