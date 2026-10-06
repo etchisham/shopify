@@ -1,5 +1,8 @@
 {% render 'catalog-styles' %}
 
+{%- assign pagination_previous = 'collections.previous_page' | t -%}
+{%- assign pagination_next = 'collections.next_page' | t -%}
+
 <section class="catalog-page search-page full-width section-spacing">
   <div class="catalog-page__inner search-page__inner">
 
@@ -48,14 +51,19 @@
                   {% if featured_image %}
                     {% render 'image', image: featured_image, url: result.url, width: 1000, widths: '320, 480, 640, 800, 1000', sizes: '(min-width: 1024px) 25vw, (min-width: 750px) 33vw, 50vw' %}
                   {% endif %}
-                  <p class="eyebrow">{{ result.object_type | capitalize }}</p>
+                  {%- assign type_key = 'search.result_types.' | append: result.object_type -%}
+                  {%- assign type_label = type_key | t -%}
+                  {%- if type_label contains 'translation missing' -%}
+                    {%- assign type_label = result.object_type | capitalize -%}
+                  {%- endif -%}
+                  <p class="eyebrow">{{ type_label }}</p>
                   <h2><a href="{{ result.url }}">{{ result.title | escape }}</a></h2>
                   <p class="muted">{{ result.content | strip_html | truncatewords: 24 }}</p>
                 </article>
               {% endif %}
             {% endfor %}
           </div>
-          <div class="search-page__pagination catalog-page__pagination">{{ paginate | default_pagination }}</div>
+          <div class="search-page__pagination catalog-page__pagination">{{ paginate | default_pagination: previous: pagination_previous, next: pagination_next }}</div>
         {% endif %}
       {% endpaginate %}
     {% endif %}
@@ -199,6 +207,18 @@
     .search-page__inner {
       padding-inline: 1rem;
     }
+  }
+  /* Arabic */
+  [dir="rtl"] .search-page__title {
+    line-height: 1.4;
+  }
+
+  [dir="rtl"] .search-page__form input[type='search'] {
+    font-size: 1rem;
+  }
+
+  [dir="rtl"] .search-card h2 {
+    line-height: 1.6;
   }
 {% endstylesheet %}
 
