@@ -31,7 +31,15 @@
       {%- if social_image != blank -%}
         {%- assign pos_x = section.settings[x_key] | default: 50 -%}
         {%- assign pos_y = section.settings[y_key] | default: 50 -%}
-        {%- capture pos_style -%}object-position: {{ pos_x }}% {{ pos_y }}%;{%- endcapture -%}
+        {%- assign pos_mx = pos_x -%}
+        {%- assign pos_my = pos_y -%}
+        {%- if section.settings.mobile_crop -%}
+          {%- assign mx_key = image_key | append: '_x_mobile' -%}
+          {%- assign my_key = image_key | append: '_y_mobile' -%}
+          {%- assign pos_mx = section.settings[mx_key] | default: 50 -%}
+          {%- assign pos_my = section.settings[my_key] | default: 50 -%}
+        {%- endif -%}
+        {%- capture pos_style -%}--pos-x: {{ pos_x }}%; --pos-y: {{ pos_y }}%; --pos-mx: {{ pos_mx }}%; --pos-my: {{ pos_my }}%;{%- endcapture -%}
         <a
           href="{{ section.settings.instagram_url }}"
           class="hilya-social__image hilya-social__image--{{ i }}"
@@ -167,6 +175,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--pos-x, 50%) var(--pos-y, 50%);
   transition: transform .5s ease;
 }
 
@@ -357,10 +366,15 @@
   .hilya-social__image--4 { grid-column: 2; grid-row: 7 / 14; }
   .hilya-social__image--6 { grid-column: 2; grid-row: 14 / 19; }
 
+  .hilya-social__image img {
+    object-position: var(--pos-mx, 50%) var(--pos-my, 50%);
+  }
   .hilya-social__button {
     grid-column: 1 / -1;
     grid-row: 19;
-    padding: 13px 38px;
+    padding: 10px 28px;
+    border-width: 1.5px;
+    font-size: 12.5px;
   }
 }
 
@@ -377,7 +391,6 @@
 }
 
 [dir="rtl"] .hilya-social__button {
-  font-size: 15px;
   letter-spacing: 0;
 }
 
@@ -390,9 +403,6 @@
     font-size: 28px;
   }
 
-  [dir="rtl"] .hilya-social__button {
-    font-size: 14px;
-  }
 }
 
 
@@ -418,7 +428,6 @@
       "id": "instagram_url",
       "label": "Instagram link"
     },
-
     {
       "type": "header",
       "content": "Image 1"
@@ -448,7 +457,6 @@
       "unit": "%",
       "default": 50
     },
-
     {
       "type": "header",
       "content": "Image 2"
@@ -478,7 +486,6 @@
       "unit": "%",
       "default": 50
     },
-
     {
       "type": "header",
       "content": "Image 3"
@@ -508,7 +515,6 @@
       "unit": "%",
       "default": 50
     },
-
     {
       "type": "header",
       "content": "Image 4"
@@ -538,7 +544,6 @@
       "unit": "%",
       "default": 50
     },
-
     {
       "type": "header",
       "content": "Image 5"
@@ -568,7 +573,6 @@
       "unit": "%",
       "default": 50
     },
-
     {
       "type": "header",
       "content": "Image 6"
@@ -598,7 +602,6 @@
       "unit": "%",
       "default": 50
     },
-
     {
       "type": "header",
       "content": "Text"
@@ -638,6 +641,137 @@
       "id": "button_label_ar",
       "label": "Button label - Arabic",
       "default": "تابعنا"
+    },
+    {
+      "type": "header",
+      "content": "Mobile image crop"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_crop",
+      "label": "Use a different crop on mobile",
+      "info": "Off = mobile uses the same positions as desktop (as now).",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "image_1_x_mobile",
+      "label": "Image 1 - horizontal position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_1_y_mobile",
+      "label": "Image 1 - vertical position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_2_x_mobile",
+      "label": "Image 2 - horizontal position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_2_y_mobile",
+      "label": "Image 2 - vertical position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_3_x_mobile",
+      "label": "Image 3 - horizontal position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_3_y_mobile",
+      "label": "Image 3 - vertical position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_4_x_mobile",
+      "label": "Image 4 - horizontal position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_4_y_mobile",
+      "label": "Image 4 - vertical position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_5_x_mobile",
+      "label": "Image 5 - horizontal position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_5_y_mobile",
+      "label": "Image 5 - vertical position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_6_x_mobile",
+      "label": "Image 6 - horizontal position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_6_y_mobile",
+      "label": "Image 6 - vertical position (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
     }
   ],
   "presets": [
