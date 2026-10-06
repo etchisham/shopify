@@ -156,7 +156,18 @@
     "choose_collection": "اختر مجموعة من محرر القالب.",
     "previous_page": "الصفحة السابقة",
     "next_page": "الصفحة التالية",
-    "pagination": "التنقل بين الصفحات"
+    "pagination": "التنقل بين الصفحات",
+    "sort_options": {
+      "manual": "المنتجات المميزة",
+      "relevance": "الأكثر صلة",
+      "best_selling": "الأكثر مبيعًا",
+      "title_ascending": "أبجديًا، من أ إلى ي",
+      "title_descending": "أبجديًا، من ي إلى أ",
+      "price_ascending": "السعر: من الأقل إلى الأعلى",
+      "price_descending": "السعر: من الأعلى إلى الأقل",
+      "created_ascending": "التاريخ: من الأقدم إلى الأحدث",
+      "created_descending": "التاريخ: من الأحدث إلى الأقدم"
+    }
   },
   "wishlist": {
     "eyebrow": "محفوظ لوقت لاحق",
