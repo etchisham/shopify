@@ -141,7 +141,10 @@
       "personalization_date_error": "Please select the date.",
       "personalization_error": "Please complete the required personalization fields.",
       "back_to": "Back to {{ title }}",
-      "back_to_search": "Back to search results"
+      "back_to_search": "Back to search results",
+      "personalization_letter": "Letter",
+      "personalization_letter_placeholder": "Enter one letter",
+      "personalization_letter_error": "Please enter one letter."
     }
   },
   "collections": {
@@ -152,7 +155,18 @@
     "choose_collection": "Choose a collection in the theme editor.",
     "previous_page": "Previous page",
     "next_page": "Next page",
-    "pagination": "Pagination"
+    "pagination": "Pagination",
+    "sort_options": {
+      "manual": "Featured",
+      "relevance": "Most relevant",
+      "best_selling": "Best selling",
+      "title_ascending": "Alphabetically, A-Z",
+      "title_descending": "Alphabetically, Z-A",
+      "price_ascending": "Price, low to high",
+      "price_descending": "Price, high to low",
+      "created_ascending": "Date, old to new",
+      "created_descending": "Date, new to old"
+    }
   },
   "wishlist": {
     "eyebrow": "Saved for later",
@@ -263,6 +277,10 @@
     "results_for_html": {
       "one": "{{ count }} result for <strong>{{ terms }}</strong>.",
       "other": "{{ count }} results for <strong>{{ terms }}</strong>."
+    },
+    "result_types": {
+      "article": "Article",
+      "page": "Page"
     }
   },
   "blog": {
