@@ -167,7 +167,7 @@
     "pagination": "Pagination",
     "sort_options": {
       "manual": "Featured",
-      "relevance": "Most relevant",
+      "most_relevant": "Most relevant",
       "best_selling": "Best selling",
       "title_ascending": "Alphabetically, A-Z",
       "title_descending": "Alphabetically, Z-A",
