@@ -31,6 +31,7 @@
       namePlaceholder: 'Enter the name',
       date: 'Date',
       letter: 'Letter',
+      letterPlaceholder: 'One letter',
       letterError: 'Please enter one letter (Arabic or English).',
       loading: 'Loading...'
     },
@@ -130,6 +131,15 @@
   const optionName = (option) =>
     (typeof option === 'string' ? option : option && option.name) || '';
 
+  /* Display-only translation. Raw values stay untouched for variant matching. */
+  const slug = (value) =>
+    String(value).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
+  const labelFor = (map, value) => (map && map[slug(value)]) || value;
+
+  const valueLabel = (value) => labelFor(config.optionValues, value);
+  const nameLabel = (name) => labelFor(config.optionNames, name);
+
 
   /* =========================================
      DRAWER (built once)
@@ -210,7 +220,7 @@
     });
 
     ui.legends.forEach((legend, index) => {
-      if (legend) legend.textContent = selected[index];
+      if (legend) legend.textContent = valueLabel(selected[index]);
     });
 
     ui.price.replaceChildren(priceNode(variant.price, variant.compare_at_price));
@@ -323,14 +333,14 @@
 
         const pills = el(
           'div',
-          { class: 'quick-view__pills', role: 'group', 'aria-label': name },
+          { class: 'quick-view__pills', role: 'group', 'aria-label': nameLabel(name) },
           values[index].map((value) => {
             const pill = el('button', {
               type: 'button',
               class: 'quick-view__pill',
               'data-option-index': index,
               'data-option-value': value,
-              text: value
+              text: valueLabel(value)
             });
 
             ui.pills.push(pill);
@@ -340,7 +350,7 @@
 
         form.append(
           el('div', { class: 'quick-view__group' }, [
-            el('p', { class: 'quick-view__legend' }, [name + ': ', legend]),
+            el('p', { class: 'quick-view__legend' }, [nameLabel(name) + ': ', legend]),
             pills
           ])
         );
