@@ -164,8 +164,6 @@
         "image_6_y": 50,
         "brand_name": "Hilya",
         "brand_name_ar": "حِلْيَةَ",
-        "description": "For more inspiration, behind the scenes and special moments.",
-        "description_ar": "لمزيد من الإلهام وكواليس العمل واللحظات المميزة.",
         "button_label": "Follow Us",
         "button_label_ar": "تابعنا",
         "mobile_crop": false,
@@ -181,8 +179,10 @@
         "image_5_y_mobile": 50,
         "image_6_x_mobile": 50,
         "image_6_y_mobile": 50,
-        "extra_space_desktop": 40,
-        "extra_space_mobile": 40
+        "section_space_desktop": 40,
+        "section_space_mobile": 40,
+        "content_space_desktop": 0,
+        "content_space_mobile": 0
       }
     }
   },
