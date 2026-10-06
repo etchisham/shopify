@@ -15,7 +15,10 @@
   endif
 -%}
 
-<section class="featured-collection">
+<section
+  class="featured-collection"
+  style="--fc-extra-desktop: {{ section.settings.extra_space_desktop }}px; --fc-extra-mobile: {{ section.settings.extra_space_mobile }}px;"
+>
     <div class="featured-collection__header">
     <div class="featured-collection__heading">
       {% if fc_eyebrow != blank %}
@@ -136,7 +139,8 @@
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 30px max(24px, calc((100vw - 1400px) / 2)) 30px;
+  --fc-extra-top: var(--fc-extra-desktop, 0px);
+  padding: calc(30px + var(--fc-extra-top)) max(24px, calc((100vw - 1400px) / 2)) 30px;
   box-sizing: border-box;
 }
 
@@ -360,7 +364,8 @@
 @media (max-width: 749px) {
 
   .featured-collection {
-    padding: 30px 0 30px;
+    --fc-extra-top: var(--fc-extra-mobile, 0px);
+    padding: calc(30px + var(--fc-extra-top)) 0 30px;
     overflow-x: clip;
   }
 
@@ -563,6 +568,30 @@
       "step": 1,
       "label": "t:labels.columns",
       "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "extra_space_desktop",
+      "label": "Extra space above - Desktop",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "extra_space_mobile",
+      "label": "Extra space above - Mobile",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
     }
   ],
   "presets": [
