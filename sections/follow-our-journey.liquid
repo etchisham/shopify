@@ -18,7 +18,10 @@
   endif
 -%}
 
-<section class="hilya-social">
+<section
+  class="hilya-social"
+  style="--hs-extra-desktop: {{ section.settings.extra_space_desktop }}px; --hs-extra-mobile: {{ section.settings.extra_space_mobile }}px;"
+>
 
   <div class="hilya-social__grid">
 
@@ -114,7 +117,8 @@
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 15px max(12px, calc((100vw - 1660px) / 2));
+  --hs-extra-top: var(--hs-extra-desktop, 0px);
+  padding: calc(15px + var(--hs-extra-top)) max(12px, calc((100vw - 1660px) / 2)) 15px;
   box-sizing: border-box;
   overflow-x: clip;
   background: #f4f1eb;
@@ -323,7 +327,8 @@
 @media (max-width: 749px) {
 
   .hilya-social {
-    padding: 10px 6px;
+    --hs-extra-top: var(--hs-extra-mobile, 0px);
+    padding: calc(10px + var(--hs-extra-top)) 6px 10px;
   }
 
   .hilya-social__grid {
@@ -772,6 +777,30 @@
       "step": 1,
       "unit": "%",
       "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "extra_space_desktop",
+      "label": "Extra space above - Desktop",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "extra_space_mobile",
+      "label": "Extra space above - Mobile",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [
