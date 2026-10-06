@@ -60,6 +60,15 @@
     "brand_name": "Hilya"
   },
   "products": {
+    "option_values": {
+      "gold_plated": "Gold Plated",
+      "silver_plated": "Silver Plated"
+    },
+    "option_names": {
+      "color": "Color",
+      "size": "Size",
+      "material": "Material"
+    },
     "product": {
       "add_to_cart": "Add to cart",
       "sold_out": "Sold out",
