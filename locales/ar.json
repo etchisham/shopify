@@ -153,7 +153,10 @@
     "view_all": "عرض الكل",
     "sort_by": "ترتيب حسب",
     "empty": "لا توجد منتجات.",
-    "choose_collection": "اختر مجموعة من محرر القالب."
+    "choose_collection": "اختر مجموعة من محرر القالب.",
+    "previous_page": "الصفحة السابقة",
+    "next_page": "الصفحة التالية",
+    "pagination": "التنقل بين الصفحات"
   },
   "wishlist": {
     "eyebrow": "محفوظ لوقت لاحق",
@@ -183,7 +186,23 @@
     "minimum_price": "الحد الأدنى للسعر",
     "maximum_price": "الحد الأقصى للسعر",
     "from": "من",
-    "to": "إلى"
+    "to": "إلى",
+    "filters": "الفلاتر",
+    "filters_caps": "الفلاتر",
+    "products_caps": "منتج",
+    "collection_eyebrow": "المجموعة",
+    "availability": "التوفر",
+    "in_stock": "متوفر",
+    "out_of_stock": "غير متوفر",
+    "price": "السعر",
+    "price_to": "إلى",
+    "color": "اللون",
+    "gold_plated": "مطلي بالذهب",
+    "silver_plated": "مطلي بالفضة",
+    "product_type": "نوع المنتج",
+    "filtered_by": "التصفية حسب",
+    "clear_all_caps": "مسح الكل",
+    "remove_filter": "إزالة {{ label }}"
   },
   "newsletter": {
     "label": "البريد الإلكتروني",
