@@ -1019,6 +1019,55 @@ body:has(.site-header--sticky) {
   padding: 0 !important;
 }
 
+/* =========================================================
+   ARABIC HEADER TEXT SIZE
+   ========================================================= */
+
+/* القائمة الرئيسية: الرئيسية / الفئات / تواصل معنا */
+[dir="rtl"] .desktop-nav > a,
+[dir="rtl"] .desktop-categories__trigger {
+  font-size: 0.95rem;   /* كان 0.78rem */
+  letter-spacing: 0;    /* مهم: يمنع فصل الحروف العربية */
+  text-transform: none;
+}
+
+/* القوائم المنسدلة */
+[dir="rtl"] .desktop-dropdown a {
+  font-size: 0.92rem;   /* كان 0.76rem */
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* مربع البحث */
+[dir="rtl"] .header-search__input {
+  font-size: 0.92rem;   /* كان 0.78rem */
+}
+
+/* زر اللغة: "العربية" في الصفحة الإنجليزية */
+.header-language__button[lang="ar"] {
+  font-size: 1rem;      /* كان 0.8rem */
+  letter-spacing: 0;
+}
+
+/* موبايل */
+@media screen and (max-width: 749px) {
+
+  [dir="rtl"] .mobile-menu__panel > a,
+  [dir="rtl"] .mobile-categories summary {
+    font-size: 0.95rem;   /* كان 0.82rem */
+    letter-spacing: 0;
+  }
+
+  [dir="rtl"] .mobile-categories__items a {
+    font-size: 0.9rem;    /* كان 0.76rem */
+    letter-spacing: 0;
+  }
+
+  .header-language--mobile .header-language__button[lang="ar"] {
+    font-size: 0.95rem;
+  }
+}
+
 {% endstyle %}
 
 {%- assign language_label = 'general.language' | t -%}
