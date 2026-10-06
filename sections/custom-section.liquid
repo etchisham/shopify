@@ -28,23 +28,44 @@
       assign story_alt = section.settings.image_alt_ar
     endif
   endif
+
+  case section.settings.mobile_shape
+    when 'square'
+      assign story_mobile_ratio = '1 / 1'
+    when 'portrait'
+      assign story_mobile_ratio = '4 / 5'
+    else
+      assign story_mobile_ratio = '2.05 / 1'
+  endcase
 -%}
 
-<section class="story-section">
+<section
+  class="story-section"
+  style="--story-extra-desktop: {{ section.settings.extra_space_desktop }}px; --story-extra-mobile: {{ section.settings.extra_space_mobile }}px; --story-pos-x: {{ section.settings.desktop_position_x }}%; --story-pos-y: {{ section.settings.desktop_position_y }}%; --story-mobile-pos-x: {{ section.settings.mobile_position_x }}%; --story-mobile-pos-y: {{ section.settings.mobile_position_y }}%; --story-mobile-ratio: {{ story_mobile_ratio }};"
+>
 
   <div class="story-section__inner">
 
     <div class="story-section__media">
       {% if section.settings.image != blank %}
-        {{
-          section.settings.image
-          | image_url: width: 1800
-          | image_tag:
-            widths: '600, 900, 1200, 1500, 1800',
-            sizes: '(min-width: 750px) 60vw, 100vw',
-            loading: 'lazy',
-            alt: story_alt
-        }}
+        <picture>
+          {% if section.settings.mobile_image != blank %}
+            <source
+              media="(max-width: 749px)"
+              srcset="{{ section.settings.mobile_image | image_url: width: 750 }} 750w, {{ section.settings.mobile_image | image_url: width: 1125 }} 1125w, {{ section.settings.mobile_image | image_url: width: 1500 }} 1500w"
+              sizes="100vw"
+            >
+          {% endif %}
+          {{
+            section.settings.image
+            | image_url: width: 1800
+            | image_tag:
+              widths: '600, 900, 1200, 1500, 1800',
+              sizes: '(min-width: 750px) 60vw, 100vw',
+              loading: 'lazy',
+              alt: story_alt
+          }}
+        </picture>
       {% else %}
         {{ 'lifestyle-1' | placeholder_svg_tag: 'story-section__placeholder' }}
       {% endif %}
@@ -99,7 +120,9 @@
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 35px max(24px, calc((100vw - 1400px) / 2)) 45px;
+  --story-extra-top: var(--story-extra-desktop, 0px);
+  --story-heading-leading: .84; /* heading line spacing: lower = closer lines */
+  padding: calc(35px + var(--story-extra-top)) max(24px, calc((100vw - 1400px) / 2)) 45px;
   box-sizing: border-box;
   background: #F7F4EE;
 }
@@ -127,6 +150,12 @@
   height: 100%;
   aspect-ratio: 2.15 / 1;
   object-fit: cover;
+  object-position: var(--story-pos-x, 50%) var(--story-pos-y, 50%);
+}
+
+.story-section__media picture {
+  display: block;
+  width: 100%;
 }
 
 /* CONTENT */
@@ -162,7 +191,7 @@
   font-size: clamp(42px, 4.3vw, 64px);
   font-weight: 400;
   font-style: normal;
-  line-height: .92;
+  line-height: var(--story-heading-leading, .84);
   letter-spacing: -.025em;
 }
 
@@ -180,9 +209,9 @@
 .story-section__text p {
   margin: 0;
   color: #8b8b8b;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.8;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: .01em;
 }
 
@@ -239,7 +268,7 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .story-section {
-    padding: 25px 28px 0;
+    padding: calc(25px + var(--story-extra-top)) 28px 0;
   }
 
   .story-section__inner {
@@ -272,7 +301,8 @@
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: 25px 16px 35px;
+  --story-extra-top: var(--story-extra-mobile, 0px);
+  padding: calc(25px + var(--story-extra-top)) 16px 35px;
   background: #F7F4EE;
 }
 
@@ -292,8 +322,9 @@
   .story-section__placeholder {
     width: 100%;
     height: auto;
-    aspect-ratio: 2.05 / 1;
+    aspect-ratio: var(--story-mobile-ratio, 2.05 / 1);
     object-fit: cover;
+    object-position: var(--story-mobile-pos-x, 50%) var(--story-mobile-pos-y, 50%);
   }
 
   .story-section__content {
@@ -309,7 +340,7 @@
   .story-section__heading {
     margin-bottom: 22px;
     font-size: 42px;
-    line-height: .92;
+    line-height: var(--story-heading-leading, .84);
     letter-spacing: -.025em;
   }
 
@@ -319,7 +350,7 @@
   }
 
   .story-section__text p {
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1.75;
   }
 
@@ -348,7 +379,7 @@
 }
 
 [dir="rtl"] .story-section__heading {
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 [dir="rtl"] .story-section__eyebrow {
@@ -357,7 +388,7 @@
 }
 
 [dir="rtl"] .story-section__text p {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.9;
 }
 
@@ -371,7 +402,7 @@
   }
 
   [dir="rtl"] .story-section__text p {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   [dir="rtl"] .story-section__link {
@@ -407,6 +438,108 @@
       "type": "image_picker",
       "id": "image",
       "label": "Offer image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Optional picture used on phones. Leave blank to use the offer image."
+    },
+    {
+      "type": "select",
+      "id": "mobile_shape",
+      "label": "Mobile image shape",
+      "options": [
+        {
+          "value": "wide",
+          "label": "Wide (current)"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait (4:5)"
+        }
+      ],
+      "default": "wide"
+    },
+    {
+      "type": "header",
+      "content": "Image crop - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "desktop_position_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0% = left, 100% = right"
+    },
+    {
+      "type": "range",
+      "id": "desktop_position_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0% = top, 100% = bottom"
+    },
+    {
+      "type": "header",
+      "content": "Image crop - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_position_x",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0% = left, 100% = right"
+    },
+    {
+      "type": "range",
+      "id": "mobile_position_y",
+      "label": "Vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0% = top, 100% = bottom"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "extra_space_desktop",
+      "label": "Extra space above - Desktop",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "extra_space_mobile",
+      "label": "Extra space above - Mobile",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
     },
     {
       "type": "text",
