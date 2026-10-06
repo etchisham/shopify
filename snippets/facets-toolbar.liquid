@@ -79,7 +79,7 @@
         <span data-hilya-sort-current>
           {% for option in sort_options %}
             {% if option.value == current_sort %}
-              {{ option.name }}
+              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
             {% endif %}
           {% endfor %}
         </span>
@@ -102,7 +102,7 @@
             aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
           >
             <span>
-              {{ option.name }}
+              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
             </span>
 
             <span class="hilya-filters__sort-check" aria-hidden="true">
@@ -411,7 +411,7 @@
           {% for option in sort_options %}
 
             {% if option.value == current_sort %}
-              {{ option.name }}
+              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
             {% endif %}
 
           {% endfor %}
@@ -440,7 +440,7 @@
           >
 
             <span>
-              {{ option.name }}
+              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
             </span>
 
             <span class="hilya-filters__sort-check" aria-hidden="true">
