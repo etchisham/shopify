@@ -29,6 +29,15 @@
         root: {{ routes.root_url | json }},
         cartAddUrl: {{ routes.cart_add_url | json }},
         moneyFormat: {{ shop.money_format | json }},
+        optionValues: {
+          gold_plated: {{ 'products.option_values.gold_plated' | t | json }},
+          silver_plated: {{ 'products.option_values.silver_plated' | t | json }}
+        },
+        optionNames: {
+          color: {{ 'products.option_names.color' | t | json }},
+          size: {{ 'products.option_names.size' | t | json }},
+          material: {{ 'products.option_names.material' | t | json }}
+        },
         text: {
           addToCart: {{ 'products.product.add_to_cart' | t | json }},
           soldOut: {{ 'products.product.sold_out' | t | json }},
