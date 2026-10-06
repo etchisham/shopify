@@ -93,7 +93,7 @@
         "collection": "best-sellers",
         "products_to_show": 10,
         "columns": 5,
-        "extra_space_desktop": 0,
+        "extra_space_desktop": 10,
         "extra_space_mobile": 24
       }
     },
@@ -107,7 +107,7 @@
         "desktop_position_y": 50,
         "mobile_position_x": 50,
         "mobile_position_y": 50,
-        "extra_space_desktop": 0,
+        "extra_space_desktop": 10,
         "extra_space_mobile": 24,
         "image_alt": "Hilya jewelry",
         "image_alt_ar": "عروض حلية الخاصة",
