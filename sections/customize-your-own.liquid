@@ -88,7 +88,7 @@
 
 <section
   class="custom-order"
-  style="--co-extra-desktop: {{ section.settings.extra_space_desktop }}px; --co-extra-mobile: {{ section.settings.extra_space_mobile }}px; --co-card-opacity: {{ section.settings.card_opacity | divided_by: 100.0 }};"
+  style="--co-section-desktop: {{ section.settings.section_space_desktop }}px; --co-section-mobile: {{ section.settings.section_space_mobile }}px; --co-content-desktop: {{ section.settings.content_space_desktop }}px; --co-content-mobile: {{ section.settings.content_space_mobile }}px; --co-card-opacity: {{ section.settings.card_opacity | divided_by: 100.0 }};"
 >
 
   <div class="custom-order__frame">
@@ -504,13 +504,16 @@
 /* =========================
    SECTION
    Same outer width as before: full-width band, content centered up to 1400px.
+   --co-section-* : moves the WHOLE section
+   --co-content-* : moves the content INSIDE the section
 ========================= */
 
 .custom-order {
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  padding: var(--co-extra-desktop, 0px) 0 0;
+  margin-top: var(--co-section-desktop, 0px);
+  padding: var(--co-content-desktop, 0px) 0 0;
   box-sizing: border-box;
   overflow-x: clip;
   background: #F7F4EE;
@@ -752,7 +755,8 @@
 
   /* the picture now runs edge to edge on phones */
   .custom-order {
-    padding: var(--co-extra-mobile, 0px) 0 0;
+    margin-top: var(--co-section-mobile, 0px);
+    padding: var(--co-content-mobile, 0px) 0 0;
   }
 
   /* على الموبايل ارتفاع ثابت أطول بدل ما يتحسب من الصورة */
@@ -1321,12 +1325,36 @@ html.co-lock {
     },
     {
       "type": "header",
-      "content": "Spacing"
+      "content": "Section position (moves the whole section)"
     },
     {
       "type": "range",
-      "id": "extra_space_desktop",
-      "label": "Extra space above - Desktop",
+      "id": "section_space_desktop",
+      "label": "Section position - Desktop",
+      "min": -60,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_space_mobile",
+      "label": "Section position - Mobile",
+      "min": -60,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Content spacing (moves content inside section)"
+    },
+    {
+      "type": "range",
+      "id": "content_space_desktop",
+      "label": "Content spacing - Desktop",
       "min": 0,
       "max": 120,
       "step": 2,
@@ -1335,8 +1363,8 @@ html.co-lock {
     },
     {
       "type": "range",
-      "id": "extra_space_mobile",
-      "label": "Extra space above - Mobile",
+      "id": "content_space_mobile",
+      "label": "Content spacing - Mobile",
       "min": 0,
       "max": 120,
       "step": 2,
