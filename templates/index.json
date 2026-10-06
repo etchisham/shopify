@@ -182,7 +182,7 @@
         "image_6_x_mobile": 50,
         "image_6_y_mobile": 50,
         "extra_space_desktop": 50,
-        "extra_space_mobile": 0
+        "extra_space_mobile": 50
       }
     }
   },
