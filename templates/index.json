@@ -47,7 +47,9 @@
       "custom_css": [],
       "name": "categories",
       "settings": {
-        "grid_gap": 48
+        "grid_gap": 48,
+        "extra_space_desktop": 0,
+        "extra_space_mobile": 24
       }
     },
     "customize_your_own_dtb9nD": {
@@ -55,6 +57,13 @@
       "name": "Customize Your Own",
       "settings": {
         "image": "shopify://shop_images/08_New_Arrivals.jpg",
+        "desktop_position_x": 50,
+        "desktop_position_y": 50,
+        "mobile_position_x": 50,
+        "mobile_position_y": 50,
+        "card_opacity": 50,
+        "extra_space_desktop": 0,
+        "extra_space_mobile": 24,
         "eyebrow": "Made for You",
         "eyebrow_ar": "صُمّمت لأجلك",
         "heading": "Customize Your Own",
@@ -83,7 +92,9 @@
         "heading_ar": "القطع التي يحبها الجميع",
         "collection": "best-sellers",
         "products_to_show": 10,
-        "columns": 5
+        "columns": 5,
+        "extra_space_desktop": 0,
+        "extra_space_mobile": 24
       }
     },
     "custom_section_ETjLrM": {
@@ -91,6 +102,13 @@
       "name": "Special Offers",
       "settings": {
         "image": "shopify://shop_images/ChatGPT_Image_Sep_28_2026_10_13_47_PM.png",
+        "mobile_shape": "wide",
+        "desktop_position_x": 50,
+        "desktop_position_y": 50,
+        "mobile_position_x": 50,
+        "mobile_position_y": 50,
+        "extra_space_desktop": 0,
+        "extra_space_mobile": 24,
         "image_alt": "Hilya jewelry",
         "image_alt_ar": "عروض حلية الخاصة",
         "eyebrow": "SPECIAL OFFER",
@@ -116,7 +134,9 @@
         "heading_ar": "قطع جديدة، للحظات جديدة",
         "collection": "new-arrivals",
         "products_to_show": 10,
-        "columns": 5
+        "columns": 5,
+        "extra_space_desktop": 0,
+        "extra_space_mobile": 24
       }
     },
     "follow_our_journey_fFyeaN": {
@@ -147,7 +167,20 @@
         "description": "For more inspiration, behind the scenes and special moments.",
         "description_ar": "لمزيد من الإلهام وكواليس العمل واللحظات المميزة.",
         "button_label": "Follow Us",
-        "button_label_ar": "تابعنا"
+        "button_label_ar": "تابعنا",
+        "mobile_crop": false,
+        "image_1_x_mobile": 50,
+        "image_1_y_mobile": 50,
+        "image_2_x_mobile": 50,
+        "image_2_y_mobile": 50,
+        "image_3_x_mobile": 50,
+        "image_3_y_mobile": 50,
+        "image_4_x_mobile": 50,
+        "image_4_y_mobile": 50,
+        "image_5_x_mobile": 50,
+        "image_5_y_mobile": 50,
+        "image_6_x_mobile": 50,
+        "image_6_y_mobile": 50
       }
     }
   },
