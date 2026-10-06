@@ -22,13 +22,17 @@
     assign detail_metafield = product.metafields[block.settings.metafield_namespace][block.settings.metafield_key]
   endif
 %}
+{% comment %}
+  Priority: 1) product description  2) product metafield  3) default text from the theme editor.
+  The "source" setting no longer decides which one wins.
+{% endcomment %}
+{% assign description_html = product.description | strip %}
+{% assign description_text = description_html | strip_html | strip %}
 {% capture detail_content %}
-  {% case block.settings.source %}
-    {% when 'description' %}{{ product.description }}
-    {% when 'metafield' %}
-      {% if detail_metafield != blank %}{{ detail_metafield | metafield_tag }}{% endif %}
-    {% else %}{{ body }}
-  {% endcase %}
+  {% if description_text != blank %}{{ description_html }}
+  {% elsif detail_metafield != blank %}{{ detail_metafield | metafield_tag }}
+  {% else %}{{ body }}
+  {% endif %}
 {% endcapture %}
 {% assign detail_content = detail_content | strip %}
 {% assign detail_text = detail_content | strip_html | strip %}
