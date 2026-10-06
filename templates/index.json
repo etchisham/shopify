@@ -93,8 +93,10 @@
         "collection": "best-sellers",
         "products_to_show": 10,
         "columns": 5,
-        "extra_space_desktop": 10,
-        "extra_space_mobile": 24
+        "section_space_desktop": 0,
+        "section_space_mobile": 0,
+        "content_space_desktop": 0,
+        "content_space_mobile": 24
       }
     },
     "custom_section_ETjLrM": {
@@ -135,8 +137,10 @@
         "collection": "new-arrivals",
         "products_to_show": 10,
         "columns": 5,
-        "extra_space_desktop": 10,
-        "extra_space_mobile": 24
+        "section_space_desktop": 0,
+        "section_space_mobile": 0,
+        "content_space_desktop": 10,
+        "content_space_mobile": 24
       }
     },
     "follow_our_journey_fFyeaN": {
