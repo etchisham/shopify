@@ -31,6 +31,7 @@
       namePlaceholder: 'Enter the name',
       date: 'Date',
       letter: 'Letter',
+      letterPlaceholder: 'One letter',
       letterError: 'Please enter one letter (Arabic or English).',
       loading: 'Loading...'
     },
