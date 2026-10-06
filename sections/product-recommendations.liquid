@@ -6,6 +6,24 @@
 
   assign add_label = 'products.product.add_to_cart' | t
   assign sold_out_label = 'products.product.sold_out' | t
+
+  assign carousel_locale = request.locale.iso_code | split: '-' | first
+  assign rtl_locales = 'ar,fa,he,ur' | split: ','
+  assign left_arrow_label = 'home.previous_products' | t
+  assign right_arrow_label = 'home.next_products' | t
+  # The arrow buttons are physical (left scrolls left). In RTL, scrolling left shows the NEXT products.
+  if rtl_locales contains carousel_locale
+    assign left_arrow_label = 'home.next_products' | t
+    assign right_arrow_label = 'home.previous_products' | t
+  endif
+
+  assign rec_heading = section.settings.heading
+  if carousel_locale == 'ar'
+    assign rec_heading = section.settings.heading_ar | default: rec_heading
+  endif
+  if rec_heading == blank
+    assign rec_heading = 'cart.you_may_also_like' | t
+  endif
 %}
 
 <section
@@ -16,7 +34,7 @@
 
     <div class="product-recommendations__header">
       <h2 class="product-recommendations__title">
-        {{ section.settings.heading | escape }}
+        {{ rec_heading | escape }}
       </h2>
     </div>
 
@@ -28,7 +46,7 @@
           type="button"
           class="product-recommendations__arrow product-recommendations__arrow--prev"
           data-recommendations-prev
-          aria-label="Previous products"
+          aria-label="{{ left_arrow_label | escape }}"
         >
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
         </button>
@@ -37,7 +55,7 @@
           type="button"
           class="product-recommendations__arrow product-recommendations__arrow--next"
           data-recommendations-next
-          aria-label="Next products"
+          aria-label="{{ right_arrow_label | escape }}"
         >
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
@@ -67,10 +85,6 @@
               assign rating_value = rating.rating | default: rating
               assign rating_maximum = rating.scale_max | default: 5
               assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
-              assign review_word = 'review'
-              if rating_count != 1
-                assign review_word = 'reviews'
-              endif
 
             %}
 
@@ -137,11 +151,11 @@
                   <div
                     class="product-recommendations__rating"
                     role="img"
-                    aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
+                    aria-label="{{ 'products.product.rating' | t: rating: rating_display, maximum: rating_maximum | escape }}, {{ 'products.product.rating_count' | t: count: rating_count | escape }}"
                   >
                     <span class="product-recommendations__rating-star" aria-hidden="true">★</span>
                     <span class="product-recommendations__rating-value">{{ rating_display }}</span>
-                    <span class="product-recommendations__rating-count">({{ rating_count }} {{ review_word }})</span>
+                    <span class="product-recommendations__rating-count">({{ 'products.product.rating_count' | t: count: rating_count }})</span>
                   </div>
                 {% endif %}
 
@@ -808,6 +822,21 @@
   }
 }
 
+/* ARABIC / RTL */
+
+[dir="rtl"] .product-recommendations__title {
+  line-height: 1.4;
+}
+
+[dir="rtl"] .product-recommendations__product-title {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+[dir="rtl"] .product-recommendations__rating-count {
+  font-size: .85rem;
+}
+
 {% endstylesheet %}
 
 {% schema %}
@@ -824,6 +853,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "You May Also Like"
+    },
+    {
+      "type": "text",
+      "id": "heading_ar",
+      "label": "Heading - Arabic",
+      "default": "قد يعجبك أيضًا"
     },
     {
       "type": "range",
