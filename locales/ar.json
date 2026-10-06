@@ -60,6 +60,15 @@
     "brand_name": "حِلْية"
   },
   "products": {
+    "option_values": {
+      "gold_plated": "مطلي بالذهب",
+      "silver_plated": "مطلي بالفضة"
+    },
+    "option_names": {
+      "color": "اللون",
+      "size": "المقاس",
+      "material": "الخامة"
+    },
     "product": {
       "add_to_cart": "أضف إلى السلة",
       "sold_out": "نفد المخزون",
