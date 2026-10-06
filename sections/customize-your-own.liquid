@@ -384,8 +384,13 @@
       success.hidden = false;
     };
 
-    /* Open / close */
-    const open = () => {
+    /* Open / close
+       The pop-up adds one history entry when it opens, so the phone's Back button
+       closes the pop-up instead of leaving the page. */
+    const HISTORY_KEY = 'coDrawer';
+    let pushedHistory = false;
+
+    const showDrawer = () => {
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
       document.documentElement.classList.add('co-lock');
@@ -397,7 +402,7 @@
       }, 300);
     };
 
-    const close = () => {
+    const hideDrawer = () => {
       drawer.classList.remove('is-open');
       drawer.setAttribute('aria-hidden', 'true');
       document.documentElement.classList.remove('co-lock');
@@ -406,6 +411,42 @@
 
       openButton.focus();
     };
+
+    const open = () => {
+      if (drawer.classList.contains('is-open')) return;
+
+      try {
+        const state = Object.assign({}, history.state);
+        state[HISTORY_KEY] = owner || true;
+        history.pushState(state, '');
+        pushedHistory = true;
+      } catch (e) {
+        pushedHistory = false;
+      }
+
+      showDrawer();
+    };
+
+    const close = () => {
+      if (!drawer.classList.contains('is-open')) return;
+
+      /* Closing with X / overlay / Escape: remove our history entry; the popstate handler hides the pop-up */
+      if (pushedHistory && history.state && history.state[HISTORY_KEY]) {
+        history.back();
+        return;
+      }
+
+      pushedHistory = false;
+      hideDrawer();
+    };
+
+    /* Back button (or history.back above) */
+    window.addEventListener('popstate', () => {
+      if (!drawer.classList.contains('is-open')) return;
+
+      pushedHistory = false;
+      hideDrawer();
+    });
 
     openButton.addEventListener('click', open);
 
