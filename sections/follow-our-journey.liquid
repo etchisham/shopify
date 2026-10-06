@@ -118,7 +118,8 @@
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
   --hs-extra-top: var(--hs-extra-desktop, 0px);
-  padding: calc(15px + var(--hs-extra-top)) max(12px, calc((100vw - 1660px) / 2)) 15px;
+  margin-top: var(--hs-extra-top); /* gap OUTSIDE the section background */
+  padding: 15px max(12px, calc((100vw - 1660px) / 2));
   box-sizing: border-box;
   overflow-x: clip;
   background: #f4f1eb;
@@ -328,7 +329,8 @@
 
   .hilya-social {
     --hs-extra-top: var(--hs-extra-mobile, 0px);
-    padding: calc(10px + var(--hs-extra-top)) 6px 10px;
+    margin-top: var(--hs-extra-top);
+    padding: 10px 6px;
   }
 
   .hilya-social__grid {
