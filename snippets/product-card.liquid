@@ -17,10 +17,6 @@
   assign rating_maximum = rating.scale_max | default: 5
 
   assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
-  assign review_word = 'review'
-  if rating_count != 1
-    assign review_word = 'reviews'
-  endif
 
   assign compare_price = product.compare_at_price_max
   assign current_price = product.price
@@ -108,7 +104,7 @@
     {% if discount_percentage > 0 %}
 
       <span class="product-card__discount">
-        {{ discount_percentage }}% OFF
+        {{ 'products.product.discount' | t: percent: discount_percentage }}
       </span>
 
     {% endif %}
@@ -172,7 +168,7 @@
       <div
         class="product-card__rating"
         role="img"
-        aria-label="{{ rating_display }} / {{ rating_maximum }} ({{ rating_count }} {{ review_word }})"
+        aria-label="{{ 'products.product.rating' | t: rating: rating_display, maximum: rating_maximum | escape }}, {{ 'products.product.rating_count' | t: count: rating_count | escape }}"
       >
 
         <span class="product-card__rating-star" aria-hidden="true">★</span>
@@ -180,7 +176,7 @@
         <span class="product-card__rating-value">{{ rating_display }}</span>
 
         <span class="product-card__rating-count">
-          ({{ rating_count }} {{ review_word }})
+          ({{ 'products.product.rating_count' | t: count: rating_count }})
         </span>
 
       </div>
@@ -327,7 +323,7 @@
 .product-card__discount {
   position: absolute;
   top: 12px;
-  left: 12px;
+  inset-inline-start: 12px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
@@ -353,7 +349,7 @@
 .product-card__badge {
   position: absolute;
   top: 12px;
-  left: 12px;
+  inset-inline-start: 12px;
   z-index: 3;
   border: 1px solid rgb(0 0 0 / 10%);
   border-radius: 999px;
@@ -668,7 +664,7 @@
 
   .product-card__discount {
     top: 8px;
-    left: 8px;
+    inset-inline-start: 8px;
     min-width: 48px;
     height: 22px;
     padding: 0 7px;
@@ -698,6 +694,32 @@
     transition: none;
   }
 
+}
+
+/* ================================
+   ARABIC / RTL
+================================ */
+
+[dir="rtl"] .product-card__discount {
+  min-width: 56px;
+  height: 26px;
+  font-size: 12px;
+}
+
+[dir="rtl"] .product-card__badge {
+  font-size: 0.85rem;
+}
+
+[dir="rtl"] .product-card__title {
+  line-height: 1.6;
+}
+
+@media (max-width: 27rem) {
+  [dir="rtl"] .product-card__discount {
+    min-width: 52px;
+    height: 24px;
+    font-size: 11px;
+  }
 }
 
 {% endstylesheet %}
