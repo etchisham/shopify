@@ -15,7 +15,6 @@
       "name": "t:general.hero",
       "settings": {
         "image": "shopify://shop_images/ChatGPT_Image_Sep_27_2026_09_26_16_PM.png",
-        "arabic_image": "shopify://shop_images/ChatGPT_Image_Sep_28_2026_10_13_47_PM.png",
         "desktop_position_x": 50,
         "desktop_position_y": 50,
         "mobile_position_x": 100,
