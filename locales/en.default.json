@@ -149,7 +149,10 @@
     "view_all": "View all",
     "sort_by": "Sort by",
     "empty": "No products found.",
-    "choose_collection": "Choose a collection in the theme editor."
+    "choose_collection": "Choose a collection in the theme editor.",
+    "previous_page": "Previous page",
+    "next_page": "Next page",
+    "pagination": "Pagination"
   },
   "wishlist": {
     "eyebrow": "Saved for later",
@@ -175,7 +178,23 @@
     "minimum_price": "Minimum price",
     "maximum_price": "Maximum price",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "filters": "Filters",
+    "filters_caps": "FILTERS",
+    "products_caps": "PRODUCTS",
+    "collection_eyebrow": "COLLECTION",
+    "availability": "Availability",
+    "in_stock": "In stock",
+    "out_of_stock": "Out of stock",
+    "price": "Price",
+    "price_to": "to",
+    "color": "Color",
+    "gold_plated": "Gold Plated",
+    "silver_plated": "Silver Plated",
+    "product_type": "Product Type",
+    "filtered_by": "FILTERED BY",
+    "clear_all_caps": "CLEAR ALL",
+    "remove_filter": "Remove {{ label }}"
   },
   "newsletter": {
     "label": "Email address",
