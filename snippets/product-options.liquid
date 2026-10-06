@@ -17,13 +17,17 @@
 
       {% assign option_index = option.position | minus: 1 %}
 
+      {%- assign option_key = option.name | handleize | replace: '-', '_' -%}
+      {%- capture option_name_key -%}products.option_names.{{ option_key }}{%- endcapture -%}
+      {%- assign option_label = option_name_key | t: default: option.name -%}
+
       <div class="product-form__field product-option-field">
 
         <span
           class="product-option-label"
           id="ProductOptionLabel-{{ section_id }}-{{ option.position }}"
         >
-          {{ option.name | escape }}
+          {{ option_label | escape }}
         </span>
 
         <div
@@ -45,6 +49,10 @@
               {%- endif -%}
             {%- endfor -%}
 
+            {%- assign value_key = value.name | handleize | replace: '-', '_' -%}
+            {%- capture value_label_key -%}products.option_values.{{ value_key }}{%- endcapture -%}
+            {%- assign value_label = value_label_key | t: default: value.name -%}
+
             <button
               type="button"
               role="radio"
@@ -56,7 +64,7 @@
                 title="{{ 'products.product.sold_out' | t | escape }}"
               {% endunless %}
             >
-              {{ value.name | escape }}
+              {{ value_label | escape }}
             </button>
 
           {% endfor %}
@@ -73,11 +81,14 @@
           autocomplete="off"
         >
           {% for value in option.values %}
+            {%- assign value_key = value.name | handleize | replace: '-', '_' -%}
+            {%- capture value_label_key -%}products.option_values.{{ value_key }}{%- endcapture -%}
+            {%- assign value_label = value_label_key | t: default: value.name -%}
             <option
               value="{{ value.name | escape }}"
               {% if value.selected %}selected{% endif %}
             >
-              {{ value.name | escape }}
+              {{ value_label | escape }}
             </option>
           {% endfor %}
         </select>
@@ -94,9 +105,14 @@
 
       {% for option in product.options_with_values %}
 
-        <p>{{ option.name | escape }}</p>
+        {%- assign option_key = option.name | handleize | replace: '-', '_' -%}
+        {%- capture option_name_key -%}products.option_names.{{ option_key }}{%- endcapture -%}
+        <p>{{ option_name_key | t: default: option.name | escape }}</p>
 
         {% for value in option.values %}
+
+          {%- assign value_key = value.name | handleize | replace: '-', '_' -%}
+          {%- capture value_label_key -%}products.option_values.{{ value_key }}{%- endcapture -%}
 
           {%- capture option_ids -%}
             {%- for other_option in product.options_with_values -%}
@@ -118,7 +134,7 @@
               aria-current="true"
             {% endif %}
           >
-            {{ value.name | escape }}
+            {{ value_label_key | t: default: value.name | escape }}
           </a>
 
         {% endfor %}
