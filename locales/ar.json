@@ -172,6 +172,7 @@
     "sort_options": {
       "manual": "المنتجات المميزة",
       "relevance": "الأكثر صلة",
+      "most_relevant": "الأكثر صلة",
       "best_selling": "الأكثر مبيعًا",
       "title_ascending": "أبجديًا، من أ إلى ي",
       "title_descending": "أبجديًا، من ي إلى أ",
