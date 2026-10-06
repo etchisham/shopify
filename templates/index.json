@@ -48,8 +48,10 @@
       "name": "categories",
       "settings": {
         "grid_gap": 48,
-        "extra_space_desktop": 12,
-        "extra_space_mobile": 20
+        "section_space_desktop": 0,
+        "section_space_mobile": 0,
+        "content_space_desktop": 12,
+        "content_space_mobile": 20
       }
     },
     "customize_your_own_dtb9nD": {
