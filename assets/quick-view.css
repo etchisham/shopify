@@ -303,7 +303,7 @@ html[dir="rtl"] .quick-view__price .price {
 } 
 
 .quick-view__letter {
-  max-width: 10rem;
+  max-width: 9rem;
   text-align: center;
   font-size: 1.1rem !important;
 }
