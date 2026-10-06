@@ -341,4 +341,35 @@ button.hilya-pagination__item:hover:not(:disabled) {
 
 }
 
+/* =========================================
+   ARABIC / RTL
+========================================= */
+
+[dir="rtl"] .catalog-page__title {
+  line-height: 1.4;
+}
+
+[dir="rtl"] .catalog-page__description {
+  font-size: .95rem;
+  line-height: 1.9;
+}
+
+[dir="rtl"] .catalog-page__empty {
+  font-size: 1rem;
+}
+
+[dir="rtl"] .hilya-pagination__item {
+  font-size: .92rem;
+}
+
+@media (max-width: 40rem) {
+  [dir="rtl"] .catalog-page__description {
+    font-size: .88rem;
+  }
+
+  [dir="rtl"] .hilya-pagination__item {
+    font-size: .85rem;
+  }
+}
+
 {% endstylesheet %}
