@@ -135,7 +135,7 @@
         "collection": "new-arrivals",
         "products_to_show": 10,
         "columns": 5,
-        "extra_space_desktop": 0,
+        "extra_space_desktop": 10,
         "extra_space_mobile": 24
       }
     },
