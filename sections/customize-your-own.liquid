@@ -1067,7 +1067,8 @@ html.co-lock {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
+  /* the label spans the whole row, so only the button itself should be clickable */
+  pointer-events: none;
 }
 
 .co-file__input {
@@ -1079,6 +1080,8 @@ html.co-lock {
 }
 
 .co-file__button {
+  pointer-events: auto;
+  cursor: pointer;
   flex-shrink: 0;
   padding: 11px 16px;
   border: 1px solid #111;
