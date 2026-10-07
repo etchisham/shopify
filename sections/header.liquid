@@ -1556,8 +1556,15 @@ body:has(.site-header--sticky) {
 
       {% if section.settings.show_account %}
 
+        {%- if customer -%}
+          {%- assign account_link = routes.account_url -%}
+        {%- else -%}
+          {%- assign return_path = routes.root_url | url_encode -%}
+          {%- assign account_link = '/customer_authentication/login?return_to=' | append: return_path -%}
+        {%- endif -%}
+
         <a
-          href="{{ routes.account_url }}"
+          href="{{ account_link }}"
           class="header-action"
           aria-label="{{ 'general.account' | t | escape }}"
         >
