@@ -1153,6 +1153,9 @@
             const expanded = button.getAttribute('aria-expanded') !== 'true';
 
             button.setAttribute('aria-expanded', String(expanded));
+            button.textContent = expanded
+              ? button.dataset.less
+              : button.dataset.more;
             node.classList.toggle('is-collapsed', !expanded);
           },
           { signal }
