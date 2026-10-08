@@ -17,9 +17,16 @@
 
       {% assign option_index = option.position | minus: 1 %}
 
-      {%- assign option_key = option.name | handleize | replace: '-', '_' -%}
-      {%- capture option_name_key -%}products.option_names.{{ option_key }}{%- endcapture -%}
-      {%- assign option_label = option_name_key | t: default: option.name -%}
+      {%- assign option_name_down = option.name | downcase -%}
+      {%- if option_name_down == 'color' or option.name == 'لون' or option.name == 'اللون' -%}
+        {%- assign option_label = 'products.option_names.color' | t -%}
+      {%- elsif option_name_down == 'size' or option.name == 'مقاس' or option.name == 'المقاس' -%}
+        {%- assign option_label = 'products.option_names.size' | t -%}
+      {%- elsif option_name_down == 'material' or option.name == 'خامة' or option.name == 'الخامة' -%}
+        {%- assign option_label = 'products.option_names.material' | t -%}
+      {%- else -%}
+        {%- assign option_label = option.name -%}
+      {%- endif -%}
 
       <div class="product-form__field product-option-field">
 
@@ -105,9 +112,18 @@
 
       {% for option in product.options_with_values %}
 
-        {%- assign option_key = option.name | handleize | replace: '-', '_' -%}
-        {%- capture option_name_key -%}products.option_names.{{ option_key }}{%- endcapture -%}
-        <p>{{ option_name_key | t: default: option.name | escape }}</p>
+        {%- assign option_name_down = option.name | downcase -%}
+        {%- if option_name_down == 'color' or option.name == 'لون' or option.name == 'اللون' -%}
+          {%- assign option_label = 'products.option_names.color' | t -%}
+        {%- elsif option_name_down == 'size' or option.name == 'مقاس' or option.name == 'المقاس' -%}
+          {%- assign option_label = 'products.option_names.size' | t -%}
+        {%- elsif option_name_down == 'material' or option.name == 'خامة' or option.name == 'الخامة' -%}
+          {%- assign option_label = 'products.option_names.material' | t -%}
+        {%- else -%}
+          {%- assign option_label = option.name -%}
+        {%- endif -%}
+
+        <p>{{ option_label | escape }}</p>
 
         {% for value in option.values %}
 
