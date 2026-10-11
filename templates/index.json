@@ -17,6 +17,7 @@
         "image": "shopify://shop_images/Hilya_Hero_pc.png",
         "mobile_image": "shopify://shop_images/Hilya_Hero_mobile.png",
         "arabic_image": "shopify://shop_images/hero_pc.png",
+        "arabic_mobile_image": "shopify://shop_images/Hero_mobile.png",
         "desktop_position_x": 50,
         "desktop_position_y": 50,
         "mobile_position_x": 60,
