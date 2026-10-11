@@ -64,7 +64,7 @@
         "desktop_position_y": 60,
         "mobile_position_x": 0,
         "mobile_position_y": 0,
-        "card_opacity": 50,
+        "card_opacity": 10,
         "section_space_desktop": 10,
         "section_space_mobile": 0,
         "content_space_desktop": 0,
