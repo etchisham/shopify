@@ -15,7 +15,7 @@
       "name": "t:general.hero",
       "settings": {
         "image": "shopify://shop_images/Hilya_Hero_pc.png",
-        "arabic_image": "shopify://shop_images/hero_pc_70cd49c2-3a24-47a9-bdc2-2d52ade1901e.jpg",
+        "arabic_image": "shopify://shop_images/hero_pc.png",
         "desktop_position_x": 50,
         "desktop_position_y": 50,
         "mobile_position_x": 60,
