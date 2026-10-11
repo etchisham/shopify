@@ -21,7 +21,7 @@
         "desktop_position_y": 50,
         "mobile_position_x": 60,
         "mobile_position_y": 100,
-        "arabic_desktop_position_x": 50,
+        "arabic_desktop_position_x": 0,
         "arabic_desktop_position_y": 50,
         "arabic_mobile_position_x": 42,
         "arabic_mobile_position_y": 0,
