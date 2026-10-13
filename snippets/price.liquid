@@ -2,14 +2,21 @@
   Renders product or selected-variant price with sale semantics.
 
   @param {product} product - Product object.
+  @param {variant} [variant] - Specific variant to price. Takes priority over use_variant.
   @param {boolean} [use_variant] - Use selected or first available variant pricing.
   @param {boolean} [card_layout] - Use compact product-card price order.
   @param {boolean} [show_discount] - Show calculated percentage discount.
 {% enddoc %}
 
 {% liquid
-  if use_variant
+  assign is_variant_price = false
+
+  if variant != blank
+    assign target = variant
+    assign is_variant_price = true
+  elsif use_variant
     assign target = product.selected_or_first_available_variant
+    assign is_variant_price = true
   else
     assign target = product
   endif
@@ -17,7 +24,10 @@
   assign price = target.price
   assign compare_at_price = target.compare_at_price
 
-  if compare_at_price == blank and product.compare_at_price_min > product.price
+  comment
+    Product-level fallback only: never mix product min/max values into a single variant's price.
+  endcomment
+  if is_variant_price == false and compare_at_price == blank and product.compare_at_price_min > product.price
     assign compare_at_price = product.compare_at_price_min
   endif
 
