@@ -63,36 +63,24 @@
    FIXED HEADER
    ========================================================= */
 
+/* The header section wrapper is what sticks, so the announcement bar above it
+   scrolls away with the page and the header then stays at the top. */
+.shopify-section:has(.site-header--sticky) {
+  position: sticky;
+  top: 0;
+  z-index: 99999;
+}
+
 .site-header--sticky {
-  position: fixed !important;
-
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-
-  width: auto !important;
+  position: relative !important;
+  width: 100% !important;
   max-width: none !important;
-
   margin-left: 0 !important;
   margin-right: 0 !important;
-
-  z-index: 99999 !important;
 }
 
 
-/* =========================================================
-   RESERVE SPACE FOR FIXED HEADER
-   ========================================================= */
-
-body:has(.site-header--sticky) {
-  padding-top: {{ section.settings.desktop_height }}px !important;
-}
-
-@media screen and (max-width: 749px) {
-  body:has(.site-header--sticky) {
-    padding-top: {{ section.settings.mobile_height }}px !important;
-  }
-}
+/* No reserved body space needed: the header stays in the normal flow (sticky). */
 
 
 /* =========================================================
@@ -710,13 +698,13 @@ body:has(.site-header--sticky) {
   .mobile-menu__panel {
     position: fixed;
 
-    top: var(--header-mobile-height);
+    top: var(--hilya-header-bottom, var(--header-mobile-height));
     left: 0;
 
     width: 100vw;
 
-    height: calc(100vh - var(--header-mobile-height));
-    height: calc(100dvh - var(--header-mobile-height));
+    height: calc(100vh - var(--hilya-header-bottom, var(--header-mobile-height)));
+    height: calc(100dvh - var(--hilya-header-bottom, var(--header-mobile-height)));
 
     max-height: none;
 
@@ -894,7 +882,7 @@ body:has(.site-header--sticky) {
   .header-search__panel {
     position: fixed;
 
-    top: var(--header-mobile-height);
+    top: var(--hilya-header-bottom, var(--header-mobile-height));
     left: 0;
 
     width: auto;
@@ -1698,6 +1686,38 @@ body:has(.site-header--sticky) {
 
   }
 
+})();
+</script>
+
+
+<script>
+/* Keeps --hilya-header-bottom equal to the real bottom edge of the header,
+   so the mobile menu and mobile search open right under it, also while the
+   announcement bar above is still partly visible. */
+(function () {
+  var root = document.documentElement;
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    var bottom = Math.max(0, Math.round(header.getBoundingClientRect().bottom));
+    root.style.setProperty('--hilya-header-bottom', bottom + 'px');
+  }
+
+  function request() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+
+  window.addEventListener('scroll', request, { passive: true });
+  window.addEventListener('resize', request);
+  window.addEventListener('load', request);
+  document.addEventListener('shopify:section:load', request);
+  update();
 })();
 </script>
 
