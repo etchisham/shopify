@@ -12,12 +12,40 @@
     so the card always matches the product page default variant.
   endcomment
   assign card_variant = product.selected_or_first_available_variant
-  assign card_image = card_variant.featured_image | default: product.featured_image
 
+  comment
+    Images are matched by alt text, per color:
+      "Gold Plated - Front"   / "Gold Plated - Detail"
+      "Silver Plated - Front" / "Silver Plated - Detail"
+    Primary   = variant image, else the "<Color> - Front" image, else the product's first image.
+    Hover     = the "<Color> - Detail" image, else the old fallback (second image).
+  endcomment
+  assign color_name = card_variant.option1 | strip | downcase
+  assign front_key = color_name | append: ' - front'
+  assign detail_key = color_name | append: ' - detail'
+  assign front_image = null
+  assign detail_image = null
+
+  for img in product.images
+    assign img_alt_key = img.alt | strip | downcase
+    if front_image == blank and img_alt_key == front_key
+      assign front_image = img
+    endif
+    if detail_image == blank and img_alt_key == detail_key
+      assign detail_image = img
+    endif
+  endfor
+
+  assign card_image = card_variant.featured_image | default: front_image | default: product.featured_image
   assign card_image_alt = card_image.alt | default: product.title
-  assign secondary_image = product.images[1]
-  if secondary_image.src == card_image.src
-    assign secondary_image = product.images[0]
+
+  if detail_image != blank
+    assign secondary_image = detail_image
+  else
+    assign secondary_image = product.images[1]
+    if secondary_image.src == card_image.src
+      assign secondary_image = product.images[0]
+    endif
   endif
   assign secondary_image_alt = secondary_image.alt | default: product.title
 
