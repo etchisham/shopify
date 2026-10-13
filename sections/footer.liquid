@@ -32,10 +32,6 @@
         </a>
       {% endif %}
 
-      <a href="{{ routes.collections_url }}/collections">
-        {{ 'navigation.collections' | t }}
-      </a>
-
       {% if section.settings.new_arrivals_link != blank %}
         <a href="{{ section.settings.new_arrivals_link }}">
           {{ 'navigation.new_arrivals' | t }}
@@ -62,6 +58,8 @@
     <div class="hilya-footer__column">
 
       <h3>{{ 'navigation.categories' | t }}</h3>
+
+      <a href="{{ routes.collections_url }}/collections">{{ 'navigation.collections' | t }}</a>
 
       {% if section.settings.necklaces_link != blank %}
         <a href="{{ section.settings.necklaces_link }}">{{ 'navigation.necklaces' | t }}</a>
