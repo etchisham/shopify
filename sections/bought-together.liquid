@@ -49,21 +49,6 @@
     assign bundle_note = 'products.bundle.collection_note' | t
   endif
 
-  # Bundle product: price, compare-at price and saving % come from the product picked in the section settings
-  assign bundle = section.settings.bundle_product
-  assign show_bundle = false
-  assign bundle_percent = 0
-  if bundle != blank and bundle.id != product.id
-    assign show_bundle = true
-    assign bundle_variant = bundle.selected_or_first_available_variant
-    assign bundle_price = bundle_variant.price
-    assign bundle_compare = bundle_variant.compare_at_price
-    if bundle_compare > bundle_price
-      assign bundle_saved = bundle_compare | minus: bundle_price
-      assign bundle_percent = bundle_saved | times: 100.0 | divided_by: bundle_compare | round
-    endif
-  endif
-
   assign add_label = 'products.product.add_to_cart' | t
   assign sold_out_label = 'products.product.sold_out' | t
 
@@ -106,9 +91,41 @@
     endif
   endif
 
+  comment
+    Bundle tag: the tag of the collection product is the same name with an s (collection-x -> collections-x)
+  endcomment
+  assign bundle_prefix = tag_prefix | replace: 'collection-', 'collections-'
+  assign bundle_prefix_length = bundle_prefix | size
+  assign bundle_handle = ''
+  if group_handle != blank
+    assign group_rest = group_handle | slice: prefix_length, 200
+    assign bundle_handle = bundle_prefix | append: group_rest
+  endif
+
+  comment
+    The collection page request is a bundle request when its tag starts with collections-
+  endcomment
+  assign is_bundle_request = false
+  if is_cards_request
+    for current_tag in current_tags
+      assign current_tag_start = current_tag | handleize | slice: 0, bundle_prefix_length
+      if current_tag_start == bundle_prefix
+        assign is_bundle_request = true
+      endif
+    endfor
+  endif
+
   assign card_source = related_products
   if is_cards_request
     assign card_source = collection.products
+  endif
+  if is_bundle_request
+    assign card_source = blank
+  endif
+
+  assign bundle_url = ''
+  if bundle_handle != blank
+    assign bundle_url = routes.all_products_collection_url | append: '/' | append: bundle_handle | append: '?section_id=' | append: section_file
   endif
 %}
 
@@ -221,7 +238,35 @@
 {% if is_cards_request %}
 
   {%- comment -%} Cards only: this is what the fetch below receives from /collections/all/<tag> {%- endcomment -%}
-  {{ cards_html }}
+  {%- if is_bundle_request -%}
+    {%- assign bundle_item = collection.products.first -%}
+    {%- if bundle_item != blank -%}
+      <script type="application/json" data-bundle-data>
+        {
+          "id": {{ bundle_item.id | json }},
+          "url": {{ bundle_item.url | json }},
+          "variants": [
+            {%- for v in bundle_item.variants -%}
+              {%- assign v_percent = 0 -%}
+              {%- if v.compare_at_price > v.price -%}
+                {%- assign v_saved = v.compare_at_price | minus: v.price -%}
+                {%- assign v_percent = v_saved | times: 100.0 | divided_by: v.compare_at_price | round -%}
+              {%- endif -%}
+              {
+                "options": {{ v.options | json }},
+                "available": {{ v.available | json }},
+                "price": {{ v.price | money | json }},
+                "compare": {{ v.compare_at_price | money | json }},
+                "percent": {{ v_percent }}
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          ]
+        }
+      </script>
+    {%- endif -%}
+  {%- else -%}
+    {{ cards_html }}
+  {%- endif -%}
 
 {% elsif show_section %}
 
@@ -229,6 +274,8 @@
     class="explore-collection"
     data-explore-collection
     data-current-product-id="{{ product.id }}"
+    {% if bundle_url != blank %}data-bundle-url="{{ bundle_url }}"{% endif %}
+    data-percent-template="{{ 'products.bundle.save_percent' | t: percent: '__PERCENT__' | escape }}"
     {% if use_tag %}data-tag-url="{{ routes.all_products_collection_url }}/{{ group_handle }}?section_id={{ section_file }}" hidden{% endif %}
     aria-labelledby="ExploreHeading-{{ section.id }}"
   >
@@ -267,38 +314,40 @@
 
       </div>
 
-      {%- if show_bundle -%}
-        <div class="explore-collection__bundle">
+      <div class="explore-collection__bundle" data-bundle hidden>
 
-          <div class="explore-collection__bundle-info">
-            <p class="explore-collection__bundle-eyebrow">{{ bundle_eyebrow | escape }}</p>
+        <div class="explore-collection__bundle-info">
+          <p class="explore-collection__bundle-eyebrow">{{ bundle_eyebrow | escape }}</p>
 
-            <div class="explore-collection__bundle-prices">
-              <span class="explore-collection__bundle-price">{{ bundle_price | money }}</span>
-              {%- if bundle_percent > 0 -%}
-                <s class="explore-collection__bundle-compare">{{ bundle_compare | money }}</s>
-              {%- endif -%}
-            </div>
-
-            {%- if bundle_percent > 0 -%}
-              <span class="explore-collection__bundle-badge">{{ 'products.bundle.save_percent' | t: percent: bundle_percent }}</span>
-            {%- endif -%}
+          <div class="explore-collection__bundle-prices">
+            <span class="explore-collection__bundle-price" data-bundle-price></span>
+            <s class="explore-collection__bundle-compare" data-bundle-compare hidden></s>
           </div>
 
-          <span class="explore-collection__bundle-divider" aria-hidden="true"></span>
-
-          <div class="explore-collection__bundle-cta">
-            <a class="explore-collection__bundle-button" href="{{ bundle.url }}">
-              <span>{{ bundle_button | escape }}</span>
-              <svg class="explore-collection__bundle-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </a>
-            {%- if bundle_note != blank -%}
-              <p class="explore-collection__bundle-note">{{ bundle_note | escape }}</p>
-            {%- endif -%}
-          </div>
-
+          <span class="explore-collection__bundle-badge" data-bundle-badge hidden></span>
         </div>
-      {%- endif -%}
+
+        <span class="explore-collection__bundle-divider" aria-hidden="true"></span>
+
+        <div class="explore-collection__bundle-cta">
+          <a class="explore-collection__bundle-button" href="#" data-bundle-link>
+            <span>{{ bundle_button | escape }}</span>
+            <svg class="explore-collection__bundle-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          {%- if bundle_note != blank -%}
+            <p class="explore-collection__bundle-note">{{ bundle_note | escape }}</p>
+          {%- endif -%}
+        </div>
+
+      </div>
+
+      <script type="application/json" data-current-variants>
+        {
+          {%- for v in product.variants -%}
+            "{{ v.id }}": {{ v.options | json }}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        }
+      </script>
 
     </div>
 
@@ -417,6 +466,115 @@
             })
             .catch(function () {});
         }
+
+        /* Collection bar: find the product tagged collections-<name>, show it only if it exists */
+        var bundleUrl = root.getAttribute('data-bundle-url');
+        var bundle = root.querySelector('[data-bundle]');
+
+        if (bundleUrl && bundle) {
+          var bundlePriceEl = bundle.querySelector('[data-bundle-price]');
+          var bundleCompareEl = bundle.querySelector('[data-bundle-compare]');
+          var bundleBadgeEl = bundle.querySelector('[data-bundle-badge]');
+          var bundleLink = bundle.querySelector('[data-bundle-link]');
+          var percentTemplate = root.getAttribute('data-percent-template') || '';
+          var bundleData = null;
+          var lastKey = null;
+          var currentVariants = {};
+          var currentProductId = root.getAttribute('data-current-product-id');
+
+          try {
+            var variantsScript = root.querySelector('[data-current-variants]');
+            if (variantsScript) currentVariants = JSON.parse(variantsScript.textContent);
+          } catch (error) {}
+
+          var normalize = function (value) { return String(value || '').trim().toLowerCase(); };
+
+          /* The variant selected on the main product (hidden form input first, then the URL) */
+          var getCurrentOptions = function () {
+            var input = document.querySelector('form[action*="/cart/add"] [name="id"]');
+            var id = input && input.value;
+            if (!id) {
+              var param = new URLSearchParams(window.location.search).get('variant');
+              if (param) id = param;
+            }
+            return { id: id || '', options: currentVariants[id] || [] };
+          };
+
+          var pickVariant = function (options) {
+            var best = null;
+            var bestScore = -1;
+            bundleData.variants.forEach(function (variant) {
+              var score = 0;
+              variant.options.forEach(function (value) {
+                if (options.some(function (o) { return normalize(o) === normalize(value); })) score += 1;
+              });
+              if (variant.available) score += 0.5;
+              if (score > bestScore) { best = variant; bestScore = score; }
+            });
+            return best || bundleData.variants[0];
+          };
+
+          var renderBundle = function () {
+            if (!bundleData) return;
+            var current = getCurrentOptions();
+            var key = current.id + '|' + current.options.join('|');
+            if (key === lastKey) return;
+            lastKey = key;
+
+            var variant = pickVariant(current.options);
+            if (!variant) return;
+
+            bundlePriceEl.textContent = variant.price;
+
+            if (variant.percent > 0) {
+              bundleCompareEl.textContent = variant.compare;
+              bundleCompareEl.hidden = false;
+              bundleBadgeEl.textContent = percentTemplate.replace('__PERCENT__', variant.percent);
+              bundleBadgeEl.hidden = false;
+            } else {
+              bundleCompareEl.hidden = true;
+              bundleBadgeEl.hidden = true;
+            }
+          };
+
+          fetch(bundleUrl, { credentials: 'same-origin' })
+            .then(function (response) { return response.ok ? response.text() : ''; })
+            .then(function (html) {
+              if (!html) return;
+
+              var doc = new DOMParser().parseFromString(html, 'text/html');
+              var dataEl = doc.querySelector('[data-bundle-data]');
+              if (!dataEl) return; /* tag missing or misspelled: the bar stays hidden */
+
+              var data = JSON.parse(dataEl.textContent);
+              if (!data || !data.url || !data.variants || !data.variants.length) return;
+
+              /* The collection product is the current product itself: nothing to show */
+              if (String(data.id) === String(currentProductId)) return;
+
+              bundleData = data;
+              bundleLink.setAttribute('href', data.url);
+              renderBundle();
+              bundle.hidden = false;
+
+              /* Follow the Gold / Silver (or any option) change on the main product */
+              ['change', 'click'].forEach(function (name) {
+                document.addEventListener(name, function () {
+                  setTimeout(renderBundle, 60);
+                  setTimeout(renderBundle, 400);
+                }, true);
+              });
+
+              var variantContent = document.querySelector('[data-product-variant-content]');
+              if (variantContent && window.MutationObserver) {
+                new MutationObserver(renderBundle).observe(variantContent, { attributes: true });
+              }
+
+              /* Safety net in case the theme changes the variant without an event */
+              setInterval(renderBundle, 700);
+            })
+            .catch(function () {});
+        }
       })();
     </script>
   </section>
@@ -437,6 +595,11 @@
 {% stylesheet %}
 
 [data-explore-collection][hidden] {
+  display: none !important;
+}
+
+.explore-collection__bundle[hidden],
+.explore-collection__bundle [hidden] {
   display: none !important;
 }
 
@@ -1195,12 +1358,6 @@
     { "type": "text", "id": "tag_prefix", "label": "Tag prefix", "default": "collection-" },
     { "type": "product_list", "id": "products", "label": "t:bought_together.products", "limit": 4, "info": "t:bought_together.products_info" },
     { "type": "header", "content": "Collection bar (price, saving and button)" },
-    {
-      "type": "product",
-      "id": "bundle_product",
-      "label": "Collection product",
-      "info": "The button opens this product. Price, compare-at price and saving % are read from it, so set a compare-at price on the product to show the discount."
-    },
     { "type": "text", "id": "bundle_eyebrow_en", "label": "Small title (English)", "info": "Leave empty to use the default text." },
     { "type": "text", "id": "bundle_eyebrow_ar", "label": "Small title (Arabic)" },
     { "type": "text", "id": "bundle_button_en", "label": "Button text (English)", "info": "Leave empty to use the default text." },
