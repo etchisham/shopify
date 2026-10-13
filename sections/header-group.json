@@ -16,7 +16,7 @@
       "name": "t:general.announcement_bar",
       "settings": {
         "enabled": true,
-        "text": "",
+        "text": "&nbsp;CELEBRATE OUR LAUNCH — UP TO 25% OFF&nbsp;",
         "text_ar": "احتفالًا بالافتتاح — خصومات تصل إلى 25%",
         "animation": "static",
         "marquee_direction": "right_to_left",
