@@ -11,6 +11,30 @@
   "type": "header",
   "name": "t:general.header",
   "sections": {
+    "announcement_bar_LBpbnt": {
+      "type": "announcement-bar",
+      "name": "t:general.announcement_bar",
+      "settings": {
+        "enabled": false,
+        "text": "",
+        "text_ar": "احتفالًا بالافتتاح — خصومات تصل إلى 25%",
+        "animation": "static",
+        "marquee_direction": "right_to_left",
+        "marquee_speed": 40,
+        "marquee_gap": 64,
+        "marquee_mobile": true,
+        "static_align": "center",
+        "background_color": "#f6a429",
+        "text_color": "#000000",
+        "height": 48,
+        "padding_y": 8,
+        "padding_x": 20,
+        "font_size": 14,
+        "font_size_mobile": 12,
+        "font_weight": "500",
+        "uppercase": true
+      }
+    },
     "header": {
       "type": "header",
       "settings": {
@@ -38,18 +62,6 @@
         "desktop_height": 64,
         "mobile_height": 64,
         "desktop_padding": 32
-      }
-    },
-    "announcement_bar_LBpbnt": {
-      "type": "announcement-bar",
-      "name": "t:general.announcement_bar",
-      "settings": {
-        "text": "",
-        "background_color": "#F6A429",
-        "text_color": "#000000",
-        "height": 48,
-        "font_size": 14,
-        "uppercase": true
       }
     }
   },
