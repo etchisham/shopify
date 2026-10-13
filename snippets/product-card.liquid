@@ -356,6 +356,29 @@
 
 
 /* ================================
+   SECOND IMAGE ON PRESS AND HOLD (touch screens)
+   The JS below adds .product-card--holding while a finger rests on the image.
+================================ */
+
+.product-card--holding .product-card__image-layer--primary {
+  opacity: 0;
+}
+
+.product-card--holding .product-card__image-layer--secondary {
+  opacity: 1;
+}
+
+/* No long-press menu / image preview / text selection on the card image */
+.product-card__media,
+.product-card__media img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+
+/* ================================
    DISCOUNT
 ================================ */
 
@@ -762,3 +785,85 @@
 }
 
 {% endstylesheet %}
+
+
+{% javascript %}
+
+/* Press and hold on a product image shows the second image (touch screens).
+   A quick tap still opens the product. Releasing brings the first image back. */
+(function () {
+  if (window.__productCardHold) return;
+  window.__productCardHold = true;
+
+  var HOLD_DELAY = 180;   // ms before the second image shows
+  var MOVE_LIMIT = 10;    // px: moving more than this means scrolling, not holding
+  var timer = null;
+  var activeCard = null;
+  var held = false;
+  var startX = 0;
+  var startY = 0;
+
+  function cardFrom(target) {
+    var media = target.closest && target.closest('[data-product-media]');
+    if (!media) return null;
+    var card = media.closest('[data-product-card]');
+    if (!card || !card.classList.contains('product-card--has-secondary')) return null;
+    return card;
+  }
+
+  function reset() {
+    clearTimeout(timer);
+    timer = null;
+    if (activeCard) activeCard.classList.remove('product-card--holding');
+    activeCard = null;
+  }
+
+  document.addEventListener('touchstart', function (event) {
+    reset();
+    held = false;
+    if (event.touches.length !== 1) return;
+
+    var card = cardFrom(event.target);
+    if (!card) return;
+
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+
+    timer = setTimeout(function () {
+      held = true;
+      activeCard = card;
+      card.classList.add('product-card--holding');
+    }, HOLD_DELAY);
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function (event) {
+    if (!timer && !activeCard) return;
+    var touch = event.touches[0];
+    if (Math.abs(touch.clientX - startX) > MOVE_LIMIT || Math.abs(touch.clientY - startY) > MOVE_LIMIT) {
+      held = false;
+      reset();
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (event) {
+    var wasHeld = held;
+    reset();
+    held = false;
+    /* A hold is not a tap: stop the browser from opening the product link */
+    if (wasHeld && event.cancelable) event.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener('touchcancel', function () {
+    held = false;
+    reset();
+  }, { passive: true });
+
+  /* Android long-press would open the link menu; block it on the card image */
+  document.addEventListener('contextmenu', function (event) {
+    if (window.matchMedia('(hover: none)').matches && cardFrom(event.target)) {
+      event.preventDefault();
+    }
+  });
+})();
+
+{% endjavascript %}
