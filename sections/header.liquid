@@ -65,10 +65,22 @@
 
 /* The header section wrapper is what sticks, so the announcement bar above it
    scrolls away with the page and the header then stays at the top. */
-.shopify-section:has(.site-header--sticky) {
+body .shopify-section:has(.site-header--sticky) {
   position: sticky;
   top: 0;
   z-index: 99999;
+
+  /* Full viewport width even when the page content sits in a narrower column.
+     "body" in the selector makes this win over the full-width rule further down. */
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-inline: calc(50% - 50vw) !important;
+}
+
+/* The 100vw above includes the scrollbar; clip avoids a sideways scrollbar
+   and, unlike hidden, does not break sticky. */
+html:has(.site-header--sticky) {
+  overflow-x: clip;
 }
 
 .site-header--sticky {
