@@ -17,13 +17,13 @@
   </button>
   <div class="collection-list__grid">
 
-    {% assign allowed_collections = 'necklaces,rings,pendants,bracelets,keychains' | split: ',' %}
+    {% assign allowed_collections = 'necklaces,rings,collections,bracelets,keychains,pendants' | split: ',' %}
 
     {% for handle in allowed_collections %}
       {% assign collection = collections[handle] %}
 
       {% if collection != blank %}
-        <article class="collection-card">
+        <article class="collection-card" data-handle="{{ handle }}">
           <a href="{{ collection.url }}" class="collection-card__link">
 
             <div class="collection-card__media">
@@ -43,7 +43,11 @@
 
               <div class="collection-card__overlay">
                 <h3 class="collection-card__title">
-                  {{ collection.title | escape }}
+                  {%- if handle == 'collections' -%}
+                    {{ 'navigation.collections' | t }}
+                  {%- else -%}
+                    {{ collection.title | escape }}
+                  {%- endif -%}
                 </h3>
 
                 <span class="collection-card__arrow">→</span>
@@ -113,7 +117,7 @@ const centerMiddle = () => {
   const cards = grid.querySelectorAll('.collection-card');
   if (cards.length < 3) return;
 
-  const mid = cards[Math.floor((cards.length - 1) / 2)];
+  const mid = grid.querySelector('.collection-card[data-handle="collections"]') || cards[Math.floor((cards.length - 1) / 2)];
   const g = grid.getBoundingClientRect();
   const c = mid.getBoundingClientRect();
   const delta = (c.left + c.width / 2) - (g.left + g.width / 2);
@@ -242,6 +246,53 @@ window.addEventListener('load', centerMiddle, { once: true });
   }
 }
 
+/* Desktop arrows: same as Featured Collection (white rounded square, on hover) */
+@media (min-width: 750px) {
+  .collection-list__nav {
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 0;
+    border-radius: 0.9rem;
+    background: #fff;
+    color: #222;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
+    transition: opacity 200ms ease, background-color 160ms ease, color 160ms ease;
+  }
+
+  .collection-list__nav--prev { left: -1.625rem; }
+  .collection-list__nav--next { right: -1.625rem; }
+
+  .collection-list__nav svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .collection-list__nav.is-visible {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (min-width: 750px) and (hover: hover) and (pointer: fine) {
+  .collection-list__slider:hover .collection-list__nav.is-visible,
+  .collection-list__slider:has(:focus-visible) .collection-list__nav.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .collection-list__nav.is-visible:hover {
+    background: #222;
+    color: #fff;
+  }
+}
+
+/* Touch tablets: swipe only, no arrows */
+@media (hover: none) and (min-width: 750px) {
+  .collection-list__nav {
+    display: none;
+  }
+}
+
 /* =========================
    COLLECTION SECTION
    --cl-section-* : moves the WHOLE section
@@ -297,18 +348,30 @@ window.addEventListener('load', centerMiddle, { once: true });
 ========================= */
 
 .collection-list__grid {
+  --per-view: 5;
+  --gap: 18px;
+
   display: flex !important;
   flex-wrap: nowrap !important;
-  gap: 18px;
+  gap: var(--gap);
   width: 100%;
   max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
   box-sizing: border-box;
 }
 
+.collection-list__grid::-webkit-scrollbar {
+  display: none;
+}
+
 .collection-card {
-  flex: 1 1 0 !important;
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view)) !important;
   min-width: 0 !important;
-  width: 0;
+  width: auto;
+  scroll-snap-align: start;
   box-sizing: border-box;
 }
 
@@ -422,7 +485,8 @@ window.addEventListener('load', centerMiddle, { once: true });
   }
 
   .collection-list__grid {
-    gap: 14px;
+    --per-view: 3.3;
+    --gap: 14px;
   }
 
   .collection-list__intro {
