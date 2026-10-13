@@ -18,7 +18,7 @@
         "enabled": true,
         "text": "CELEBRATE OUR LAUNCH — UP TO 25% OFF",
         "text_ar": "احتفالًا بالافتتاح — خصومات تصل إلى 25%",
-        "animation": "marquee",
+        "animation": "static",
         "marquee_direction": "right_to_left",
         "marquee_speed": 40,
         "marquee_gap": 64,
