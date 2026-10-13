@@ -100,7 +100,13 @@
       "no_javascript": "Open each product to add it to your cart.",
       "subscription_options": "Open this product to choose subscription options.",
       "personalization_options": "Open this product to add required personalization.",
-      "editor_setup": "Choose products in this section or the custom.frequently_bought_together product metafield."
+      "editor_setup": "Choose products in this section or the custom.frequently_bought_together product metafield.",
+      "collection_heading": "Explore the Collection",
+      "collection_subheading": "Complete your look. Enjoy an exclusive saving.",
+      "complete_collection": "Complete the collection",
+      "save_percent": "Save {{ percent }}%",
+      "explore_full": "Explore the Full Collection",
+      "collection_note": "Add all items to your cart and enjoy the special price."
     },
     "details": {
       "buy_now": "Buy it now",
