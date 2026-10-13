@@ -104,7 +104,13 @@
       "no_javascript": "افتح كل منتج لإضافته إلى السلة.",
       "subscription_options": "افتح المنتج لاختيار الاشتراك.",
       "personalization_options": "افتح المنتج لإضافة التخصيص المطلوب.",
-      "editor_setup": "اختر المنتجات في إعدادات القسم أو في الحقل المخصص custom.frequently_bought_together لكل منتج."
+      "editor_setup": "اختر المنتجات في إعدادات القسم أو في الحقل المخصص custom.frequently_bought_together لكل منتج.",
+      "collection_heading": "اكتشف المجموعة",
+      "collection_subheading": "أكمل إطلالتك واستمتع بتوفير حصري.",
+      "complete_collection": "أكمل المجموعة",
+      "save_percent": "وفّر {{ percent }}٪",
+      "explore_full": "اكتشف المجموعة كاملة",
+      "collection_note": "أضف كل القطع إلى سلتك واستمتع بالسعر الخاص."
     },
     "details": {
       "buy_now": "اشترِ الآن",
