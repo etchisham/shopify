@@ -288,5 +288,33 @@
         "default": 24
       }
     ]
+  },
+  {
+    "name": "Price filter",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Collection price filter scale"
+      },
+      {
+        "type": "number",
+        "id": "hilya_price_filter_min",
+        "label": "Minimum price (EGP)",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "hilya_price_filter_max",
+        "label": "Maximum price (EGP)",
+        "default": 5000
+      },
+      {
+        "type": "number",
+        "id": "hilya_price_filter_step",
+        "label": "Slider step (EGP)",
+        "info": "How much the slider moves each step. Leave at 1 for normal use.",
+        "default": 1
+      }
+    ]
   }
 ]
