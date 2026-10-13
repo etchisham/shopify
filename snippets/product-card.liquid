@@ -837,7 +837,9 @@
   }, { passive: true });
 
   document.addEventListener('touchmove', function (event) {
-    if (!timer && !activeCard) return;
+    /* Already holding: keep the second image while the finger scrolls, until it lifts */
+    if (activeCard) return;
+    if (!timer) return;
     var touch = event.touches[0];
     if (Math.abs(touch.clientX - startX) > MOVE_LIMIT || Math.abs(touch.clientY - startY) > MOVE_LIMIT) {
       held = false;
@@ -853,9 +855,27 @@
     if (wasHeld && event.cancelable) event.preventDefault();
   }, { passive: false });
 
+  /* Some browsers send touchcancel when a scroll takes over the gesture.
+     If that happens while holding, keep the second image until scrolling stops. */
+  var settleTimer = null;
+
+  function releaseAfterScroll() {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(function () {
+      window.removeEventListener('scroll', releaseAfterScroll);
+      held = false;
+      reset();
+    }, 300);
+  }
+
   document.addEventListener('touchcancel', function () {
-    held = false;
-    reset();
+    if (activeCard) {
+      window.addEventListener('scroll', releaseAfterScroll, { passive: true });
+      releaseAfterScroll();
+    } else {
+      held = false;
+      reset();
+    }
   }, { passive: true });
 
   /* Android long-press would open the link menu; block it on the card image */
