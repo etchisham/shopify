@@ -32,6 +32,10 @@
         </a>
       {% endif %}
 
+      <a href="{{ routes.collections_url }}/collections">
+        {{ 'navigation.collections' | t }}
+      </a>
+
       {% if section.settings.new_arrivals_link != blank %}
         <a href="{{ section.settings.new_arrivals_link }}">
           {{ 'navigation.new_arrivals' | t }}
