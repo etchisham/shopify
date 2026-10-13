@@ -65,22 +65,16 @@
 
 /* The header section wrapper is what sticks, so the announcement bar above it
    scrolls away with the page and the header then stays at the top. */
-body .shopify-section:has(.site-header--sticky) {
+.shopify-section:has(.site-header--sticky) {
   position: sticky;
   top: 0;
   z-index: 99999;
-
-  /* Full viewport width even when the page content sits in a narrower column.
-     "body" in the selector makes this win over the full-width rule further down. */
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin-inline: calc(50% - 50vw) !important;
 }
 
-/* The 100vw above includes the scrollbar; clip avoids a sideways scrollbar
-   and, unlike hidden, does not break sticky. */
-html:has(.site-header--sticky) {
-  overflow-x: clip;
+/* The theme grid (critical.css) puts every section child in the centered
+   content column. The header must span all columns, like .full-width does. */
+.shopify-section > .site-header {
+  grid-column: 1 / -1;
 }
 
 .site-header--sticky {
