@@ -15,7 +15,7 @@
       "type": "announcement-bar",
       "name": "t:general.announcement_bar",
       "settings": {
-        "enabled": false,
+        "enabled": true,
         "text": "",
         "text_ar": "احتفالًا بالافتتاح — خصومات تصل إلى 25%",
         "animation": "static",
