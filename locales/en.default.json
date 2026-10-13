@@ -27,6 +27,7 @@
     "view_all": "View all {{ title }}",
     "home": "Home",
     "all_products": "All Products",
+    "collections": "Collections",
     "categories": "Categories",
     "necklaces": "Necklaces",
     "rings": "Rings",
