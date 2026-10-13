@@ -1240,22 +1240,44 @@
     clip-path: none;
   }
 
-  /* Bundle bar: stacked, everything centered */
+  /* Bundle bar: stacked, everything centered (compact on mobile) */
   .explore-collection__bundle {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
+    gap: 0.9rem;
     margin-inline: 1rem;
+    margin-top: 1.5rem;
     width: auto;
-    padding: 1.5rem 1.25rem;
+    padding: 1.1rem 1rem;
+    border-radius: 1rem;
   }
 
   .explore-collection__bundle-info {
     align-items: center;
+    gap: 0.6rem;
     text-align: center;
+  }
+
+  .explore-collection__bundle-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
   }
 
   .explore-collection__bundle-prices {
     justify-content: center;
+    gap: 0.2rem 0.7rem;
+  }
+
+  .explore-collection__bundle-price {
+    font-size: 1.35rem;
+  }
+
+  .explore-collection__bundle-compare {
+    font-size: 0.9rem;
+  }
+
+  .explore-collection__bundle-badge {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
   }
 
   .explore-collection__bundle-divider {
@@ -1264,8 +1286,26 @@
     align-self: auto;
   }
 
+  .explore-collection__bundle-cta {
+    gap: 0.6rem;
+  }
+
   .explore-collection__bundle-button {
     max-width: none;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .explore-collection__bundle-arrow {
+    width: 16px;
+    height: 16px;
+  }
+
+  .explore-collection__bundle-note {
+    font-size: 0.75rem;
+    line-height: 1.4;
   }
 }
 
