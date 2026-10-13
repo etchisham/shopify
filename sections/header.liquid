@@ -1148,6 +1148,13 @@
         </details>
 
 
+        <!-- MOBILE COLLECTIONS -->
+
+        <a href="{{ routes.collections_url }}/collections">
+          {{ 'navigation.collections' | t }}
+        </a>
+
+
         {% if section.settings.show_new_arrivals
           and section.settings.new_arrivals_link != blank %}
 
@@ -1293,6 +1300,10 @@
 
           <a href="{{ section.settings.all_products_collection.url | default: routes.all_products_collection_url }}">
             {{ 'navigation.all_products' | t }}
+          </a>
+
+          <a href="{{ routes.collections_url }}/collections">
+            {{ 'navigation.collections' | t }}
           </a>
 
 
