@@ -1,4326 +1,931 @@
-{% doc %}
-  Hilya custom collection filters.
-  Client-side filtering without Shopify Search & Discovery.
+{%- assign current_year = 'now' | date: '%Y' -%}
+{%- assign language_label = 'general.language' | t -%}
 
-  @param {number} [results_count] - Total number of products/results
-  @param {object} [sort_options] - Available sort options
-  @param {string} [sort_by] - Current sort value
-  @param {string} [default_sort_by] - Default sort value
-{% enddoc %}
+<footer class="hilya-footer">
 
-{%- comment -%}
-  Price filter scale — controlled from Theme settings > Price filter
-  (config/settings_schema.json). Falls back to 0 / 5000 / 1.
-{%- endcomment -%}
-{%- assign hilya_price_min = settings.hilya_price_filter_min | default: 0 | plus: 0 -%}
-{%- assign hilya_price_max = settings.hilya_price_filter_max | default: 5000 | plus: 0 -%}
-{%- assign hilya_price_step = settings.hilya_price_filter_step | default: 1 | plus: 0 -%}
-{%- if hilya_price_step < 1 -%}{%- assign hilya_price_step = 1 -%}{%- endif -%}
-{%- if hilya_price_max <= hilya_price_min -%}{%- assign hilya_price_max = hilya_price_min | plus: hilya_price_step -%}{%- endif -%}
+  <div class="hilya-footer__inner">
 
-<div
-  class="hilya-filters"
-  data-hilya-filters-text
-  data-price-min-limit="{{ hilya_price_min }}"
-  data-price-max-limit="{{ hilya_price_max }}"
-  data-price-step="{{ hilya_price_step }}"
-  data-regular-price="{{ 'products.product.regular_price' | t | escape }}"
-  data-percent-off="{{ 'products.product.discount' | t: percent: '__PERCENT__' | escape }}"
-  data-sold-out="{{ 'products.product.sold_out' | t | escape }}"
-  data-previous-page="{{ 'collections.previous_page' | t | escape }}"
-  data-next-page="{{ 'collections.next_page' | t | escape }}"
-  data-page="{{ 'meta.page' | t: number: '__NUMBER__' | escape }}"
-  data-filtered-by="{{ 'facets.filtered_by' | t | escape }}"
-  data-clear-all="{{ 'facets.clear_all_caps' | t | escape }}"
-  data-remove-filter="{{ 'facets.remove_filter' | t: label: '__LABEL__' | escape }}"
-  data-from="{{ 'facets.from' | t | escape }}"
-  data-to="{{ 'facets.to' | t | escape }}"
->
+    <!-- BRAND -->
 
-  <!-- =========================================
-       MOBILE FILTER / PRODUCTS / SORT BAR
-  ========================================== -->
+    <div class="hilya-footer__brand">
 
-  <div class="hilya-filters__mobile-bar">
+      <a href="{{ routes.root_url }}" class="hilya-footer__logo">
+        {{ 'general.brand_name' | t }}
+      </a>
 
-    <button
-      type="button"
-      class="hilya-filters__mobile-button"
-      data-filter-open
-      aria-expanded="false"
-      aria-controls="HilyaFilterDrawer"
-    >
-      <span class="hilya-filters__filter-icon" aria-hidden="true">
-        <span></span>
-        <span></span>
-      </span>
+      <p>
+        {{ 'footer.tagline' | t }}
+      </p>
 
-      <span class="hilya-filters__filter-text">
-        {{ 'facets.filters_caps' | t }}
-      </span>
+    </div>
 
-      <span class="hilya-filters__count" data-filter-count hidden>
-        0
-      </span>
-    </button>
 
-    <span class="hilya-filters__mobile-results">
-      <span data-filter-results>
-        {{ results_count }}
-      </span>
-      {{ 'facets.products_caps' | t }}
-    </span>
+    <!-- SHOP -->
 
-    <div
-      class="hilya-filters__sort hilya-filters__sort--mobile"
-      data-hilya-sort-wrap
-    >
+    <div class="hilya-footer__column">
 
-      <span class="hilya-filters__sort-label">
-        {{ 'collections.sort_by' | t }}
-      </span>
+      <h3>{{ 'navigation.shop' | t }}</h3>
 
-      {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
+      {% if section.settings.all_products_link != blank %}
+        <a href="{{ section.settings.all_products_link }}">
+          {{ 'navigation.all_products' | t }}
+        </a>
+      {% endif %}
 
-      <button
-        type="button"
-        class="hilya-filters__sort-trigger"
-        data-hilya-sort-trigger
-        aria-expanded="false"
-        aria-haspopup="listbox"
-      >
-        <span data-hilya-sort-current>
-          {% for option in sort_options %}
-            {% if option.value == current_sort %}
-              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
-            {% endif %}
-          {% endfor %}
-        </span>
+      {% if section.settings.new_arrivals_link != blank %}
+        <a href="{{ section.settings.new_arrivals_link }}">
+          {{ 'navigation.new_arrivals' | t }}
+        </a>
+      {% endif %}
 
-        <span class="hilya-filters__sort-chevron" aria-hidden="true"></span>
-      </button>
+      {% if section.settings.best_sellers_link != blank %}
+        <a href="{{ section.settings.best_sellers_link }}">
+          {{ 'navigation.best_sellers' | t }}
+        </a>
+      {% endif %}
 
-      <div
-        class="hilya-filters__sort-menu"
-        data-hilya-sort-menu
-        role="listbox"
-        hidden
-      >
-        {% for option in sort_options %}
-          <button
-            type="button"
-            class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
-            data-sort-value="{{ option.value | escape }}"
-            role="option"
-            aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
-          >
-            <span>
-              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
-            </span>
+      {% if section.settings.sale_link != blank %}
+        <a href="{{ section.settings.sale_link }}">
+          {{ 'navigation.sale' | t }}
+        </a>
+      {% endif %}
 
-            <span class="hilya-filters__sort-check" aria-hidden="true">
-              ✓
-            </span>
-          </button>
-        {% endfor %}
-      </div>
+    </div>
+
+
+    <!-- CATEGORIES -->
+
+    <div class="hilya-footer__column">
+
+      <h3>{{ 'navigation.categories' | t }}</h3>
+
+      <a href="{{ routes.collections_url }}/collections">{{ 'navigation.collections' | t }}</a>
+
+      {% if section.settings.necklaces_link != blank %}
+        <a href="{{ section.settings.necklaces_link }}">{{ 'navigation.necklaces' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.rings_link != blank %}
+        <a href="{{ section.settings.rings_link }}">{{ 'navigation.rings' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.pendants_link != blank %}
+        <a href="{{ section.settings.pendants_link }}">{{ 'navigation.pendants' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.bracelets_link != blank %}
+        <a href="{{ section.settings.bracelets_link }}">{{ 'navigation.bracelets' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.keychains_link != blank %}
+        <a href="{{ section.settings.keychains_link }}">{{ 'navigation.keychains' | t }}</a>
+      {% endif %}
+
+    </div>
+
+
+    <!-- ABOUT -->
+
+    <div class="hilya-footer__column">
+
+      <h3>{{ 'navigation.about' | t }}</h3>
+
+      {% if section.settings.our_story_link != blank %}
+        <a href="{{ section.settings.our_story_link }}">{{ 'navigation.our_story' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.contact_link != blank %}
+        <a href="{{ section.settings.contact_link }}">{{ 'navigation.contact_us' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.shipping_link != blank %}
+        <a href="{{ section.settings.shipping_link }}">{{ 'navigation.shipping' | t }}</a>
+      {% endif %}
+
+      {% if section.settings.returns_link != blank %}
+        <a href="{{ section.settings.returns_link }}">{{ 'navigation.returns' | t }}</a>
+      {% endif %}
+
+    </div>
+
+
+    <!-- NEWSLETTER -->
+
+    <div class="hilya-footer__newsletter">
+
+      <h3>{{ 'footer.join_newsletter' | t }}</h3>
+
+      <p>
+        {{ 'footer.newsletter_tagline' | t }}
+      </p>
+
+      {% form 'customer', class: 'hilya-newsletter-form' %}
+
+        {%- if form.posted_successfully? -%}
+          {%- assign newsletter_status = 'success' -%}
+        {%- elsif form.errors -%}
+          {%- assign newsletter_status = 'error' -%}
+        {%- endif -%}
+
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        <input
+          type="email"
+          name="contact[email]"
+          aria-label="{{ 'newsletter.label' | t | escape }}"
+          placeholder="{{ 'footer.email_placeholder' | t | escape }}"
+          autocomplete="email"
+          required
+        >
+
+        <button type="submit" aria-label="{{ 'newsletter.button' | t | escape }}">
+          →
+        </button>
+
+      {% endform %}
+
+      {%- if newsletter_status == 'success' -%}
+        <p class="hilya-newsletter-message" role="status">{{ 'newsletter.success' | t }}</p>
+      {%- elsif newsletter_status == 'error' -%}
+        <p class="hilya-newsletter-message hilya-newsletter-message--error" role="alert">{{ 'newsletter.error' | t }}</p>
+      {%- endif -%}
 
     </div>
 
   </div>
 
 
-  <!-- =========================================
-       DESKTOP SIDEBAR
-  ========================================== -->
+  <!-- BOTTOM -->
 
-  <aside class="hilya-filter-sidebar">
+  <div class="hilya-footer__bottom">
 
-    <div class="hilya-filter-sidebar__heading">
-      <h2>{{ 'facets.filters' | t }}</h2>
-    </div>
-
-    <div class="hilya-filters__active" data-active-filters hidden></div>
-
-    <form class="hilya-filter-form" data-hilya-filter-form>
-
-      <!-- AVAILABILITY -->
-
-      <div class="hilya-filter-group is-open">
-
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.availability' | t }}</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
-
-        <div class="hilya-filter-group__content">
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="availability" value="in_stock">
-            <span>{{ 'facets.in_stock' | t }}</span>
-          </label>
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="availability" value="out_of_stock">
-            <span>{{ 'facets.out_of_stock' | t }}</span>
-          </label>
-
-        </div>
-
-      </div>
+    <p>
+      {{ 'footer.copyright' | t: year: current_year }}
+    </p>
 
 
-      <!-- PRICE -->
+    <!-- SOCIAL ICONS -->
 
-      <div class="hilya-filter-group is-open">
+    <div class="hilya-footer__social">
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.price' | t }}</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
-
-        <div class="hilya-filter-group__content">
-
-          <div class="hilya-price-slider">
-
-            <div class="hilya-price-slider__track"></div>
-
-            <div class="hilya-price-slider__range" data-price-range></div>
-
-            <input
-              type="range"
-              name="price_min"
-              min="{{ hilya_price_min }}"
-              max="{{ hilya_price_max }}"
-              value="{{ hilya_price_min }}"
-              step="{{ hilya_price_step }}"
-              data-price-min
-              aria-label="{{ 'facets.minimum_price' | t | escape }}"
-            >
-
-            <input
-              type="range"
-              name="price_max"
-              min="{{ hilya_price_min }}"
-              max="{{ hilya_price_max }}"
-              value="{{ hilya_price_max }}"
-              step="{{ hilya_price_step }}"
-              data-price-max
-              aria-label="{{ 'facets.maximum_price' | t | escape }}"
-            >
-
-          </div>
-
-          <div class="hilya-price-values">
-
-            <label class="hilya-price-input">
-              <span>EGP</span>
-
-              <input
-                type="number"
-                min="{{ hilya_price_min }}"
-                max="{{ hilya_price_max }}"
-                step="{{ hilya_price_step }}"
-                value="{{ hilya_price_min }}"
-                inputmode="numeric"
-                data-price-min-input
-                aria-label="{{ 'facets.minimum_price' | t | escape }}"
+      {%- if localization.available_languages.size > 1 -%}
+        {% form 'localization',
+          id: 'FooterLanguage',
+          class: 'hilya-footer-language',
+          aria-label: language_label
+        %}
+          {%- for language in localization.available_languages -%}
+            {%- unless language.iso_code == localization.language.iso_code -%}
+              <button
+                type="submit"
+                class="hilya-footer-language__button"
+                name="language_code"
+                value="{{ language.iso_code }}"
+                lang="{{ language.iso_code }}"
               >
-            </label>
+                {{ language.endonym_name | escape }}
+              </button>
+            {%- endunless -%}
+          {%- endfor -%}
+        {% endform %}
+      {%- endif -%}
 
-            <span class="hilya-price-values__to">
-              {{ 'facets.price_to' | t }}
-            </span>
 
-            <label class="hilya-price-input hilya-price-input--max">
-              <span>EGP</span>
+      {% if section.settings.instagram_url != blank %}
 
-              <input
-                type="number"
-                min="{{ hilya_price_min }}"
-                max="{{ hilya_price_max }}"
-                step="{{ hilya_price_step }}"
-                value="{{ hilya_price_max }}"
-                inputmode="numeric"
-                data-price-max-input
-                aria-label="{{ 'facets.maximum_price' | t | escape }}"
-              >
-            </label>
+        <a
+          href="{{ section.settings.instagram_url }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="Instagram"
+        >
 
-          </div>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1"></circle>
+          </svg>
 
-        </div>
+        </a>
 
-      </div>
+      {% endif %}
 
 
-      <!-- COLOR -->
+      {% if section.settings.facebook_url != blank %}
 
-      <div class="hilya-filter-group is-open">
+        <a
+          href="{{ section.settings.facebook_url }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="Facebook"
+        >
 
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.color' | t }}</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.7.3-1 1-1z"></path>
+          </svg>
 
-        <div class="hilya-filter-group__content">
+        </a>
 
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="color" value="Gold Plated">
-            <span>{{ 'facets.gold_plated' | t }}</span>
-          </label>
+      {% endif %}
 
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="color" value="Silver Plated">
-            <span>{{ 'facets.silver_plated' | t }}</span>
-          </label>
 
-        </div>
+      {% if section.settings.whatsapp_number != blank %}
 
-      </div>
+        <a
+          href="https://wa.me/{{ section.settings.whatsapp_number | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="WhatsApp"
+        >
 
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.5-4A8 8 0 1 1 20 11.5z"></path>
+            <path d="M9 8.5c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.3 2.2l.6-.5c.2-.2.4-.2.6-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.4-1.6 1.5-1.1.1-2.8-.7-4.2-1.9-1.4-1.2-2.4-2.8-2.5-3.9-.1-.7.2-1.1.6-1.4z"></path>
+          </svg>
 
-      <!-- PRODUCT TYPE -->
+        </a>
 
-      <div class="hilya-filter-group is-open">
-
-        <button type="button" class="hilya-filter-group__toggle" data-filter-toggle>
-          <span>{{ 'facets.product_type' | t }}</span>
-          <span class="hilya-filter-chevron" aria-hidden="true"></span>
-        </button>
-
-        <div class="hilya-filter-group__content">
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="product_type" value="Necklaces">
-            <span>{{ 'navigation.necklaces' | t }}</span>
-          </label>
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="product_type" value="Rings">
-            <span>{{ 'navigation.rings' | t }}</span>
-          </label>
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="product_type" value="Pendants">
-            <span>{{ 'navigation.pendants' | t }}</span>
-          </label>
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="product_type" value="Bracelets">
-            <span>{{ 'navigation.bracelets' | t }}</span>
-          </label>
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="product_type" value="Keychains">
-            <span>{{ 'navigation.keychains' | t }}</span>
-          </label>
-
-          <label class="hilya-filter-option">
-            <input type="checkbox" name="product_type" value="Collections">
-            <span>{{ 'navigation.collections' | t }}</span>
-          </label>
-
-        </div>
-
-      </div>
-
-    </form>
-
-  </aside>
-
-
-  <!-- =========================================
-       MOBILE DRAWER
-  ========================================== -->
-
-  <div class="hilya-filter-overlay" data-filter-overlay></div>
-
-
-  <aside
-    id="HilyaFilterDrawer"
-    class="hilya-filter-drawer"
-    data-filter-drawer
-    aria-hidden="true"
-  >
-
-    <!-- MOBILE HEADER -->
-
-    <div class="hilya-filter-drawer__header">
-
-      <div class="hilya-filter-drawer__header-main">
-
-        <div class="hilya-filter-drawer__title">
-
-          <span class="hilya-filter-drawer__eyebrow">
-            {{ 'facets.collection_eyebrow' | t }}
-          </span>
-
-          <h2>
-            {{ 'facets.filters_caps' | t }}
-          </h2>
-
-        </div>
-
-      </div>
-
-      <button
-        type="button"
-        class="hilya-filter-drawer__close"
-        data-filter-close
-        aria-label="{{ 'accessibility.close_filters' | t | escape }}"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <!-- ONLY THIS AREA SCROLLS -->
-
-    <div class="hilya-filter-drawer__content">
-
-      <div class="hilya-filters__active" data-active-filters-mobile hidden></div>
-
-      <div data-mobile-filter-content></div>
-
-    </div>
-
-  </aside>
-
-
-  <!-- =========================================
-       DESKTOP PRODUCTS / SORT TOOLBAR
-  ========================================== -->
-
-  <div class="hilya-filters__products-toolbar">
-
-    <span class="hilya-filters__results">
-
-      <span data-filter-results>
-        {{ results_count }}
-      </span>
-
-      {{ 'facets.products_caps' | t }}
-
-    </span>
-
-    <div
-      class="hilya-filters__sort hilya-filters__sort--desktop"
-      data-hilya-sort-wrap
-    >
-
-      <span class="hilya-filters__sort-label">
-        {{ 'collections.sort_by' | t }}
-      </span>
-
-      {% assign current_sort = sort_by | default: default_sort_by | default: 'manual' %}
-
-      <button
-        type="button"
-        class="hilya-filters__sort-trigger"
-        data-hilya-sort-trigger
-        aria-expanded="false"
-        aria-haspopup="listbox"
-      >
-
-        <span data-hilya-sort-current>
-
-          {% for option in sort_options %}
-
-            {% if option.value == current_sort %}
-              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
-            {% endif %}
-
-          {% endfor %}
-
-        </span>
-
-        <span class="hilya-filters__sort-chevron" aria-hidden="true"></span>
-
-      </button>
-
-      <div
-        class="hilya-filters__sort-menu"
-        data-hilya-sort-menu
-        role="listbox"
-        hidden
-      >
-
-        {% for option in sort_options %}
-
-          <button
-            type="button"
-            class="hilya-filters__sort-option{% if option.value == current_sort %} is-selected{% endif %}"
-            data-sort-value="{{ option.value | escape }}"
-            role="option"
-            aria-selected="{% if option.value == current_sort %}true{% else %}false{% endif %}"
-          >
-
-            <span>
-              {%- assign sort_key = 'collections.sort_options.' | append: option.value | replace: '-', '_' -%}{%- assign sort_label = sort_key | t -%}{%- if sort_label contains 'translation missing' -%}{%- assign sort_label = option.name -%}{%- endif -%}{{ sort_label }}
-            </span>
-
-            <span class="hilya-filters__sort-check" aria-hidden="true">
-              ✓
-            </span>
-
-          </button>
-
-        {% endfor %}
-
-      </div>
+      {% endif %}
 
     </div>
 
   </div>
 
-</div>
-
-
-{% javascript %}
-
-document.addEventListener('DOMContentLoaded', function () {
-
-  const openButton = document.querySelector('[data-filter-open]');
-  const closeButton = document.querySelector('[data-filter-close]');
-  const drawer = document.querySelector('[data-filter-drawer]');
-  const overlay = document.querySelector('[data-filter-overlay]');
-  const form = document.querySelector('[data-hilya-filter-form]');
-
-  /* "let" because products from other pages are added later */
-  let items = Array.from(document.querySelectorAll('[data-product-item]'));
-
-  const resultsElements = document.querySelectorAll('[data-filter-results]');
-  const countBadge = document.querySelector('[data-filter-count]');
-  const activeFilters = document.querySelector('[data-active-filters]');
-  const activeFiltersMobile = document.querySelector('[data-active-filters-mobile]');
-  const mobileContent = document.querySelector('[data-mobile-filter-content]');
-  const mobileHeaderMain = document.querySelector('.hilya-filter-drawer__header-main');
-
-
-  if (!form) {
-    return;
-  }
-
-  /* =========================================
-     TEXTS (translated in Liquid, read from the page)
-  ========================================= */
-
-  const textRoot = document.querySelector('[data-hilya-filters-text]');
-  const textData = textRoot ? textRoot.dataset : {};
-
-  const T = {
-    regularPrice: textData.regularPrice || 'Regular price',
-    percentOff: textData.percentOff || '__PERCENT__% OFF',
-    soldOut: textData.soldOut || 'Sold out',
-    previousPage: textData.previousPage || 'Previous page',
-    nextPage: textData.nextPage || 'Next page',
-    page: textData.page || 'Page __NUMBER__',
-    filteredBy: textData.filteredBy || 'FILTERED BY',
-    clearAll: textData.clearAll || 'CLEAR ALL',
-    removeFilter: textData.removeFilter || 'Remove __LABEL__',
-    from: textData.from || 'From',
-    to: textData.to || 'To'
-  };
-
-  /* Label of a filter option as shown on the page (so chips use the translated text) */
-  function labelFor(inputName, value, fallback) {
-    const wanted = String(value || '').trim().toLowerCase();
-    const input = Array.from(
-      form.querySelectorAll('input[name="' + inputName + '"]')
-    ).find(function (candidate) {
-      return String(candidate.value || '').trim().toLowerCase() === wanted;
-    });
-    const span = input && input.parentElement
-      ? input.parentElement.querySelector('span')
-      : null;
-
-    return (span && span.textContent.trim()) || fallback;
-  }
-
-
-
-  /* =========================================
-     MOBILE DRAWER
-  ========================================= */
-
-  function openDrawer() {
-
-    if (!drawer) {
-      return;
-    }
-
-    drawer.classList.add('is-open');
-
-    if (overlay) {
-      overlay.classList.add('is-visible');
-    }
-
-    drawer.setAttribute('aria-hidden', 'false');
-
-    if (openButton) {
-      openButton.setAttribute('aria-expanded', 'true');
-    }
-
-    document.documentElement.classList.add('hilya-filter-lock');
-    document.body.classList.add('hilya-filter-lock');
-
-  }
-
-
-  function closeDrawer() {
-
-    if (!drawer) {
-      return;
-    }
-
-    drawer.classList.remove('is-open');
-
-    if (overlay) {
-      overlay.classList.remove('is-visible');
-    }
-
-    drawer.setAttribute('aria-hidden', 'true');
-
-    if (openButton) {
-      openButton.setAttribute('aria-expanded', 'false');
-    }
-
-    document.documentElement.classList.remove('hilya-filter-lock');
-    document.body.classList.remove('hilya-filter-lock');
-
-  }
-
-
-  if (openButton) {
-    openButton.addEventListener('click', openDrawer);
-  }
-
-  if (closeButton) {
-    closeButton.addEventListener('click', closeDrawer);
-  }
-
-  if (overlay) {
-    overlay.addEventListener('click', closeDrawer);
-  }
-
-  document.addEventListener('keydown', function (event) {
-
-    if (event.key === 'Escape') {
-      closeDrawer();
-    }
-
-  });
-
-
-  /* =========================================
-     MOBILE FILTERED BY
-  ========================================= */
-
-  if (
-    mobileHeaderMain &&
-    activeFiltersMobile &&
-    window.matchMedia('(max-width: 40rem)').matches
-  ) {
-
-    mobileHeaderMain.appendChild(activeFiltersMobile);
-
-  }
-
-
-  /* =========================================
-     MOVE FILTER CONTENT TO MOBILE
-  ========================================= */
-
-  if (mobileContent) {
-
-    const filterGroups = form.querySelectorAll('.hilya-filter-group');
-
-    filterGroups.forEach(function (group) {
-
-      mobileContent.appendChild(group.cloneNode(true));
-
-    });
-
-  }
-
-
-  /* =========================================
-     HELPERS
-  ========================================= */
-
-  function normalize(value) {
-
-    return String(value || '').trim().toLowerCase();
-
-  }
-
-
-  function escapeAttribute(value) {
-
-    return String(value || '')
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&quot;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-
-  }
-
-
-  function getVariantData(item) {
-
-    const dataElement = item.querySelector('[data-variant-data]');
-
-    if (!dataElement) {
-      return [];
-    }
-
-    try {
-
-      const parsed = JSON.parse(dataElement.textContent);
-
-      return Array.isArray(parsed) ? parsed : [];
-
-    } catch (error) {
-
-      return [];
-
-    }
-
-  }
-
-
-  function getVariantByColor(item, color) {
-
-    const wantedColor = normalize(color);
-
-    return getVariantData(item).find(function (variant) {
-
-      return normalize(variant.color) === wantedColor;
-
-    }) || null;
-
-  }
-
-
-  /* =========================================
-     ORIGINAL CARD STATE
-     (a function, so products loaded from
-     other pages can use it too)
-  ========================================= */
-
-  function initItem(item) {
-
-    const card = item.querySelector('[data-product-card]');
-
-    if (!card) {
-      return;
-    }
-
-
-    const priceElement = card.querySelector('[data-product-price]');
-
-    const primaryLayer = card.querySelector('[data-product-image-primary]');
-
-    const secondaryLayer = card.querySelector('[data-product-image-secondary]');
-
-    const links = card.querySelectorAll('[data-product-link], [data-product-media]');
-
-
-    /* ORIGINAL PRICE */
-
-    if (priceElement) {
-
-      priceElement.dataset.originalHtml = priceElement.innerHTML;
-
-    }
-
-
-    /* ORIGINAL LINKS */
-
-    links.forEach(function (link) {
-
-      link.dataset.originalUrl = link.getAttribute('href') || '';
-
-    });
-
-
-    /* ORIGINAL IMAGES */
-
-    if (primaryLayer) {
-
-      primaryLayer.dataset.originalHtml = primaryLayer.innerHTML;
-
-    }
-
-    if (secondaryLayer) {
-
-      secondaryLayer.dataset.originalHtml = secondaryLayer.innerHTML;
-
-    }
-
-
-    /* ORIGINAL SECONDARY STATE */
-
-    card.dataset.originalHasSecondary =
-      card.classList.contains('product-card--has-secondary')
-        ? 'true'
-        : 'false';
-
-  }
-
-  items.forEach(initItem);
-
-
-  /* =========================================
-     IMAGE SELECTION BY ALT TEXT
-
-     GOLD:
-     Gold Plated Front
-     Gold Plated Detail
-     Gold Plated Lifestyle
-
-     SILVER:
-     Silver Plated Front
-     Silver Plated Detail
-     Silver Plated Lifestyle
-  ========================================= */
-
-  function getColorImage(images, color, type) {
-
-    if (!Array.isArray(images)) {
-      return null;
-    }
-
-    const wantedColor = normalize(color);
-    const wantedType = normalize(type);
-
-    return images.find(function (image) {
-
-      const alt = normalize(image && image.alt);
-
-      return (
-        alt.includes(wantedColor) &&
-        alt.includes(wantedType)
-      );
-
-    }) || null;
-
-  }
-
-
-  function getImagesForColor(variant, color) {
-
-    const images = Array.isArray(variant.images) ? variant.images : [];
-
-
-    /*
-      IMPORTANT:
-      Image selection is based on ALT TEXT,
-      not on image order.
-    */
-
-    let primaryImage = getColorImage(images, color, 'front');
-
-    let secondaryImage = getColorImage(images, color, 'detail');
-
-
-    /* If there is no Detail image, use Lifestyle. */
-
-    if (!secondaryImage) {
-
-      secondaryImage = getColorImage(images, color, 'lifestyle');
-
-    }
-
-
-    /* Fallback if the exact ALT naming is missing. */
-
-    if (!primaryImage) {
-
-      primaryImage = images.find(function (image) {
-
-        return normalize(image && image.alt).includes(normalize(color));
-
-      }) || null;
-
-    }
-
-
-    /* Last fallback: variant.image. */
-
-    if (!primaryImage && variant.image && variant.image.src) {
-
-      primaryImage = variant.image;
-
-    }
-
-
-    /* If there is still no secondary image, use another image of the same color. */
-
-    if (!secondaryImage) {
-
-      const primarySrc = primaryImage ? primaryImage.src : null;
-
-      secondaryImage = images.find(function (image) {
-
-        if (!image || !image.src) {
-          return false;
-        }
-
-        const alt = normalize(image.alt);
-
-        return (
-          image.src !== primarySrc &&
-          alt.includes(normalize(color))
-        );
-
-      }) || null;
-
-    }
-
-
-    return {
-      primary: primaryImage,
-      secondary: secondaryImage
-    };
-
-  }
-
-
-  /* =========================================
-     SET IMAGE
-  ========================================= */
-
-  function setLayerImage(layer, image) {
-
-    if (!layer || !image || !image.src) {
-      return;
-    }
-
-    layer.innerHTML =
-      '<img' +
-        ' src="' + escapeAttribute(image.src) + '"' +
-        ' alt="' + escapeAttribute(image.alt || '') + '"' +
-        ' loading="lazy"' +
-        ' width="1200"' +
-        ' height="960"' +
-      '>';
-
-  }
-
-
-  /* =========================================
-     PRICE HTML FOR SELECTED VARIANT
-  ========================================= */
-
-  function buildVariantPriceHtml(variant) {
-
-    if (
-      !variant ||
-      variant.price === undefined ||
-      variant.price === null
-    ) {
-      return '';
-    }
-
-    const price = Number(variant.price);
-
-    if (!Number.isFinite(price)) {
-      return '';
-    }
-
-    const compareAt = Number(variant.compare_at_price);
-
-    const hasSale = Number.isFinite(compareAt) && compareAt > price;
-
-    let html =
-      '<div class="price' +
-        (variant.available === false ? ' price--sold-out' : '') +
-        (hasSale ? ' price--sale' : '') +
-      '">';
-
-    html +=
-      '<span class="price__current">' +
-        'EGP ' + price.toLocaleString('en-US') +
-      '</span>';
-
-    if (hasSale) {
-
-      html +=
-        '<span class="visually-hidden">' +
-          T.regularPrice +
-        '</span>' +
-
-        '<s class="price__compare">' +
-          'EGP ' + compareAt.toLocaleString('en-US') +
-        '</s>';
-
-    }
-
-    html += '</div>';
-
-    return html;
-
-  }
-
-
-  /* =========================================
-     DISCOUNT BADGE
-  ========================================= */
-
-  function updateDiscountBadge(card, variant) {
-
-    const media = card.querySelector('[data-product-media]');
-
-    if (!media) {
-      return;
-    }
-
-    const existing = media.querySelector('[data-variant-discount]');
-
-    if (existing) {
-      existing.remove();
-    }
-
-    if (
-      !variant ||
-      variant.price === undefined ||
-      variant.compare_at_price === undefined ||
-      variant.compare_at_price === null
-    ) {
-      return;
-    }
-
-    const price = Number(variant.price);
-    const compareAt = Number(variant.compare_at_price);
-
-    if (
-      !Number.isFinite(price) ||
-      !Number.isFinite(compareAt) ||
-      compareAt <= price
-    ) {
-      return;
-    }
-
-    const percentage = Math.round(((compareAt - price) / compareAt) * 100);
-
-    if (percentage <= 0) {
-      return;
-    }
-
-    const badge = document.createElement('span');
-
-    badge.className = 'product-card__discount';
-
-    badge.dataset.variantDiscount = '';
-
-    badge.textContent = T.percentOff.replace('__PERCENT__', percentage);
-
-    media.appendChild(badge);
-
-  }
-
-
-  /* =========================================
-     AVAILABILITY
-  ========================================= */
-
-  function updateAvailabilityBadge(card, available) {
-
-    const media = card.querySelector('[data-product-media]');
-
-    if (!media) {
-      return;
-    }
-
-    const existingVariantBadge = media.querySelector('[data-variant-sold-out]');
-
-    if (available) {
-
-      if (existingVariantBadge) {
-        existingVariantBadge.remove();
-      }
-
-      return;
-
-    }
-
-    if (!existingVariantBadge) {
-
-      const badge = document.createElement('span');
-
-      badge.className = 'product-card__badge';
-
-      badge.dataset.variantSoldOut = '';
-
-      badge.textContent = T.soldOut;
-
-      media.appendChild(badge);
-
-    }
-
-  }
-
-
-  /* =========================================
-     UPDATE CARD FOR COLOR
-  ========================================= */
-
-  function updateProductCard(item, color) {
-
-    const card = item.querySelector('[data-product-card]');
-
-    if (!card) {
-      return;
-    }
-
-    const variant = getVariantByColor(item, color);
-
-    if (!variant) {
-
-      resetProductCard(item);
-
-      return;
-
-    }
-
-
-    /* PRICE */
-
-    const priceElement = card.querySelector('[data-product-price]');
-
-    if (priceElement) {
-
-      const priceHtml = buildVariantPriceHtml(variant);
-
-      if (priceHtml) {
-
-        priceElement.innerHTML = priceHtml;
-
-      }
-
-    }
-
-
-    /* LINKS */
-
-    const productLinks = card.querySelectorAll('[data-product-link], [data-product-media]');
-
-    productLinks.forEach(function (link) {
-
-      if (variant.url) {
-
-        link.setAttribute('href', variant.url);
-
-      }
-
-    });
-
-
-    /* IMAGES */
-
-    const primaryLayer = card.querySelector('[data-product-image-primary]');
-
-    const secondaryLayer = card.querySelector('[data-product-image-secondary]');
-
-    const selectedImages = getImagesForColor(variant, color);
-
-    if (selectedImages.primary) {
-
-      setLayerImage(primaryLayer, selectedImages.primary);
-
-    }
-
-    if (selectedImages.secondary) {
-
-      setLayerImage(secondaryLayer, selectedImages.secondary);
-
-      if (secondaryLayer) {
-
-        secondaryLayer.hidden = false;
-
-      }
-
-      card.classList.add('product-card--has-secondary');
-
-    } else {
-
-      if (secondaryLayer) {
-
-        secondaryLayer.hidden = true;
-
-        secondaryLayer.innerHTML = '';
-
-      }
-
-      card.classList.remove('product-card--has-secondary');
-
-    }
-
-
-    /* AVAILABILITY */
-
-    updateAvailabilityBadge(card, variant.available !== false);
-
-
-    /* DISCOUNT */
-
-    updateDiscountBadge(card, variant);
-
-  }
-
-
-  /* =========================================
-     RESET CARD
-  ========================================= */
-
-  function resetProductCard(item) {
-
-    const card = item.querySelector('[data-product-card]');
-
-    if (!card) {
-      return;
-    }
-
-
-    /* RESTORE ORIGINAL PRICE HTML */
-
-    const priceElement = card.querySelector('[data-product-price]');
-
-    if (priceElement) {
-
-      const originalPrice = priceElement.dataset.originalHtml;
-
-      if (originalPrice !== undefined) {
-
-        priceElement.innerHTML = originalPrice;
-
-      }
-
-    }
-
-
-    /* RESTORE ORIGINAL LINKS */
-
-    const links = card.querySelectorAll('[data-product-link], [data-product-media]');
-
-    links.forEach(function (link) {
-
-      const originalUrl = link.dataset.originalUrl;
-
-      if (originalUrl !== undefined) {
-
-        link.setAttribute('href', originalUrl);
-
-      }
-
-    });
-
-
-    /* RESTORE PRIMARY IMAGE */
-
-    const primaryLayer = card.querySelector('[data-product-image-primary]');
-
-    if (primaryLayer) {
-
-      const originalImage = primaryLayer.dataset.originalHtml;
-
-      if (originalImage !== undefined) {
-
-        primaryLayer.innerHTML = originalImage;
-
-      }
-
-    }
-
-
-    /* RESTORE SECONDARY IMAGE */
-
-    const secondaryLayer = card.querySelector('[data-product-image-secondary]');
-
-    if (secondaryLayer) {
-
-      const originalImage = secondaryLayer.dataset.originalHtml;
-
-      if (originalImage !== undefined) {
-
-        secondaryLayer.innerHTML = originalImage;
-
-        secondaryLayer.hidden = false;
-
-      }
-
-    }
-
-
-    /* RESTORE SECONDARY CLASS */
-
-    if (card.dataset.originalHasSecondary === 'true') {
-
-      card.classList.add('product-card--has-secondary');
-
-    } else {
-
-      card.classList.remove('product-card--has-secondary');
-
-    }
-
-
-    /* REMOVE VARIANT SOLD OUT */
-
-    const variantBadge = card.querySelector('[data-variant-sold-out]');
-
-    if (variantBadge) {
-      variantBadge.remove();
-    }
-
-
-    /* REMOVE VARIANT DISCOUNT */
-
-    const variantDiscount = card.querySelector('[data-variant-discount]');
-
-    if (variantDiscount) {
-      variantDiscount.remove();
-    }
-
-  }
-
-
-  /* =========================================
-     PRICE CONTROLS
-  ========================================= */
-
-  const desktopPriceMin = form.querySelector('[data-price-min]');
-  const desktopPriceMax = form.querySelector('[data-price-max]');
-  const desktopPriceMinInput = form.querySelector('[data-price-min-input]');
-  const desktopPriceMaxInput = form.querySelector('[data-price-max-input]');
-  const desktopPriceRange = form.querySelector('[data-price-range]');
-
-  const mobilePriceMin = mobileContent ? mobileContent.querySelector('[data-price-min]') : null;
-  const mobilePriceMax = mobileContent ? mobileContent.querySelector('[data-price-max]') : null;
-  const mobilePriceMinInput = mobileContent ? mobileContent.querySelector('[data-price-min-input]') : null;
-  const mobilePriceMaxInput = mobileContent ? mobileContent.querySelector('[data-price-max-input]') : null;
-  const mobilePriceRange = mobileContent ? mobileContent.querySelector('[data-price-range]') : null;
-
-
-  /* =========================================
-     CALCULATE REAL PRICE MAX
-  ========================================= */
-
-  /* Scale comes from the theme settings (read from data attributes) */
-
-  const priceLimits = textRoot ? textRoot.dataset : {};
-
-  const filterPriceMin = Number(priceLimits.priceMinLimit) || 0;
-
-  let filterPriceMax = Number(priceLimits.priceMaxLimit) || 5000;
-
-  const filterPriceStep = Math.max(1, Number(priceLimits.priceStep) || 1);
-
-  if (filterPriceMax <= filterPriceMin) {
-    filterPriceMax = filterPriceMin + filterPriceStep;
-  }
-
-
-  /* Kept so the "load all pages" code below keeps working:
-     the scale is manual now, so it never changes. */
-
-  function calculatePriceMaximum() {
-
-    return filterPriceMax;
-
-  }
-
-
-  filterPriceMax = calculatePriceMaximum();
-
-
-  /* =========================================
-     UPDATE PRICE INPUT LIMITS
-  ========================================= */
-
-  function updatePriceInputLimits() {
-
-    const controls = [
-      desktopPriceMin,
-      desktopPriceMax,
-      desktopPriceMinInput,
-      desktopPriceMaxInput,
-      mobilePriceMin,
-      mobilePriceMax,
-      mobilePriceMinInput,
-      mobilePriceMaxInput
-    ];
-
-    controls.forEach(function (input) {
-
-      if (!input) {
-        return;
-      }
-
-      input.min = filterPriceMin;
-
-      input.max = filterPriceMax;
-
-      input.step = filterPriceStep;
-
-    });
-
-  }
-
-
-  updatePriceInputLimits();
-
-
-  /* =========================================
-     PRICE STATE
-  ========================================= */
-
-  let currentMinPrice = filterPriceMin;
-
-  let currentMaxPrice = filterPriceMax;
-
-
-  function clampPrice(value, fallback) {
-
-    const number = Number(value);
-
-    if (!Number.isFinite(number)) {
-      return fallback;
-    }
-
-    /* Snap to the step, counted from the minimum */
-
-    const snapped =
-      filterPriceMin +
-      Math.round((number - filterPriceMin) / filterPriceStep) * filterPriceStep;
-
-    return Math.min(filterPriceMax, Math.max(filterPriceMin, snapped));
-
-  }
-
-
-  function setPriceState(min, max, source) {
-
-    min = clampPrice(min, filterPriceMin);
-
-    max = clampPrice(max, filterPriceMax);
-
-    if (min > max) {
-
-      if (source === 'min') {
-
-        max = min;
-
-      } else {
-
-        min = max;
-
-      }
-
-    }
-
-    currentMinPrice = min;
-
-    currentMaxPrice = max;
-
-    syncPriceControls();
-
-  }
-
-
-  function syncPriceControls() {
-
-    if (desktopPriceMin) {
-      desktopPriceMin.value = currentMinPrice;
-    }
-
-    if (desktopPriceMax) {
-      desktopPriceMax.value = currentMaxPrice;
-    }
-
-    if (desktopPriceMinInput) {
-      desktopPriceMinInput.value = currentMinPrice;
-    }
-
-    if (desktopPriceMaxInput) {
-      desktopPriceMaxInput.value = currentMaxPrice;
-    }
-
-    if (mobilePriceMin) {
-      mobilePriceMin.value = currentMinPrice;
-    }
-
-    if (mobilePriceMax) {
-      mobilePriceMax.value = currentMaxPrice;
-    }
-
-    if (mobilePriceMinInput) {
-      mobilePriceMinInput.value = currentMinPrice;
-    }
-
-    if (mobilePriceMaxInput) {
-      mobilePriceMaxInput.value = currentMaxPrice;
-    }
-
-
-    const priceSpan = filterPriceMax - filterPriceMin;
-
-    const minPercent =
-      priceSpan > 0
-        ? ((currentMinPrice - filterPriceMin) / priceSpan) * 100
-        : 0;
-
-    const maxPercent =
-      priceSpan > 0
-        ? ((currentMaxPrice - filterPriceMin) / priceSpan) * 100
-        : 100;
-
-
-    if (desktopPriceRange) {
-
-      desktopPriceRange.style.left = minPercent + '%';
-
-      desktopPriceRange.style.right = (100 - maxPercent) + '%';
-
-    }
-
-    if (mobilePriceRange) {
-
-      mobilePriceRange.style.left = minPercent + '%';
-
-      mobilePriceRange.style.right = (100 - maxPercent) + '%';
-
-    }
-
-  }
-
-
-  function handlePriceSliderChange(type, value) {
-
-    if (type === 'min') {
-
-      setPriceState(value, currentMaxPrice, 'min');
-
-    } else {
-
-      setPriceState(currentMinPrice, value, 'max');
-
-    }
-
-    applyFilters();
-
-  }
-
-
-  function handlePriceInputChange(type, value) {
-
-    if (type === 'min') {
-
-      let min = clampPrice(value, filterPriceMin);
-
-      if (min > currentMaxPrice) {
-
-        min = currentMaxPrice;
-
-      }
-
-      setPriceState(min, currentMaxPrice, 'min');
-
-    } else {
-
-      let max = clampPrice(value, filterPriceMax);
-
-      if (max < currentMinPrice) {
-
-        max = currentMinPrice;
-
-      }
-
-      setPriceState(currentMinPrice, max, 'max');
-
-    }
-
-    applyFilters();
-
-  }
-
-
-  /* =========================================
-     PRICE EVENTS
-  ========================================= */
-
-  if (desktopPriceMin) {
-
-    desktopPriceMin.addEventListener('input', function () {
-
-      handlePriceSliderChange('min', this.value);
-
-    });
-
-  }
-
-  if (desktopPriceMax) {
-
-    desktopPriceMax.addEventListener('input', function () {
-
-      handlePriceSliderChange('max', this.value);
-
-    });
-
-  }
-
-  if (desktopPriceMinInput) {
-
-    desktopPriceMinInput.addEventListener('input', function () {
-
-      handlePriceInputChange('min', this.value);
-
-    });
-
-    desktopPriceMinInput.addEventListener('change', function () {
-
-      handlePriceInputChange('min', this.value);
-
-    });
-
-  }
-
-  if (desktopPriceMaxInput) {
-
-    desktopPriceMaxInput.addEventListener('input', function () {
-
-      handlePriceInputChange('max', this.value);
-
-    });
-
-    desktopPriceMaxInput.addEventListener('change', function () {
-
-      handlePriceInputChange('max', this.value);
-
-    });
-
-  }
-
-  if (mobilePriceMin) {
-
-    mobilePriceMin.addEventListener('input', function () {
-
-      handlePriceSliderChange('min', this.value);
-
-    });
-
-  }
-
-  if (mobilePriceMax) {
-
-    mobilePriceMax.addEventListener('input', function () {
-
-      handlePriceSliderChange('max', this.value);
-
-    });
-
-  }
-
-  if (mobilePriceMinInput) {
-
-    mobilePriceMinInput.addEventListener('input', function () {
-
-      handlePriceInputChange('min', this.value);
-
-    });
-
-    mobilePriceMinInput.addEventListener('change', function () {
-
-      handlePriceInputChange('min', this.value);
-
-    });
-
-  }
-
-  if (mobilePriceMaxInput) {
-
-    mobilePriceMaxInput.addEventListener('input', function () {
-
-      handlePriceInputChange('max', this.value);
-
-    });
-
-    mobilePriceMaxInput.addEventListener('change', function () {
-
-      handlePriceInputChange('max', this.value);
-
-    });
-
-  }
-
-
-  /* =========================================
-     MOBILE PRICE ENTER
-  ========================================= */
-
-  function closeMobileKeyboardOnEnter(input) {
-
-    if (!input) {
-      return;
-    }
-
-    input.addEventListener('keydown', function (event) {
-
-      if (event.key !== 'Enter') {
-        return;
-      }
-
-      event.preventDefault();
-
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-
-      input.blur();
-
-    });
-
-  }
-
-  closeMobileKeyboardOnEnter(mobilePriceMinInput);
-
-  closeMobileKeyboardOnEnter(mobilePriceMaxInput);
-
-
-  /* =========================================
-     INITIAL PRICE STATE
-  ========================================= */
-
-  setPriceState(filterPriceMin, filterPriceMax, 'initial');
-
-
-  /* =========================================
-     CHECKED VALUES
-  ========================================= */
-
-  function getCheckedValues(name) {
-
-    return Array.from(
-      form.querySelectorAll('input[name="' + name + '"]:checked')
-    ).map(function (input) {
-
-      return normalize(input.value);
-
-    });
-
-  }
-
-
-  /* =========================================
-     GET VARIANTS MATCHING COLORS
-  ========================================= */
-
-  function getSelectedVariants(item, colors) {
-
-    if (!colors.length) {
-      return [];
-    }
-
-    const variants = getVariantData(item);
-
-    return variants.filter(function (variant) {
-
-      return colors.includes(normalize(variant.color));
-
-    });
-
-  }
-
-
-  /* =========================================
-     AVAILABILITY MATCH
-  ========================================= */
-
-  function matchesAvailability(item, availability, colors) {
-
-    if (!availability.length) {
-      return true;
-    }
-
-
-    /*
-      If a color is selected, availability
-      is checked against those variants.
-    */
-
-    if (colors.length > 0) {
-
-      const selectedVariants = getSelectedVariants(item, colors);
-
-      return selectedVariants.some(function (variant) {
-
-        const available = variant.available !== false;
-
-        return availability.some(function (value) {
-
-          if (value === 'in_stock') {
-
-            return available;
-
-          }
-
-          if (value === 'out_of_stock') {
-
-            return !available;
-
-          }
-
-          return false;
-
-        });
-
-      });
-
-    }
-
-
-    /*
-      No color selected:
-      use product-level availability.
-    */
-
-    const itemAvailable = item.dataset.productAvailable === 'true';
-
-    return availability.some(function (value) {
-
-      if (value === 'in_stock') {
-
-        return itemAvailable;
-
-      }
-
-      if (value === 'out_of_stock') {
-
-        return !itemAvailable;
-
-      }
-
-      return false;
-
-    });
-
-  }
-
-
-  /* =========================================
-     PRICE MATCH
-  ========================================= */
-
-  function matchesPrice(item, colors, minPrice, maxPrice) {
-
-    /* At the very end of the scale = no limit on that side
-       (so products above the max / below the min are not cut off). */
-
-    if (minPrice <= filterPriceMin) {
-      minPrice = -Infinity;
-    }
-
-    if (maxPrice >= filterPriceMax) {
-      maxPrice = Infinity;
-    }
-
-
-    /*
-      With selected colors:
-      product matches if at least one
-      selected-color variant is in range.
-    */
-
-    if (colors.length > 0) {
-
-      const selectedVariants = getSelectedVariants(item, colors);
-
-      if (!selectedVariants.length) {
-        return false;
-      }
-
-      return selectedVariants.some(function (variant) {
-
-        const price = Number(variant.price);
-
-        return (
-          Number.isFinite(price) &&
-          price >= minPrice &&
-          price <= maxPrice
-        );
-
-      });
-
-    }
-
-
-    /*
-      No color selected:
-      use product price.
-    */
-
-    const itemPrice = Number(item.dataset.productPrice || 0);
-
-    return (
-      Number.isFinite(itemPrice) &&
-      itemPrice >= minPrice &&
-      itemPrice <= maxPrice
-    );
-
-  }
-
-
-  /* =========================================
-     LOAD ALL PAGES
-     Filters must work on every product, not
-     only on the current page.
-  ========================================= */
-
-  const totalProducts =
-    Number(
-      (
-        resultsElements[0]
-          ? resultsElements[0].textContent
-          : ''
-      ).trim()
-    ) || items.length;
-
-  const currentPage =
-    Number(
-      new URL(window.location.href).searchParams.get('page')
-    ) || 1;
-
-  const initialItemCount = items.length;
-
-  let allPagesLoaded = false;
-  let loadingPages = false;
-  let pagesLoadFailed = false;
-
-  /* Page size of the collection (products per page) */
-  let pageSize = 0;
-
-  /* Pagination of the FILTERED results */
-  let filteredPage = 1;
-  let lastFilterSignature = '';
-
-
-  function getItemKey(item) {
-
-    const link = item.querySelector('[data-product-link], [data-product-media]');
-
-    if (!link) {
-      return '';
-    }
-
-    const href =
-      link.dataset.originalUrl ||
-      link.getAttribute('href') ||
-      '';
-
-    return href.split('#')[0].split('?')[0];
-
-  }
-
-
-  function getTotalPages() {
-
-    let max = currentPage;
-
-    document
-      .querySelectorAll('.catalog-page__pagination a[href*="page="]')
-      .forEach(function (link) {
-
-        try {
-
-          const page = Number(
-            new URL(link.href, window.location.origin).searchParams.get('page')
-          );
-
-          if (Number.isFinite(page)) {
-            max = Math.max(max, page);
-          }
-
-        } catch (error) {}
-
-      });
-
-    return max;
-
-  }
-
-
-  async function loadAllPages() {
-
-    loadingPages = true;
-
-    try {
-
-      const grid = document.querySelector('.catalog-grid');
-
-      const totalPages = Math.min(getTotalPages(), 30);
-
-      if (grid && totalPages > 1) {
-
-        const pageNumbers = [];
-
-        for (let page = 1; page <= totalPages; page++) {
-
-          if (page !== currentPage) {
-            pageNumbers.push(page);
-          }
-
-        }
-
-        const results = await Promise.all(
-          pageNumbers.map(function (page) {
-
-            const url = new URL(window.location.href);
-
-            url.searchParams.set('page', page);
-
-            return fetch(url.toString(), { credentials: 'same-origin' })
-              .then(function (response) {
-
-                if (!response.ok) {
-                  throw new Error('Page failed');
-                }
-
-                return response.text();
-
-              })
-              .then(function (html) {
-
-                return {
-                  page: page,
-                  doc: new DOMParser().parseFromString(html, 'text/html')
-                };
-
-              });
-
-          })
-        );
-
-        /* How many products fit in one page */
-
-        if (currentPage === 1) {
-
-          pageSize = initialItemCount;
-
-        } else {
-
-          const firstPage = results.find(function (result) {
-
-            return result.page === 1;
-
-          });
-
-          pageSize = firstPage
-            ? firstPage.doc.querySelectorAll('[data-product-item]').length
-            : 0;
-
-        }
-
-
-        const anchor = items[0] || null;
-
-        const seen = new Set(items.map(getItemKey));
-
-        const added = [];
-
-        results.forEach(function (result) {
-
-          result.doc
-            .querySelectorAll('[data-product-item]')
-            .forEach(function (node) {
-
-              const item = document.importNode(node, true);
-
-              const key = getItemKey(item);
-
-              if (!key || seen.has(key)) {
-                return;
-              }
-
-              seen.add(key);
-
-              item.dataset.extraPage = 'true';
-
-              item.classList.add('is-filtered-out');
-
-              if (result.page < currentPage) {
-
-                grid.insertBefore(item, anchor);
-
-              } else {
-
-                grid.appendChild(item);
-
-              }
-
-              added.push(item);
-
-            });
-
-        });
-
-        added.forEach(initItem);
-
-        /* Keep the real page order (important for pagination) */
-
-        items = Array.from(document.querySelectorAll('[data-product-item]'));
-
-
-        /* Price slider max may change now */
-
-        const newMax = calculatePriceMaximum();
-
-        if (newMax !== filterPriceMax) {
-
-          const wasAtMax = currentMaxPrice === filterPriceMax;
-
-          filterPriceMax = newMax;
-
-          updatePriceInputLimits();
-
-          setPriceState(
-            currentMinPrice,
-            wasAtMax ? newMax : currentMaxPrice,
-            'initial'
-          );
-
-        }
-
-      }
-
-      allPagesLoaded = true;
-
-    } catch (error) {
-
-      pagesLoadFailed = true;
-
-    }
-
-    loadingPages = false;
-
-    applyFilters();
-
-  }
-
-
-  /* =========================================
-     FILTERED PAGINATION
-     Same look as the normal pagination.
-  ========================================= */
-
-  const ARROW_LEFT =
-    '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
-
-  const ARROW_RIGHT =
-    '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-
-
-  function getPageList(current, total) {
-
-    const pages = [];
-
-    for (let page = 1; page <= total; page++) {
-
-      if (
-        total <= 7 ||
-        page === 1 ||
-        page === total ||
-        Math.abs(page - current) <= 1
-      ) {
-
-        pages.push(page);
-
-      } else if (pages[pages.length - 1] !== '…') {
-
-        pages.push('…');
-
-      }
-
-    }
-
-    return pages;
-
-  }
-
-
-  function buildPaginationHtml(current, total) {
-
-    let html = '<ul class="hilya-pagination">';
-
-    html +=
-      '<li><button type="button"' +
-      ' class="hilya-pagination__item hilya-pagination__item--arrow"' +
-      ' data-page="' + (current - 1) + '"' +
-      ' aria-label="' + T.previousPage + '"' +
-      (current <= 1 ? ' disabled' : '') +
-      '>' + ARROW_LEFT + '</button></li>';
-
-    getPageList(current, total).forEach(function (entry) {
-
-      if (entry === '…') {
-
-        html +=
-          '<li><span class="hilya-pagination__item is-ellipsis">…</span></li>';
-
-      } else if (entry === current) {
-
-        html +=
-          '<li><span class="hilya-pagination__item is-current" aria-current="page">' +
-          entry +
-          '</span></li>';
-
-      } else {
-
-        html +=
-          '<li><button type="button" class="hilya-pagination__item"' +
-          ' data-page="' + entry + '"' +
-          ' aria-label="' + T.page.replace('__NUMBER__', entry) + '">' +
-          entry +
-          '</button></li>';
-
-      }
-
-    });
-
-    html +=
-      '<li><button type="button"' +
-      ' class="hilya-pagination__item hilya-pagination__item--arrow"' +
-      ' data-page="' + (current + 1) + '"' +
-      ' aria-label="' + T.nextPage + '"' +
-      (current >= total ? ' disabled' : '') +
-      '>' + ARROW_RIGHT + '</button></li>';
-
-    html += '</ul>';
-
-    return html;
-
-  }
-
-
-  function updatePaginationUi(isFiltering, usePaging, totalFilteredPages) {
-
-    const serverNav = document.querySelector(
-      '.catalog-page__pagination:not([data-filtered-pagination])'
-    );
-
-    let filteredNav = document.querySelector('[data-filtered-pagination]');
-
-
-    /* The normal pagination belongs to the unfiltered list */
-
-    if (serverNav) {
-
-      serverNav.style.display =
-        isFiltering && !pagesLoadFailed
-          ? 'none'
-          : '';
-
-    }
-
-
-    if (!usePaging) {
-
-      if (filteredNav) {
-        filteredNav.remove();
-      }
-
-      return;
-
-    }
-
-
-    if (!filteredNav) {
-
-      filteredNav = document.createElement('nav');
-
-      filteredNav.className = 'catalog-page__pagination';
-
-      filteredNav.setAttribute('data-filtered-pagination', '');
-
-      filteredNav.setAttribute('aria-label', 'Pagination');
-
-      filteredNav.addEventListener('click', function (event) {
-
-        const button = event.target.closest('[data-page]');
-
-        if (!button || button.disabled) {
-          return;
-        }
-
-        filteredPage = Number(button.dataset.page) || 1;
-
-        applyFilters();
-
-        const grid = document.querySelector('.catalog-grid');
-
-        if (grid) {
-
-          const top =
-            grid.getBoundingClientRect().top +
-            window.scrollY -
-            140;
-
-          window.scrollTo({
-            top: Math.max(0, top),
-            behavior: 'smooth'
-          });
-
-        }
-
-      });
-
-      const anchorElement =
-        serverNav ||
-        document.querySelector('.catalog-grid');
-
-      if (anchorElement) {
-
-        anchorElement.insertAdjacentElement('afterend', filteredNav);
-
-      }
-
-    }
-
-    filteredNav.innerHTML = buildPaginationHtml(
-      filteredPage,
-      totalFilteredPages
-    );
-
-  }
-
-
-  /* =========================================
-     FILTER
-  ========================================= */
-
-  function applyFilters() {
-
-    const availability = getCheckedValues('availability');
-
-    const colors = getCheckedValues('color');
-
-    const productTypes = getCheckedValues('product_type');
-
-    const minPrice = currentMinPrice;
-
-    const maxPrice = currentMaxPrice;
-
-
-    const isFiltering =
-      availability.length > 0 ||
-      colors.length > 0 ||
-      productTypes.length > 0 ||
-      minPrice > filterPriceMin ||
-      maxPrice < filterPriceMax;
-
-    /* New filters => back to the first filtered page */
-
-    const signature = [
-      availability.join(','),
-      colors.join(','),
-      productTypes.join(','),
-      minPrice,
-      maxPrice
-    ].join('|');
-
-    if (signature !== lastFilterSignature) {
-
-      lastFilterSignature = signature;
-
-      filteredPage = 1;
-
-    }
-
-
-    if (
-      isFiltering &&
-      !allPagesLoaded &&
-      !loadingPages &&
-      !pagesLoadFailed
-    ) {
-      loadAllPages();
-    }
-
-
-    const matchedItems = [];
-
-
-    items.forEach(function (item) {
-
-      /* Products from other pages stay hidden when no filter is active */
-
-      if (!isFiltering && item.dataset.extraPage === 'true') {
-
-        item.classList.add('is-filtered-out');
-
-        return;
-
-      }
-
-
-      const itemType = normalize(item.dataset.productType);
-
-      const itemColors =
-        normalize(item.dataset.productColors)
-          .split('|')
-          .map(function (value) {
-
-            return value.trim();
-
-          })
-          .filter(Boolean);
-
-
-      let matches = true;
-
-
-      /* PRODUCT TYPE */
-
-      if (matches && productTypes.length > 0) {
-
-        if (!productTypes.includes(itemType)) {
-
-          matches = false;
-
-        }
-
-      }
-
-
-      /* COLOR */
-
-      if (matches && colors.length > 0) {
-
-        const matchesColor = colors.some(function (color) {
-
-          return itemColors.includes(color);
-
-        });
-
-
-        /*
-          If data-product-colors is not
-          available/reliable, also inspect
-          the actual variant data.
-        */
-
-        if (!matchesColor) {
-
-          const hasVariantColor = getVariantData(item).some(function (variant) {
-
-            return colors.includes(normalize(variant.color));
-
-          });
-
-          if (!hasVariantColor) {
-
-            matches = false;
-
-          }
-
-        }
-
-      }
-
-
-      /* AVAILABILITY */
-
-      if (matches && !matchesAvailability(item, availability, colors)) {
-
-        matches = false;
-
-      }
-
-
-      /* PRICE */
-
-      if (matches && !matchesPrice(item, colors, minPrice, maxPrice)) {
-
-        matches = false;
-
-      }
-
-
-      /* DISPLAY */
-
-      if (matches) {
-
-        matchedItems.push(item);
-
-
-        /*
-          Only one color means there is
-          one clear variant to display.
-        */
-
-        const wantedColor = colors.length === 1 ? colors[0] : '';
-
-        if (item.dataset.appliedColor !== wantedColor) {
-
-          item.dataset.appliedColor = wantedColor;
-
-          if (wantedColor) {
-
-            updateProductCard(item, wantedColor);
-
-          } else {
-
-            resetProductCard(item);
-
-          }
-
-        }
-
-      } else {
-
-        item.classList.add('is-filtered-out');
-
-      }
-
-    });
-
-
-    /* PAGINATION OF THE RESULTS */
-
-    const visibleCount = matchedItems.length;
-
-    const usePaging =
-      isFiltering &&
-      allPagesLoaded &&
-      pageSize > 0 &&
-      visibleCount > pageSize;
-
-    const totalFilteredPages =
-      usePaging
-        ? Math.ceil(visibleCount / pageSize)
-        : 1;
-
-    if (filteredPage > totalFilteredPages) {
-
-      filteredPage = totalFilteredPages;
-
-    }
-
-    const startIndex = (filteredPage - 1) * pageSize;
-
-    matchedItems.forEach(function (item, index) {
-
-      const onThisPage =
-        !usePaging ||
-        (index >= startIndex && index < startIndex + pageSize);
-
-      item.classList.toggle('is-filtered-out', !onThisPage);
-
-    });
-
-
-    /* RESULTS */
-
-    const shownCount =
-      !isFiltering
-        ? totalProducts
-        : loadingPages
-          ? '…'
-          : visibleCount;
-
-    resultsElements.forEach(function (element) {
-
-      element.textContent = shownCount;
-
-    });
-
-
-    /* PAGINATION UI */
-
-    updatePaginationUi(isFiltering, usePaging, totalFilteredPages);
-
-
-    /* ACTIVE FILTER COUNT */
-
-    const activeCount =
-      availability.length +
-      colors.length +
-      productTypes.length +
-      (minPrice > filterPriceMin ? 1 : 0) +
-      (maxPrice < filterPriceMax ? 1 : 0);
-
-    if (countBadge) {
-
-      countBadge.textContent = activeCount;
-
-      countBadge.hidden = activeCount === 0;
-
-    }
-
-    renderActiveFilters(
-      availability,
-      colors,
-      productTypes,
-      minPrice,
-      maxPrice
-    );
-
-  }
-
-
-  /* =========================================
-     ACTIVE FILTER CHIPS
-  ========================================= */
-
-  function renderActiveFilters(
-    availability,
-    colors,
-    productTypes,
-    minPrice,
-    maxPrice
-  ) {
-
-    const containers = [activeFilters, activeFiltersMobile].filter(Boolean);
-
-    containers.forEach(function (container) {
-
-      container.innerHTML = '';
-
-      const hasFilters =
-        availability.length > 0 ||
-        colors.length > 0 ||
-        productTypes.length > 0 ||
-        minPrice > filterPriceMin ||
-        maxPrice < filterPriceMax;
-
-      if (!hasFilters) {
-
-        container.hidden = true;
-
-        return;
-
-      }
-
-      container.hidden = false;
-
-
-      const title = document.createElement('span');
-
-      title.className = 'hilya-filters__active-label';
-
-      title.textContent = T.filteredBy;
-
-      container.appendChild(title);
-
-
-      availability.forEach(function (value) {
-
-        addChip(
-          container,
-          labelFor('availability', value, value === 'in_stock' ? 'In stock' : 'Out of stock'),
-          'availability',
-          value
-        );
-
-      });
-
-
-      colors.forEach(function (value) {
-
-        addChip(
-          container,
-          labelFor('color', value, value === 'gold plated' ? 'Gold Plated' : 'Silver Plated'),
-          'color',
-          value
-        );
-
-      });
-
-
-      productTypes.forEach(function (value) {
-
-        addChip(
-          container,
-          labelFor('product_type', value, value.charAt(0).toUpperCase() + value.slice(1)),
-          'product_type',
-          value
-        );
-
-      });
-
-
-      if (minPrice > filterPriceMin) {
-
-        addChip(
-          container,
-          T.from + ' EGP ' + minPrice.toLocaleString('en-US'),
-          'price_min',
-          String(filterPriceMin)
-        );
-
-      }
-
-
-      if (maxPrice < filterPriceMax) {
-
-        addChip(
-          container,
-          T.to + ' EGP ' + maxPrice.toLocaleString('en-US'),
-          'price_max',
-          String(filterPriceMax)
-        );
-
-      }
-
-
-      const clear = document.createElement('button');
-
-      clear.type = 'button';
-
-      clear.className = 'hilya-filters__clear';
-
-      clear.textContent = T.clearAll;
-
-      clear.addEventListener('click', clearFilters);
-
-      container.appendChild(clear);
-
-    });
-
-  }
-
-
-  function addChip(container, label, inputName, inputValue) {
-
-    const chip = document.createElement('button');
-
-    chip.type = 'button';
-
-    chip.className = 'hilya-filter-chip';
-
-
-    const labelSpan = document.createElement('span');
-
-    labelSpan.textContent = label;
-
-
-    const removeSpan = document.createElement('span');
-
-    removeSpan.className = 'hilya-filter-chip__remove';
-
-    removeSpan.setAttribute('aria-hidden', 'true');
-
-    removeSpan.textContent = '×';
-
-
-    chip.appendChild(labelSpan);
-
-    chip.appendChild(removeSpan);
-
-    chip.setAttribute('aria-label', T.removeFilter.replace('__LABEL__', label));
-
-
-    chip.addEventListener('click', function () {
-
-      if (inputName === 'price_min') {
-
-        setPriceState(filterPriceMin, currentMaxPrice, 'min');
-
-      } else if (inputName === 'price_max') {
-
-        setPriceState(currentMinPrice, filterPriceMax, 'max');
-
-      } else {
-
-        const inputs = form.querySelectorAll('input[name="' + inputName + '"]');
-
-        inputs.forEach(function (input) {
-
-          if (normalize(input.value) === normalize(inputValue)) {
-
-            input.checked = false;
-
-          }
-
-        });
-
-      }
-
-      syncMobileFilters();
-
-      applyFilters();
-
-    });
-
-
-    container.appendChild(chip);
-
-  }
-
-
-  /* =========================================
-     SYNC MOBILE FILTERS
-  ========================================= */
-
-  function syncMobileFilters() {
-
-    if (!mobileContent) {
-      return;
-    }
-
-    form
-      .querySelectorAll('input[type="checkbox"]')
-      .forEach(function (input) {
-
-        const matching = Array.from(
-          mobileContent.querySelectorAll('input[type="checkbox"]')
-        ).find(function (mobileInput) {
-
-          return (
-            mobileInput.name === input.name &&
-            mobileInput.value === input.value
-          );
-
-        });
-
-        if (matching) {
-
-          matching.checked = input.checked;
-
-        }
-
-      });
-
-    syncPriceControls();
-
-  }
-
-
-  /* =========================================
-     CLEAR
-  ========================================= */
-
-  function clearFilters() {
-
-    form
-      .querySelectorAll('input[type="checkbox"]')
-      .forEach(function (input) {
-
-        input.checked = false;
-
-      });
-
-    if (mobileContent) {
-
-      mobileContent
-        .querySelectorAll('input[type="checkbox"]')
-        .forEach(function (input) {
-
-          input.checked = false;
-
-        });
-
-    }
-
-    setPriceState(filterPriceMin, filterPriceMax, 'initial');
-
-    applyFilters();
-
-  }
-
-
-  /* =========================================
-     CHECKBOX EVENTS
-  ========================================= */
-
-  form.addEventListener('change', function (event) {
-
-    if (!event.target.matches('input[type="checkbox"]')) {
-      return;
-    }
-
-    if (mobileContent) {
-
-      const matching = Array.from(
-        mobileContent.querySelectorAll('input[type="checkbox"]')
-      ).find(function (mobileInput) {
-
-        return (
-          mobileInput.name === event.target.name &&
-          mobileInput.value === event.target.value
-        );
-
-      });
-
-      if (matching) {
-
-        matching.checked = event.target.checked;
-
-      }
-
-    }
-
-    applyFilters();
-
-  });
-
-
-  /* =========================================
-     MOBILE CHECKBOX EVENTS
-  ========================================= */
-
-  if (mobileContent) {
-
-    mobileContent.addEventListener('change', function (event) {
-
-      if (!event.target.matches('input[type="checkbox"]')) {
-        return;
-      }
-
-      const name = event.target.name;
-
-      const value = event.target.value;
-
-      const desktopInput = Array.from(
-        form.querySelectorAll('input[type="checkbox"]')
-      ).find(function (input) {
-
-        return input.name === name && input.value === value;
-
-      });
-
-      if (desktopInput) {
-
-        desktopInput.checked = event.target.checked;
-
-      }
-
-      applyFilters();
-
-    });
-
-  }
-
-
-  /* =========================================
-     SORT
-  ========================================= */
-
-  const sortWraps = document.querySelectorAll('[data-hilya-sort-wrap]');
-
-  const sortTriggers = document.querySelectorAll('[data-hilya-sort-trigger]');
-
-  const sortMenus = document.querySelectorAll('[data-hilya-sort-menu]');
-
-  const sortOptions = document.querySelectorAll('[data-sort-value]');
-
-
-  function closeSortMenus() {
-
-    sortWraps.forEach(function (wrap) {
-
-      wrap.classList.remove('is-open');
-
-    });
-
-    sortTriggers.forEach(function (trigger) {
-
-      trigger.setAttribute('aria-expanded', 'false');
-
-    });
-
-    sortMenus.forEach(function (menu) {
-
-      menu.hidden = true;
-
-    });
-
-  }
-
-
-  function openSortMenu(targetWrap) {
-
-    closeSortMenus();
-
-    const trigger = targetWrap.querySelector('[data-hilya-sort-trigger]');
-
-    const menu = targetWrap.querySelector('[data-hilya-sort-menu]');
-
-    if (!trigger || !menu) {
-      return;
-    }
-
-    targetWrap.classList.add('is-open');
-
-    trigger.setAttribute('aria-expanded', 'true');
-
-    menu.hidden = false;
-
-  }
-
-
-  sortTriggers.forEach(function (trigger) {
-
-    trigger.addEventListener('click', function (event) {
-
-      event.stopPropagation();
-
-      const wrap = trigger.closest('[data-hilya-sort-wrap]');
-
-      const menu = wrap ? wrap.querySelector('[data-hilya-sort-menu]') : null;
-
-      if (!wrap || !menu) {
-        return;
-      }
-
-      if (menu.hidden) {
-
-        openSortMenu(wrap);
-
-      } else {
-
-        closeSortMenus();
-
-      }
-
-    });
-
-  });
-
-
-  sortOptions.forEach(function (option) {
-
-    option.addEventListener('click', function () {
-
-      const value = option.getAttribute('data-sort-value');
-
-      const url = new URL(window.location.href);
-
-      url.searchParams.set('sort_by', value);
-      
-      url.searchParams.delete('page');
-
-      window.location.href = url.toString();
-
-    });
-
-  });
-
-
-  document.addEventListener('click', function (event) {
-
-    const clickedSort = event.target.closest('[data-hilya-sort-wrap]');
-
-    if (!clickedSort) {
-
-      closeSortMenus();
-
-    }
-
-  });
-
-
-  document.addEventListener('keydown', function (event) {
-
-    if (event.key === 'Escape') {
-
-      closeSortMenus();
-
-    }
-
-  });
-
-
-  /* =========================================
-     FILTER GROUP TOGGLES
-  ========================================= */
-
-  document.addEventListener('click', function (event) {
-
-    const toggle = event.target.closest('[data-filter-toggle]');
-
-    if (!toggle) {
-      return;
-    }
-
-    const group = toggle.closest('.hilya-filter-group');
-
-    if (!group) {
-      return;
-    }
-
-    group.classList.toggle('is-open');
-
-  });
-
-
-  /* =========================================
-     INITIAL FILTER
-  ========================================= */
-
-  syncPriceControls();
-
-  applyFilters();
-
-});
-
-{% endjavascript %}
+</footer>
 
 
 {% stylesheet %}
 
-/* =========================================
-   FILTER CONTAINER
-========================================= */
+.hilya-footer {
 
-.hilya-filters {
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+
+  background: #181818;
+  color: #ffffff;
+
+  padding: 42px max(24px, calc((100vw - 1400px) / 2)) 18px;
+
+  box-sizing: border-box;
+
 }
 
 
-/* =========================================
-   LOCK WEBSITE SCROLL
-========================================= */
+.hilya-footer__inner {
 
-html.hilya-filter-lock,
-html.hilya-filter-lock body,
-body.hilya-filter-lock {
-  overflow: hidden !important;
-  overscroll-behavior: none !important;
-}
-
-
-/* =========================================
-   MOBILE BAR
-========================================= */
-
-.hilya-filters__mobile-bar {
-  display: none;
-}
-
-
-/* =========================================
-   SIDEBAR
-========================================= */
-
-.hilya-filter-sidebar {
-  width: 100%;
-}
-
-
-/* =========================================
-   FILTERS TITLE
-========================================= */
-
-.hilya-filter-sidebar__heading {
-  margin: -.15rem 0 .65rem;
-}
-
-.hilya-filter-sidebar__heading h2 {
-  margin: 0;
-  color: var(--color-foreground);
-  font-size: 1.08rem;
-  font-weight: 500;
-  letter-spacing: .005em;
-  line-height: 1.1;
-  text-transform: none;
-}
-
-
-/* =========================================
-   ACTIVE FILTERS
-========================================= */
-
-.hilya-filters__active {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .3rem;
-  margin: 0 0 .7rem;
-}
-
-.hilya-filters__active-label {
-  width: 100%;
-  margin: 0 0 .08rem;
-  color: var(--color-muted);
-  font-size: .52rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
-.hilya-filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  padding: .34rem .44rem;
-  border: 1px solid rgb(0 0 0 / 12%);
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .59rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.hilya-filter-chip:hover {
-  background: rgb(0 0 0 / 3%);
-}
-
-.hilya-filter-chip__remove {
-  font-size: .72rem;
-  line-height: .8;
-  font-weight: 300;
-}
-
-.hilya-filters__clear {
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-muted);
-  font: inherit;
-  font-size: .55rem;
-  letter-spacing: .02em;
-  text-decoration: underline;
-  text-underline-offset: .16rem;
-  cursor: pointer;
-}
-
-
-/* =========================================
-   FILTER GROUP
-========================================= */
-
-.hilya-filter-group {
-  border-top: 1px solid rgb(0 0 0 / 10%);
-}
-
-.hilya-filter-group:last-child {
-  border-bottom: 1px solid rgb(0 0 0 / 10%);
-}
-
-
-/* =========================================
-   FILTER HEADINGS
-========================================= */
-
-.hilya-filter-group__toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: .82rem 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .78rem;
-  font-weight: 500;
-  letter-spacing: .01em;
-  line-height: 1.2;
-  text-align: left;
-  text-transform: none;
-  cursor: pointer;
-  list-style: none;
-}
-
-.hilya-filter-group__toggle::-webkit-details-marker {
-  display: none;
-}
-
-
-/* =========================================
-   CHEVRON
-========================================= */
-
-.hilya-filter-chevron {
-  position: relative;
-  display: inline-block;
-  width: .46rem;
-  height: .46rem;
-  margin-right: .12rem;
-  border-right: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  transform: rotate(45deg) translateY(-.08rem);
-  transform-origin: center;
-  transition: transform 180ms ease;
-}
-
-.hilya-filter-group.is-open .hilya-filter-chevron {
-  transform: rotate(225deg) translate(-.02rem, -.02rem);
-}
-
-
-/* =========================================
-   FILTER CONTENT
-========================================= */
-
-.hilya-filter-group:not(.is-open) .hilya-filter-group__content {
-  display: none;
-}
-
-.hilya-filter-group__content {
-  padding: 0 0 .9rem;
-}
-
-
-/* =========================================
-   CHECKBOX OPTIONS
-========================================= */
-
-.hilya-filter-option {
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-  min-height: 1.95rem;
-  color: var(--color-foreground);
-  font-size: .76rem;
-  cursor: pointer;
-}
-
-.hilya-filter-option input {
-  width: .82rem;
-  height: .82rem;
-  margin: 0;
-  accent-color: #111;
-  cursor: pointer;
-}
-
-
-/* =========================================
-   PRICE SLIDER
-========================================= */
-
-.hilya-price-slider {
-  position: relative;
-  width: 100%;
-  height: 1.4rem;
-  margin: .2rem 0 .5rem;
-  overflow: visible;
-}
-
-.hilya-price-slider__track {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  left: 0;
-  height: 2px;
-  margin: 0;
-  padding: 0;
-  transform: translateY(-50%);
-  background: #d2d2d2 !important;
-  border: 0 !important;
-  border-radius: 0;
-  box-shadow: none !important;
-}
-
-.hilya-price-slider__range {
-  position: absolute;
-  top: 50%;
-  height: 2px;
-  margin: 0;
-  padding: 0;
-  transform: translateY(-50%);
-  background: #111 !important;
-  border: 0 !important;
-  border-radius: 0;
-  z-index: 2;
-  box-shadow: none !important;
-}
-
-
-/* =========================================
-   RANGE CONTROLS
-========================================= */
-
-.hilya-price-slider input[type="range"] {
-  position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 1.4rem !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  outline: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 2px;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.hilya-price-slider input[type="range"]::-webkit-slider-thumb {
-  width: 11px;
-  height: 11px;
-  margin-top: -4.5px;
-  border: 0 !important;
-  border-radius: 50%;
-  background: #111 !important;
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  box-shadow: none !important;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.hilya-price-slider input[type="range"]::-moz-range-track {
-  width: 100%;
-  height: 2px;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.hilya-price-slider input[type="range"]::-moz-range-progress {
-  background: transparent !important;
-}
-
-.hilya-price-slider input[type="range"]::-moz-range-thumb {
-  width: 11px;
-  height: 11px;
-  border: 0 !important;
-  border-radius: 50%;
-  background: #111 !important;
-  box-shadow: none !important;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-
-/* =========================================
-   PRICE NUMBER FIELDS
-========================================= */
-
-.hilya-price-values {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: .4rem;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  font-size: .6rem;
+
+  grid-template-columns: 1.4fr .8fr .8fr .8fr 1.5fr;
+
+  gap: 50px;
+
+  padding-bottom: 32px;
+
 }
 
-.hilya-price-input {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-  height: 1.85rem;
-  margin: 0;
-  padding: 0 .5rem;
-  border: 1px solid rgb(0 0 0 / 16%) !important;
-  border-radius: 0;
-  background: var(--color-background) !important;
-  box-shadow: none !important;
-  outline: none;
-}
 
-.hilya-price-input span {
-  flex: 0 0 auto;
-  color: var(--color-muted);
-  font-size: .52rem;
-  line-height: 1;
-}
+/* BRAND */
 
-.hilya-price-input input {
+.hilya-footer__logo {
+
   display: block;
-  width: 100%;
-  min-width: 0;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0 !important;
-  outline: 0 !important;
-  background: transparent !important;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .6rem;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+
+  font-size: 34px;
+
   line-height: 1;
-  text-align: right;
-  box-shadow: none !important;
-}
 
-.hilya-price-input input:focus {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-}
+  font-weight: 500;
 
-.hilya-price-input input::-webkit-inner-spin-button,
-.hilya-price-input input::-webkit-outer-spin-button {
-  margin: 0;
-  appearance: none;
-  -webkit-appearance: none;
-}
+  letter-spacing: -.04em;
 
-.hilya-price-input input[type="number"] {
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-.hilya-price-values__to {
-  color: var(--color-muted);
-  font-size: .56rem;
-  line-height: 1;
-  white-space: nowrap;
 }
 
 
-/* =========================================
-   PRODUCTS TOOLBAR
-========================================= */
+.hilya-footer__brand p {
 
-.hilya-filters__products-toolbar {
+  margin: 8px 0 0;
+
+  color: #aaa;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+
+  letter-spacing: .14em;
+
+  line-height: 1.5;
+
+}
+
+
+/* COLUMNS */
+
+.hilya-footer__column {
+
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 2.55rem;
-  margin: 0 0 .4rem;
-  border-bottom: 1px solid rgb(0 0 0 / 9%);
-}
 
-.hilya-filters__results {
-  color: var(--color-foreground);
-  font-size: .68rem;
-  letter-spacing: .075em;
-  text-transform: uppercase;
-}
+  flex-direction: column;
 
-
-/* =========================================
-   SORT
-========================================= */
-
-.hilya-filters__sort {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: .55rem;
-  white-space: nowrap;
-}
-
-.hilya-filters__sort-label {
-  color: var(--color-muted);
-  font-size: .66rem;
-  font-weight: 400;
-  letter-spacing: .035em;
-  white-space: nowrap;
-  text-transform: none;
-}
-
-.hilya-filters__sort-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .9rem;
-  min-width: auto;
-  min-height: auto;
-  padding: .15rem 0 .18rem;
-  border: 0;
-  border-bottom: 0 !important;
-  border-radius: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .68rem;
-  font-weight: 400;
-  text-align: left;
-  cursor: pointer;
-  box-shadow: none;
-}
-
-.hilya-filters__sort-trigger:hover {
-  border-color: rgb(0 0 0 / 45%);
-  border-bottom: 0 !important;
-  background: transparent;
-}
-
-.hilya-filters__sort-chevron {
-  position: relative;
-  display: inline-block;
-  width: .42rem;
-  height: .42rem;
-  flex: 0 0 auto;
-  margin-top: -.18rem;
-  border-right: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  transform: rotate(45deg);
-  transition: transform 180ms ease;
-}
-
-.hilya-filters__sort.is-open .hilya-filters__sort-chevron {
-  transform: rotate(225deg);
-}
-
-.hilya-filters__sort-menu {
-  position: absolute;
-  top: calc(100% + .45rem);
-  right: 0;
-  z-index: 30;
-  width: 11rem;
-  padding: .3rem 0;
-  border: 1px solid rgb(0 0 0 / 12%);
-  border-radius: 0;
-  background: var(--color-background);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
-}
-
-.hilya-filters__sort-option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: .6rem .7rem;
-  border: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .64rem;
-  text-align: left;
-  cursor: pointer;
-}
-
-.hilya-filters__sort-option:hover {
-  background: rgb(0 0 0 / 4%);
-}
-
-.hilya-filters__sort-check {
-  visibility: hidden;
-  font-size: .7rem;
-}
-
-.hilya-filters__sort-option.is-selected .hilya-filters__sort-check {
-  visibility: visible;
-}
-
-
-/* =========================================
-   MOBILE OVERLAY
-========================================= */
-
-.hilya-filter-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100000;
-  background: rgb(0 0 0 / 35%);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 260ms ease,
-    visibility 260ms ease;
-}
-
-.hilya-filter-overlay.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-
-/* =========================================
-   DESKTOP DRAWER DEFAULT
-========================================= */
-
-.hilya-filter-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 100001;
-  width: min(28rem, 92vw);
-  overflow-y: auto;
-  background: var(--color-background);
-  transform: translateX(100%);
-  transition: transform 320ms cubic-bezier(.22,.61,.36,1);
-}
-
-.hilya-filter-drawer.is-open {
-  transform: translateX(0);
-}
-
-
-/* =========================================
-   DESKTOP DRAWER HEADER
-========================================= */
-
-.hilya-filter-drawer__header {
-  display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  padding: 2rem 1.5rem 1.35rem;
-  border-bottom: 1px solid rgb(0 0 0 / 8%);
+
+  gap: 8px;
+
 }
 
-.hilya-filter-drawer__eyebrow {
-  display: block;
-  margin-bottom: .45rem;
-  color: var(--color-muted);
-  font-size: .56rem;
-  letter-spacing: .18em;
+
+.hilya-footer h3 {
+
+  margin: 0 0 10px;
+
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 14px;
+
+  line-height: 1.4;
+
+  font-weight: 500;
+
 }
 
-.hilya-filter-drawer__header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 400;
-  letter-spacing: .08em;
+
+.hilya-footer__column a {
+
+  color: #aaa;
+
+  text-decoration: none;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
 }
 
-.hilya-filter-drawer__close {
-  padding: 0;
+
+.hilya-footer__column a:hover {
+
+  color: #ffffff;
+
+}
+
+
+/* NEWSLETTER */
+
+.hilya-footer__newsletter p {
+
+  max-width: 260px;
+
+  margin: 0 0 13px;
+
+  color: #aaa;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+
+}
+
+
+.hilya-newsletter-form {
+
+  position: relative;
+
+  display: flex;
+
+  width: 100%;
+
+  max-width: 280px;
+
+  height: 31px;
+
+}
+
+
+.hilya-newsletter-form input {
+
+  width: 100%;
+
+  height: 100%;
+
+  padding-block: 0;
+  padding-inline: 12px 38px;
+
   border: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font-size: 1.8rem;
-  font-weight: 300;
-  line-height: 1;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  box-sizing: border-box;
+
+}
+
+
+.hilya-newsletter-form button {
+
+  position: absolute;
+
+  top: 0;
+
+  inset-inline-end: 0;
+
+  width: 34px;
+
+  height: 31px;
+
+  border: 0;
+
+  background: #ffffff;
+
+  color: #111;
+
+  font-size: 15px;
+
   cursor: pointer;
-}
 
-.hilya-filter-drawer__content {
-  padding: 0 1.5rem 2rem;
-}
-
-.hilya-filter-drawer .hilya-filter-group {
-  border-top: 1px solid rgb(0 0 0 / 9%);
-}
-
-.hilya-filter-drawer .hilya-filter-group:last-child {
-  border-bottom: 1px solid rgb(0 0 0 / 9%);
-}
-
-.hilya-filter-drawer .hilya-filter-group__toggle,
-.hilya-filter-drawer .hilya-filter-group__content {
-  padding-inline: 0;
 }
 
 
-/* =========================================
-   DESKTOP
-========================================= */
+/* BOTTOM */
 
-@media (min-width: 40.001rem) {
+.hilya-footer__bottom {
 
-  .hilya-filter-sidebar {
-    grid-area: sidebar;
-    align-self: start;
-    position: sticky;
-    top: 96px;
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-top: 17px;
+
+  border-top: 1px solid #333;
+
+}
+
+
+.hilya-footer__bottom p {
+
+  margin: 0;
+
+  color: #999;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+
+}
+
+
+.hilya-footer__social {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+}
+
+
+.hilya-footer__social a {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 18px;
+
+  height: 18px;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  transition: opacity .2s ease;
+
+}
+
+
+.hilya-footer__social a:hover {
+
+  opacity: .65;
+
+}
+
+
+.hilya-footer__social svg {
+
+  width: 15px;
+
+  height: 15px;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.5;
+
+  stroke-linecap: round;
+
+  stroke-linejoin: round;
+
+}
+
+
+/*
+  Match icons by name, not by position: the language button sits in the
+  same row, so position-based rules (nth-child) hit the wrong icon.
+*/
+
+.hilya-footer__social a[aria-label="Facebook"] svg {
+
+  fill: currentColor;
+
+  stroke: none;
+
+}
+
+
+/* TABLET */
+
+@media (min-width: 750px) and (max-width: 1100px) {
+
+  .hilya-footer {
+
+    width: 100vw;
+    max-width: 100vw;
+
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    padding: 40px 28px 18px;
+
+    box-sizing: border-box;
+
+  }
+
+
+  .hilya-footer__inner {
+
     width: 100%;
-    max-height: calc(100vh - 112px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: .15rem;
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+
+    grid-template-columns:
+      1.25fr
+      .8fr
+      .8fr
+      .8fr
+      1.2fr;
+
+    gap: 28px;
+
+    padding-bottom: 30px;
+
   }
 
-  .hilya-filter-sidebar::-webkit-scrollbar {
-    width: 2px;
+
+  .hilya-footer__newsletter p {
+
+    max-width: 230px;
+
   }
 
-  .hilya-filter-sidebar::-webkit-scrollbar-track {
-    background: transparent;
-  }
 
-  .hilya-filter-sidebar::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 999px;
-  }
+  .hilya-newsletter-form {
 
-  .hilya-filter-sidebar:hover {
-    scrollbar-color: rgb(0 0 0 / 14%) transparent;
-  }
+    max-width: 260px;
 
-  .hilya-filter-sidebar:hover::-webkit-scrollbar-thumb {
-    background: rgb(0 0 0 / 14%);
-  }
-
-  .hilya-filter-sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgb(0 0 0 / 22%);
-  }
-
-  .hilya-filter-sidebar__heading {
-    margin: 0 0 .55rem;
-  }
-
-  .hilya-filter-sidebar__heading h2 {
-    font-size: .96rem;
-  }
-
-  .hilya-filter-group__toggle {
-    padding: .65rem 0;
-    font-size: .72rem;
-  }
-
-  .hilya-filter-group__content {
-    padding-bottom: .65rem;
-  }
-
-  .hilya-filter-option {
-    min-height: 1.7rem;
-    font-size: .70rem;
-  }
-
-  .hilya-price-slider {
-    margin: .12rem 0 .38rem;
-  }
-
-  .hilya-price-input {
-    height: 1.7rem;
-    padding-inline: .38rem;
-  }
-
-  .hilya-filters__products-toolbar {
-    grid-area: toolbar;
-    min-height: 2.35rem;
-    margin-bottom: .35rem;
-  }
-
-  .hilya-filters__results,
-  .hilya-filters__sort-label,
-  .hilya-filters__sort-trigger {
-    line-height: 1.2;
-  }
-
-  .hilya-filters__mobile-bar,
-  .hilya-filter-drawer,
-  .hilya-filter-overlay {
-    display: none !important;
   }
 
 }
 
 
-/* =========================================
-   MOBILE
-========================================= */
+/* MOBILE */
 
-@media (max-width: 40rem) {
+@media (max-width: 749px) {
 
-  .hilya-filter-sidebar {
-    display: none;
+  .hilya-footer {
+
+    width: 100vw;
+    max-width: 100vw;
+
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+
+    padding: 38px 22px 18px;
+
+    box-sizing: border-box;
+
   }
 
 
-  /* =======================================
-     MOBILE TOP BAR
-  ======================================= */
+  .hilya-footer__inner {
 
-  .hilya-filters {
-    position: relative;
-  }
-
-  .hilya-filters__mobile-bar {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: center;
     width: 100%;
-    min-height: 3rem;
-    border-top: 1px solid rgb(0 0 0 / 9%);
-    border-bottom: 1px solid rgb(0 0 0 / 9%);
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 34px 28px;
+
   }
 
 
-  /* FILTERS LEFT */
+  .hilya-footer__brand {
 
-  .hilya-filters__mobile-button {
-    display: inline-flex;
-    align-items: center;
-    justify-self: start;
-    gap: .55rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--color-foreground);
-    font: inherit;
-    font-size: .63rem;
-    font-weight: 500;
-    letter-spacing: .1em;
-    cursor: pointer;
+    grid-column: 1 / -1;
+
   }
 
 
-  /* FILTER ICON */
+  .hilya-footer__newsletter {
 
-  .hilya-filters__filter-icon {
-    position: relative;
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: .7rem;
-    height: .40rem;
-    flex-basis: .7rem;
+    grid-column: 1 / -1;
+
   }
 
-  .hilya-filters__filter-icon span {
-    position: relative;
-    display: block;
+
+  .hilya-footer__logo {
+
+    font-size: 34px;
+
+  }
+
+
+  .hilya-footer__bottom {
+
     width: 100%;
-    height: 1px;
-    background: currentColor;
-  }
 
-  .hilya-filters__filter-icon span::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: .23rem;
-    height: .23rem;
-    border: 1px solid currentColor;
-    border-radius: 50%;
-    background: var(--color-background);
-    transform: translateY(-50%);
-  }
-
-  .hilya-filters__filter-icon span:first-child::after {
-    left: 18%;
-  }
-
-  .hilya-filters__filter-icon span:last-child::after {
-    left: 58%;
-  }
-
-  .hilya-filters__filter-text {
-    display: inline-block;
-  }
-
-
-  /* PRODUCTS CENTER */
-
-  .hilya-filters__mobile-results {
-    display: block;
-    justify-self: center;
-    color: var(--color-foreground);
-    font-size: .58rem;
-    letter-spacing: .075em;
-    text-align: center;
-    white-space: nowrap;
-    text-transform: uppercase;
-  }
-
-
-  /* SORT RIGHT */
-
-  .hilya-filters__sort--mobile {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-self: end;
-    gap: .45rem;
-    white-space: nowrap;
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-label {
-    display: inline;
-    color: var(--color-muted);
-    font-size: .58rem;
-    font-weight: 400;
-    letter-spacing: .02em;
-    white-space: nowrap;
-    text-transform: none;
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .55rem;
-    min-width: auto;
-    min-height: auto;
-    padding: .15rem 0 .18rem;
-    border: 0 !important;
-    border-bottom: 0 !important;
-    border-radius: 0;
-    background: transparent;
-    color: var(--color-foreground);
-    font: inherit;
-    font-size: .58rem;
-    font-weight: 400;
-    text-align: left;
-    cursor: pointer;
-    box-shadow: none;
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-trigger:hover {
-    border: 0 !important;
-    border-bottom: 0 !important;
-    background: transparent;
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-chevron {
-    width: .38rem;
-    height: .38rem;
-    margin-top: -.15rem;
-    border-right: 1px solid currentColor;
-    border-bottom: 1px solid currentColor;
-    transform: rotate(45deg);
-  }
-
-  .hilya-filters__sort--mobile.is-open .hilya-filters__sort-chevron {
-    transform: rotate(225deg);
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-menu {
-    top: calc(100% + .45rem);
-    right: 0;
-    width: 11rem;
-  }
-
-
-  /* HIDE OLD MOBILE TOOLBAR */
-
-  .hilya-filters__products-toolbar {
-    display: none;
-  }
-
-
-  /* =======================================
-     MOBILE DRAWER
-  ======================================= */
-
-  .hilya-filter-drawer {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: auto;
-
-    z-index: 100001;
-
-    width: min(28rem, 92vw);
-
-    height: 100dvh;
-    max-height: 100dvh;
-
-    overflow: hidden;
-
-    display: flex;
     flex-direction: column;
 
-    background: var(--color-background);
-
-    transform: translateX(-100%);
-
-    transition: transform 320ms cubic-bezier(.22,.61,.36,1);
-
-    overscroll-behavior: none;
-  }
-
-  .hilya-filter-drawer.is-open {
-    transform: translateX(0);
-  }
-
-
-  /* =======================================
-     MOBILE DRAWER HEADER
-
-     FILTERS + FILTERED BY
-     STAY TOGETHER
-  ======================================= */
-
-  .hilya-filter-drawer__header {
-    display: flex;
     align-items: flex-start;
-    justify-content: space-between;
 
-    flex: 0 0 auto;
+    gap: 14px;
 
-    padding: 2rem 1.5rem 1.35rem;
-
-    background: var(--color-background);
-
-    /*
-      IMPORTANT:
-      No line under FILTERS.
-      The line will start at Availability.
-    */
-    border-bottom: 0;
-
-    position: relative;
-    z-index: 2;
-  }
-
-  .hilya-filter-drawer__header-main {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .hilya-filter-drawer__title {
-    display: block;
-  }
-
-  .hilya-filter-drawer__eyebrow {
-    display: none;
-  }
-
-  .hilya-filter-drawer__header h2 {
-    margin: 0;
-    color: var(--color-foreground);
-    font-size: 1.2rem;
-    font-weight: 400;
-    letter-spacing: .08em;
   }
 
 
-  /* =======================================
-     FILTERED BY
-     INSIDE FIXED HEADER
-  ======================================= */
+  .hilya-footer__social {
 
-  .hilya-filter-drawer__header .hilya-filters__active {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    gap: 18px;
 
-    width: 100%;
-
-    margin-top: .7rem;
-    margin-bottom: 0;
-
-    gap: .3rem;
-  }
-
-  .hilya-filter-drawer__header .hilya-filters__active-label {
-    width: 100%;
-    margin: 0 0 .08rem;
-
-    color: var(--color-muted);
-    font-size: .52rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-
-  .hilya-filter-drawer__header .hilya-filter-chip {
-    font-size: .57rem;
-    padding: .36rem .44rem;
-  }
-
-  .hilya-filter-drawer__header .hilya-filters__clear {
-    font-size: .55rem;
-  }
-
-
-  /* CLOSE */
-
-  .hilya-filter-drawer__close {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--color-foreground);
-    font-size: 1.8rem;
-    font-weight: 300;
-    line-height: 1;
-    cursor: pointer;
-    flex: 0 0 auto;
-    margin-left: 1rem;
-  }
-
-
-  /* =======================================
-     DRAWER CONTENT
-
-     ONLY THIS AREA SCROLLS
-  ======================================= */
-
-  .hilya-filter-drawer__content {
-
-    flex: 1 1 auto;
-
-    min-height: 0;
-
-    width: 100%;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    overscroll-behavior-y: contain;
-
-    -webkit-overflow-scrolling: touch;
-
-    padding: 0 1.5rem 2rem;
-  }
-
-
-  /* =======================================
-     FIRST FILTER LINE
-
-     Starts UNDER FILTERED BY.
-  ======================================= */
-
-  .hilya-filter-drawer__content .hilya-filter-group:first-child {
-    border-top: 1px solid rgb(0 0 0 / 9%);
-  }
-
-
-  /* =======================================
-     MOBILE FILTER GROUPS
-  ======================================= */
-
-  .hilya-filter-drawer .hilya-filter-group {
-    border-top: 1px solid rgb(0 0 0 / 9%);
-  }
-
-  .hilya-filter-drawer .hilya-filter-group:last-child {
-    border-bottom: 1px solid rgb(0 0 0 / 9%);
-  }
-
-  .hilya-filter-drawer .hilya-filter-group__toggle,
-  .hilya-filter-drawer .hilya-filter-group__content {
-    padding-inline: 0;
   }
 
 }
 
-@media screen and (max-width: 749px) {
-  .price {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-  }
+/* LANGUAGE SWITCHER */
 
-  .price__current,
-  .price__compare {
-    display: block;
-  }
-
-  .price__compare {
-    text-decoration: line-through;
-  }
+.hilya-footer-language {
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
 
+.hilya-footer-language__button {
+  padding: 5px 13px;
 
-/* =========================================
-   VERY SMALL MOBILE
-========================================= */
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
 
-@media (max-width: 27rem) {
+  background: transparent;
+  color: #d8d3c8;
 
-  .hilya-filters__mobile-bar {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  }
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.2;
 
-  .hilya-filters__mobile-button {
-    font-size: .58rem;
-    letter-spacing: .07em;
-  }
-
-  .hilya-filters__mobile-results {
-    font-size: .54rem;
-  }
-
-  .hilya-filters__sort--mobile {
-    gap: .3rem;
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-label {
-    font-size: .52rem;
-  }
-
-  .hilya-filters__sort--mobile .hilya-filters__sort-trigger {
-    gap: .4rem;
-    font-size: .52rem;
-  }
-
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-
-/* =========================================
-   REDUCED MOTION
-========================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .hilya-filter-overlay,
-  .hilya-filter-drawer,
-  .hilya-filter-chevron,
-  .hilya-filters__sort-chevron {
-    transition: none;
-  }
-
+.hilya-footer-language__button:hover {
+  border-color: #ffffff;
+  color: #ffffff;
 }
 
-/* =========================================
-   ARABIC / RTL
-========================================= */
-
-/* Price slider and the two price boxes stay left-to-right (min on the left) */
-[dir="rtl"] .hilya-price-slider,
-[dir="rtl"] .hilya-price-values {
-  direction: ltr;
+.hilya-footer-language__button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
-[dir="rtl"] .hilya-filter-group__toggle,
-[dir="rtl"] .hilya-filters__sort-trigger,
-[dir="rtl"] .hilya-filters__sort-option {
-  text-align: right;
+/* NEWSLETTER MESSAGES */
+
+.hilya-footer__newsletter .hilya-newsletter-message {
+  max-width: 280px;
+  margin: 10px 0 0;
+  color: #d8d3c8;
+  font-size: 11px;
+  line-height: 1.5;
 }
 
-/* The sort menu opens toward the inside of the page */
-[dir="rtl"] .hilya-filters__sort-menu {
-  right: auto;
-  left: 0;
+.hilya-footer__newsletter .hilya-newsletter-message--error {
+  color: #ffb4a8;
 }
 
-/* Filter drawer on phones slides in from the right in Arabic */
-[dir="rtl"] .hilya-filter-drawer {
-  right: 0;
-  left: auto;
-  transform: translateX(100%);
+/* ARABIC / RTL */
+
+[dir="rtl"] .hilya-footer__logo {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
-[dir="rtl"] .hilya-filter-drawer.is-open {
-  transform: translateX(0);
+[dir="rtl"] .hilya-newsletter-form button {
+  transform: scaleX(-1);
 }
 
-/* Arabic needs bigger letters than these very small English sizes */
-html[dir="rtl"] .hilya-filter-sidebar__heading h2 { font-size: 1.15rem; }
-html[dir="rtl"] .hilya-filters__active-label { font-size: .75rem; }
-html[dir="rtl"] .hilya-filter-chip { font-size: .8rem; }
-html[dir="rtl"] .hilya-filter-chip__remove { font-size: .95rem; }
-html[dir="rtl"] .hilya-filters__clear { font-size: .8rem; }
-html[dir="rtl"] .hilya-filter-group__toggle { font-size: .95rem; }
-html[dir="rtl"] .hilya-filter-option { font-size: .92rem; }
-html[dir="rtl"] .hilya-price-values { font-size: .85rem; }
-html[dir="rtl"] .hilya-price-input span { font-size: .75rem; }
-html[dir="rtl"] .hilya-price-input input { font-size: .85rem; }
-html[dir="rtl"] .hilya-price-values__to { font-size: .8rem; }
-html[dir="rtl"] .hilya-filters__results { font-size: .85rem; }
-html[dir="rtl"] .hilya-filters__sort-label { font-size: .82rem; }
-html[dir="rtl"] .hilya-filters__sort-trigger { font-size: .85rem; }
-html[dir="rtl"] .hilya-filters__sort-option { font-size: .85rem; }
-html[dir="rtl"] .hilya-filter-drawer__eyebrow { font-size: .75rem; }
-html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
-
-@media (max-width: 40rem) {
-  html[dir="rtl"] .hilya-filters__mobile-button { font-size: .8rem; }
-  html[dir="rtl"] .hilya-filters__mobile-results { font-size: .78rem; }
-  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-label,
-  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-trigger { font-size: .75rem; }
-  html[dir="rtl"] .hilya-filter-drawer__header .hilya-filters__active-label { font-size: .72rem; }
-  html[dir="rtl"] .hilya-filter-drawer__header .hilya-filter-chip { font-size: .78rem; }
-  html[dir="rtl"] .hilya-filter-drawer__header .hilya-filters__clear { font-size: .78rem; }
+[dir="rtl"] .hilya-footer__brand p {
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-@media (max-width: 27rem) {
-  html[dir="rtl"] .hilya-filters__mobile-button { font-size: .75rem; }
-  html[dir="rtl"] .hilya-filters__mobile-results { font-size: .72rem; }
-  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-label,
-  html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-trigger { font-size: .7rem; }
+[dir="rtl"] .hilya-footer__column h3,
+[dir="rtl"] .hilya-footer__newsletter h3 {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+[dir="rtl"] .hilya-footer__column a {
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+[dir="rtl"] .hilya-footer__newsletter p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+[dir="rtl"] .hilya-newsletter-form input {
+  font-size: 13px;
+}
+
+[dir="rtl"] .hilya-footer__bottom p {
+  font-size: 12px;
 }
 
 {% endstylesheet %}
+
+
+{% schema %}
+
+{
+
+  "name": "Hilya Footer",
+
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram link"
+    },
+
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook link"
+    },
+
+    {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp number",
+      "info": "Enter your WhatsApp number with country code, for example: 201012345678"
+    },
+
+
+    {
+      "type": "header",
+      "content": "Shop Links"
+    },
+
+    {
+      "type": "url",
+      "id": "all_products_link",
+      "label": "All Products link"
+    },
+
+    {
+      "type": "url",
+      "id": "new_arrivals_link",
+      "label": "New Arrivals link"
+    },
+
+    {
+      "type": "url",
+      "id": "best_sellers_link",
+      "label": "Best Sellers link"
+    },
+
+    {
+      "type": "url",
+      "id": "sale_link",
+      "label": "Sale link"
+    },
+
+
+    {
+      "type": "header",
+      "content": "Category Links"
+    },
+
+    {
+      "type": "url",
+      "id": "necklaces_link",
+      "label": "Necklaces link"
+    },
+
+    {
+      "type": "url",
+      "id": "rings_link",
+      "label": "Rings link"
+    },
+
+    {
+      "type": "url",
+      "id": "pendants_link",
+      "label": "Pendants link"
+    },
+
+    {
+      "type": "url",
+      "id": "bracelets_link",
+      "label": "Bracelets link"
+    },
+
+    {
+      "type": "url",
+      "id": "keychains_link",
+      "label": "Keychains link"
+    },
+
+
+    {
+      "type": "header",
+      "content": "About Links"
+    },
+
+    {
+      "type": "url",
+      "id": "our_story_link",
+      "label": "Our Story link"
+    },
+
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact Us link"
+    },
+
+    {
+      "type": "url",
+      "id": "shipping_link",
+      "label": "Shipping link"
+    },
+
+    {
+      "type": "url",
+      "id": "returns_link",
+      "label": "Returns link"
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "Hilya Footer"
+    }
+
+  ]
+
+}
+
+{% endschema %}
