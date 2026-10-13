@@ -7,8 +7,18 @@
 {% enddoc %}
 
 {% liquid
-  assign card_image_alt = product.featured_image.alt | default: product.title
+  comment
+    One variant drives the whole card (image, price, compare price, discount),
+    so the card always matches the product page default variant.
+  endcomment
+  assign card_variant = product.selected_or_first_available_variant
+  assign card_image = card_variant.featured_image | default: product.featured_image
+
+  assign card_image_alt = card_image.alt | default: product.title
   assign secondary_image = product.images[1]
+  if secondary_image.src == card_image.src
+    assign secondary_image = product.images[0]
+  endif
   assign secondary_image_alt = secondary_image.alt | default: product.title
 
   assign rating = product.metafields.reviews.rating.value
@@ -18,8 +28,8 @@
 
   assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
 
-  assign compare_price = product.compare_at_price_max
-  assign current_price = product.price
+  assign compare_price = card_variant.compare_at_price
+  assign current_price = card_variant.price
   assign discount_percentage = 0
 
   if compare_price > current_price and compare_price > 0
@@ -49,7 +59,7 @@
     data-product-media
   >
 
-    {% if product.featured_image %}
+    {% if card_image %}
 
       <div
         class="product-card__image-layer product-card__image-layer--primary"
@@ -57,7 +67,7 @@
       >
 
         {% render 'image',
-          image: product.featured_image,
+          image: card_image,
           width: 1200,
           widths: '240, 360, 480, 640, 800, 1000, 1200',
           sizes: sizes,
@@ -191,6 +201,7 @@
 
       {% render 'price',
         product: product,
+        variant: card_variant,
         card_layout: true,
         show_discount: false
       %}
