@@ -1,51 +1,122 @@
-{% liquid
-  assign announcement_text = section.settings.text
-  if announcement_text == blank
-    assign announcement_text = 'announcement.default' | t
+{%- comment -%}
+  HILYA announcement bar.
+  - Text comes from two fields: English (setting "text") and Arabic ("text_ar"), chosen by the current site language.
+  - If the field for the current language is empty, nothing is rendered (no empty bar, no text from the other language).
+  - Static or marquee, speed, direction, gap, colors and sizes are all theme editor settings.
+  - The bar sits in normal page flow, so it scrolls away with the page. Whether the header below it stays
+    fixed is decided by the header section, not by this file.
+{%- endcomment -%}
+
+{%- liquid
+  assign language_code = request.locale.iso_code | split: '-' | first | downcase
+
+  if language_code == 'ar'
+    assign text_direction = 'rtl'
+    assign announcement_text = section.settings.text_ar
+  else
+    assign text_direction = 'ltr'
+    assign announcement_text = section.settings.text
   endif
-%}
+
+  assign announcement_text = announcement_text | strip
+
+  assign show_bar = false
+  if section.settings.enabled and announcement_text != blank
+    assign show_bar = true
+  endif
+
+  assign use_marquee = false
+  if section.settings.animation == 'marquee'
+    assign use_marquee = true
+  endif
+
+  assign bar_height = 0
+  if show_bar
+    assign bar_height = section.settings.height
+  endif
+
+  assign marquee_direction = 'normal'
+  if section.settings.marquee_direction == 'left_to_right'
+    assign marquee_direction = 'reverse'
+  endif
+-%}
 
 {% style %}
-  :root { --announcement-bar-height: {{ section.settings.height }}px; }
+  :root { --announcement-bar-height: {{ bar_height }}px; }
 {% endstyle %}
 
-<aside
-  class="announcement-bar full-width"
-  style="
-    --announcement-background: {{ section.settings.background_color }};
-    --announcement-color: {{ section.settings.text_color }};
-    --announcement-height: {{ section.settings.height }}px;
-    --announcement-font-size: {{ section.settings.font_size }}px;
-  "
-  aria-label="{{ 'general.announcement' | t | escape }}"
->
-  <div class="announcement-bar__content{% if section.settings.uppercase %} announcement-bar__content--uppercase{% endif %}">
-    {{ announcement_text }}
+{%- if show_bar -%}
+  <aside
+    class="announcement-bar full-width{% if use_marquee %} announcement-bar--marquee{% else %} announcement-bar--static{% endif %}{% unless section.settings.marquee_mobile %} announcement-bar--no-mobile-marquee{% endunless %}{% if section.settings.uppercase %} announcement-bar--uppercase{% endif %}"
+    lang="{{ request.locale.iso_code }}"
+    style="
+      --announcement-background: {{ section.settings.background_color }};
+      --announcement-color: {{ section.settings.text_color }};
+      --announcement-height: {{ section.settings.height }}px;
+      --announcement-padding-y: {{ section.settings.padding_y }}px;
+      --announcement-padding-x: {{ section.settings.padding_x }}px;
+      --announcement-font-size: {{ section.settings.font_size }}px;
+      --announcement-font-size-mobile: {{ section.settings.font_size_mobile }}px;
+      --announcement-font-weight: {{ section.settings.font_weight }};
+      --announcement-align: {{ section.settings.static_align }};
+      --marquee-gap: {{ section.settings.marquee_gap }}px;
+      --marquee-direction: {{ marquee_direction }};
+    "
+    aria-label="{{ 'general.announcement' | t | escape }}"
+  >
+    {%- if use_marquee -%}
+      <announcement-marquee class="announcement-bar__marquee" data-speed="{{ section.settings.marquee_speed }}">
+        <div class="announcement-bar__track" data-marquee-track>
+          {%- for group in (1..2) -%}
+            <div
+              class="announcement-bar__group"
+              {% if group == 1 %}data-marquee-group{% else %}aria-hidden="true" inert{% endif %}
+            >
+              {%- for item in (1..6) -%}
+                <span
+                  class="announcement-bar__item"
+                  dir="{{ text_direction }}"
+                  {% if group == 1 and item > 1 %}aria-hidden="true" inert{% endif %}
+                >{{ announcement_text }}</span>
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </announcement-marquee>
+    {%- else -%}
+      <div class="announcement-bar__static" dir="{{ text_direction }}">{{ announcement_text }}</div>
+    {%- endif -%}
+  </aside>
+{%- elsif request.design_mode -%}
+  <div class="announcement-bar-editor-note">
+    Announcement bar is hidden: it is turned off, or the text for the current site language is empty.
   </div>
-</aside>
+{%- endif -%}
 
 {% stylesheet %}
   .announcement-bar {
-    display: grid;
+    position: relative;
+    display: flex;
+    align-items: center;
     min-height: var(--announcement-height);
-    place-items: center;
+    padding-block: var(--announcement-padding-y);
+    overflow: hidden;
     background: var(--announcement-background);
     color: var(--announcement-color);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-body-family, Arial, Helvetica, sans-serif);
     font-size: var(--announcement-font-size);
-    font-weight: 600;
-    letter-spacing: 0.025em;
-    line-height: 1.25;
-    padding: 0.55rem max(1.25rem, var(--page-margin));
-    text-align: center;
+    font-weight: var(--announcement-font-weight);
+    letter-spacing: 0.08em;
+    line-height: 1.4;
   }
 
-  .announcement-bar__content--uppercase {
+  .announcement-bar--uppercase {
     text-transform: uppercase;
   }
 
-  .announcement-bar p {
-    margin: 0;
+  /* Arabic letters must stay joined, so no letter spacing */
+  .announcement-bar [dir='rtl'] {
+    letter-spacing: 0;
   }
 
   .announcement-bar a {
@@ -53,23 +124,322 @@
     text-underline-offset: 0.12em;
   }
 
-  [dir='rtl'] .announcement-bar {
-    font-family: Tahoma, Arial, sans-serif;
-    letter-spacing: 0;
+  .announcement-bar__static {
+    flex: 1 1 100%;
+    min-width: 0;
+    padding-inline: var(--announcement-padding-x);
+    text-align: var(--announcement-align, center);
+  }
+
+  /* Marquee */
+  .announcement-bar__marquee {
+    display: block;
+    flex: 1 1 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* Always laid out left to right so the loop math is the same in every language;
+     each text keeps its own reading direction through its dir attribute */
+  .announcement-bar__track {
+    display: flex;
+    width: max-content;
+    direction: ltr;
+    animation: announcement-marquee-scroll var(--marquee-duration, 40s) linear infinite;
+    animation-direction: var(--marquee-direction, normal);
+    will-change: transform;
+  }
+
+  .announcement-bar__group {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-around;
+    min-width: 100vw;
+  }
+
+  .announcement-bar__item {
+    flex: 0 0 auto;
+    padding-inline: calc(var(--marquee-gap, 64px) / 2);
+    white-space: nowrap;
+  }
+
+  @keyframes announcement-marquee-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  @media (max-width: 749px) {
+    .announcement-bar {
+      font-size: var(--announcement-font-size-mobile);
+    }
+
+    /* "Animate on mobile" turned off: show one centered text, no motion */
+    .announcement-bar--no-mobile-marquee .announcement-bar__track {
+      width: 100%;
+      transform: none;
+      animation: none;
+    }
+
+    .announcement-bar--no-mobile-marquee .announcement-bar__group:nth-child(2),
+    .announcement-bar--no-mobile-marquee .announcement-bar__group:first-child .announcement-bar__item:nth-child(n + 2) {
+      display: none;
+    }
+
+    .announcement-bar--no-mobile-marquee .announcement-bar__group {
+      width: 100%;
+      min-width: 0;
+      justify-content: center;
+    }
+
+    .announcement-bar--no-mobile-marquee .announcement-bar__item {
+      padding-inline: var(--announcement-padding-x);
+      text-align: center;
+      white-space: normal;
+    }
+  }
+
+  /* Respect "reduce motion": same calm, centered, non-moving result */
+  @media (prefers-reduced-motion: reduce) {
+    .announcement-bar--marquee .announcement-bar__track {
+      width: 100%;
+      transform: none;
+      animation: none;
+    }
+
+    .announcement-bar--marquee .announcement-bar__group:nth-child(2),
+    .announcement-bar--marquee .announcement-bar__group:first-child .announcement-bar__item:nth-child(n + 2) {
+      display: none;
+    }
+
+    .announcement-bar--marquee .announcement-bar__group {
+      width: 100%;
+      min-width: 0;
+      justify-content: center;
+    }
+
+    .announcement-bar--marquee .announcement-bar__item {
+      padding-inline: var(--announcement-padding-x);
+      text-align: center;
+      white-space: normal;
+    }
+  }
+
+  /* Only visible inside the theme editor */
+  .announcement-bar-editor-note {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px dashed currentColor;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    text-align: center;
   }
 {% endstylesheet %}
+
+{% javascript %}
+  /* Sets the marquee loop time from its real width, so "speed" means pixels per second
+     whatever the text length or screen size. Runs again when the editor re-renders the section. */
+  if (!customElements.get('announcement-marquee')) {
+    class AnnouncementMarquee extends HTMLElement {
+      connectedCallback() {
+        this.group = this.querySelector('[data-marquee-group]');
+        if (!this.group) return;
+
+        this.update();
+
+        if ('ResizeObserver' in window) {
+          this.observer = new ResizeObserver(() => this.update());
+          this.observer.observe(this.group);
+        }
+      }
+
+      disconnectedCallback() {
+        if (this.observer) this.observer.disconnect();
+      }
+
+      update() {
+        const speed = parseFloat(this.dataset.speed) || 40;
+        const width = this.group.getBoundingClientRect().width;
+        if (!width) return;
+
+        this.style.setProperty('--marquee-duration', (width / speed).toFixed(2) + 's');
+      }
+    }
+
+    customElements.define('announcement-marquee', AnnouncementMarquee);
+  }
+{% endjavascript %}
 
 {% schema %}
 {
   "name": "t:general.announcement_bar",
   "enabled_on": { "groups": ["header"] },
   "settings": [
-    { "type": "inline_richtext", "id": "text", "label": "t:labels.announcement_text" },
-    { "type": "color", "id": "background_color", "label": "t:labels.announcement_background", "default": "#F6A429" },
-    { "type": "color", "id": "text_color", "label": "t:labels.announcement_text_color", "default": "#000000" },
-    { "type": "range", "id": "height", "label": "t:labels.announcement_height", "min": 36, "max": 64, "step": 2, "unit": "px", "default": 48 },
-    { "type": "range", "id": "font_size", "label": "t:labels.announcement_font_size", "min": 11, "max": 18, "step": 1, "unit": "px", "default": 14 },
-    { "type": "checkbox", "id": "uppercase", "label": "t:labels.uppercase", "default": true }
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement bar",
+      "default": true
+    },
+
+    { "type": "header", "content": "Text" },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "English text",
+      "info": "Shown when the site language is English (or any language other than Arabic).",
+      "default": "CELEBRATE OUR LAUNCH — UP TO 25% OFF"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text_ar",
+      "label": "Arabic text (النص العربي)",
+      "info": "Shown when the site language is Arabic, right to left. If a language's field is empty, the bar is hidden for that language.",
+      "default": "احتفالًا بالافتتاح — خصومات تصل إلى 25%"
+    },
+
+    { "type": "header", "content": "Animation" },
+    {
+      "type": "select",
+      "id": "animation",
+      "label": "Animation",
+      "options": [
+        { "value": "static", "label": "Static (no movement)" },
+        { "value": "marquee", "label": "Marquee (scrolling text)" }
+      ],
+      "default": "static"
+    },
+    {
+      "type": "select",
+      "id": "marquee_direction",
+      "label": "Marquee direction",
+      "options": [
+        { "value": "right_to_left", "label": "Right to left" },
+        { "value": "left_to_right", "label": "Left to right" }
+      ],
+      "default": "right_to_left"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Marquee speed (pixels per second)",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 40,
+      "info": "Higher is faster. About 25 is slow, 40 is calm (default), 80 or more is fast. The time for one full loop is calculated automatically from the text length and screen width, so it is not the same as the speed."
+    },
+    {
+      "type": "range",
+      "id": "marquee_gap",
+      "label": "Space between repeated texts",
+      "min": 24,
+      "max": 160,
+      "step": 8,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "checkbox",
+      "id": "marquee_mobile",
+      "label": "Animate on mobile",
+      "info": "Turn off to show one centered, still text on phones.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "static_align",
+      "label": "Text alignment (Static)",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "start", "label": "Start (left in English, right in Arabic)" },
+        { "value": "end", "label": "End (right in English, left in Arabic)" }
+      ],
+      "default": "center"
+    },
+
+    { "type": "header", "content": "Colors" },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:labels.announcement_background",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:labels.announcement_text_color",
+      "default": "#FFFFFF"
+    },
+
+    { "type": "header", "content": "Size and spacing" },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "t:labels.announcement_height",
+      "min": 36,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Side padding",
+      "min": 8,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 20,
+      "info": "Space between the text and the edges of the bar (Static, and mobile without animation)."
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (desktop)",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font size (mobile)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "t:labels.uppercase",
+      "default": true
+    }
   ],
   "presets": [{ "name": "t:general.announcement_bar" }]
 }
