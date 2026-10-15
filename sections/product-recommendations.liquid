@@ -86,6 +86,57 @@
               assign rating_maximum = rating.scale_max | default: 5
               assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
 
+              comment
+                Hover picture: the "Detail" image of the same material (Gold / Silver), found through the image alt text.
+                Alt names used in the store: "Gold Plated - Front / Detail / Lifestyle" and "Silver Plated - Front / Detail / Lifestyle".
+                If there is no Detail image, the first other image of the same material is used.
+              endcomment
+              assign hover_image = nil
+              assign featured_alt = item.featured_image.alt | downcase
+              assign wanted_material = ''
+              if featured_alt contains 'gold' or featured_alt contains 'ذهب'
+                assign wanted_material = 'gold'
+              elsif featured_alt contains 'silver' or featured_alt contains 'فض'
+                assign wanted_material = 'silver'
+              endif
+
+              assign same_material_image = nil
+
+              for candidate in item.images
+                if candidate.id == item.featured_image.id
+                  continue
+                endif
+
+                assign candidate_alt = candidate.alt | downcase
+                assign same_material = false
+
+                if wanted_material == 'gold'
+                  if candidate_alt contains 'gold' or candidate_alt contains 'ذهب'
+                    assign same_material = true
+                  endif
+                elsif wanted_material == 'silver'
+                  if candidate_alt contains 'silver' or candidate_alt contains 'فض'
+                    assign same_material = true
+                  endif
+                else
+                  assign same_material = true
+                endif
+
+                if same_material
+                  if same_material_image == blank
+                    assign same_material_image = candidate
+                  endif
+
+                  if candidate_alt contains 'detail'
+                    assign hover_image = candidate
+                    break
+                  endif
+                endif
+              endfor
+
+              if hover_image == blank
+                assign hover_image = same_material_image
+              endif
             %}
 
             <article class="product-recommendations__item" data-rec-item>
@@ -94,7 +145,7 @@
 
                 <a
                   href="{{ item.url }}"
-                  class="product-recommendations__image-link"
+                  class="product-recommendations__image-link{% if hover_image != blank %} has-hover-image{% endif %}"
                   aria-label="{{ item.title | escape }}"
                 >
 
@@ -109,6 +160,19 @@
                         sizes: '(min-width: 990px) 25vw, 70vw',
                         alt: item.featured_image.alt | default: item.title
                       }}
+
+                    {%- if hover_image != blank -%}
+                      {{
+                        hover_image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '360, 540, 720, 900',
+                          sizes: '(min-width: 990px) 25vw, 70vw',
+                          class: 'product-recommendations__hover-image',
+                          alt: ''
+                      }}
+                    {%- endif -%}
 
                   {% else %}
 
@@ -268,6 +332,49 @@
       event.preventDefault();
       event.stopPropagation();
     }, true);
+
+    /*
+      Touch screens: hold a finger on a card to see its second picture.
+      It stays while the finger is down (even while scrolling) and goes back when the finger lifts.
+    */
+    let holdTimer = null;
+    let heldMedia = null;
+
+    const releaseHold = () => {
+      clearTimeout(holdTimer);
+
+      if (heldMedia) {
+        heldMedia.classList.remove('is-touch-hover');
+        heldMedia = null;
+      }
+    };
+
+    track.addEventListener('touchstart', (event) => {
+      const media = event.target.closest?.('.product-recommendations__media');
+
+      if (!media || !media.querySelector('.product-recommendations__hover-image')) return;
+
+      releaseHold();
+
+      /* Short hold, so a quick tap or flick does not flash the second picture */
+      holdTimer = setTimeout(() => {
+        media.classList.add('is-touch-hover');
+        heldMedia = media;
+      }, 100);
+    }, { passive: true });
+
+    track.addEventListener('touchend', releaseHold, { passive: true });
+    track.addEventListener('touchcancel', releaseHold, { passive: true });
+
+    /* A long press would open the link menu and cancel the hold */
+    track.addEventListener('contextmenu', (event) => {
+      if (
+        window.matchMedia('(hover: none)').matches &&
+        event.target.closest?.('.product-recommendations__image-link')
+      ) {
+        event.preventDefault();
+      }
+    });
 
   })();
 </script>
@@ -462,6 +569,42 @@
 
 .product-recommendations__image-link:hover img {
   transform: scale(1.025);
+}
+
+/* Second picture on hover (same material), instead of a zoom */
+.product-recommendations__image-link {
+  position: relative;
+}
+
+.product-recommendations__image-link img.product-recommendations__hover-image {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.product-recommendations__image-link.has-hover-image:hover img {
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-recommendations__media:hover .product-recommendations__hover-image {
+    opacity: 1;
+  }
+}
+
+/* Touch screens: the second picture shows while a finger is held on the card */
+.product-recommendations__media.is-touch-hover .product-recommendations__hover-image {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .product-recommendations__image-link,
+  .product-recommendations__image-link img {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
 }
 
 
