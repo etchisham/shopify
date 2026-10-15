@@ -148,15 +148,101 @@
         assign rating_value = rating.rating | default: rating
         assign rating_maximum = rating.scale_max | default: 5
         assign rating_display = rating_value | round: 1 | append: '' | remove: '.0'
+
+        comment
+          Hover picture: the "Detail" image of the same material (Gold / Silver), found through the image alt text.
+          Alt names used in the store: "Gold Plated - Front / Detail / Lifestyle" and "Silver Plated - Front / Detail / Lifestyle".
+          If there is no Detail image, the first other image of the same material is used.
+        endcomment
+        assign hover_image = nil
+        assign featured_alt = item.featured_image.alt | downcase
+        assign wanted_material = ''
+        if featured_alt contains 'gold' or featured_alt contains 'ذهب'
+          assign wanted_material = 'gold'
+        elsif featured_alt contains 'silver' or featured_alt contains 'فض'
+          assign wanted_material = 'silver'
+        endif
+
+        assign same_material_image = nil
+
+        for candidate in item.images
+          if candidate.id == item.featured_image.id
+            continue
+          endif
+
+          assign candidate_alt = candidate.alt | downcase
+          assign same_material = false
+
+          if wanted_material == 'gold'
+            if candidate_alt contains 'gold' or candidate_alt contains 'ذهب'
+              assign same_material = true
+            endif
+          elsif wanted_material == 'silver'
+            if candidate_alt contains 'silver' or candidate_alt contains 'فض'
+              assign same_material = true
+            endif
+          else
+            assign same_material = true
+          endif
+
+          if same_material
+            if same_material_image == blank
+              assign same_material_image = candidate
+            endif
+
+            if candidate_alt contains 'detail'
+              assign hover_image = candidate
+              break
+            endif
+          endif
+        endfor
+
+        if hover_image == blank
+          assign hover_image = same_material_image
+        endif
       -%}
 
-      <article class="explore-collection__item" data-explore-item data-product-id="{{ item.id }}">
+      {%- comment -%} Pictures per material, so the card can follow the Gold / Silver chosen on the product page {%- endcomment -%}
+      {%- assign slots_used = ',' -%}
+      {%- capture material_data -%}
+        {%- for image in item.images -%}
+          {%- assign image_alt = image.alt | downcase -%}
+          {%- assign image_material = '' -%}
+
+          {%- if image_alt contains 'gold' or image_alt contains 'ذهب' -%}
+            {%- assign image_material = 'gold' -%}
+          {%- elsif image_alt contains 'silver' or image_alt contains 'فض' -%}
+            {%- assign image_material = 'silver' -%}
+          {%- endif -%}
+
+          {%- if image_material != blank -%}
+            {%- assign image_kind = 'other' -%}
+            {%- if image_alt contains 'front' -%}
+              {%- assign image_kind = 'front' -%}
+            {%- elsif image_alt contains 'detail' -%}
+              {%- assign image_kind = 'detail' -%}
+            {%- endif -%}
+
+            {%- assign image_slot = image_material | append: '-' | append: image_kind -%}
+            {%- assign slot_token = ',' | append: image_slot | append: ',' -%}
+
+            {% unless slots_used contains slot_token %}
+              {%- assign slots_used = slots_used | append: image_slot | append: ',' %}
+              data-{{ image_slot }}-src="{{ image | image_url: width: 900 | escape }}"
+              data-{{ image_slot }}-alt="{{ image.alt | escape }}"
+              data-{{ image_slot }}-srcset="{{ image | image_url: width: 360 | escape }} 360w, {{ image | image_url: width: 540 | escape }} 540w, {{ image | image_url: width: 720 | escape }} 720w, {{ image | image_url: width: 900 | escape }} 900w"
+            {% endunless %}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      <article class="explore-collection__item" data-explore-item data-product-id="{{ item.id }}" {{ material_data }}>
 
         <div class="explore-collection__media">
 
           <a
             href="{{ item.url }}"
-            class="explore-collection__image-link"
+            class="explore-collection__image-link{% if hover_image != blank %} has-hover-image{% endif %}"
             aria-label="{{ item.title | escape }}"
           >
             {%- if item.featured_image != blank -%}
@@ -169,6 +255,18 @@
                   sizes: '(min-width: 990px) 25vw, 70vw',
                   alt: item.featured_image.alt | default: item.title
               }}
+              {%- if hover_image != blank -%}
+                {{
+                  hover_image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '360, 540, 720, 900',
+                    sizes: '(min-width: 990px) 25vw, 70vw',
+                    class: 'explore-collection__hover-image',
+                    alt: ''
+                }}
+              {%- endif -%}
             {%- else -%}
               {{ 'product-1' | placeholder_svg_tag }}
             {%- endif -%}
@@ -385,6 +483,10 @@
 
         </article>
 
+        {%- if bundle_note != blank -%}
+          <p class="explore-collection__bundle-note explore-collection__bundle-note--after">{{ bundle_note | escape }}</p>
+        {%- endif -%}
+
       </div>
 
       <script type="application/json" data-current-variants>
@@ -485,6 +587,130 @@
           event.stopPropagation();
         }, true);
 
+        /* Gold / Silver: the cards follow the variant chosen on the main product */
+        var normalize = function (value) { return String(value || '').trim().toLowerCase(); };
+
+        var currentVariants = {};
+
+        try {
+          var variantsScript = root.querySelector('[data-current-variants]');
+          if (variantsScript) currentVariants = JSON.parse(variantsScript.textContent);
+        } catch (error) {}
+
+        /* The variant selected on the main product (hidden form input first, then the URL) */
+        var getCurrentOptions = function () {
+          var input = document.querySelector('form[action*="/cart/add"] [name="id"]');
+          var id = input && input.value;
+          if (!id) {
+            var param = new URLSearchParams(window.location.search).get('variant');
+            if (param) id = param;
+          }
+          return { id: id || '', options: currentVariants[id] || [] };
+        };
+
+        var materialOf = function (options) {
+          for (var i = 0; i < options.length; i++) {
+            var value = normalize(options[i]);
+            if (value.indexOf('gold') !== -1 || value.indexOf('ذهب') !== -1) return 'gold';
+            if (value.indexOf('silver') !== -1 || value.indexOf('فض') !== -1) return 'silver';
+          }
+          return '';
+        };
+
+        var getSlot = function (card, name) {
+          var src = card.getAttribute('data-' + name + '-src');
+          if (!src) return null;
+
+          return {
+            src: src,
+            srcset: card.getAttribute('data-' + name + '-srcset') || '',
+            alt: card.getAttribute('data-' + name + '-alt') || ''
+          };
+        };
+
+        var setPicture = function (img, picture) {
+          if (img.getAttribute('src') === picture.src) return;
+
+          if (picture.srcset) {
+            img.setAttribute('srcset', picture.srcset);
+          } else {
+            img.removeAttribute('srcset');
+          }
+
+          img.setAttribute('src', picture.src);
+        };
+
+        var applyMaterial = function (card, material) {
+          var link = card.querySelector('.explore-collection__image-link');
+          var main = link && link.querySelector('img:not(.explore-collection__hover-image)');
+
+          if (!link || !main) return;
+
+          var front = getSlot(card, material + '-front') || getSlot(card, material + '-other');
+
+          /* No picture of this material on the product: the card stays as it is */
+          if (!front) return;
+
+          var hover = getSlot(card, material + '-detail');
+
+          if (!hover) {
+            var other = getSlot(card, material + '-other');
+            if (other && other.src !== front.src) hover = other;
+          }
+
+          setPicture(main, front);
+          if (front.alt) main.setAttribute('alt', front.alt);
+
+          var hoverImage = link.querySelector('.explore-collection__hover-image');
+
+          if (hover) {
+            if (!hoverImage) {
+              hoverImage = document.createElement('img');
+              hoverImage.className = 'explore-collection__hover-image';
+              hoverImage.setAttribute('alt', '');
+              hoverImage.setAttribute('loading', 'lazy');
+              hoverImage.setAttribute('sizes', main.getAttribute('sizes') || '');
+              hoverImage.setAttribute('width', main.getAttribute('width') || '900');
+              hoverImage.setAttribute('height', main.getAttribute('height') || '1200');
+              link.appendChild(hoverImage);
+            }
+
+            setPicture(hoverImage, hover);
+            link.classList.add('has-hover-image');
+          } else {
+            if (hoverImage) hoverImage.remove();
+            link.classList.remove('has-hover-image');
+          }
+        };
+
+        var lastCardsKey = '';
+
+        var applyCards = function () {
+          var material = materialOf(getCurrentOptions().options);
+          if (!material) return;
+
+          var cards = root.querySelectorAll('[data-explore-item]');
+          var key = material + ':' + cards.length;
+
+          if (key === lastCardsKey) return;
+          lastCardsKey = key;
+
+          Array.prototype.forEach.call(cards, function (card) {
+            applyMaterial(card, material);
+          });
+        };
+
+        ['change', 'click'].forEach(function (name) {
+          document.addEventListener(name, function () {
+            setTimeout(applyCards, 60);
+            setTimeout(applyCards, 400);
+          }, true);
+        });
+
+        /* Safety net in case the theme changes the variant without an event */
+        setInterval(applyCards, 700);
+        applyCards();
+
         /* Tag mode: bring the products that have the same tag, then show the section */
         var tagUrl = root.getAttribute('data-tag-url');
 
@@ -506,6 +732,8 @@
               if (!items.length) return;
 
               items.forEach(function (el) { track.appendChild(el); });
+
+              applyCards();
 
               root.hidden = false;
               requestAnimationFrame(updateArrows);
@@ -530,26 +758,7 @@
           var bundleData = null;
           var lastKey = null;
           var selected = [];
-          var currentVariants = {};
           var currentProductId = root.getAttribute('data-current-product-id');
-
-          try {
-            var variantsScript = root.querySelector('[data-current-variants]');
-            if (variantsScript) currentVariants = JSON.parse(variantsScript.textContent);
-          } catch (error) {}
-
-          var normalize = function (value) { return String(value || '').trim().toLowerCase(); };
-
-          /* The variant selected on the main product (hidden form input first, then the URL) */
-          var getCurrentOptions = function () {
-            var input = document.querySelector('form[action*="/cart/add"] [name="id"]');
-            var id = input && input.value;
-            if (!id) {
-              var param = new URLSearchParams(window.location.search).get('variant');
-              if (param) id = param;
-            }
-            return { id: id || '', options: currentVariants[id] || [] };
-          };
 
           /* Closest bundle variant to the options of the main product */
           var pickVariant = function (options) {
@@ -993,6 +1202,29 @@
   transform: scale(1.025);
 }
 
+/* Second picture on hover (same material), instead of a zoom */
+.explore-collection__image-link {
+  position: relative;
+}
+
+.explore-collection__image-link img.explore-collection__hover-image {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.explore-collection__image-link.has-hover-image:hover img {
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .explore-collection__media:hover .explore-collection__hover-image {
+    opacity: 1;
+  }
+}
+
 
 /* =========================================
    ADD TO CART (appears on hover)
@@ -1337,6 +1569,11 @@
   text-align: center;
 }
 
+/* Copy of the note placed after the card: used on mobile only */
+.explore-collection__bundle-note--after {
+  display: none;
+}
+
 .explore-collection__bundle-divider {
   align-self: stretch;
   width: 1px;
@@ -1535,6 +1772,19 @@
     padding-top: 0.8rem;
     font-size: 0.75rem;
     line-height: 1.4;
+  }
+
+  /* The note moves under the card on mobile */
+  .explore-collection__bundle-info .explore-collection__bundle-note {
+    display: none;
+  }
+
+  .explore-collection__bundle-note--after {
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding-top: 0;
+    border-top: 0;
   }
 
   .explore-collection__bundle-divider {
