@@ -245,6 +245,20 @@
         if (zoomPrevious) zoomPrevious.disabled = zoomIndex === 0;
         if (zoomNext) zoomNext.disabled = zoomIndex === images.length - 1;
       };
+      /* Keyboard: Enter / Space opens the zoom (the link no longer has an href) */
+node.addEventListener(
+  'keydown',
+  (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+
+    const link = event.target.closest('[data-product-zoom]');
+    if (!link || !node.contains(link)) return;
+
+    event.preventDefault();
+    link.click();
+  },
+  { signal }
+);
 
       /* Open from any zoom link in the gallery */
       node.addEventListener(
