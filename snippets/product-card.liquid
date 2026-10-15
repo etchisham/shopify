@@ -790,18 +790,17 @@
 {% javascript %}
 
 /* Press and hold on a product image shows the second image (touch screens).
-   A quick tap still opens the product. Releasing brings the first image back. */
+   A quick tap still opens the product. Releasing brings the first image back.
+   The second image shows after a short hold and stays while the finger is down,
+   even if the finger moves or scrolls. */
 (function () {
   if (window.__productCardHold) return;
   window.__productCardHold = true;
 
-  var HOLD_DELAY = 180;   // ms before the second image shows
-  var MOVE_LIMIT = 10;    // px: moving more than this means scrolling, not holding
+  var HOLD_DELAY = 100;   // ms before the second image shows
   var timer = null;
   var activeCard = null;
   var held = false;
-  var startX = 0;
-  var startY = 0;
 
   function cardFrom(target) {
     var media = target.closest && target.closest('[data-product-media]');
@@ -826,9 +825,6 @@
     var card = cardFrom(event.target);
     if (!card) return;
 
-    startX = event.touches[0].clientX;
-    startY = event.touches[0].clientY;
-
     timer = setTimeout(function () {
       held = true;
       activeCard = card;
@@ -836,16 +832,7 @@
     }, HOLD_DELAY);
   }, { passive: true });
 
-  document.addEventListener('touchmove', function (event) {
-    /* Already holding: keep the second image while the finger scrolls, until it lifts */
-    if (activeCard) return;
-    if (!timer) return;
-    var touch = event.touches[0];
-    if (Math.abs(touch.clientX - startX) > MOVE_LIMIT || Math.abs(touch.clientY - startY) > MOVE_LIMIT) {
-      held = false;
-      reset();
-    }
-  }, { passive: true });
+  /* There is no touchmove handler on purpose: moving the finger does not cancel the hold. */
 
   document.addEventListener('touchend', function (event) {
     var wasHeld = held;
