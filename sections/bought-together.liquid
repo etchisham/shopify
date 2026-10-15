@@ -711,6 +711,50 @@
         setInterval(applyCards, 700);
         applyCards();
 
+        /*
+          Touch screens: hold a finger on a card to see its second picture.
+          It stays while the finger is down (even while scrolling) and goes back when the finger lifts.
+        */
+        var holdTimer = null;
+        var heldMedia = null;
+
+        var releaseHold = function () {
+          clearTimeout(holdTimer);
+
+          if (heldMedia) {
+            heldMedia.classList.remove('is-touch-hover');
+            heldMedia = null;
+          }
+        };
+
+        track.addEventListener('touchstart', function (event) {
+          var media = event.target.closest && event.target.closest('.explore-collection__media');
+
+          if (!media || !media.querySelector('.explore-collection__hover-image')) return;
+
+          releaseHold();
+
+          /* Short hold, so a quick tap or flick does not flash the second picture */
+          holdTimer = setTimeout(function () {
+            media.classList.add('is-touch-hover');
+            heldMedia = media;
+          }, 100);
+        }, { passive: true });
+
+        track.addEventListener('touchend', releaseHold, { passive: true });
+        track.addEventListener('touchcancel', releaseHold, { passive: true });
+
+        /* A long press would open the link menu and cancel the hold */
+        track.addEventListener('contextmenu', function (event) {
+          if (
+            window.matchMedia('(hover: none)').matches &&
+            event.target.closest &&
+            event.target.closest('.explore-collection__image-link')
+          ) {
+            event.preventDefault();
+          }
+        });
+
         /* Tag mode: bring the products that have the same tag, then show the section */
         var tagUrl = root.getAttribute('data-tag-url');
 
@@ -1222,6 +1266,19 @@
 @media (hover: hover) and (pointer: fine) {
   .explore-collection__media:hover .explore-collection__hover-image {
     opacity: 1;
+  }
+}
+
+/* Touch screens: the second picture shows while a finger is held on the card */
+.explore-collection__media.is-touch-hover .explore-collection__hover-image {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .explore-collection__image-link,
+  .explore-collection__image-link img {
+    -webkit-touch-callout: none;
+    user-select: none;
   }
 }
 
@@ -1759,13 +1816,9 @@
     font-size: 0.8rem;
   }
 
-  .explore-collection__bundle-pills {
-    gap: 0.5rem;
-  }
-
-  .explore-collection__bundle-pill {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+  /* Gold Plated / Silver Plated pills: desktop only */
+  .explore-collection__bundle-options {
+    display: none;
   }
 
   .explore-collection__bundle-note {
