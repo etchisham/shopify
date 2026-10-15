@@ -120,7 +120,8 @@
 
               <a
                 class="product-gallery__image"
-                href="{{ media.preview_image | image_url: width: 2400 }}"
+                role="button"
+                tabindex="0"
                 data-product-zoom
                 data-zoom-src="{{ media.preview_image | image_url: width: 2400 }}"
                 data-zoom-alt="{{ media_alt | escape }}"
@@ -215,9 +216,9 @@
         type="button"
         class="product-zoom__toggle"
         data-product-zoom-toggle
-        data-label-in="Zoom in"
-        data-label-out="Zoom out"
-        aria-label="Zoom in"
+        data-label-in="{{ 'products.details.zoom_in' | t | escape }}"
+        data-label-out="{{ 'products.details.zoom_out' | t | escape }}"
+        aria-label="{{ 'products.details.zoom_in' | t | escape }}"
         aria-pressed="false"
       >+</button>
 
@@ -225,7 +226,7 @@
         type="button"
         class="product-zoom__close"
         data-product-zoom-close
-        aria-label="Close"
+        aria-label="{{ 'products.details.close_gallery' | t | escape }}"
       >
         <span aria-hidden="true">×</span>
       </button>
