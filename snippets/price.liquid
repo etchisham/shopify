@@ -148,9 +148,11 @@
 }
 
 /* Arabic: the Arabic font puts the native line at a different height, so the
-   old price uses a Latin font, same as the English pages. */
-html[dir="rtl"] .price__compare {
-  font-family: Arial, Helvetica, sans-serif;
+   old price uses a Latin font, same as the English pages.
+   !important is needed because the theme forces the Arabic font on everything
+   with its own !important rule. */
+html[dir="rtl"] .price .price__compare {
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
 .price__discount {
