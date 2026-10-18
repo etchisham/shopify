@@ -518,6 +518,14 @@
   text-align: center;
 }
 
+/* Phones: the two price lines are stacked (a column), where align-items: baseline
+   pushes them to the start side. center keeps them in the middle under the name. */
+@media (max-width: 749px) {
+  .product-card .price {
+    align-items: center;
+  }
+}
+
 .product-card .price__current {
   color: var(--color-foreground);
   font-size: .88rem;
