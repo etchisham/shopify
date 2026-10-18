@@ -132,6 +132,10 @@
   letter-spacing: 0.02em;
 }
 
+/* The strike line is drawn by ::after so it sits in the middle of the box
+   with any font (the Arabic font moves the native line-through off-center).
+   This is the ONLY place that draws it: do not add text-decoration: line-through
+   in other files, or two lines will show. */
 .price__compare {
   position: relative;
 
@@ -139,7 +143,6 @@
 
   font-size: 0.74rem;
   font-weight: 400;
-  line-height: 1;
 
   text-decoration: none;
 }
@@ -149,7 +152,7 @@
 
   position: absolute;
   inset-inline: 0;
-  top: 45%;
+  top: 52%;
 
   border-top: 1px solid currentColor;
 
