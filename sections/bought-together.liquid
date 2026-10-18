@@ -1446,7 +1446,7 @@
 
 .explore-collection__price .price {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   gap: 7px;
   width: 100%;
@@ -1465,7 +1465,6 @@
 .explore-collection__price .price__compare {
   color: var(--color-muted, #777);
   font-size: 0.74rem;
-  text-decoration: line-through;
 }
 
 
@@ -1572,6 +1571,12 @@
   color: var(--color-muted, #777);
   font-size: clamp(1rem, 1.4vw, 1.2rem);
   text-decoration: line-through;
+}
+
+/* Arabic: same reason as .price__compare in price.liquid */
+html[dir="rtl"] .explore-collection__bundle-price + .explore-collection__bundle-compare,
+html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-compare {
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
 .explore-collection__bundle-badge {
