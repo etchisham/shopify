@@ -153,7 +153,7 @@ html[dir="rtl"] .quick-view[open] {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   gap: 0.1rem 0.5rem;
   direction: ltr;
   justify-content: flex-start;
@@ -172,7 +172,6 @@ html[dir="rtl"] .quick-view__price .price {
 .quick-view__price .price__compare {
   color: var(--color-muted, #777);
   font-size: 0.8rem;
-  text-decoration: line-through;
 }
 
 
