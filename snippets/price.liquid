@@ -132,31 +132,25 @@
   letter-spacing: 0.02em;
 }
 
-/* The strike line is drawn by ::after so it sits in the middle of the box
-   with any font (the Arabic font moves the native line-through off-center).
-   This is the ONLY place that draws it: do not add text-decoration: line-through
-   in other files, or two lines will show. */
+/* The strike is the browser's own line-through: it is placed from the text
+   baseline, so it stays at the same height on the numbers in every card.
+   (A line drawn with ::after is placed from the box instead, and drifts
+   1px up or down depending on the card's position on the page.)
+   This is the ONLY place that sets it: do not add another text-decoration
+   on .price__compare in other files. */
 .price__compare {
-  position: relative;
-
   color: var(--color-muted);
 
   font-size: 0.74rem;
   font-weight: 400;
 
-  text-decoration: none;
+  text-decoration: line-through;
 }
 
-.price__compare::after {
-  content: "";
-
-  position: absolute;
-  inset-inline: 0;
-  top: 52%;
-
-  border-top: 1px solid currentColor;
-
-  pointer-events: none;
+/* Arabic: the Arabic font puts the native line at a different height, so the
+   old price uses a Latin font, same as the English pages. */
+html[dir="rtl"] .price__compare {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .price__discount {
