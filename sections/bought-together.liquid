@@ -79,6 +79,32 @@
   endfor
 
   comment
+    Bundle tag: the tag of the collection product is the same name with an s (collection-x -> collections-x)
+  endcomment
+  assign bundle_prefix = tag_prefix | replace: 'collection-', 'collections-'
+  assign bundle_prefix_length = bundle_prefix | size
+
+  comment
+    Collection product page: its tag is collections-x, so it shows the cards of collection-x
+    (the single products of the collection) and no collection bar.
+  endcomment
+  assign is_bundle_page = false
+
+  if group_handle == blank
+    for tag in product.tags
+      if group_handle == blank
+        assign tag_handle = tag | handleize
+        assign tag_start = tag_handle | slice: 0, bundle_prefix_length
+        if tag_start == bundle_prefix
+          assign bundle_rest = tag_handle | slice: bundle_prefix_length, 200
+          assign group_handle = tag_prefix | append: bundle_rest
+          assign is_bundle_page = true
+        endif
+      endif
+    endfor
+  endif
+
+  comment
     Priority: metafield, then same tag, then the products picked in the section settings
   endcomment
   assign related_products = product.metafields.custom.frequently_bought_together.value
@@ -91,13 +117,8 @@
     endif
   endif
 
-  comment
-    Bundle tag: the tag of the collection product is the same name with an s (collection-x -> collections-x)
-  endcomment
-  assign bundle_prefix = tag_prefix | replace: 'collection-', 'collections-'
-  assign bundle_prefix_length = bundle_prefix | size
   assign bundle_handle = ''
-  if group_handle != blank
+  if group_handle != blank and is_bundle_page == false
     assign group_rest = group_handle | slice: prefix_length, 200
     assign bundle_handle = bundle_prefix | append: group_rest
   endif
