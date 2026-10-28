@@ -2168,22 +2168,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    /* Page 1 = very start of the line, last page = very end */
+    /* Only one page: the number above a dot, no line */
 
-    function position(page) {
+    if (total <= 1) {
 
-      return Math.round(((page - 1) / (total - 1)) * 10000) / 100;
+      return (
+        '<div class="hp hp--js hp--single">' +
+        '<div class="hp__single">' +
+        '<span class="hp__n hp__n--single">' + label(1) + '</span>' +
+        '<span class="hp__dot hp__dot--static" aria-hidden="true"></span>' +
+        '</div></div>'
+      );
 
     }
 
-    /* With many pages only about 10 numbers are drawn on the line */
+    /* Pages drawn on the line: 5 at most.
+       Up to 5 pages: all of them.
+       More: first page, the page before, the current page, the page after, last page. */
 
-    const step = Math.floor(total / 10) + 1;
+    let slots = [];
 
-    const halfStep = Math.ceil(step / 2);
+    if (total <= 5) {
+
+      for (let page = 1; page <= total; page++) {
+        slots.push(page);
+      }
+
+    } else {
+
+      const center = Math.min(Math.max(current, 3), total - 2);
+
+      slots = [1, center - 1, center, center + 1, total];
+
+    }
+
+    const lastSlot = slots.length - 1;
+
+    const activeIndex = Math.max(0, slots.indexOf(current));
+
+    function position(index) {
+
+      return Math.round((index / lastSlot) * 10000) / 100;
+
+    }
+
+    const chevronLeft =
+      '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
+
+    const chevronRight =
+      '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
     let html =
-      '<div class="hp hp--js' + (total <= 20 ? ' hp--ticks' : '') + '">' +
+      '<div class="hp hp--js hp--ticks">' +
       '<div class="hp__bar">';
 
 
@@ -2198,29 +2234,25 @@ document.addEventListener('DOMContentLoaded', function () {
       '>' + ARROW_LEFT + '</button>';
 
 
-    /* LINE: the ticks are the pages, the dot is the draggable handle */
+    /* LINE: the ticks are the drawn pages, the dot is the draggable handle */
 
     html +=
-      '<div class="hp__track" style="--hp-p: ' + position(current) + '%">' +
+      '<div class="hp__track" style="--hp-p: ' + position(activeIndex) + '%">' +
       '<span class="hp__fill" aria-hidden="true"></span>';
 
-    for (let page = 1; page <= total; page++) {
-
-      const minor =
-        page !== total &&
-        ((page - 1) % step !== 0 || total - page < halfStep);
+    slots.forEach(function (page, index) {
 
       html +=
         '<button type="button"' +
-        ' class="hp__seg' + (minor ? ' is-minor' : '') + (page === current ? ' is-on' : '') + '"' +
-        ' style="--hp-s: ' + position(page) + '%"' +
+        ' class="hp__seg' + (page === current ? ' is-on' : '') + '"' +
+        ' style="--hp-s: ' + position(index) + '%"' +
         ' data-page="' + page + '"' +
         ' data-n="' + label(page) + '"' +
         ' aria-label="' + T.page.replace('__NUMBER__', page) + '"' +
         (page === current ? ' aria-current="page"' : '') +
         '><span class="hp__n" aria-hidden="true">' + label(page) + '</span></button>';
 
-    }
+    });
 
     html +=
       '<span class="hp__dot" role="slider" tabindex="0"' +
@@ -2241,7 +2273,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '</div>';
 
 
-    /* CURRENT PAGE: rounded box in the middle, opens the list of all pages */
+    /* CURRENT PAGE: rounded box in the middle, opens a row of all pages (5 visible) */
 
     html +=
       '<div class="hp__foot"><details class="hp__jump">' +
@@ -2250,12 +2282,32 @@ document.addEventListener('DOMContentLoaded', function () {
       '</summary>' +
       '<div class="hp__grid">';
 
+    if (total > 5) {
+
+      html +=
+        '<button type="button" class="hp__sarrow hp__sarrow--prev"' +
+        ' aria-label="' + T.previousPage + '">' + chevronLeft + '</button>';
+
+    }
+
+    html += '<div class="hp__strip">';
+
     for (let page = 1; page <= total; page++) {
 
       html +=
         '<button type="button" data-page="' + page + '"' +
         (page === current ? ' class="is-current" aria-current="page"' : '') +
         '>' + label(page) + '</button>';
+
+    }
+
+    html += '</div>';
+
+    if (total > 5) {
+
+      html +=
+        '<button type="button" class="hp__sarrow hp__sarrow--next"' +
+        ' aria-label="' + T.nextPage + '">' + chevronRight + '</button>';
 
     }
 
@@ -2559,11 +2611,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const visibleCount = matchedItems.length;
 
+    /* shown whenever there are results (a single page shows just "01" and a dot) */
     const usePaging =
       isFiltering &&
       allPagesLoaded &&
       pageSize > 0 &&
-      visibleCount > pageSize;
+      visibleCount > 0;
 
     const totalFilteredPages =
       usePaging
