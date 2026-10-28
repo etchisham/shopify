@@ -3,10 +3,12 @@
   Usage: {% render 'hilya-pagination', paginate: paginate %}
   Works for any number of pages. Keeps the active filters/sort in every link.
 
-  Layout:  <  01  ●────────────────  15  >      (page 1 = very start of the line,
-                                                  last page = very end)
-  The current page number sits above the dot. Drag the dot (mouse or touch):
-  the number above it shows the page under it, and letting go opens that page.
+        01   02   03   04   05           <- small dim numbers, the one under the dot lights up
+    <   |----|----|----|----|----●---   >    <- page 1 = very start, last page = very end
+                   ( 05 v )                 <- rounded box in the middle: opens all pages
+
+  Drag the dot (mouse or touch): it follows the pointer smoothly, the number it
+  passes lights up, and letting go snaps to the nearest page and opens it.
   Without JavaScript every tick on the line is a normal link.
   Arabic: Arabic-Indic digits, no leading zero.
 {%- endcomment -%}
@@ -53,64 +55,80 @@
     assign labels = label_string | split: '|'
 
     assign cur_label = labels[current_idx]
-    assign first_label = labels.first
-    assign last_label = labels.last
-
     assign pct = current_idx | times: 100.0 | divided_by: last_idx | round: 2
+
+    comment
+      With many pages only some numbers are drawn on the line (about 10);
+      the one under the dot is always drawn and lit.
+    endcomment
+    assign step = total | divided_by: 10 | plus: 1
+    assign half_step = step | plus: 1 | divided_by: 2
   -%}
 
   <div class="catalog-page__pagination">
     <nav class="hp{% if total <= 20 %} hp--ticks{% endif %}" aria-label="{{ 'collections.pagination' | t | escape }}">
 
-      {%- comment %} PREVIOUS {% endcomment -%}
-      {%- if paginate.previous.is_link -%}
-        <a class="hp__arrow hp__arrow--prev" href="{{ paginate.previous.url }}" aria-label="{{ 'collections.previous_page' | t | escape }}">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-        </a>
-      {%- else -%}
-        <span class="hp__arrow hp__arrow--prev is-disabled" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-        </span>
-      {%- endif -%}
+      <div class="hp__bar">
 
-      {%- comment %} FIRST PAGE {% endcomment -%}
-      {%- if current == 1 -%}
-        <span class="hp__num">{{ first_label }}</span>
-      {%- else -%}
-        <a class="hp__num" href="{{ url_prefix }}page=1{{ url_rest }}" aria-label="{{ 'meta.page' | t: number: 1 | escape }}">{{ first_label }}</a>
-      {%- endif -%}
+        {%- comment %} PREVIOUS {% endcomment -%}
+        {%- if paginate.previous.is_link -%}
+          <a class="hp__arrow hp__arrow--prev" href="{{ paginate.previous.url }}" aria-label="{{ 'collections.previous_page' | t | escape }}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          </a>
+        {%- else -%}
+          <span class="hp__arrow hp__arrow--prev is-disabled" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          </span>
+        {%- endif -%}
 
-      {%- comment %} LINE: ticks are real links; the dot is the draggable handle {% endcomment -%}
-      <div class="hp__track" style="--hp-p: {{ pct }}%">
-        <span class="hp__fill" aria-hidden="true"></span>
+        {%- comment %} LINE: ticks are real links (with their number); the dot is the draggable handle {% endcomment -%}
+        <div class="hp__track" style="--hp-p: {{ pct }}%">
+          <span class="hp__fill" aria-hidden="true"></span>
 
-        {%- for i in (1..total) -%}
-          {%- assign seg_pct = forloop.index0 | times: 100.0 | divided_by: last_idx | round: 2 -%}
-          <a class="hp__seg" style="--hp-s: {{ seg_pct }}%" href="{{ url_prefix }}page={{ i }}{{ url_rest }}" data-n="{{ labels[forloop.index0] }}" aria-label="{{ 'meta.page' | t: number: i | escape }}"{% if i == current %} aria-current="page"{% endif %}></a>
-        {%- endfor -%}
+          {%- for i in (1..total) -%}
+            {%- assign seg_pct = forloop.index0 | times: 100.0 | divided_by: last_idx | round: 2 -%}
+            {%- liquid
+              assign seg_rem = forloop.index0 | modulo: step
+              assign to_last = total | minus: i
+              assign show_n = false
+              if i == total
+                assign show_n = true
+              elsif seg_rem == 0 and to_last >= half_step
+                assign show_n = true
+              endif
+            -%}
+            <a class="hp__seg{% unless show_n %} is-minor{% endunless %}{% if i == current %} is-on{% endif %}" style="--hp-s: {{ seg_pct }}%" href="{{ url_prefix }}page={{ i }}{{ url_rest }}" data-n="{{ labels[forloop.index0] }}" aria-label="{{ 'meta.page' | t: number: i | escape }}"{% if i == current %} aria-current="page"{% endif %}><span class="hp__n" aria-hidden="true">{{ labels[forloop.index0] }}</span></a>
+          {%- endfor -%}
 
-        <span class="hp__dot" role="slider" tabindex="0" aria-orientation="horizontal" aria-label="{{ 'collections.pagination' | t | escape }}" aria-valuemin="1" aria-valuemax="{{ total }}" aria-valuenow="{{ current }}">
-          <span class="hp__label" aria-hidden="true">{{ cur_label }}</span>
-        </span>
+          <span class="hp__dot" role="slider" tabindex="0" aria-orientation="horizontal" aria-label="{{ 'collections.pagination' | t | escape }}" aria-valuemin="1" aria-valuemax="{{ total }}" aria-valuenow="{{ current }}"></span>
+        </div>
+
+        {%- comment %} NEXT {% endcomment -%}
+        {%- if paginate.next.is_link -%}
+          <a class="hp__arrow hp__arrow--next" href="{{ paginate.next.url }}" aria-label="{{ 'collections.next_page' | t | escape }}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        {%- else -%}
+          <span class="hp__arrow hp__arrow--next is-disabled" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        {%- endif -%}
+
       </div>
 
-      {%- comment %} LAST PAGE {% endcomment -%}
-      {%- if current == total -%}
-        <span class="hp__num">{{ last_label }}</span>
-      {%- else -%}
-        <a class="hp__num" href="{{ url_prefix }}page={{ total }}{{ url_rest }}" aria-label="{{ 'meta.page' | t: number: total | escape }}">{{ last_label }}</a>
-      {%- endif -%}
-
-      {%- comment %} NEXT {% endcomment -%}
-      {%- if paginate.next.is_link -%}
-        <a class="hp__arrow hp__arrow--next" href="{{ paginate.next.url }}" aria-label="{{ 'collections.next_page' | t | escape }}">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-      {%- else -%}
-        <span class="hp__arrow hp__arrow--next is-disabled" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </span>
-      {%- endif -%}
+      {%- comment %} CURRENT PAGE: rounded box in the middle, opens the list of all pages {% endcomment -%}
+      <div class="hp__foot">
+        <details class="hp__jump">
+          <summary class="hp__badge" aria-label="{{ 'meta.page' | t: number: current | escape }}">
+            <span class="hp__badge-num">{{ cur_label }}</span>
+          </summary>
+          <div class="hp__grid">
+            {%- for i in (1..total) -%}
+              <a href="{{ url_prefix }}page={{ i }}{{ url_rest }}"{% if i == current %} aria-current="page" class="is-current"{% endif %}>{{ labels[forloop.index0] }}</a>
+            {%- endfor -%}
+          </div>
+        </details>
+      </div>
 
     </nav>
   </div>
@@ -118,19 +136,21 @@
 
 {% stylesheet %}
   .hp {
-    --hp-accent: #b87f6f; /* rose gold */
+    --hp-accent: #b87f6f;       /* rose gold */
+    --hp-accent-deep: #8f5a4b;  /* text on the rose box */
     --hp-line: #e6dccb;
     --hp-muted: #9a948a;
+    --hp-y: 70%;                /* height of the line inside the track */
     --hp-font: Georgia, 'Times New Roman', serif;
     --hp-dir: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 1.1rem;
+    gap: 0.35rem;
     width: 100%;
-    max-width: 36rem;
+    max-width: 34rem;
     margin: 0 auto;
-    padding: 2.4rem 1rem 0.4rem;
+    padding: 0.5rem 1rem 0.6rem;
     color: var(--color-foreground, #1c1b19);
     -webkit-user-select: none;
     user-select: none;
@@ -139,6 +159,13 @@
   [dir='rtl'] .hp {
     --hp-dir: -1;
     --hp-font: inherit;
+  }
+
+  .hp__bar {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    width: 100%;
   }
 
   :where(.hp) button {
@@ -181,37 +208,13 @@
     transform: scaleX(-1);
   }
 
-  /* First / last page numbers */
-  .hp__num {
-    font-family: var(--hp-font);
-    font-size: 0.95rem;
-    letter-spacing: 0.06em;
-    line-height: 1;
-    padding: 0;
-    color: var(--hp-muted);
-    transition: color 0.25s ease;
-  }
-
-  .hp__num:is(a, button) {
-    cursor: pointer;
-  }
-
-  .hp__num:is(a, button):hover {
-    color: var(--hp-accent);
-  }
-
-  [dir='rtl'] .hp__num {
-    font-size: 1.05rem;
-    letter-spacing: 0;
-  }
-
   /* Line */
   .hp__track {
     position: relative;
     display: block;
     flex: 1;
     min-width: 0;
-    height: 2.75rem;
+    height: 3.4rem;
     touch-action: pan-y;
   }
 
@@ -223,7 +226,7 @@
     content: '';
     position: absolute;
     inset-inline: 0;
-    top: 50%;
+    top: var(--hp-y);
     height: 1px;
     background: var(--hp-line);
   }
@@ -231,15 +234,15 @@
   .hp__fill {
     position: absolute;
     inset-inline-start: 0;
-    top: 50%;
+    top: var(--hp-y);
     width: var(--hp-p);
     height: 1px;
     background: var(--hp-accent);
-    transition: width 0.18s ease;
+    transition: width 0.2s ease;
     animation: hp-grow 0.6s ease both;
   }
 
-  /* Ticks: one per page, each one a real link (works without JavaScript) */
+  /* One tick per page. Each is a real link (works without JavaScript) */
   .hp__seg {
     position: absolute;
     inset-inline-start: var(--hp-s);
@@ -247,7 +250,7 @@
     bottom: 0;
     z-index: 1;
     display: block;
-    width: 1.4rem;
+    width: 1.5rem;
     padding: 0;
     transform: translateX(calc(-50% * var(--hp-dir)));
   }
@@ -255,12 +258,43 @@
   .hp--ticks .hp__seg::before {
     content: '';
     position: absolute;
-    top: 50%;
+    top: var(--hp-y);
     left: 50%;
     width: 1px;
     height: 7px;
     background: var(--hp-line);
     transform: translate(-50%, -50%);
+  }
+
+  /* Small dim page number above each tick; lights up when the dot is on it */
+  .hp__n {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - var(--hp-y) + 0.75rem);
+    transform: translateX(-50%);
+    font-family: var(--hp-font);
+    font-size: 0.78rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    color: var(--hp-muted);
+    opacity: 0.55;
+    transform-origin: 50% 100%;
+    transition: color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .hp__seg.is-minor:not(.is-on) .hp__n {
+    display: none;
+  }
+
+  .hp__seg.is-near .hp__n {
+    opacity: 0;
+  }
+
+  .hp__seg.is-on .hp__n {
+    color: var(--hp-accent);
+    opacity: 1;
+    transform: translateX(-50%) translateY(-0.3rem) scale(1.45);
   }
 
   /* With JavaScript the whole line is the drag area */
@@ -272,19 +306,26 @@
   .hp__dot {
     position: absolute;
     inset-inline-start: var(--hp-p);
-    top: 50%;
+    top: var(--hp-y);
     z-index: 3;
     width: 12px;
     height: 12px;
     border-radius: 50%;
     background: var(--hp-accent);
     transform: translate(calc(-50% * var(--hp-dir)), -50%);
-    transition: inset-inline-start 0.18s ease, box-shadow 0.2s ease;
+    transition: inset-inline-start 0.2s ease, box-shadow 0.2s ease;
     animation: hp-slide 0.6s ease both;
   }
 
   .hp--js .hp__dot {
     cursor: grab;
+  }
+
+  /* While dragging it sticks to the pointer: no easing at all */
+  .hp.is-dragging .hp__dot,
+  .hp.is-dragging .hp__fill {
+    transition: none;
+    animation: none;
   }
 
   .hp.is-dragging,
@@ -302,39 +343,115 @@
     outline-offset: 5px;
   }
 
-  /* Page number above the handle */
-  .hp__label {
-    position: absolute;
-    bottom: calc(100% + 0.6rem);
-    left: 50%;
-    transform: translateX(-50%);
-    transform-origin: 50% 100%;
-    font-family: var(--hp-font);
-    font-size: 1.2rem;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    white-space: nowrap;
-    color: var(--color-foreground, #1c1b19);
-    pointer-events: none;
-    transition: color 0.2s ease, transform 0.2s ease;
-  }
-
-  [dir='rtl'] .hp__label {
-    font-size: 1.35rem;
-    letter-spacing: 0;
-  }
-
-  .hp.is-dragging .hp__label {
-    color: var(--hp-accent);
-    transform: translateX(-50%) scale(1.3);
-  }
-
   @keyframes hp-grow {
     from { width: 0; }
   }
 
   @keyframes hp-slide {
     from { inset-inline-start: 0; }
+  }
+
+  /* Current page: rounded box in the middle, under the line */
+  .hp__foot {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hp__jump {
+    position: relative;
+  }
+
+  .hp__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-width: 4rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid rgb(184 127 111 / 30%);
+    border-radius: 0.85rem;
+    background: rgb(184 127 111 / 11%);
+    color: var(--hp-accent-deep);
+    font-family: var(--hp-font);
+    font-size: 1.05rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .hp__badge::-webkit-details-marker {
+    display: none;
+  }
+
+  .hp__badge::after {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-top: -0.2rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease, margin 0.2s ease;
+  }
+
+  .hp__badge:hover,
+  .hp__jump[open] .hp__badge {
+    background: rgb(184 127 111 / 18%);
+    border-color: rgb(184 127 111 / 50%);
+  }
+
+  .hp__jump[open] .hp__badge::after {
+    margin-top: 0.2rem;
+    transform: rotate(-135deg);
+  }
+
+  .hp__badge:focus-visible {
+    outline: 1px solid var(--hp-accent);
+    outline-offset: 3px;
+  }
+
+  /* All pages (opens under the box) */
+  .hp__grid {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(5, 2.6rem);
+    gap: 0.2rem;
+    max-height: 15rem;
+    overflow-y: auto;
+    padding: 0.75rem;
+    border: 1px solid var(--hp-line);
+    border-radius: 0.9rem;
+    background: var(--color-background, #fffcf7);
+    box-shadow: 0 10px 28px rgb(60 40 30 / 10%);
+    transform: translateX(calc(-50% + var(--hp-shift, 0px)));
+  }
+
+  .hp__grid :is(a, button) {
+    display: grid;
+    place-items: center;
+    height: 2.4rem;
+    border-bottom: 1px solid transparent;
+    font-family: var(--hp-font);
+    font-size: 0.95rem;
+    color: var(--hp-muted);
+    cursor: pointer;
+  }
+
+  .hp__grid :is(a, button):hover {
+    color: var(--color-foreground, #1c1b19);
+    border-color: var(--hp-line);
+  }
+
+  .hp__grid .is-current {
+    color: var(--hp-accent-deep);
+    border-color: var(--hp-accent);
   }
 
   .hp a:focus-visible,
@@ -345,8 +462,11 @@
 
   @media (max-width: 40rem) {
     .hp {
-      gap: 0.7rem;
       padding-inline: 0.75rem;
+    }
+
+    .hp__bar {
+      gap: 0.7rem;
     }
   }
 
@@ -365,6 +485,12 @@
     function markReady() {
       document.querySelectorAll('.hp').forEach(function (nav) {
         nav.classList.add('hp--js');
+
+        var track = nav.querySelector('.hp__track');
+        if (track) {
+          var ticks = ticksOf(track);
+          updateNear(track, ticks, currentIndex(ticks));
+        }
       });
     }
 
@@ -374,7 +500,47 @@
       markReady();
     }
 
+    /* the filtered pagination is drawn later by the filters script */
+    document.addEventListener('hp:rendered', markReady);
+
+    var resizeTimer = null;
+
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(markReady, 150);
+    });
+
+
+    /* ---------- list of all pages ---------- */
+
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.hp__jump[open]').forEach(function (d) {
+        if (!d.contains(e.target)) d.removeAttribute('open');
+      });
+    });
+
+    document.addEventListener('toggle', function (e) {
+      var d = e.target;
+      if (!d.classList || !d.classList.contains('hp__jump') || !d.open) return;
+
+      var grid = d.querySelector('.hp__grid');
+      if (!grid) return;
+
+      /* keep the list inside the screen */
+      grid.style.setProperty('--hp-shift', '0px');
+      var r = grid.getBoundingClientRect();
+      var m = 8;
+      var shift = 0;
+      if (r.left < m) shift = m - r.left;
+      else if (r.right > window.innerWidth - m) shift = window.innerWidth - m - r.right;
+      grid.style.setProperty('--hp-shift', shift + 'px');
+    }, true);
+
+
+    /* ---------- dragging ---------- */
+
     var drag = null;
+    var settleTimer = null;
 
     function ticksOf(track) {
       return track.querySelectorAll('.hp__seg');
@@ -391,23 +557,50 @@
       return window.getComputedStyle(track).direction === 'rtl';
     }
 
-    function indexFromPointer(track, ticks, clientX) {
+    /* 0 (first page) ... 1 (last page), straight from the pointer position */
+    function fractionFromPointer(track, clientX, offset) {
       var rect = track.getBoundingClientRect();
+      var x = clientX + offset;
       var fraction = isRtl(track)
-        ? (rect.right - clientX) / rect.width
-        : (clientX - rect.left) / rect.width;
-      fraction = Math.min(1, Math.max(0, fraction));
-      return Math.round(fraction * (ticks.length - 1));
+        ? (rect.right - x) / rect.width
+        : (x - rect.left) / rect.width;
+      return Math.min(1, Math.max(0, fraction));
     }
 
-    function show(track, ticks, index) {
-      track.style.setProperty('--hp-p', (index / (ticks.length - 1)) * 100 + '%');
+    /* A dim number too close to the lit one would overlap it: hide it for now */
+    function updateNear(track, ticks, index) {
+      if (ticks.length < 2) return;
 
-      var label = track.querySelector('.hp__label');
-      if (label) label.textContent = ticks[index].getAttribute('data-n');
+      var perPage = track.getBoundingClientRect().width / (ticks.length - 1);
+
+      for (var i = 0; i < ticks.length; i++) {
+        ticks[i].classList.toggle(
+          'is-near',
+          i !== index && Math.abs(i - index) * perPage < 26
+        );
+      }
+    }
+
+    /* Move the dot and light up the number it is nearest to */
+    function show(track, ticks, fraction) {
+      track.style.setProperty('--hp-p', fraction * 100 + '%');
+
+      var index = Math.round(fraction * (ticks.length - 1));
+
+      for (var i = 0; i < ticks.length; i++) {
+        ticks[i].classList.toggle('is-on', i === index);
+      }
+
+      updateNear(track, ticks, index);
+
+      var nav = track.closest('.hp');
+      var badge = nav && nav.querySelector('.hp__badge-num');
+      if (badge) badge.textContent = ticks[index].getAttribute('data-n');
 
       var dot = track.querySelector('.hp__dot');
       if (dot) dot.setAttribute('aria-valuenow', index + 1);
+
+      return index;
     }
 
     function finish(commit) {
@@ -416,12 +609,16 @@
       var state = drag;
       drag = null;
 
+      /* easing comes back, so the dot glides onto the page it is nearest to */
       state.nav.classList.remove('is-dragging');
 
-      if (commit && state.index !== state.start) {
-        state.ticks[state.index].click();
-      } else {
-        show(state.track, state.ticks, state.start);
+      var target = commit ? state.index : state.start;
+      show(state.track, state.ticks, target / (state.ticks.length - 1));
+
+      if (commit && target !== state.start) {
+        settleTimer = setTimeout(function () {
+          state.ticks[target].click();
+        }, 170);
       }
     }
 
@@ -434,14 +631,26 @@
       var ticks = ticksOf(track);
       if (ticks.length < 2) return;
 
-      var start = currentIndex(ticks);
+      clearTimeout(settleTimer);
+
+      /* grabbing the dot off-centre must not make it jump */
+      var offset = 0;
+      var dot = e.target.closest('.hp__dot');
+
+      if (dot) {
+        var box = dot.getBoundingClientRect();
+        offset = (box.left + box.right) / 2 - e.clientX;
+      }
+
+      var fraction = fractionFromPointer(track, e.clientX, offset);
 
       drag = {
         track: track,
         nav: track.closest('.hp'),
         ticks: ticks,
-        start: start,
-        index: indexFromPointer(track, ticks, e.clientX),
+        start: currentIndex(ticks),
+        index: 0,
+        offset: offset,
         pointerId: e.pointerId
       };
 
@@ -450,19 +659,18 @@
       } catch (error) {}
 
       drag.nav.classList.add('is-dragging');
-      show(track, ticks, drag.index);
+      drag.index = show(track, ticks, fraction);
       e.preventDefault();
     });
 
     document.addEventListener('pointermove', function (e) {
       if (!drag || e.pointerId !== drag.pointerId) return;
 
-      var index = indexFromPointer(drag.track, drag.ticks, e.clientX);
-
-      if (index !== drag.index) {
-        drag.index = index;
-        show(drag.track, drag.ticks, index);
-      }
+      drag.index = show(
+        drag.track,
+        drag.ticks,
+        fractionFromPointer(drag.track, e.clientX, drag.offset)
+      );
     });
 
     document.addEventListener('pointerup', function (e) {
