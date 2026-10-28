@@ -2168,9 +2168,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    const percent = Math.round(((current - 0.5) / total) * 10000) / 100;
+    /* Page 1 = very start of the line, last page = very end */
 
-    let html = '<div class="hp">';
+    function position(page) {
+
+      return Math.round(((page - 1) / (total - 1)) * 10000) / 100;
+
+    }
+
+    let html =
+      '<div class="hp hp--js' + (total <= 20 ? ' hp--ticks' : '') + '">';
 
 
     /* PREVIOUS */
@@ -2201,17 +2208,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    /* LINE */
+    /* LINE: the ticks are the pages, the dot is the draggable handle */
 
     html +=
-      '<div class="hp__track" style="--hp-p: ' + percent + '%">' +
-      '<span class="hp__fill" aria-hidden="true"></span>' +
-      '<span class="hp__dot" aria-hidden="true"></span>';
+      '<div class="hp__track" style="--hp-p: ' + position(current) + '%">' +
+      '<span class="hp__fill" aria-hidden="true"></span>';
 
     for (let page = 1; page <= total; page++) {
 
       html +=
         '<button type="button" class="hp__seg"' +
+        ' style="--hp-s: ' + position(page) + '%"' +
         ' data-page="' + page + '"' +
         ' data-n="' + label(page) + '"' +
         ' aria-label="' + T.page.replace('__NUMBER__', page) + '"' +
@@ -2220,37 +2227,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
-    /* CURRENT PAGE under the dot */
-
-    if (total > 2) {
-
-      html +=
-        '<details class="hp__marker hp__jump">' +
-        '<summary class="hp__current">' + label(current) + '</summary>' +
-        '<div class="hp__grid">';
-
-      for (let page = 1; page <= total; page++) {
-
-        html +=
-          '<button type="button" data-page="' + page + '"' +
-          (page === current ? ' class="is-current" aria-current="page"' : '') +
-          '>' + label(page) + '</button>';
-
-      }
-
-      html += '</div></details>';
-
-    } else {
-
-      html +=
-        '<div class="hp__marker">' +
-        '<span class="hp__current" aria-current="page">' + label(current) + '</span>' +
-        '</div>';
-
-    }
-
-    html += '</div>';
+    html +=
+      '<span class="hp__dot" role="slider" tabindex="0"' +
+      ' aria-orientation="horizontal"' +
+      ' aria-valuemin="1" aria-valuemax="' + total + '" aria-valuenow="' + current + '">' +
+      '<span class="hp__label" aria-hidden="true">' + label(current) + '</span>' +
+      '</span>' +
+      '</div>';
 
 
     /* LAST PAGE */

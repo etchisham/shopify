@@ -1,11 +1,13 @@
 {%- comment -%}
-  Hilya editorial pagination.
+  Hilya editorial pagination (draggable).
   Usage: {% render 'hilya-pagination', paginate: paginate %}
   Works for any number of pages. Keeps the active filters/sort in every link.
 
-  Layout:  <  01  ────────●────────  15  >
-                           07
-  The current page number sits under the dot on the line.
+  Layout:  <  01  ●────────────────  15  >      (page 1 = very start of the line,
+                                                  last page = very end)
+  The current page number sits above the dot. Drag the dot (mouse or touch):
+  the number above it shows the page under it, and letting go opens that page.
+  Without JavaScript every tick on the line is a normal link.
   Arabic: Arabic-Indic digits, no leading zero.
 {%- endcomment -%}
 
@@ -14,6 +16,7 @@
     assign total = paginate.pages
     assign current = paginate.current_page
     assign current_idx = current | minus: 1
+    assign last_idx = total | minus: 1
 
     if paginate.next.is_link
       assign ref_url = paginate.next.url
@@ -53,11 +56,11 @@
     assign first_label = labels.first
     assign last_label = labels.last
 
-    assign pct = current | minus: 0.5 | times: 100.0 | divided_by: total | round: 2
+    assign pct = current_idx | times: 100.0 | divided_by: last_idx | round: 2
   -%}
 
   <div class="catalog-page__pagination">
-    <nav class="hp" aria-label="{{ 'collections.pagination' | t | escape }}">
+    <nav class="hp{% if total <= 20 %} hp--ticks{% endif %}" aria-label="{{ 'collections.pagination' | t | escape }}">
 
       {%- comment %} PREVIOUS {% endcomment -%}
       {%- if paginate.previous.is_link -%}
@@ -77,30 +80,18 @@
         <a class="hp__num" href="{{ url_prefix }}page=1{{ url_rest }}" aria-label="{{ 'meta.page' | t: number: 1 | escape }}">{{ first_label }}</a>
       {%- endif -%}
 
-      {%- comment %} LINE: every segment is a real link to a page {% endcomment -%}
+      {%- comment %} LINE: ticks are real links; the dot is the draggable handle {% endcomment -%}
       <div class="hp__track" style="--hp-p: {{ pct }}%">
         <span class="hp__fill" aria-hidden="true"></span>
-        <span class="hp__dot" aria-hidden="true"></span>
 
         {%- for i in (1..total) -%}
-          <a class="hp__seg" href="{{ url_prefix }}page={{ i }}{{ url_rest }}" data-n="{{ labels[forloop.index0] }}" aria-label="{{ 'meta.page' | t: number: i | escape }}"{% if i == current %} aria-current="page"{% endif %}></a>
+          {%- assign seg_pct = forloop.index0 | times: 100.0 | divided_by: last_idx | round: 2 -%}
+          <a class="hp__seg" style="--hp-s: {{ seg_pct }}%" href="{{ url_prefix }}page={{ i }}{{ url_rest }}" data-n="{{ labels[forloop.index0] }}" aria-label="{{ 'meta.page' | t: number: i | escape }}"{% if i == current %} aria-current="page"{% endif %}></a>
         {%- endfor -%}
 
-        {%- comment %} CURRENT PAGE under the dot (opens a jump grid when there are 3+ pages) {% endcomment -%}
-        {%- if total > 2 -%}
-          <details class="hp__marker hp__jump">
-            <summary class="hp__current" aria-label="{{ 'meta.page' | t: number: current | escape }}">{{ cur_label }}</summary>
-            <div class="hp__grid">
-              {%- for i in (1..total) -%}
-                <a href="{{ url_prefix }}page={{ i }}{{ url_rest }}"{% if i == current %} aria-current="page" class="is-current"{% endif %}>{{ labels[forloop.index0] }}</a>
-              {%- endfor -%}
-            </div>
-          </details>
-        {%- else -%}
-          <div class="hp__marker">
-            <span class="hp__current" aria-current="page">{{ cur_label }}</span>
-          </div>
-        {%- endif -%}
+        <span class="hp__dot" role="slider" tabindex="0" aria-orientation="horizontal" aria-label="{{ 'collections.pagination' | t | escape }}" aria-valuemin="1" aria-valuemax="{{ total }}" aria-valuenow="{{ current }}">
+          <span class="hp__label" aria-hidden="true">{{ cur_label }}</span>
+        </span>
       </div>
 
       {%- comment %} LAST PAGE {% endcomment -%}
@@ -139,8 +130,10 @@
     width: 100%;
     max-width: 36rem;
     margin: 0 auto;
-    padding: 0 1rem 2.2rem;
+    padding: 2.4rem 1rem 0.4rem;
     color: var(--color-foreground, #1c1b19);
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   [dir='rtl'] .hp {
@@ -188,7 +181,7 @@
     transform: scaleX(-1);
   }
 
-  /* Edge numbers (first / last page) */
+  /* First / last page numbers */
   .hp__num {
     font-family: var(--hp-font);
     font-size: 0.95rem;
@@ -215,10 +208,15 @@
   /* Line */
   .hp__track {
     position: relative;
-    display: flex;
+    display: block;
     flex: 1;
     min-width: 0;
-    height: 1.75rem;
+    height: 2.75rem;
+    touch-action: pan-y;
+  }
+
+  .hp--js .hp__track {
+    cursor: pointer;
   }
 
   .hp__track::before {
@@ -237,19 +235,98 @@
     width: var(--hp-p);
     height: 1px;
     background: var(--hp-accent);
+    transition: width 0.18s ease;
     animation: hp-grow 0.6s ease both;
   }
 
+  /* Ticks: one per page, each one a real link (works without JavaScript) */
+  .hp__seg {
+    position: absolute;
+    inset-inline-start: var(--hp-s);
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: block;
+    width: 1.4rem;
+    padding: 0;
+    transform: translateX(calc(-50% * var(--hp-dir)));
+  }
+
+  .hp--ticks .hp__seg::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 7px;
+    background: var(--hp-line);
+    transform: translate(-50%, -50%);
+  }
+
+  /* With JavaScript the whole line is the drag area */
+  .hp--js .hp__seg {
+    pointer-events: none;
+  }
+
+  /* The handle */
   .hp__dot {
     position: absolute;
     inset-inline-start: var(--hp-p);
     top: 50%;
-    width: 8px;
-    height: 8px;
+    z-index: 3;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--hp-accent);
     transform: translate(calc(-50% * var(--hp-dir)), -50%);
+    transition: inset-inline-start 0.18s ease, box-shadow 0.2s ease;
     animation: hp-slide 0.6s ease both;
+  }
+
+  .hp--js .hp__dot {
+    cursor: grab;
+  }
+
+  .hp.is-dragging,
+  .hp.is-dragging .hp__track,
+  .hp.is-dragging .hp__dot {
+    cursor: grabbing;
+  }
+
+  .hp.is-dragging .hp__dot {
+    box-shadow: 0 0 0 7px rgb(184 127 111 / 18%);
+  }
+
+  .hp__dot:focus-visible {
+    outline: 1px solid var(--hp-accent);
+    outline-offset: 5px;
+  }
+
+  /* Page number above the handle */
+  .hp__label {
+    position: absolute;
+    bottom: calc(100% + 0.6rem);
+    left: 50%;
+    transform: translateX(-50%);
+    transform-origin: 50% 100%;
+    font-family: var(--hp-font);
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--color-foreground, #1c1b19);
+    pointer-events: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  [dir='rtl'] .hp__label {
+    font-size: 1.35rem;
+    letter-spacing: 0;
+  }
+
+  .hp.is-dragging .hp__label {
+    color: var(--hp-accent);
+    transform: translateX(-50%) scale(1.3);
   }
 
   @keyframes hp-grow {
@@ -260,122 +337,8 @@
     from { inset-inline-start: 0; }
   }
 
-  .hp__seg {
-    display: block;
-    position: relative;
-    z-index: 1;
-    flex: 1;
-    min-width: 0;
-    padding: 0;
-  }
-
-  .hp__seg:hover::before,
-  .hp__seg:focus-visible::before {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    top: 50%;
-    height: 1px;
-    background: var(--hp-accent);
-    opacity: 0.55;
-  }
-
-  .hp__seg:hover::after,
-  .hp__seg:focus-visible::after {
-    content: attr(data-n);
-    position: absolute;
-    top: -0.35rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--hp-font);
-    font-size: 0.75rem;
-    color: var(--hp-accent);
-  }
-
-  /* Current page: zero-size anchor on the dot, number hangs under it */
-  .hp__marker {
-    position: absolute;
-    top: 50%;
-    inset-inline-start: var(--hp-p);
-    z-index: 2;
-    width: 0;
-    height: 0;
-    animation: hp-slide 0.6s ease both;
-  }
-
-  .hp__current {
-    position: absolute;
-    top: 0.95rem;
-    inset-inline-start: 0;
-    transform: translateX(calc(-50% * var(--hp-dir)));
-    font-family: var(--hp-font);
-    font-size: 1.2rem;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    white-space: nowrap;
-    color: var(--color-foreground, #1c1b19);
-    list-style: none;
-  }
-
-  [dir='rtl'] .hp__current {
-    font-size: 1.35rem;
-    letter-spacing: 0;
-  }
-
-  summary.hp__current {
-    cursor: pointer;
-    transition: color 0.25s ease;
-  }
-
-  summary.hp__current::-webkit-details-marker {
-    display: none;
-  }
-
-  summary.hp__current:hover,
-  .hp__jump[open] summary.hp__current {
-    color: var(--hp-accent);
-  }
-
-  /* Jump grid (opens under the number) */
-  .hp__grid {
-    position: absolute;
-    top: 2.9rem;
-    inset-inline-start: 0;
-    z-index: 10;
-    display: grid;
-    grid-template-columns: repeat(5, 2.6rem);
-    gap: 0.2rem;
-    padding: 0.75rem;
-    border: 1px solid var(--hp-line);
-    border-radius: 0.75rem;
-    background: var(--color-background, #fffcf7);
-    transform: translateX(calc(-50% * var(--hp-dir) + var(--hp-shift, 0px)));
-  }
-
-  .hp__grid :is(a, button) {
-    display: grid;
-    place-items: center;
-    height: 2.4rem;
-    border-bottom: 1px solid transparent;
-    font-family: var(--hp-font);
-    font-size: 0.95rem;
-    color: var(--hp-muted);
-    cursor: pointer;
-  }
-
-  .hp__grid :is(a, button):hover {
-    color: var(--color-foreground, #1c1b19);
-    border-color: var(--hp-line);
-  }
-
-  .hp__grid .is-current {
-    color: var(--color-foreground, #1c1b19);
-    border-color: var(--hp-accent);
-  }
-
   .hp a:focus-visible,
-  .hp button:focus-visible,
-  .hp summary:focus-visible {
+  .hp button:focus-visible {
     outline: 1px solid var(--hp-accent);
     outline-offset: 3px;
   }
@@ -383,41 +346,154 @@
   @media (max-width: 40rem) {
     .hp {
       gap: 0.7rem;
-      padding-inline: 0.5rem;
+      padding-inline: 0.75rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hp__fill,
-    .hp__dot,
-    .hp__marker {
+    .hp__dot {
       animation: none;
+      transition: none;
     }
   }
 {% endstylesheet %}
 
 {% javascript %}
   (function () {
-    /* Close the jump grid when clicking outside of it */
-    document.addEventListener('click', function (e) {
-      document.querySelectorAll('.hp__jump[open]').forEach(function (d) {
-        if (!d.contains(e.target)) d.removeAttribute('open');
+    /* Turn the line into a drag area (the tick links stay as the no-JS fallback) */
+    function markReady() {
+      document.querySelectorAll('.hp').forEach(function (nav) {
+        nav.classList.add('hp--js');
       });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', markReady);
+    } else {
+      markReady();
+    }
+
+    var drag = null;
+
+    function ticksOf(track) {
+      return track.querySelectorAll('.hp__seg');
+    }
+
+    function currentIndex(ticks) {
+      for (var i = 0; i < ticks.length; i++) {
+        if (ticks[i].getAttribute('aria-current') === 'page') return i;
+      }
+      return 0;
+    }
+
+    function isRtl(track) {
+      return window.getComputedStyle(track).direction === 'rtl';
+    }
+
+    function indexFromPointer(track, ticks, clientX) {
+      var rect = track.getBoundingClientRect();
+      var fraction = isRtl(track)
+        ? (rect.right - clientX) / rect.width
+        : (clientX - rect.left) / rect.width;
+      fraction = Math.min(1, Math.max(0, fraction));
+      return Math.round(fraction * (ticks.length - 1));
+    }
+
+    function show(track, ticks, index) {
+      track.style.setProperty('--hp-p', (index / (ticks.length - 1)) * 100 + '%');
+
+      var label = track.querySelector('.hp__label');
+      if (label) label.textContent = ticks[index].getAttribute('data-n');
+
+      var dot = track.querySelector('.hp__dot');
+      if (dot) dot.setAttribute('aria-valuenow', index + 1);
+    }
+
+    function finish(commit) {
+      if (!drag) return;
+
+      var state = drag;
+      drag = null;
+
+      state.nav.classList.remove('is-dragging');
+
+      if (commit && state.index !== state.start) {
+        state.ticks[state.index].click();
+      } else {
+        show(state.track, state.ticks, state.start);
+      }
+    }
+
+    document.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+      var track = e.target.closest && e.target.closest('.hp__track');
+      if (!track) return;
+
+      var ticks = ticksOf(track);
+      if (ticks.length < 2) return;
+
+      var start = currentIndex(ticks);
+
+      drag = {
+        track: track,
+        nav: track.closest('.hp'),
+        ticks: ticks,
+        start: start,
+        index: indexFromPointer(track, ticks, e.clientX),
+        pointerId: e.pointerId
+      };
+
+      try {
+        track.setPointerCapture(e.pointerId);
+      } catch (error) {}
+
+      drag.nav.classList.add('is-dragging');
+      show(track, ticks, drag.index);
+      e.preventDefault();
     });
 
-    /* Keep the jump grid inside the screen (page 1 and the last page sit near the edges) */
-    document.addEventListener('toggle', function (e) {
-      var d = e.target;
-      if (!d.classList || !d.classList.contains('hp__jump') || !d.open) return;
-      var grid = d.querySelector('.hp__grid');
-      if (!grid) return;
-      grid.style.setProperty('--hp-shift', '0px');
-      var r = grid.getBoundingClientRect();
-      var m = 8;
-      var shift = 0;
-      if (r.left < m) shift = m - r.left;
-      else if (r.right > window.innerWidth - m) shift = window.innerWidth - m - r.right;
-      grid.style.setProperty('--hp-shift', shift + 'px');
-    }, true);
+    document.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.pointerId) return;
+
+      var index = indexFromPointer(drag.track, drag.ticks, e.clientX);
+
+      if (index !== drag.index) {
+        drag.index = index;
+        show(drag.track, drag.ticks, index);
+      }
+    });
+
+    document.addEventListener('pointerup', function (e) {
+      if (drag && e.pointerId === drag.pointerId) finish(true);
+    });
+
+    document.addEventListener('pointercancel', function (e) {
+      if (drag && e.pointerId === drag.pointerId) finish(false);
+    });
+
+    /* Keyboard: arrows move one page, Home / End jump to the first / last page */
+    document.addEventListener('keydown', function (e) {
+      var dot = e.target.closest && e.target.closest('.hp__dot');
+      if (!dot) return;
+
+      var track = dot.closest('.hp__track');
+      var ticks = ticksOf(track);
+      var current = currentIndex(ticks);
+      var rtl = isRtl(track);
+      var next = current;
+
+      if (e.key === 'ArrowRight') next = current + (rtl ? -1 : 1);
+      else if (e.key === 'ArrowLeft') next = current + (rtl ? 1 : -1);
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = ticks.length - 1;
+      else return;
+
+      next = Math.min(ticks.length - 1, Math.max(0, next));
+      e.preventDefault();
+
+      if (next !== current) ticks[next].click();
+    });
   })();
 {% endjavascript %}
