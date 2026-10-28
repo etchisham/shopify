@@ -333,7 +333,7 @@
     bottom: calc(100% - var(--hp-y) + 0.75rem);
     transform: translateX(-50%);
     font-family: var(--hp-font);
-    font-size: 0.78rem;
+    font-size: 12.5px;
     font-weight: 400;
     font-style: normal;
     font-variant-numeric: oldstyle-nums;
@@ -531,28 +531,29 @@
     cursor: grabbing;
   }
 
-  .hp__strip a {
+  .hp__strip :is(a, button) {
     flex: 0 0 2.6rem;
     display: grid;
     place-items: center;
     height: 2.4rem;
-    border-bottom: 1px solid transparent;
+    border: 0;
     font-family: var(--hp-font);
-    font-variant-numeric: oldstyle-nums;
-    font-size: 0.95rem;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: 'lnum' 1;
+    font-size: 15px;
+    line-height: 1;
     color: var(--hp-muted);
     -webkit-user-drag: none;
     user-select: none;
+    cursor: pointer;
   }
 
-  .hp__strip a:hover {
+  .hp__strip :is(a, button):hover {
     color: var(--color-foreground, #1c1b19);
-    border-color: var(--hp-line);
   }
 
   .hp__strip .is-current {
     color: var(--hp-accent-deep);
-    border-color: var(--hp-accent);
   }
 
   /* Small rose-gold circles, half inside the box and half outside */
@@ -610,7 +611,7 @@
     }
 
     .hp .hp__n {
-      font-size: 0.78rem;
+      font-size: 12.5px;
       opacity: 0.55;
     }
 
