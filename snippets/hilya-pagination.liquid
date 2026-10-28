@@ -1,0 +1,346 @@
+{%- comment -%}
+  Hilya editorial pagination.
+  Usage: {% render 'hilya-pagination', paginate: paginate %}
+  Works for any number of pages. Keeps the active filters/sort in every link.
+{%- endcomment -%}
+
+{%- if paginate.pages > 1 -%}
+  {%- liquid
+    assign total = paginate.pages
+    assign current = paginate.current_page
+
+    if paginate.next.is_link
+      assign ref_url = paginate.next.url
+      assign ref_page = current | plus: 1
+    else
+      assign ref_url = paginate.previous.url
+      assign ref_page = current | minus: 1
+    endif
+
+    assign ref_page_str = ref_page | append: ''
+    assign ref_split = ref_url | split: 'page='
+    assign url_prefix = ref_split.first
+    assign url_rest = ref_split.last | remove_first: ref_page_str
+
+    assign pct = current | times: 100.0 | divided_by: total | round: 2
+  -%}
+
+  {%- capture current_label -%}{%- if current < 10 -%}0{%- endif -%}{{ current }}{%- endcapture -%}
+  {%- capture total_label -%}{%- if total < 10 -%}0{%- endif -%}{{ total }}{%- endcapture -%}
+
+  <div class="catalog-page__pagination">
+  <nav class="hp" aria-label="{{ 'collections.pagination' | t | escape }}">
+
+    {%- comment %} PREVIOUS {% endcomment -%}
+    {%- if paginate.previous.is_link -%}
+      <a class="hp__arrow hp__arrow--prev" href="{{ paginate.previous.url }}" aria-label="{{ 'collections.previous_page' | t | escape }}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </a>
+    {%- else -%}
+      <span class="hp__arrow hp__arrow--prev is-disabled" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </span>
+    {%- endif -%}
+
+    {%- comment %} CURRENT PAGE (opens a jump grid when there are 3+ pages) {% endcomment -%}
+    {%- if total > 2 -%}
+      <details class="hp__jump">
+        <summary class="hp__num" data-n="{{ current_label }}" aria-label="{{ 'meta.page' | t: number: current | escape }}">{{ current_label }}</summary>
+        <div class="hp__grid">
+          {%- for i in (1..total) -%}
+            {%- capture i_label -%}{%- if i < 10 -%}0{%- endif -%}{{ i }}{%- endcapture -%}
+            <a href="{{ url_prefix }}page={{ i }}{{ url_rest }}" data-n="{{ i_label }}"{% if i == current %} aria-current="page" class="is-current"{% endif %}>{{ i_label }}</a>
+          {%- endfor -%}
+        </div>
+      </details>
+    {%- else -%}
+      <span class="hp__num" data-n="{{ current_label }}" aria-current="page">{{ current_label }}</span>
+    {%- endif -%}
+
+    {%- comment %} PROGRESS LINE: each segment is a real link to a page {% endcomment -%}
+    <div class="hp__track" style="--hp-p: {{ pct }}%">
+      <span class="hp__fill" aria-hidden="true"></span>
+      <span class="hp__dot" aria-hidden="true"></span>
+      {%- for i in (1..total) -%}
+        {%- capture i_label -%}{%- if i < 10 -%}0{%- endif -%}{{ i }}{%- endcapture -%}
+        <a class="hp__seg" href="{{ url_prefix }}page={{ i }}{{ url_rest }}" data-n="{{ i_label }}" aria-label="{{ 'meta.page' | t: number: i | escape }}"{% if i == current %} aria-current="page"{% endif %}></a>
+      {%- endfor -%}
+    </div>
+
+    {%- comment %} LAST PAGE {% endcomment -%}
+    {%- if current == total -%}
+      <span class="hp__num hp__num--total" data-n="{{ total_label }}">{{ total_label }}</span>
+    {%- else -%}
+      <a class="hp__num hp__num--total" href="{{ url_prefix }}page={{ total }}{{ url_rest }}" data-n="{{ total_label }}" aria-label="{{ 'meta.page' | t: number: total | escape }}">{{ total_label }}</a>
+    {%- endif -%}
+
+    {%- comment %} NEXT {% endcomment -%}
+    {%- if paginate.next.is_link -%}
+      <a class="hp__arrow hp__arrow--next" href="{{ paginate.next.url }}" aria-label="{{ 'collections.next_page' | t | escape }}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    {%- else -%}
+      <span class="hp__arrow hp__arrow--next is-disabled" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    {%- endif -%}
+
+  </nav>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .hp {
+    --hp-accent: #b87f6f; /* rose gold */
+    --hp-line: var(--color-border, #e6dccb);
+    --hp-dir: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    max-width: 34rem;
+    width: 100%;
+    margin: 0 auto;
+    padding-inline: 1rem;
+    color: var(--color-foreground, #1c1b19);
+  }
+
+  [dir='rtl'] .hp {
+    --hp-dir: -1;
+  }
+
+  :where(.hp) button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+  }
+
+  /* Arrows */
+  .hp__arrow {
+    display: inline-grid;
+    place-items: center;
+    padding: 0.4rem;
+    color: inherit;
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  .hp__arrow:is(a, button):not(:disabled):hover,
+  .hp__arrow:is(a, button):not(:disabled):focus-visible {
+    color: var(--hp-accent);
+  }
+
+  .hp__arrow--prev:is(a, button):not(:disabled):hover {
+    transform: translateX(calc(-4px * var(--hp-dir)));
+  }
+
+  .hp__arrow--next:is(a, button):not(:disabled):hover {
+    transform: translateX(calc(4px * var(--hp-dir)));
+  }
+
+  .hp__arrow.is-disabled,
+  .hp__arrow:disabled {
+    opacity: 0.25;
+  }
+
+  [dir='rtl'] .hp__arrow svg {
+    transform: scaleX(-1);
+  }
+
+  /* Numbers */
+  .hp__num {
+    font-family: var(--font-heading-family, Georgia, 'Times New Roman', serif);
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.25s ease;
+  }
+
+  .hp__num::-webkit-details-marker {
+    display: none;
+  }
+
+  span.hp__num {
+    cursor: default;
+  }
+
+  .hp__num--total {
+    font-size: 0.95rem;
+    color: color-mix(in srgb, currentColor 50%, transparent);
+  }
+
+  .hp__num:is(a, button, summary):hover {
+    color: var(--hp-accent);
+  }
+
+  /* Progress line */
+  .hp__track {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    height: 1.75rem;
+  }
+
+  .hp__track::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--hp-line);
+  }
+
+  .hp__fill {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: var(--hp-p);
+    height: 1px;
+    background: var(--hp-accent);
+    animation: hp-grow 0.6s ease both;
+  }
+
+  .hp__dot {
+    position: absolute;
+    inset-inline-start: var(--hp-p);
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--hp-accent);
+    transform: translate(calc(-50% * var(--hp-dir)), -50%);
+    animation: hp-slide 0.6s ease both;
+  }
+
+  @keyframes hp-grow {
+    from { width: 0; }
+  }
+
+  @keyframes hp-slide {
+    from { inset-inline-start: 0; }
+  }
+
+  .hp__seg {
+    display: block;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hp__seg:hover::before,
+  .hp__seg:focus-visible::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--hp-accent);
+    opacity: 0.55;
+  }
+
+  .hp__seg:hover::after,
+  .hp__seg:focus-visible::after {
+    content: attr(data-n);
+    position: absolute;
+    top: -0.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: 0.75rem;
+    color: var(--hp-accent);
+  }
+
+  /* Jump grid */
+  .hp__jump {
+    position: relative;
+  }
+
+  .hp__grid {
+    position: absolute;
+    bottom: calc(100% + 0.9rem);
+    inset-inline-start: 0;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(5, 2.6rem);
+    gap: 0.2rem;
+    padding: 0.75rem;
+    border: 1px solid var(--hp-line);
+    border-radius: 0.75rem;
+    background: var(--color-background, #fffcf7);
+  }
+
+  .hp__grid :is(a, button) {
+    display: grid;
+    place-items: center;
+    height: 2.4rem;
+    border-bottom: 1px solid transparent;
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: 0.95rem;
+    color: color-mix(in srgb, currentColor 65%, transparent);
+    cursor: pointer;
+  }
+
+  .hp__grid :is(a, button):hover {
+    color: inherit;
+    border-color: var(--hp-line);
+  }
+
+  .hp__grid .is-current {
+    color: inherit;
+    border-color: var(--hp-accent);
+  }
+
+  .hp a:focus-visible,
+  .hp button:focus-visible,
+  .hp summary:focus-visible {
+    outline: 1px solid var(--hp-accent);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 40rem) {
+    .hp {
+      gap: 0.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hp__fill,
+    .hp__dot {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.hp__jump[open]').forEach(function (d) {
+        if (!d.contains(e.target)) d.removeAttribute('open');
+      });
+    });
+
+    function toArabicDigits() {
+      if (document.documentElement.lang.indexOf('ar') !== 0) return;
+      var map = '٠١٢٣٤٥٦٧٨٩';
+      document.querySelectorAll('.hp [data-n]').forEach(function (el) {
+        var v = el.getAttribute('data-n').replace(/[0-9]/g, function (d) { return map[d]; });
+        el.setAttribute('data-n', v);
+        if (!el.children.length && el.textContent.trim()) el.textContent = v;
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', toArabicDigits);
+    } else {
+      toArabicDigits();
+    }
+  })();
+{% endjavascript %}

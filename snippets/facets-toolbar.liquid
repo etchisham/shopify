@@ -2150,52 +2150,124 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function buildPaginationHtml(current, total) {
 
-    let html = '<ul class="hilya-pagination">';
+    const arabic = document.documentElement.lang.indexOf('ar') === 0;
 
-    html +=
-      '<li><button type="button"' +
-      ' class="hilya-pagination__item hilya-pagination__item--arrow"' +
-      ' data-page="' + (current - 1) + '"' +
-      ' aria-label="' + T.previousPage + '"' +
-      (current <= 1 ? ' disabled' : '') +
-      '>' + ARROW_LEFT + '</button></li>';
+    function label(number) {
 
-    getPageList(current, total).forEach(function (entry) {
+      let text = (number < 10 ? '0' : '') + number;
 
-      if (entry === '…') {
+      if (arabic) {
 
-        html +=
-          '<li><span class="hilya-pagination__item is-ellipsis">…</span></li>';
-
-      } else if (entry === current) {
-
-        html +=
-          '<li><span class="hilya-pagination__item is-current" aria-current="page">' +
-          entry +
-          '</span></li>';
-
-      } else {
-
-        html +=
-          '<li><button type="button" class="hilya-pagination__item"' +
-          ' data-page="' + entry + '"' +
-          ' aria-label="' + T.page.replace('__NUMBER__', entry) + '">' +
-          entry +
-          '</button></li>';
+        text = text.replace(/[0-9]/g, function (digit) {
+          return '٠١٢٣٤٥٦٧٨٩'[digit];
+        });
 
       }
 
-    });
+      return text;
+
+    }
+
+    const percent = Math.round((current / total) * 10000) / 100;
+
+    let html = '<div class="hp">';
+
+
+    /* PREVIOUS */
 
     html +=
-      '<li><button type="button"' +
-      ' class="hilya-pagination__item hilya-pagination__item--arrow"' +
+      '<button type="button"' +
+      ' class="hp__arrow hp__arrow--prev"' +
+      ' data-page="' + (current - 1) + '"' +
+      ' aria-label="' + T.previousPage + '"' +
+      (current <= 1 ? ' disabled' : '') +
+      '>' + ARROW_LEFT + '</button>';
+
+
+    /* CURRENT PAGE (jump grid when there are 3+ pages) */
+
+    if (total > 2) {
+
+      html +=
+        '<details class="hp__jump">' +
+        '<summary class="hp__num" data-n="' + label(current) + '">' +
+        label(current) +
+        '</summary>' +
+        '<div class="hp__grid">';
+
+      for (let page = 1; page <= total; page++) {
+
+        html +=
+          '<button type="button" data-page="' + page + '"' +
+          ' data-n="' + label(page) + '"' +
+          (page === current ? ' class="is-current" aria-current="page"' : '') +
+          '>' + label(page) + '</button>';
+
+      }
+
+      html += '</div></details>';
+
+    } else {
+
+      html +=
+        '<span class="hp__num" aria-current="page">' +
+        label(current) +
+        '</span>';
+
+    }
+
+
+    /* PROGRESS LINE */
+
+    html +=
+      '<div class="hp__track" style="--hp-p: ' + percent + '%">' +
+      '<span class="hp__fill" aria-hidden="true"></span>' +
+      '<span class="hp__dot" aria-hidden="true"></span>';
+
+    for (let page = 1; page <= total; page++) {
+
+      html +=
+        '<button type="button" class="hp__seg"' +
+        ' data-page="' + page + '"' +
+        ' data-n="' + label(page) + '"' +
+        ' aria-label="' + T.page.replace('__NUMBER__', page) + '"' +
+        (page === current ? ' aria-current="page"' : '') +
+        '></button>';
+
+    }
+
+    html += '</div>';
+
+
+    /* LAST PAGE */
+
+    if (current === total) {
+
+      html += '<span class="hp__num hp__num--total">' + label(total) + '</span>';
+
+    } else {
+
+      html +=
+        '<button type="button" class="hp__num hp__num--total"' +
+        ' data-page="' + total + '"' +
+        ' aria-label="' + T.page.replace('__NUMBER__', total) + '">' +
+        label(total) +
+        '</button>';
+
+    }
+
+
+    /* NEXT */
+
+    html +=
+      '<button type="button"' +
+      ' class="hp__arrow hp__arrow--next"' +
       ' data-page="' + (current + 1) + '"' +
       ' aria-label="' + T.nextPage + '"' +
       (current >= total ? ' disabled' : '') +
-      '>' + ARROW_RIGHT + '</button></li>';
+      '>' + ARROW_RIGHT + '</button>';
 
-    html += '</ul>';
+    html += '</div>';
 
     return html;
 
