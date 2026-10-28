@@ -2152,23 +2152,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const arabic = document.documentElement.lang.indexOf('ar') === 0;
 
-    function label(number) {
+    /* English: 01, 02 ...   Arabic: ١، ٢ ... (no leading zero) */
 
-      let text = (number < 10 ? '0' : '') + number;
+    function label(number) {
 
       if (arabic) {
 
-        text = text.replace(/[0-9]/g, function (digit) {
+        return String(number).replace(/[0-9]/g, function (digit) {
           return '٠١٢٣٤٥٦٧٨٩'[digit];
         });
 
       }
 
-      return text;
+      return (number < 10 ? '0' : '') + number;
 
     }
 
-    const percent = Math.round((current / total) * 10000) / 100;
+    const percent = Math.round(((current - 0.5) / total) * 10000) / 100;
 
     let html = '<div class="hp">';
 
@@ -2184,40 +2184,24 @@ document.addEventListener('DOMContentLoaded', function () {
       '>' + ARROW_LEFT + '</button>';
 
 
-    /* CURRENT PAGE (jump grid when there are 3+ pages) */
+    /* FIRST PAGE */
 
-    if (total > 2) {
+    if (current === 1) {
 
-      html +=
-        '<details class="hp__jump">' +
-        '<summary class="hp__num" data-n="' + label(current) + '">' +
-        label(current) +
-        '</summary>' +
-        '<div class="hp__grid">';
-
-      for (let page = 1; page <= total; page++) {
-
-        html +=
-          '<button type="button" data-page="' + page + '"' +
-          ' data-n="' + label(page) + '"' +
-          (page === current ? ' class="is-current" aria-current="page"' : '') +
-          '>' + label(page) + '</button>';
-
-      }
-
-      html += '</div></details>';
+      html += '<span class="hp__num">' + label(1) + '</span>';
 
     } else {
 
       html +=
-        '<span class="hp__num" aria-current="page">' +
-        label(current) +
-        '</span>';
+        '<button type="button" class="hp__num" data-page="1"' +
+        ' aria-label="' + T.page.replace('__NUMBER__', 1) + '">' +
+        label(1) +
+        '</button>';
 
     }
 
 
-    /* PROGRESS LINE */
+    /* LINE */
 
     html +=
       '<div class="hp__track" style="--hp-p: ' + percent + '%">' +
@@ -2236,6 +2220,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+
+    /* CURRENT PAGE under the dot */
+
+    if (total > 2) {
+
+      html +=
+        '<details class="hp__marker hp__jump">' +
+        '<summary class="hp__current">' + label(current) + '</summary>' +
+        '<div class="hp__grid">';
+
+      for (let page = 1; page <= total; page++) {
+
+        html +=
+          '<button type="button" data-page="' + page + '"' +
+          (page === current ? ' class="is-current" aria-current="page"' : '') +
+          '>' + label(page) + '</button>';
+
+      }
+
+      html += '</div></details>';
+
+    } else {
+
+      html +=
+        '<div class="hp__marker">' +
+        '<span class="hp__current" aria-current="page">' + label(current) + '</span>' +
+        '</div>';
+
+    }
+
     html += '</div>';
 
 
@@ -2243,13 +2257,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (current === total) {
 
-      html += '<span class="hp__num hp__num--total">' + label(total) + '</span>';
+      html += '<span class="hp__num">' + label(total) + '</span>';
 
     } else {
 
       html +=
-        '<button type="button" class="hp__num hp__num--total"' +
-        ' data-page="' + total + '"' +
+        '<button type="button" class="hp__num" data-page="' + total + '"' +
         ' aria-label="' + T.page.replace('__NUMBER__', total) + '">' +
         label(total) +
         '</button>';
