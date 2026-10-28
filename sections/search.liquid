@@ -1,8 +1,5 @@
 {% render 'catalog-styles' %}
 
-{%- assign pagination_previous = 'collections.previous_page' | t -%}
-{%- assign pagination_next = 'collections.next_page' | t -%}
-
 <section class="catalog-page search-page full-width section-spacing">
   <div class="catalog-page__inner search-page__inner">
 
@@ -63,7 +60,7 @@
               {% endif %}
             {% endfor %}
           </div>
-          <div class="search-page__pagination catalog-page__pagination">{{ paginate | default_pagination: previous: pagination_previous, next: pagination_next }}</div>
+          {% render 'hilya-pagination', paginate: paginate %}
         {% endif %}
       {% endpaginate %}
     {% endif %}
