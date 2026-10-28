@@ -2176,8 +2176,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+    /* With many pages only about 10 numbers are drawn on the line */
+
+    const step = Math.floor(total / 10) + 1;
+
+    const halfStep = Math.ceil(step / 2);
+
     let html =
-      '<div class="hp hp--js' + (total <= 20 ? ' hp--ticks' : '') + '">';
+      '<div class="hp hp--js' + (total <= 20 ? ' hp--ticks' : '') + '">' +
+      '<div class="hp__bar">';
 
 
     /* PREVIOUS */
@@ -2191,23 +2198,6 @@ document.addEventListener('DOMContentLoaded', function () {
       '>' + ARROW_LEFT + '</button>';
 
 
-    /* FIRST PAGE */
-
-    if (current === 1) {
-
-      html += '<span class="hp__num">' + label(1) + '</span>';
-
-    } else {
-
-      html +=
-        '<button type="button" class="hp__num" data-page="1"' +
-        ' aria-label="' + T.page.replace('__NUMBER__', 1) + '">' +
-        label(1) +
-        '</button>';
-
-    }
-
-
     /* LINE: the ticks are the pages, the dot is the draggable handle */
 
     html +=
@@ -2216,41 +2206,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     for (let page = 1; page <= total; page++) {
 
+      const minor =
+        page !== total &&
+        ((page - 1) % step !== 0 || total - page < halfStep);
+
       html +=
-        '<button type="button" class="hp__seg"' +
+        '<button type="button"' +
+        ' class="hp__seg' + (minor ? ' is-minor' : '') + (page === current ? ' is-on' : '') + '"' +
         ' style="--hp-s: ' + position(page) + '%"' +
         ' data-page="' + page + '"' +
         ' data-n="' + label(page) + '"' +
         ' aria-label="' + T.page.replace('__NUMBER__', page) + '"' +
         (page === current ? ' aria-current="page"' : '') +
-        '></button>';
+        '><span class="hp__n" aria-hidden="true">' + label(page) + '</span></button>';
 
     }
 
     html +=
       '<span class="hp__dot" role="slider" tabindex="0"' +
       ' aria-orientation="horizontal"' +
-      ' aria-valuemin="1" aria-valuemax="' + total + '" aria-valuenow="' + current + '">' +
-      '<span class="hp__label" aria-hidden="true">' + label(current) + '</span>' +
-      '</span>' +
+      ' aria-valuemin="1" aria-valuemax="' + total + '" aria-valuenow="' + current + '"></span>' +
       '</div>';
-
-
-    /* LAST PAGE */
-
-    if (current === total) {
-
-      html += '<span class="hp__num">' + label(total) + '</span>';
-
-    } else {
-
-      html +=
-        '<button type="button" class="hp__num" data-page="' + total + '"' +
-        ' aria-label="' + T.page.replace('__NUMBER__', total) + '">' +
-        label(total) +
-        '</button>';
-
-    }
 
 
     /* NEXT */
@@ -2261,7 +2237,29 @@ document.addEventListener('DOMContentLoaded', function () {
       ' data-page="' + (current + 1) + '"' +
       ' aria-label="' + T.nextPage + '"' +
       (current >= total ? ' disabled' : '') +
-      '>' + ARROW_RIGHT + '</button>';
+      '>' + ARROW_RIGHT + '</button>' +
+      '</div>';
+
+
+    /* CURRENT PAGE: rounded box in the middle, opens the list of all pages */
+
+    html +=
+      '<div class="hp__foot"><details class="hp__jump">' +
+      '<summary class="hp__badge" aria-label="' + T.page.replace('__NUMBER__', current) + '">' +
+      '<span class="hp__badge-num">' + label(current) + '</span>' +
+      '</summary>' +
+      '<div class="hp__grid">';
+
+    for (let page = 1; page <= total; page++) {
+
+      html +=
+        '<button type="button" data-page="' + page + '"' +
+        (page === current ? ' class="is-current" aria-current="page"' : '') +
+        '>' + label(page) + '</button>';
+
+    }
+
+    html += '</div></details></div>';
 
     html += '</div>';
 
@@ -2358,6 +2356,10 @@ document.addEventListener('DOMContentLoaded', function () {
       filteredPage,
       totalFilteredPages
     );
+
+    /* lets the pagination snippet finish setting up the new markup */
+
+    document.dispatchEvent(new CustomEvent('hp:rendered'));
 
   }
 
