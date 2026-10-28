@@ -93,82 +93,6 @@
   margin-block-start: 4.5rem;
 }
 
-.hilya-pagination {
-  display: inline-flex;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border: 1px solid rgb(0 0 0 / 14%);
-  border-radius: .6rem;
-  overflow: hidden;
-}
-
-.hilya-pagination > li {
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-
-.hilya-pagination > li + li {
-  border-inline-start: 1px solid rgb(0 0 0 / 14%);
-}
-
-.hilya-pagination__item {
-  display: grid;
-  min-width: 3rem;
-  height: 3rem;
-  place-items: center;
-  margin: 0;
-  padding: 0 .7rem;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .78rem;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 160ms ease;
-}
-
-a.hilya-pagination__item:hover,
-button.hilya-pagination__item:hover:not(:disabled) {
-  background: rgb(0 0 0 / 4%);
-}
-
-.hilya-pagination__item:focus-visible {
-  outline-offset: -.2rem;
-}
-
-.hilya-pagination__item.is-current {
-  outline: 2px solid var(--color-foreground);
-  outline-offset: -2px;
-  cursor: default;
-}
-
-.hilya-pagination__item.is-ellipsis {
-  cursor: default;
-}
-
-.hilya-pagination__item.is-disabled,
-.hilya-pagination__item:disabled {
-  opacity: .3;
-  cursor: default;
-  pointer-events: none;
-}
-
-.hilya-pagination__item svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-[dir='rtl'] .hilya-pagination__item--arrow svg {
-  transform: scaleX(-1);
-}
-
 
 /* =========================================
    EMPTY COLLECTION
@@ -297,13 +221,6 @@ button.hilya-pagination__item:hover:not(:disabled) {
     margin-block-start: 3.5rem;
   }
 
-  .hilya-pagination__item {
-    min-width: 2.5rem;
-    height: 2.6rem;
-    padding: 0 .45rem;
-    font-size: .72rem;
-  }
-
 }
 
 
@@ -321,25 +238,8 @@ button.hilya-pagination__item:hover:not(:disabled) {
     column-gap: .6rem;
   }
 
-  .hilya-pagination__item {
-    min-width: 2.15rem;
-    padding: 0 .3rem;
-  }
-
 }
 
-
-/* =========================================
-   REDUCED MOTION
-========================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .hilya-pagination__item {
-    transition: none;
-  }
-
-}
 
 /* =========================================
    ARABIC / RTL
@@ -358,17 +258,9 @@ button.hilya-pagination__item:hover:not(:disabled) {
   font-size: 1rem;
 }
 
-[dir="rtl"] .hilya-pagination__item {
-  font-size: .92rem;
-}
-
 @media (max-width: 40rem) {
   [dir="rtl"] .catalog-page__description {
     font-size: .88rem;
-  }
-
-  [dir="rtl"] .hilya-pagination__item {
-    font-size: .85rem;
   }
 }
 
