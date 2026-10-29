@@ -4852,9 +4852,16 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
   -webkit-appearance: none;
   appearance: none;
   flex: 0 0 auto;
-  width: 15px;
-  height: 15px;
-  margin: 0;
+  box-sizing: border-box !important;
+  width: 15px !important;
+  height: 15px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1;
   border: 1px solid rgb(120 85 70 / 45%);
   border-radius: 4px;
   background-color: rgb(255 255 255 / 55%);
@@ -4915,8 +4922,10 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 @media (max-width: 40rem) {
 
   .hilya-filters .hilya-filter-option input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
     background-size: 13px 13px;
   }
 
