@@ -4804,4 +4804,41 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
   color: rgb(255 255 255 / 88%);
 }
 
+/* soft version: light rose tint, rose gold frame, dark brown text */
+
+.hilya-filters .hilya-price-input {
+  border: 1px solid rgb(169 112 95 / 55%) !important;
+  background: linear-gradient(180deg, rgb(169 112 95 / 15%) 0%, rgb(169 112 95 / 8%) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    0 1px 2px rgb(169 112 95 / 14%),
+    0 4px 10px rgb(169 112 95 / 10%) !important;
+}
+
+.hilya-filters .hilya-price-input:hover {
+  border-color: rgb(169 112 95 / 85%) !important;
+  background: linear-gradient(180deg, rgb(169 112 95 / 20%) 0%, rgb(169 112 95 / 11%) 100%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  border-color: #A9705F !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    0 0 0 3px rgb(169 112 95 / 22%) !important;
+}
+
+.hilya-filters .hilya-price-input span {
+  color: #8a5a4c;
+}
+
+.hilya-filters .hilya-price-input input[type="number"] {
+  color: #4a2f27 !important;
+}
+
+
+/* a little more air under the price boxes, before the Color divider */
+.hilya-filters .hilya-price-values {
+  margin-bottom: .5rem;
+}
+
 {% endstylesheet %}
