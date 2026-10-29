@@ -4584,4 +4584,30 @@ html[dir="rtl"] .hilya-filters .hilya-price-input span { font-size: .78rem; lett
 html[dir="rtl"] .hilya-filters .hilya-price-input input { font-size: 1rem; }
 html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; letter-spacing: 0; }
 
+
+/* ---------- FIX: theme gives every input a big min-height, which pushed
+   the dots ~12px below the line and stretched the price boxes.
+   Cancel it for the price controls only. ---------- */
+
+.hilya-filters .hilya-price-slider input[type="range"] {
+  box-sizing: border-box !important;
+  min-height: 0 !important;
+  max-height: var(--hilya-slider-h) !important;
+  line-height: 0 !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.hilya-filters .hilya-price-input input[type="number"] {
+  box-sizing: border-box !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hilya-filters .hilya-price-input {
+  min-height: 0 !important;
+}
+
 {% endstylesheet %}
