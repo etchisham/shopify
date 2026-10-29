@@ -4984,27 +4984,15 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
 
-    /* English: scrollbar on the LEFT edge (outer side) */
-    direction: rtl;
-    margin-left: -10px;
-    padding-left: 10px;
-  }
-
-  .hilya-filters .hilya-filter-sidebar .hilya-filter-form > * {
-    direction: ltr;
-  }
-
-  /* Arabic: scrollbar on the RIGHT edge (outer side) */
-  html[dir="rtl"] .hilya-filters .hilya-filter-sidebar .hilya-filter-form {
-    direction: ltr;
-    margin-left: 0;
+    /* scrollbar stays on its natural side (right in English, left in Arabic);
+       a small gap keeps the content away from it */
+    padding-right: 14px;
     padding-left: 0;
-    margin-right: -10px;
-    padding-right: 10px;
   }
 
-  html[dir="rtl"] .hilya-filters .hilya-filter-sidebar .hilya-filter-form > * {
-    direction: rtl;
+  html[dir="rtl"] .hilya-filters .hilya-filter-sidebar .hilya-filter-form {
+    padding-right: 0;
+    padding-left: 14px;
   }
 
   /* the fixed line above replaces the first group's own top line */
@@ -5065,15 +5053,12 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 
 
 /* =========================================
-   SCROLLBAR SIDE + HIDDEN CHIPS SCROLLBAR (desktop sidebar)
-   English: scrollbar on the LEFT edge of the filters
-   Arabic:  scrollbar on the RIGHT edge of the filters
-   (to flip them back, delete this whole block)
+   HIDDEN CHIPS SCROLLBAR (desktop sidebar)
+   The "Filtered by" chips area is fixed: never show a scrollbar there
 ========================================= */
 
 @media (min-width: 40.001rem) {
 
-  /* the chips area is fixed: never show a scrollbar there */
   .hilya-filters .hilya-filter-sidebar > .hilya-filters__active {
     max-height: 12rem;
     scrollbar-width: none;
@@ -5084,27 +5069,27 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
     display: none;
   }
 
-  /* English: scroll container is right-to-left, so its scrollbar sits on the left;
-     the content inside is put back to left-to-right */
-  .hilya-filters .hilya-filter-sidebar .hilya-filter-form {
-    direction: rtl;
-    padding-right: 0;
-    padding-left: .15rem;
+}
+
+
+/* =========================================
+   MOBILE DRAWER: the fixed top part (Filters + "Filtered by" chips)
+   never shows a scrollbar (it can still scroll if it ever has to)
+========================================= */
+
+@media (max-width: 40rem) {
+
+  .hilya-filters .hilya-filter-drawer__header,
+  .hilya-filters .hilya-filter-drawer__header .hilya-filters__active,
+  .hilya-filters .hilya-filter-drawer__content > .hilya-filters__active {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  .hilya-filters .hilya-filter-sidebar .hilya-filter-form > * {
-    direction: ltr;
-  }
-
-  /* Arabic: the opposite */
-  html[dir="rtl"] .hilya-filters .hilya-filter-sidebar .hilya-filter-form {
-    direction: ltr;
-    padding-left: 0;
-    padding-right: .15rem;
-  }
-
-  html[dir="rtl"] .hilya-filters .hilya-filter-sidebar .hilya-filter-form > * {
-    direction: rtl;
+  .hilya-filters .hilya-filter-drawer__header::-webkit-scrollbar,
+  .hilya-filters .hilya-filter-drawer__header .hilya-filters__active::-webkit-scrollbar,
+  .hilya-filters .hilya-filter-drawer__content > .hilya-filters__active::-webkit-scrollbar {
+    display: none;
   }
 
 }
