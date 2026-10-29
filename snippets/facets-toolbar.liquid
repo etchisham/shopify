@@ -4942,4 +4942,71 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
   min-height: 44px;
 }
 
+
+/* =========================================
+   DESKTOP SIDEBAR: heading + "Filtered by" chips stay fixed,
+   only the filter groups below the line scroll
+========================================= */
+
+@media (min-width: 40.001rem) {
+
+  .hilya-filters .hilya-filter-sidebar {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important;
+    padding-right: 0;
+  }
+
+  .hilya-filters .hilya-filter-sidebar__heading,
+  .hilya-filters .hilya-filter-sidebar > .hilya-filters__active {
+    flex: 0 0 auto;
+  }
+
+  /* many chips: the chip area scrolls on its own instead of eating the sidebar */
+  .hilya-filters .hilya-filter-sidebar > .hilya-filters__active {
+    max-height: 9.5rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  /* the scrolling part */
+  .hilya-filters .hilya-filter-sidebar .hilya-filter-form {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-top: 1px solid rgb(0 0 0 / 10%);
+    padding-right: .15rem;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  /* the fixed line above replaces the first group's own top line */
+  .hilya-filters .hilya-filter-sidebar .hilya-filter-form .hilya-filter-group:first-child {
+    border-top: 0;
+  }
+
+  .hilya-filters .hilya-filter-sidebar .hilya-filter-form::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  .hilya-filters .hilya-filter-sidebar .hilya-filter-form::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .hilya-filters .hilya-filter-sidebar .hilya-filter-form::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+  }
+
+  .hilya-filters .hilya-filter-sidebar:hover .hilya-filter-form {
+    scrollbar-color: rgb(0 0 0 / 14%) transparent;
+  }
+
+  .hilya-filters .hilya-filter-sidebar:hover .hilya-filter-form::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 14%);
+  }
+
+}
+
 {% endstylesheet %}
