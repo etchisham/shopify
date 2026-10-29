@@ -4448,13 +4448,12 @@ html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
 
 /* =========================================
    HILYA PRICE FILTER REFINEMENT
-   Change --hilya-rose below to match the exact
-   rose gold you used in the pagination.
+   --hilya-rose below is the accent colour of the price filter (black now).
 ========================================= */
 
 .hilya-filters {
-  --hilya-rose: #b76e79;
-  --hilya-rose-soft: rgb(183 110 121 / 18%);
+  --hilya-rose: #111;
+  --hilya-rose-soft: rgb(0 0 0 / 10%);
   --hilya-slider-h: 22px;
   --hilya-thumb: 14px;
 }
@@ -4608,6 +4607,60 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 
 .hilya-filters .hilya-price-input {
   min-height: 0 !important;
+}
+
+
+/* ---------- FINAL LOOK: room for the dots + quiet number fields ---------- */
+
+/* the sidebar clips overflow, so the slider keeps a margin for the dots */
+.hilya-filters .hilya-price-slider {
+  width: calc(100% - 20px);
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.hilya-filters .hilya-price-values {
+  align-items: center;
+  gap: .6rem;
+  margin-top: .15rem;
+}
+
+/* no boxes, no permanent lines: just "EGP 0   to   EGP 4000" */
+.hilya-filters .hilya-price-input {
+  padding: .25rem 0 .3rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid transparent !important;
+  background: transparent !important;
+  gap: .4rem;
+  cursor: text;
+}
+
+.hilya-filters .hilya-price-input:hover {
+  border-bottom-color: rgb(0 0 0 / 28%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  border-bottom-color: #111 !important;
+}
+
+.hilya-filters .hilya-price-input span {
+  font-size: .58rem;
+  font-weight: 400;
+  letter-spacing: .12em;
+  color: var(--color-muted);
+}
+
+.hilya-filters .hilya-price-input input[type="number"] {
+  font-size: .8rem !important;
+  font-weight: 500 !important;
+  color: #111 !important;
+}
+
+.hilya-filters .hilya-price-values__to {
+  padding: 0;
+  font-size: .58rem;
+  letter-spacing: .1em;
+  color: var(--color-muted);
 }
 
 {% endstylesheet %}
