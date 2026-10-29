@@ -4763,4 +4763,76 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 
 }
 
+
+/* ---------- COLOR PASS: deeper rose gold + matching checkboxes ---------- */
+
+.hilya-filters {
+  --hilya-rose: #A9705F;
+  --hilya-rose-soft: rgb(169 112 95 / 18%);
+}
+
+/* checked boxes use the same rose gold */
+.hilya-filters .hilya-filter-option input {
+  accent-color: #A9705F;
+}
+
+.hilya-filters .hilya-price-input {
+  border: 1px solid rgb(110 62 50 / 40%) !important;
+  background: linear-gradient(180deg, #B27B6A 0%, #A9705F 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 26%),
+    0 1px 2px rgb(100 56 44 / 24%),
+    0 4px 10px rgb(169 112 95 / 28%) !important;
+}
+
+.hilya-filters .hilya-price-input:hover {
+  border-color: rgb(110 62 50 / 60%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 26%),
+    0 1px 3px rgb(100 56 44 / 30%),
+    0 6px 14px rgb(169 112 95 / 34%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  border-color: rgb(90 48 38 / 75%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 26%),
+    0 0 0 3px rgb(169 112 95 / 28%) !important;
+}
+
+.hilya-filters .hilya-price-input span {
+  color: rgb(255 255 255 / 88%);
+}
+
+/* soft version: light rose tint, rose gold frame, dark brown text */
+
+.hilya-filters .hilya-price-input {
+  border: 1px solid rgb(169 112 95 / 55%) !important;
+  background: linear-gradient(180deg, rgb(169 112 95 / 15%) 0%, rgb(169 112 95 / 8%) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    0 1px 2px rgb(169 112 95 / 14%),
+    0 4px 10px rgb(169 112 95 / 10%) !important;
+}
+
+.hilya-filters .hilya-price-input:hover {
+  border-color: rgb(169 112 95 / 85%) !important;
+  background: linear-gradient(180deg, rgb(169 112 95 / 20%) 0%, rgb(169 112 95 / 11%) 100%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  border-color: #A9705F !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    0 0 0 3px rgb(169 112 95 / 22%) !important;
+}
+
+.hilya-filters .hilya-price-input span {
+  color: #8a5a4c;
+}
+
+.hilya-filters .hilya-price-input input[type="number"] {
+  color: #4a2f27 !important;
+}
+
 {% endstylesheet %}
