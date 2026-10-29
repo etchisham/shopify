@@ -4726,4 +4726,41 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
   color: var(--color-muted);
 }
 
+
+/* ---------- MOBILE DRAWER: smaller boxes, bigger text ---------- */
+
+@media (max-width: 40rem) {
+
+  .hilya-filters {
+    --hilya-thumb: 15px;
+  }
+
+  .hilya-filters .hilya-price-values {
+    grid-template-columns: 6.8rem auto 6.8rem;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-top: .7rem;
+  }
+
+  .hilya-filters .hilya-price-input {
+    height: 2.7rem !important;
+    padding: 0 .5rem !important;
+    gap: .4rem;
+    border-radius: 12px;
+  }
+
+  .hilya-filters .hilya-price-input span {
+    font-size: .62rem;
+  }
+
+  .hilya-filters .hilya-price-input input[type="number"] {
+    font-size: 1rem !important;
+  }
+
+  .hilya-filters .hilya-price-values__to {
+    font-size: .72rem;
+  }
+
+}
+
 {% endstylesheet %}
