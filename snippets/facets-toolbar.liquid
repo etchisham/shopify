@@ -4446,4 +4446,142 @@ html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
   html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-trigger { font-size: .7rem; }
 }
 
+/* =========================================
+   HILYA PRICE FILTER REFINEMENT
+   Change --hilya-rose below to match the exact
+   rose gold you used in the pagination.
+========================================= */
+
+.hilya-filters {
+  --hilya-rose: #b76e79;
+  --hilya-rose-soft: rgb(183 110 121 / 18%);
+  --hilya-slider-h: 22px;
+  --hilya-thumb: 14px;
+}
+
+
+/* ---------- SLIDER: the line + the dots on the same axis ---------- */
+
+.hilya-filters .hilya-price-slider {
+  height: var(--hilya-slider-h);
+  margin: .35rem 0 .7rem;
+}
+
+/* grey line (thin) */
+.hilya-filters .hilya-price-slider__track {
+  height: 1px;
+  background: rgb(0 0 0 / 14%) !important;
+}
+
+/* selected part (rose gold) */
+.hilya-filters .hilya-price-slider__range {
+  height: 2px;
+  background: var(--hilya-rose) !important;
+  border-radius: 2px;
+}
+
+/* the two real inputs: same height as the wrapper, thumb centered by math */
+.hilya-filters .hilya-price-slider input[type="range"] {
+  height: var(--hilya-slider-h) !important;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: var(--hilya-slider-h);
+  background: transparent !important;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-thumb {
+  width: var(--hilya-thumb);
+  height: var(--hilya-thumb);
+  margin-top: calc((var(--hilya-slider-h) - var(--hilya-thumb)) / 2);
+  border: 2px solid #fff !important;
+  border-radius: 50%;
+  background: var(--hilya-rose) !important;
+  box-shadow: 0 0 0 1px var(--hilya-rose), 0 1px 3px rgb(0 0 0 / 18%) !important;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-track {
+  height: var(--hilya-slider-h);
+  background: transparent !important;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--hilya-thumb);
+  height: var(--hilya-thumb);
+  border: 2px solid #fff !important;
+  border-radius: 50%;
+  background: var(--hilya-rose) !important;
+  box-shadow: 0 0 0 1px var(--hilya-rose), 0 1px 3px rgb(0 0 0 / 18%) !important;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]:hover::-webkit-slider-thumb,
+.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px var(--hilya-rose), 0 0 0 6px var(--hilya-rose-soft) !important;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]:hover::-moz-range-thumb,
+.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 1px var(--hilya-rose), 0 0 0 6px var(--hilya-rose-soft) !important;
+}
+
+
+/* ---------- PRICE FIELDS: no boxes, just a thin underline ---------- */
+
+.hilya-filters .hilya-price-values {
+  gap: .9rem;
+  align-items: end;
+}
+
+.hilya-filters .hilya-price-input {
+  display: flex;
+  align-items: baseline;
+  gap: .45rem;
+  height: auto;
+  padding: 0 0 .4rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgb(0 0 0 / 20%) !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: border-color 180ms ease;
+}
+
+.hilya-filters .hilya-price-input:hover {
+  border-bottom-color: rgb(0 0 0 / 45%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  border-bottom-color: var(--hilya-rose) !important;
+}
+
+.hilya-filters .hilya-price-input span {
+  font-size: .62rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  color: var(--color-muted);
+}
+
+.hilya-filters .hilya-price-input input {
+  height: auto;
+  font-size: .82rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: left;
+  color: var(--color-foreground);
+}
+
+.hilya-filters .hilya-price-values__to {
+  padding-bottom: .4rem;
+  font-size: .62rem;
+  letter-spacing: .08em;
+  text-transform: lowercase;
+}
+
+/* Arabic: keep sizes readable */
+html[dir="rtl"] .hilya-filters .hilya-price-input span { font-size: .78rem; letter-spacing: 0; }
+html[dir="rtl"] .hilya-filters .hilya-price-input input { font-size: 1rem; }
+html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; letter-spacing: 0; }
+
 {% endstylesheet %}
