@@ -5094,4 +5094,24 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 
 }
 
+/* =========================================
+   MOBILE DRAWER (Arabic fix): only .hilya-filter-drawer__content scrolls.
+   The drawer itself and the fixed header must never own a scrollbar,
+   so the scrollbar line starts under the header, same as in English.
+========================================= */
+
+@media (max-width: 40rem) {
+
+  .hilya-filter-drawer,
+  html[dir="rtl"] .hilya-filter-drawer {
+    overflow: hidden !important;
+  }
+
+  .hilya-filter-drawer__header,
+  html[dir="rtl"] .hilya-filter-drawer__header {
+    overflow: hidden;
+  }
+
+}
+
 {% endstylesheet %}
