@@ -4841,4 +4841,89 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
   margin-bottom: .5rem;
 }
 
+
+/* =========================================
+   PREMIUM PASS: custom checkboxes, clearer EGP, flatter boxes
+========================================= */
+
+/* ---------- checkboxes ---------- */
+
+.hilya-filters .hilya-filter-option input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid rgb(120 85 70 / 45%);
+  border-radius: 4px;
+  background-color: rgb(255 255 255 / 55%);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px 11px;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.hilya-filters .hilya-filter-option:hover input[type="checkbox"] {
+  border-color: #A9705F;
+}
+
+.hilya-filters .hilya-filter-option input[type="checkbox"]:checked {
+  border-color: #A9705F;
+  background-color: #A9705F;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.3l2.4 2.4 4.6-5'/%3E%3C/svg%3E");
+}
+
+.hilya-filters .hilya-filter-option input[type="checkbox"]:focus-visible {
+  outline: 2px solid rgb(169 112 95 / 45%);
+  outline-offset: 2px;
+}
+
+/* ---------- EGP label: a little bigger and darker ---------- */
+
+.hilya-filters .hilya-price-input span {
+  font-size: .6rem;
+  font-weight: 500;
+  color: #7a4d40;
+}
+
+/* ---------- price boxes: flatter, less like a button ---------- */
+
+.hilya-filters .hilya-price-input {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 1px 1px rgb(169 112 95 / 10%),
+    0 2px 6px rgb(169 112 95 / 7%) !important;
+}
+
+.hilya-filters .hilya-price-input:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 1px 2px rgb(169 112 95 / 14%),
+    0 3px 8px rgb(169 112 95 / 10%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 0 0 3px rgb(169 112 95 / 22%) !important;
+}
+
+/* ---------- mobile ---------- */
+
+@media (max-width: 40rem) {
+
+  .hilya-filters .hilya-filter-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    background-size: 13px 13px;
+  }
+
+  .hilya-filters .hilya-price-input span {
+    font-size: .64rem;
+  }
+
+}
+
 {% endstylesheet %}
