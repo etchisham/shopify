@@ -5009,4 +5009,32 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 
 }
 
+
+/* =========================================
+   MOBILE DRAWER: "Filtered by" chips stay fixed while the filters scroll.
+   If the page was opened on a wide screen and then resized (or rotated),
+   the chips sit inside the scrolling area, so they are pinned there.
+========================================= */
+
+@media (max-width: 40rem) {
+
+  .hilya-filters .hilya-filter-drawer__content > .hilya-filters__active {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0;
+    padding: .2rem 0 .8rem;
+    max-height: 9rem;
+    overflow-y: auto;
+    background: var(--color-background);
+  }
+
+  /* chips placed in the fixed header: never let them take the whole screen */
+  .hilya-filters .hilya-filter-drawer__header .hilya-filters__active {
+    max-height: 8rem;
+    overflow-y: auto;
+  }
+
+}
+
 {% endstylesheet %}
