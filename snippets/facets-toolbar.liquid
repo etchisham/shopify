@@ -4612,11 +4612,31 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
 
 /* ---------- FINAL LOOK: room for the dots + quiet number fields ---------- */
 
-/* the sidebar clips overflow, so the slider keeps a margin for the dots */
+/* full-width line, starting exactly under the first letter of EGP */
 .hilya-filters .hilya-price-slider {
-  width: calc(100% - 20px);
-  margin-left: 10px;
-  margin-right: 10px;
+  width: 100%;
+  margin: .35rem 0 .7rem;
+}
+
+/* ONE small solid black dot, no ring, no halo */
+.hilya-filters {
+  --hilya-thumb: 11px;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-thumb,
+.hilya-filters .hilya-price-slider input[type="range"]:hover::-webkit-slider-thumb,
+.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+  border: 0 !important;
+  background: #111 !important;
+  box-shadow: none !important;
+}
+
+.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-thumb,
+.hilya-filters .hilya-price-slider input[type="range"]:hover::-moz-range-thumb,
+.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-moz-range-thumb {
+  border: 0 !important;
+  background: #111 !important;
+  box-shadow: none !important;
 }
 
 .hilya-filters .hilya-price-values {
