@@ -1076,6 +1076,14 @@
     border-color 0.6s ease;
 }
 
+@media screen and (max-width: 749px) {
+  .site-header--over-hero {
+    transition:
+      background-color 0.4s ease,
+      border-color 0.4s ease;
+  }
+}
+
 /* transparent while at the top, nothing open */
 .site-header--over-hero:not(.is-scrolled):not(:has(.mobile-menu[open])):not(:has(.header-search[open])) {
   background-color: transparent;
@@ -1778,10 +1786,12 @@ body:has(.site-header--over-hero) .shopify-section:has(> .hero) {
   if (!header) return;
 
   function update() {
-    header.classList.toggle('is-scrolled', window.scrollY > 80);
+    var limit = window.matchMedia('(max-width: 749px)').matches ? 12 : 80;
+    header.classList.toggle('is-scrolled', window.scrollY > limit);
   }
 
   window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
   window.addEventListener('load', update);
   update();
 })();
