@@ -264,4 +264,24 @@
   }
 }
 
+/* =========================================
+   REVEAL ON SCROLL
+========================================= */
+
+@keyframes hilya-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.catalog-grid.has-reveal .catalog-product-item:not(.is-revealed) {
+  opacity: 0;
+}
+
+.catalog-grid.has-reveal .catalog-product-item.is-revealed {
+  animation: hilya-reveal .8s cubic-bezier(.22, 1, .36, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
 {% endstylesheet %}
