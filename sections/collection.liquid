@@ -115,6 +115,8 @@
       if (!entry.isIntersecting) return;
 
       var card = entry.target;
+      if (card.classList.contains('is-filtered-out')) return;
+
       var columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
 
       var position = 0;
@@ -140,9 +142,27 @@
 
   new MutationObserver(function (mutations) {
     mutations.forEach(function (m) {
-      Array.prototype.forEach.call(m.addedNodes, watch);
+      if (m.type === 'childList') {
+        if (m.target === grid) {
+          Array.prototype.forEach.call(m.addedNodes, watch);
+        }
+        return;
+      }
+
+      var card = m.target;
+      if (card.classList.contains('catalog-product-item') &&
+          card.classList.contains('is-filtered-out') &&
+          card.classList.contains('is-revealed')) {
+        card.classList.remove('is-revealed');
+        observer.observe(card);
+      }
     });
-  }).observe(grid, { childList: true });
+  }).observe(grid, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
 })();
 </script>
 
