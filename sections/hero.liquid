@@ -598,7 +598,7 @@
 }
 
 .hero--parallax .hero__media {
-  transform: translate3d(0, var(--hero-shift, 0px), 0) scale(1.12);
+  transform: translate3d(0, var(--hero-shift, 0px), 0) scale(1.26);
   will-change: transform;
 }
 
@@ -628,8 +628,8 @@
 
       var height = hero.offsetHeight;
       var scrolled = Math.min(Math.max(window.scrollY, 0), height);
-
-      hero.style.setProperty('--hero-shift', (scrolled * 0.06) + 'px');
+      
+      hero.style.setProperty('--hero-shift', (scrolled * 0.12) + 'px');
     }
 
     function onScroll() {
