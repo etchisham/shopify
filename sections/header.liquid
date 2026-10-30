@@ -1066,6 +1066,32 @@
   font-size: 0.9rem;
 }
 
+/* =========================================================
+   TRANSPARENT OVER THE HERO (home page only)
+   ========================================================= */
+
+.site-header--over-hero {
+  transition:
+    background-color 0.6s ease,
+    border-color 0.6s ease;
+}
+
+.site-header--over-hero:not(.is-scrolled):not(:hover):not(:has(.mobile-menu[open])):not(:has(.header-search[open])) {
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+
+/* the hero slides up under the header */
+body:has(.site-header--over-hero) .shopify-section:has(> .hero) {
+  margin-top: calc(-1 * var(--hilya-header-height));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header--over-hero {
+    transition: none;
+  }
+}
+
 {% endstyle %}
 
 {%- assign language_label = 'general.language' | t -%}
@@ -1731,6 +1757,23 @@
   window.addEventListener('resize', request);
   window.addEventListener('load', request);
   document.addEventListener('shopify:section:load', request);
+  update();
+})();
+</script>
+
+<script>
+/* Home page: the header is transparent over the hero,
+   and turns solid after a little scrolling */
+(function () {
+  var header = document.querySelector('.site-header--over-hero');
+  if (!header) return;
+
+  function update() {
+    header.classList.toggle('is-scrolled', window.scrollY > 80);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('load', update);
   update();
 })();
 </script>
