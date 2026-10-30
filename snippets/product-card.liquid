@@ -570,10 +570,10 @@
   z-index: 4;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(0.5rem);
+  transform: translateY(0.9rem);
   transition:
-    opacity 220ms ease,
-    transform 220ms ease;
+    opacity 500ms cubic-bezier(.22, 1, .36, 1),
+    transform 500ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .product-card__media-wrap:hover .product-card__quick-wrap {
