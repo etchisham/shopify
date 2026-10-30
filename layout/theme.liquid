@@ -100,5 +100,54 @@
     {% section 'cart-drawer' %}
     <p class="visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-live-region></p>
     {% render 'support-widget' %}
+    {% if template.name == 'index' %}
+<style>
+  @keyframes hilya-section-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(32px);
+    }
+  }
+
+  .hilya-section-reveal:not(.is-revealed) {
+    opacity: 0;
+  }
+
+  .hilya-section-reveal.is-revealed {
+    animation: hilya-section-reveal 1.4s cubic-bezier(.22, 1, .36, 1) backwards;
+  }
+</style>
+
+<script>
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.Shopify && window.Shopify.designMode) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var sections = Array.prototype.filter.call(
+    document.querySelectorAll('.shopify-section'),
+    function (section) {
+      return section.className.indexOf('shopify-section-group') === -1;
+    }
+  );
+
+  /* the first section is the big hero image: it stays as it is */
+  sections = sections.slice(1);
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-revealed');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -60px 0px' });
+
+  sections.forEach(function (section) {
+    section.classList.add('hilya-section-reveal');
+    observer.observe(section);
+  });
+})();
+</script>
+{% endif %}
   </body>
 </html>
