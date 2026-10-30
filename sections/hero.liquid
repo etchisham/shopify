@@ -569,7 +569,88 @@
   background: #F7F4EE;
 }
 
+/* =========================
+   HERO MOTION
+========================= */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+  }
+
+  .hero__content .eyebrow,
+  .hero__heading span,
+  .hero__text,
+  .hero__actions {
+    animation: hero-rise 1.4s cubic-bezier(.22, .8, .3, 1) backwards;
+  }
+
+  .hero__content .eyebrow { animation-delay: .2s; }
+  .hero__heading span:nth-child(1) { animation-delay: .5s; }
+  .hero__heading span:nth-child(2) { animation-delay: .8s; }
+  .hero__text { animation-delay: 1.1s; }
+  .hero__actions { animation-delay: 1.4s; }
+
+}
+
+.hero--parallax .hero__media {
+  transform: translate3d(0, var(--hero-shift, 0px), 0) scale(1.12);
+  will-change: transform;
+}
+
 {% endstylesheet %}
+
+{% javascript %}
+
+(function () {
+  function init() {
+    var hero = document.querySelector('.hero');
+    if (!hero || !hero.querySelector('.hero__media')) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var desktop = window.matchMedia('(min-width: 750px)');
+    var ticking = false;
+
+    function update() {
+      ticking = false;
+
+      if (!desktop.matches) {
+        hero.classList.remove('hero--parallax');
+        hero.style.removeProperty('--hero-shift');
+        return;
+      }
+
+      hero.classList.add('hero--parallax');
+
+      var height = hero.offsetHeight;
+      var scrolled = Math.min(Math.max(window.scrollY, 0), height);
+
+      hero.style.setProperty('--hero-shift', (scrolled * 0.06) + 'px');
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+{% endjavascript %}
 
 {% schema %}
 {
