@@ -152,6 +152,20 @@
     section.classList.add('hilya-section-reveal');
     observer.observe(section);
   });
+
+    /* after a refresh in the middle of the page: sections already passed show instantly */
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      sections.forEach(function (section) {
+        if (section.classList.contains('is-revealed')) return;
+        if (section.getBoundingClientRect().bottom < 0) {
+          section.classList.add('hilya-instant', 'is-revealed');
+          observer.unobserve(section);
+        }
+      });
+    }, 150);
+  });
+  
 })();
 </script>
 {% endif %}
