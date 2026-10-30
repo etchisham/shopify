@@ -102,6 +102,50 @@
   </div>
 </section>
 
+<script>
+(function () {
+  var grid = document.querySelector('.catalog-grid');
+  if (!grid || !('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  grid.classList.add('has-reveal');
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+
+      var card = entry.target;
+      var columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+
+      var position = 0;
+      for (var s = card.previousElementSibling; s; s = s.previousElementSibling) {
+        if (!s.classList.contains('is-filtered-out')) position++;
+      }
+
+      card.style.setProperty('--reveal-delay', ((position % columns) * 0.08) + 's');
+      card.classList.add('is-revealed');
+      observer.unobserve(card);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  function watch(node) {
+    if (node.nodeType === 1 &&
+        node.classList.contains('catalog-product-item') &&
+        !node.classList.contains('is-revealed')) {
+      observer.observe(node);
+    }
+  }
+
+  Array.prototype.forEach.call(grid.children, watch);
+
+  new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      Array.prototype.forEach.call(m.addedNodes, watch);
+    });
+  }).observe(grid, { childList: true });
+})();
+</script>
+
 
 
 
