@@ -122,7 +122,7 @@
         if (!s.classList.contains('is-filtered-out')) position++;
       }
 
-      card.style.setProperty('--reveal-delay', ((position % columns) * 0.08) + 's');
+      card.style.setProperty('--reveal-delay', ((position % columns) * 0.18) + 's');
       card.classList.add('is-revealed');
       observer.unobserve(card);
     });
