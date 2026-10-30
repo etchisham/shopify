@@ -126,8 +126,70 @@
       update();
     };
 
-    centerMiddle();
+        centerMiddle();
     window.addEventListener('load', centerMiddle);
+
+    /* ظهور متدرج: العنوان الأول وبعده الكروت واحد ورا التاني */
+    if (
+      'IntersectionObserver' in window &&
+      !(window.Shopify && window.Shopify.designMode) &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      const header = section.querySelector('.featured-collection__header');
+      const cards = Array.from(grid.querySelectorAll('.featured-collection__product'));
+      const targets = [header].concat(cards).filter(Boolean);
+
+      section.classList.add('has-reveal');
+
+      const io = new IntersectionObserver((entries) => {
+        const shown = entries
+          .filter((entry) => entry.isIntersecting)
+          .map((entry) => entry.target);
+
+        if (!shown.length) return;
+
+        shown.sort((a, b) =>
+          a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+        );
+
+        const withHeader = shown.indexOf(header) !== -1;
+        let position = 0;
+
+        shown.forEach((el) => {
+          if (el === header) {
+            el.style.setProperty('--reveal-delay', '0s');
+          } else {
+            el.style.setProperty(
+              '--reveal-delay',
+              ((withHeader ? 0.3 : 0) + position * 0.18) + 's'
+            );
+            position++;
+          }
+          el.classList.add('is-revealed');
+          io.unobserve(el);
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -15% 0px' });
+
+      /* what is already passed (above the screen) or hidden inside the slider shows without motion */
+      const settle = () => {
+        const g = grid.getBoundingClientRect();
+
+        targets.forEach((el) => {
+          if (el.classList.contains('is-revealed')) return;
+
+          const r = el.getBoundingClientRect();
+
+          if (r.bottom < 0 || r.left >= g.right - 1 || r.right <= g.left + 1) {
+            el.classList.add('hilya-instant', 'is-revealed');
+            io.unobserve(el);
+          }
+        });
+      };
+
+      targets.forEach((el) => io.observe(el));
+      settle();
+      window.addEventListener('load', () => setTimeout(settle, 150));
+    }
   })();
 </script>
 
