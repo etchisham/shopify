@@ -1076,14 +1076,23 @@
     border-color 0.6s ease;
 }
 
-.site-header--over-hero:not(.is-scrolled):not(:hover):not(:has(.mobile-menu[open])):not(:has(.header-search[open])) {
+/* transparent while at the top, nothing open */
+.site-header--over-hero:not(.is-scrolled):not(:has(.mobile-menu[open])):not(:has(.header-search[open])) {
   background-color: transparent;
   border-bottom-color: transparent;
 }
 
-/* the hero slides up under the header */
+/* mouse only: turns solid while the mouse is on it (phones skip this) */
+@media (hover: hover) and (pointer: fine) {
+  .site-header--over-hero:not(.is-scrolled):not(:has(.mobile-menu[open])):not(:has(.header-search[open])):hover {
+    background-color: var(--header-bg);
+    border-bottom-color: var(--header-border);
+  }
+}
+
+/* the hero slides up under the header (+1px for the header's bottom line) */
 body:has(.site-header--over-hero) .shopify-section:has(> .hero) {
-  margin-top: calc(-1 * var(--hilya-header-height));
+  margin-top: calc(-1 * var(--hilya-header-height) - 1px);
 }
 
 @media (prefers-reduced-motion: reduce) {
