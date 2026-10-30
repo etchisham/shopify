@@ -102,20 +102,21 @@
     {% render 'support-widget' %}
     {% if template.name == 'index' %}
 <style>
-  @keyframes hilya-section-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(32px);
-    }
-  }
+  .hilya-section-reveal {
+  transition:
+    opacity 1.8s ease,
+    transform 2.2s cubic-bezier(.22, .8, .3, 1);
+}
 
-  .hilya-section-reveal:not(.is-revealed) {
-    opacity: 0;
-  }
+.hilya-section-reveal:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(64px);
+}
 
-  .hilya-section-reveal.is-revealed {
-    animation: hilya-section-reveal 1.4s cubic-bezier(.22, 1, .36, 1) backwards;
-  }
+.hilya-section-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
 </style>
 
 <script>
