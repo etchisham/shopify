@@ -1072,7 +1072,7 @@
 
 
 <header
-  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}"
+  class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}{% if template.name == 'index' %} site-header--over-hero{% endif %}"
 >
 
   <div class="site-header__inner">
@@ -1123,6 +1123,10 @@
 
           <div class="mobile-categories__items">
 
+            <a href="{{ routes.collections_url }}/collections">
+              {{ 'navigation.collections' | t }}
+            </a>
+
             <a href="{{ routes.collections_url }}/necklaces">
               {{ 'navigation.necklaces' | t }}
             </a>
@@ -1146,13 +1150,6 @@
           </div>
 
         </details>
-
-
-        <!-- MOBILE COLLECTIONS -->
-
-        <a href="{{ routes.collections_url }}/collections">
-          {{ 'navigation.collections' | t }}
-        </a>
 
 
         {% if section.settings.show_new_arrivals
@@ -1302,10 +1299,6 @@
             {{ 'navigation.all_products' | t }}
           </a>
 
-          <a href="{{ routes.collections_url }}/collections">
-            {{ 'navigation.collections' | t }}
-          </a>
-
 
           {% if section.settings.show_new_arrivals
             and section.settings.new_arrivals_link != blank %}
@@ -1402,6 +1395,10 @@
 
 
         <div class="desktop-dropdown">
+
+          <a href="{{ routes.collections_url }}/collections">
+            {{ 'navigation.collections' | t }}
+          </a>
 
           <a href="{{ routes.collections_url }}/necklaces">
             {{ 'navigation.necklaces' | t }}
