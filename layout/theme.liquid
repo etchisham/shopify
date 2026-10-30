@@ -116,7 +116,7 @@
 .hilya-section-reveal.is-revealed {
   opacity: 1;
   transform: none;
-}
+} 
 </style>
 
 <script>
@@ -141,7 +141,7 @@
       entry.target.classList.add('is-revealed');
       observer.unobserve(entry.target);
     });
-  }, { threshold: 0.05, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: 0, rootMargin: '0px 0px -20% 0px' });
 
   sections.forEach(function (section) {
     section.classList.add('hilya-section-reveal');
