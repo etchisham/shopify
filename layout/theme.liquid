@@ -130,10 +130,11 @@
   if (window.Shopify && window.Shopify.designMode) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var sections = Array.prototype.filter.call(
+    var sections = Array.prototype.filter.call(
     document.querySelectorAll('.shopify-section'),
     function (section) {
-      return section.className.indexOf('shopify-section-group') === -1;
+      return section.className.indexOf('shopify-section-group') === -1 &&
+             !section.querySelector('.featured-collection');
     }
   );
 
