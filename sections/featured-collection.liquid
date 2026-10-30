@@ -161,7 +161,7 @@
           } else {
             el.style.setProperty(
               '--reveal-delay',
-              ((withHeader ? 0.3 : 0) + position * 0.18) + 's'
+              ((withHeader ? 0.5 : 0) + position * 0.28) + 's'
             );
             position++;
           }
@@ -546,7 +546,7 @@
 @keyframes fc-reveal {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(40px);
   }
 }
 
@@ -557,7 +557,7 @@
 
 .featured-collection.has-reveal .featured-collection__header.is-revealed,
 .featured-collection.has-reveal .featured-collection__product.is-revealed {
-  animation: fc-reveal 1.4s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation: fc-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
   animation-delay: var(--reveal-delay, 0s);
 }
 
@@ -567,8 +567,8 @@
 
 /* room under the cards so they are not cut at the bottom while they rise */
 .featured-collection__grid {
-  padding-bottom: 32px;
-  margin-bottom: -32px;
+  padding-bottom: 40px;
+  margin-bottom: -40px;
 }
 
 /* ARABIC / RTL */
