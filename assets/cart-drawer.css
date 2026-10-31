@@ -490,7 +490,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #067647;
+  background: var(--hilya-rose-deep);
   color: #fff;
   padding-block: 0.65rem;
   padding-inline: 1rem 0.5rem;
@@ -594,13 +594,13 @@
 .cart-toast,
 .cart-feedback {
   z-index: 100001;
-  top: calc(var(--hilya-header-height, 72px) + 0.75rem);
+  top: calc(var(--hilya-header-bottom, 72px) + 0.75rem);
 }
 
 @media (max-width: 749px) {
   .cart-toast,
   .cart-feedback {
-    top: calc(var(--hilya-header-height, 64px) + 0.5rem);
+    top: calc(var(--hilya-header-bottom, 64px) + 0.5rem);
   }
 }
 .cart-quantity input:focus-visible,
