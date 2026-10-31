@@ -100,6 +100,76 @@
 
 </section>
 
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+
+    if (
+      !section ||
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) return;
+
+    const grid = section.querySelector('.hilya-social__grid');
+    const head = section.querySelector('.hilya-social__head');
+    const button = section.querySelector('.hilya-social__button');
+    const pictures = {};
+
+    section.querySelectorAll('.hilya-social__image').forEach((el) => {
+      const match = el.className.match(/hilya-social__image--(\d)/);
+      if (match) pictures[match[1]] = el;
+    });
+
+    if (!grid) return;
+
+    section.classList.add('has-reveal');
+
+    const show = (instant) => {
+      const mobile = window.matchMedia('(max-width: 749px)').matches;
+      const order = mobile ? [1, 2, 3, 4, 5, 6] : [1, 2, 5, 3, 4, 6];
+
+      const list = [head]
+        .concat(order.map((n) => pictures[n]))
+        .concat([button])
+        .filter(Boolean);
+
+      list.forEach((el, index) => {
+        if (instant) {
+          el.classList.add('hilya-instant');
+        } else {
+          el.style.setProperty(
+            '--reveal-delay',
+            (index === 0 ? 0 : 0.5 + (index - 1) * 0.25) + 's'
+          );
+        }
+        el.classList.add('is-revealed');
+      });
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      show(false);
+      io.disconnect();
+    }, { threshold: 0.2, rootMargin: '0px 0px -10% 0px' });
+
+    io.observe(grid);
+
+    /* after a refresh in the middle of the page, a section already passed shows without motion */
+    const settle = () => {
+      if (head && head.classList.contains('is-revealed')) return;
+
+      if (grid.getBoundingClientRect().bottom < 0) {
+        show(true);
+        io.disconnect();
+      }
+    };
+
+    settle();
+    window.addEventListener('load', () => setTimeout(settle, 150));
+  })();
+</script>
+
 
 {% stylesheet %}
 
