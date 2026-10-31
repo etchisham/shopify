@@ -134,7 +134,7 @@
     document.querySelectorAll('.shopify-section'),
     function (section) {
       return section.className.indexOf('shopify-section-group') === -1 &&
-             !section.querySelector('.featured-collection');
+             !section.querySelector('.featured-collection, .custom-order');
     }
   );
 

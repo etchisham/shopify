@@ -279,6 +279,57 @@
     const section = document.currentScript.previousElementSibling;
     if (!section) return;
 
+        /* ظهور متدرج: الكارت الأول وبعده الدواير واحدة ورا التانية */
+    if (
+      'IntersectionObserver' in window &&
+      !(window.Shopify && window.Shopify.designMode) &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      const band = section.querySelector('.custom-order__inner');
+      const card = section.querySelector('.custom-order__content');
+      const circles = Array.from(section.querySelectorAll('.custom-order__feature'));
+      const items = [card].concat(circles).filter(Boolean);
+
+      if (band && items.length) {
+        section.classList.add('has-reveal');
+
+        const show = (instant) => {
+          items.forEach((el, index) => {
+            if (instant) {
+              el.classList.add('hilya-instant');
+            } else {
+              el.style.setProperty(
+                '--reveal-delay',
+                (index === 0 ? 0 : 0.8 + (index - 1) * 0.3) + 's'
+              );
+            }
+            el.classList.add('is-revealed');
+          });
+        };
+
+        const io = new IntersectionObserver((entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          show(false);
+          io.disconnect();
+        }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+
+        io.observe(band);
+
+        /* after a refresh in the middle of the page, a section already passed shows without motion */
+        const settle = () => {
+          if (items[0].classList.contains('is-revealed')) return;
+
+          if (band.getBoundingClientRect().bottom < 0) {
+            show(true);
+            io.disconnect();
+          }
+        };
+
+        settle();
+        window.addEventListener('load', () => setTimeout(settle, 150));
+      }
+    }
+
     const openButton = section.querySelector('[data-co-open]');
     const drawer = section.querySelector('[data-co-drawer]');
 
@@ -1177,6 +1228,32 @@ html.co-lock {
   }
 }
 
+
+/* =========================
+   REVEAL ON SCROLL
+========================= */
+
+@keyframes co-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.custom-order.has-reveal .custom-order__content:not(.is-revealed),
+.custom-order.has-reveal .custom-order__feature:not(.is-revealed) {
+  opacity: 0;
+}
+
+.custom-order.has-reveal .custom-order__content.is-revealed,
+.custom-order.has-reveal .custom-order__feature.is-revealed {
+  animation: co-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+.custom-order.has-reveal .is-revealed.hilya-instant {
+  animation: none;
+}
 
 /* =========================
    ARABIC / RTL
