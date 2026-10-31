@@ -1109,6 +1109,35 @@ body:has(.site-header--over-hero) .shopify-section:has(> .hero) {
   }
 }
 
+/* =========================================================
+   CART ICON: small bounce when an item is added
+   ========================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  @keyframes cart-bump {
+    0%   { transform: translateY(0) scale(1); }
+    30%  { transform: translateY(-4px) scale(1.12); }
+    60%  { transform: translateY(0) scale(.96); }
+    100% { transform: translateY(0) scale(1); }
+  }
+
+  @keyframes cart-count-pop {
+    0%   { transform: scale(.6); }
+    50%  { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  .header-action.is-bumped svg {
+    animation: cart-bump 1s cubic-bezier(.22, .8, .3, 1);
+  }
+
+  .header-action.is-bumped .cart-count {
+    animation: cart-count-pop 1s cubic-bezier(.22, .8, .3, 1);
+  }
+
+}
+
 {% endstyle %}
 
 {%- assign language_label = 'general.language' | t -%}
@@ -1794,6 +1823,56 @@ body:has(.site-header--over-hero) .shopify-section:has(> .hero) {
   window.addEventListener('resize', update);
   window.addEventListener('load', update);
   update();
+})();
+</script>
+
+<script>
+/* Cart icon: bounce when an item is added (the cart announces every update) */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var timer = null;
+  var last = null;
+
+  function readCount() {
+    var el = document.querySelector('[data-cart-count]');
+    return el ? (parseInt(el.textContent, 10) || 0) : 0;
+  }
+
+  function bump() {
+    var link = document.querySelector('.header-action[data-cart-open]');
+    if (!link) return;
+
+    link.classList.remove('is-bumped');
+    void link.offsetWidth; /* lets the animation start again */
+    link.classList.add('is-bumped');
+
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      link.classList.remove('is-bumped');
+    }, 1100);
+  }
+
+  document.addEventListener('cart:updated', function (event) {
+    var now = event.detail && typeof event.detail.itemCount === 'number'
+      ? event.detail.itemCount
+      : readCount();
+    var drawer = document.querySelector('[data-cart-drawer]');
+
+    if (last !== null && now > last && !(drawer && drawer.open)) bump();
+
+    last = now;
+  });
+
+  function start() {
+    last = readCount();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
 })();
 </script>
 
