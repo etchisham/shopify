@@ -653,6 +653,78 @@ window.addEventListener('load', centerMiddle, { once: true });
 }
 
 /* =========================
+   REVEAL ON SCROLL
+========================= */
+
+@keyframes cl-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.collection-list.has-reveal .collection-list__intro:not(.is-revealed),
+.collection-list.has-reveal .collection-card:not(.is-revealed) {
+  opacity: 0;
+}
+
+.collection-list.has-reveal .collection-list__intro.is-revealed,
+.collection-list.has-reveal .collection-card.is-revealed {
+  animation: cl-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+.collection-list.has-reveal .is-revealed.hilya-instant {
+  animation: none;
+}
+
+/* room under the cards so they are not cut at the bottom while they rise */
+.collection-list__grid {
+  padding-bottom: 40px;
+  margin-bottom: -40px;
+}
+
+
+/* =========================
+   LINE UNDER THE TITLE
+========================= */
+
+.collection-list__subheading {
+  position: relative;
+}
+
+.collection-list__subheading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  width: 2.4rem;
+  height: 1px;
+  margin-left: -1.2rem;
+  background: #A9705F;
+}
+
+/* drawn from the middle to both sides after the title appears */
+.collection-list.has-reveal .collection-list__subheading::after {
+  transform: scaleX(0);
+  transition: transform 1.6s cubic-bezier(.22, .8, .3, 1) .7s;
+}
+
+.collection-list.has-reveal .collection-list__intro.is-revealed .collection-list__subheading::after {
+  transform: scaleX(1);
+}
+
+.collection-list.has-reveal .collection-list__intro.hilya-instant .collection-list__subheading::after {
+  transition: none;
+}
+
+@media (max-width: 749px) {
+  .collection-list__subheading::after {
+    bottom: -9px;
+  }
+}
+
+/* =========================
    ARABIC / RTL
 ========================= */
 
