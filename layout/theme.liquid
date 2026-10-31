@@ -169,6 +169,84 @@
   
 })();
 </script>
+<style>
+  @media (min-width: 750px) and (hover: hover) and (pointer: fine) {
+    .featured-collection__grid.is-dragging,
+    .collection-list__grid.is-dragging {
+      user-select: none;
+    }
+
+    .featured-collection__grid.is-dragging *,
+    .collection-list__grid.is-dragging * {
+      cursor: grabbing !important;
+    }
+  }
+</style>
+
+<script>
+/* Home page: drag the rows with the mouse (wide screens) */
+(function () {
+  var wide = window.matchMedia('(min-width: 750px)');
+
+  function enable(grid) {
+    var drag = null;
+    var suppressClick = false;
+
+    grid.addEventListener('pointerdown', function (event) {
+      if (event.pointerType !== 'mouse' || event.button !== 0 || !wide.matches) return;
+      drag = { x: event.clientX, left: grid.scrollLeft, moved: false };
+    });
+
+    window.addEventListener('pointermove', function (event) {
+      if (!drag) return;
+
+      var dx = event.clientX - drag.x;
+
+      if (!drag.moved && Math.abs(dx) < 5) return;
+
+      if (!drag.moved) {
+        drag.moved = true;
+        grid.style.scrollSnapType = 'none';
+        grid.style.scrollBehavior = 'auto';
+        grid.classList.add('is-dragging');
+      }
+
+      grid.scrollLeft = drag.left - dx;
+    });
+
+    function end() {
+      if (!drag) return;
+
+      if (drag.moved) {
+        suppressClick = true;
+        setTimeout(function () { suppressClick = false; }, 60);
+        grid.style.scrollSnapType = '';
+        grid.style.scrollBehavior = '';
+        grid.classList.remove('is-dragging');
+      }
+
+      drag = null;
+    }
+
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+
+    grid.addEventListener('click', function (event) {
+      if (!suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
+    grid.addEventListener('dragstart', function (event) {
+      event.preventDefault();
+    });
+  }
+
+  document
+    .querySelectorAll('.featured-collection__grid, .collection-list__grid')
+    .forEach(enable);
+})();
+</script>
 {% endif %}
   </body>
 </html>
