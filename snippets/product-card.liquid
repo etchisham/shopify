@@ -403,6 +403,38 @@
   border-radius: 2px;
 }
 
+/* ================================
+   DISCOUNT SHINE
+   A soft light passes over the badge every few seconds
+================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  @keyframes badge-shine {
+    0% { transform: translateX(-100%); }
+    25%, 100% { transform: translateX(100%); }
+  }
+
+  .product-card__discount::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 25%, rgb(255 255 255 / 65%) 50%, transparent 75%);
+    transform: translateX(-100%);
+    animation: badge-shine 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  /* not all badges at the same moment */
+  :is(.catalog-product-item, .featured-collection__product):nth-child(3n + 2) .product-card__discount::after {
+    animation-delay: 2s;
+  }
+
+  :is(.catalog-product-item, .featured-collection__product):nth-child(3n) .product-card__discount::after {
+    animation-delay: 4s;
+  }
+}
+
 
 /* ================================
    SOLD OUT
