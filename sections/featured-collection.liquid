@@ -571,6 +571,43 @@
   margin-bottom: -40px;
 }
 
+/* LINE UNDER THE TITLE */
+
+.featured-collection__heading .featured-collection__title {
+  position: relative;
+}
+
+.featured-collection__heading .featured-collection__title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  width: 2.4rem;
+  height: 1px;
+  margin-left: -1.2rem;
+  background: #A9705F;
+}
+
+/* drawn from the middle to both sides after the title appears */
+.featured-collection.has-reveal .featured-collection__title::after {
+  transform: scaleX(0);
+  transition: transform 1.6s cubic-bezier(.22, .8, .3, 1) .7s;
+}
+
+.featured-collection.has-reveal .featured-collection__header.is-revealed .featured-collection__title::after {
+  transform: scaleX(1);
+}
+
+.featured-collection.has-reveal .featured-collection__header.hilya-instant .featured-collection__title::after {
+  transition: none;
+}
+
+@media (max-width: 749px) {
+  .featured-collection__heading .featured-collection__title::after {
+    bottom: -9px;
+  }
+}
+
 /* ARABIC / RTL */
 
 [dir="rtl"] .featured-collection__heading .featured-collection__title {
