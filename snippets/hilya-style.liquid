@@ -73,4 +73,55 @@ html[dir="ltr"] body .hilya-social__brand {
 html[dir="ltr"] body .story-section__heading {
   font-style: italic;
 }
+
+/* =========================================================
+   BUTTONS: hover turns deep rose gold
+   ========================================================= */
+
+body .product-card__quick:hover,
+body .hero__button:hover,
+body .hero__button--secondary:hover,
+body .custom-order__button:hover,
+body .co-submit:hover,
+body .co-file:hover .co-file__button,
+body .co-file__input:focus-visible + .co-file__button {
+  background: var(--hilya-rose-deep);
+  border-color: var(--hilya-rose-deep);
+  color: #fff;
+}
+
+
+/* TEXT LINKS: the word turns rose gold on hover */
+
+body .story-section__link,
+body .featured-collection__view-all {
+  transition: color .3s ease, border-color .3s ease;
+}
+
+body .story-section__link:hover {
+  color: var(--hilya-rose-deep);
+}
+
+@media (min-width: 750px) {
+  body .featured-collection__view-all:hover {
+    color: var(--hilya-rose-deep);
+  }
+}
+
+
+/* "VIEW ALL" button on phones: readable white text on deep rose gold */
+
+@media (max-width: 749px) {
+  body .featured-collection__view-all,
+  body .featured-collection__view-all:hover {
+    background: var(--hilya-rose-deep);
+    border-color: var(--hilya-rose-deep);
+    color: #fff;
+  }
+
+  body .featured-collection__view-all:active {
+    background: var(--hilya-rose);
+    border-color: var(--hilya-rose);
+  }
+}
 </style>
