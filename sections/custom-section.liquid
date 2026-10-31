@@ -114,6 +114,65 @@
 
 </section>
 
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+
+    if (
+      !section ||
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) return;
+
+    const items = [].concat(
+      section.querySelector('.story-section__media'),
+      section.querySelector('.story-section__eyebrow'),
+      Array.from(section.querySelectorAll('.story-section__heading span')),
+      section.querySelector('.story-section__text'),
+      section.querySelector('.story-section__link')
+    ).filter(Boolean);
+
+    if (!items.length) return;
+
+    section.classList.add('has-reveal');
+
+    const io = new IntersectionObserver((entries) => {
+      const shown = entries
+        .filter((entry) => entry.isIntersecting)
+        .map((entry) => entry.target);
+
+      if (!shown.length) return;
+
+      shown.sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+      );
+
+      shown.forEach((el, index) => {
+        el.style.setProperty('--reveal-delay', (index * 0.3) + 's');
+        el.classList.add('is-revealed');
+        io.unobserve(el);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -15% 0px' });
+
+    /* what is already passed (above the screen) shows without motion */
+    const settle = () => {
+      items.forEach((el) => {
+        if (el.classList.contains('is-revealed')) return;
+
+        if (el.getBoundingClientRect().bottom < 0) {
+          el.classList.add('hilya-instant', 'is-revealed');
+          io.unobserve(el);
+        }
+      });
+    };
+
+    items.forEach((el) => io.observe(el));
+    settle();
+    window.addEventListener('load', () => setTimeout(settle, 150));
+  })();
+</script>
+
 {% stylesheet %}
 
 /* --story-section-* : moves the WHOLE section
