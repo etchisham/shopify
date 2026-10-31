@@ -459,6 +459,29 @@
   }
 }
 
+/* REVEAL ON SCROLL */
+
+@keyframes hs-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.hilya-social.has-reveal .hilya-social__head:not(.is-revealed),
+.hilya-social.has-reveal .hilya-social__image:not(.is-revealed),
+.hilya-social.has-reveal .hilya-social__button:not(.is-revealed) {
+  opacity: 0;
+}
+
+.hilya-social.has-reveal .is-revealed {
+  animation: hs-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+.hilya-social.has-reveal .is-revealed.hilya-instant {
+  animation: none;
+}
 
 /* ARABIC / RTL */
 
