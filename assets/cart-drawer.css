@@ -480,7 +480,7 @@
   width: max-content;
   max-width: calc(100% - 2.5rem);
   margin: 0;
-  border-radius: 0.4rem;
+  border-radius: var(--hilya-radius);
   box-shadow: 0 0.5rem 2rem rgb(0 0 0 / 18%);
   font-size: 0.95rem;
   line-height: 1.4;
@@ -610,4 +610,19 @@
 
 .cart-quantity:focus-within {
   border-color: var(--cart-color);
+}
+
+/* RTL: الدرج بيفتح من الشمال */
+[dir="rtl"] .cart-drawer__panel {
+  box-shadow: 1rem 0 3rem rgb(0 0 0 / 12%);
+  animation-name: cart-slide-in-rtl;
+}
+
+@keyframes cart-slide-in-rtl {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [dir="rtl"] .cart-drawer__panel { animation: none; }
 }
