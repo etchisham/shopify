@@ -3410,7 +3410,6 @@ body.hilya-filter-lock {
   cursor: pointer;
 }
 
-
 /* =========================================
    PRICE SLIDER
 ========================================= */
@@ -3418,9 +3417,8 @@ body.hilya-filter-lock {
 .hilya-price-slider {
   position: relative;
   width: 100%;
-  height: 1.4rem;
-  margin: .2rem 0 .5rem;
-  overflow: visible;
+  height: var(--hilya-slider-h);
+  margin: .35rem 0 .7rem;
 }
 
 .hilya-price-slider__track {
@@ -3428,13 +3426,10 @@ body.hilya-filter-lock {
   top: 50%;
   right: 0;
   left: 0;
-  height: 2px;
-  margin: 0;
-  padding: 0;
+  height: 1px;
   transform: translateY(-50%);
-  background: #d2d2d2 !important;
+  background: rgb(0 0 0 / 14%) !important;
   border: 0 !important;
-  border-radius: 0;
   box-shadow: none !important;
 }
 
@@ -3442,56 +3437,53 @@ body.hilya-filter-lock {
   position: absolute;
   top: 50%;
   height: 2px;
-  margin: 0;
-  padding: 0;
   transform: translateY(-50%);
-  background: #111 !important;
+  background: var(--hilya-rose) !important;
   border: 0 !important;
-  border-radius: 0;
-  z-index: 2;
+  border-radius: 2px;
   box-shadow: none !important;
+  z-index: 2;
 }
 
-
-/* =========================================
-   RANGE CONTROLS
-========================================= */
-
-.hilya-price-slider input[type="range"] {
+.hilya-filters .hilya-price-slider input[type="range"] {
   position: absolute !important;
   top: 0 !important;
   right: 0 !important;
   bottom: 0 !important;
   left: 0 !important;
+  box-sizing: border-box !important;
   width: 100% !important;
-  height: 1.4rem !important;
+  height: var(--hilya-slider-h) !important;
+  min-height: 0 !important;
+  max-height: var(--hilya-slider-h) !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+  line-height: 0 !important;
   appearance: none !important;
   -webkit-appearance: none !important;
   pointer-events: none;
   z-index: 4;
 }
 
-.hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
+.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 2px;
+  height: var(--hilya-slider-h);
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 
-.hilya-price-slider input[type="range"]::-webkit-slider-thumb {
-  width: 11px;
-  height: 11px;
-  margin-top: -4.5px;
+.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-thumb {
+  width: var(--hilya-thumb);
+  height: var(--hilya-thumb);
+  margin-top: calc((var(--hilya-slider-h) - var(--hilya-thumb)) / 2);
   border: 0 !important;
   border-radius: 50%;
-  background: #111 !important;
+  background: var(--hilya-rose) !important;
   appearance: none !important;
   -webkit-appearance: none !important;
   box-shadow: none !important;
@@ -3499,24 +3491,25 @@ body.hilya-filter-lock {
   pointer-events: auto;
 }
 
-.hilya-price-slider input[type="range"]::-moz-range-track {
+.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-track {
   width: 100%;
-  height: 2px;
+  height: var(--hilya-slider-h);
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 
-.hilya-price-slider input[type="range"]::-moz-range-progress {
+.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-progress {
   background: transparent !important;
 }
 
-.hilya-price-slider input[type="range"]::-moz-range-thumb {
-  width: 11px;
-  height: 11px;
+.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--hilya-thumb);
+  height: var(--hilya-thumb);
   border: 0 !important;
   border-radius: 50%;
-  background: #111 !important;
+  background: var(--hilya-rose) !important;
   box-shadow: none !important;
   cursor: pointer;
   pointer-events: auto;
@@ -3527,61 +3520,97 @@ body.hilya-filter-lock {
    PRICE NUMBER FIELDS
 ========================================= */
 
-.hilya-price-values {
+.hilya-filters .hilya-price-values {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: .4rem;
   width: 100%;
-  margin: 0;
+  margin: .45rem 0 .5rem;
   padding: 0;
-  font-size: .6rem;
 }
 
-.hilya-price-input {
-  display: flex;
+.hilya-filters .hilya-price-input {
+  display: flex !important;
   align-items: center;
+  justify-content: center;
+  gap: .28rem;
+  box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 1.85rem;
+  height: 2.1rem !important;
+  min-height: 0 !important;
   margin: 0;
-  padding: 0 .5rem;
-  border: 1px solid rgb(0 0 0 / 16%) !important;
-  border-radius: 0;
-  background: var(--color-background) !important;
-  box-shadow: none !important;
+  padding: 0 .3rem !important;
+  border: 1px solid rgb(var(--hilya-rose-rgb) / 55%) !important;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgb(var(--hilya-rose-rgb) / 15%) 0%, rgb(var(--hilya-rose-rgb) / 8%) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 1px 1px rgb(var(--hilya-rose-rgb) / 10%),
+    0 2px 6px rgb(var(--hilya-rose-rgb) / 7%) !important;
   outline: none;
+  cursor: text;
+  transition: box-shadow 180ms ease, border-color 180ms ease;
 }
 
-.hilya-price-input span {
+.hilya-filters .hilya-price-input:hover {
+  border-color: rgb(var(--hilya-rose-rgb) / 85%) !important;
+  background: linear-gradient(180deg, rgb(var(--hilya-rose-rgb) / 20%) 0%, rgb(var(--hilya-rose-rgb) / 11%) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 1px 2px rgb(var(--hilya-rose-rgb) / 14%),
+    0 3px 8px rgb(var(--hilya-rose-rgb) / 10%) !important;
+}
+
+.hilya-filters .hilya-price-input:focus-within {
+  border-color: var(--hilya-rose) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    0 0 0 3px rgb(var(--hilya-rose-rgb) / 22%) !important;
+}
+
+.hilya-filters .hilya-price-input span {
   flex: 0 0 auto;
-  color: var(--color-muted);
-  font-size: .52rem;
+  color: #7a4d40;
+  font-size: .6rem;
+  font-weight: 500;
+  letter-spacing: .08em;
   line-height: 1;
 }
 
-.hilya-price-input input {
+.hilya-filters .hilya-price-input input[type="number"] {
   display: block;
-  width: 100%;
+  flex: 0 1 auto;
+  box-sizing: border-box !important;
+  width: 4.6ch !important;
   min-width: 0;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
   border: 0 !important;
   outline: 0 !important;
   background: transparent !important;
-  color: var(--color-foreground);
-  font: inherit;
-  font-size: .6rem;
-  line-height: 1;
-  text-align: right;
   box-shadow: none !important;
+  color: #4a2f27 !important;
+  font: inherit;
+  font-size: .74rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2;
+  text-align: center !important;
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
 
-.hilya-price-input input:focus {
-  border: 0 !important;
-  outline: 0 !important;
-  box-shadow: none !important;
+/* browsers that can size a field to its text keep EGP + number truly centered */
+@supports (field-sizing: content) {
+  .hilya-filters .hilya-price-input input[type="number"] {
+    field-sizing: content;
+    width: auto !important;
+    min-width: 1.2ch;
+    max-width: 100%;
+  }
 }
 
 .hilya-price-input input::-webkit-inner-spin-button,
@@ -3591,18 +3620,65 @@ body.hilya-filter-lock {
   -webkit-appearance: none;
 }
 
-.hilya-price-input input[type="number"] {
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-.hilya-price-values__to {
+.hilya-filters .hilya-price-values__to {
+  padding: 0;
   color: var(--color-muted);
-  font-size: .56rem;
+  font-size: .58rem;
   line-height: 1;
+  letter-spacing: .1em;
+  text-transform: lowercase;
   white-space: nowrap;
 }
 
+
+/* ---------- phones ---------- */
+
+@media (max-width: 40rem) {
+
+  .hilya-filters {
+    --hilya-thumb: 15px;
+  }
+
+  .hilya-filters .hilya-price-values {
+    grid-template-columns: 6.8rem auto 6.8rem;
+    justify-content: center;
+    gap: .9rem;
+    margin-top: .7rem;
+  }
+
+  .hilya-filters .hilya-price-input {
+    height: 2.7rem !important;
+    padding: 0 .5rem !important;
+    gap: .4rem;
+    border-radius: 12px;
+  }
+
+  .hilya-filters .hilya-price-input span {
+    font-size: .64rem;
+  }
+
+  .hilya-filters .hilya-price-input input[type="number"] {
+    font-size: .9rem !important;
+  }
+
+  .hilya-filters .hilya-price-values__to {
+    font-size: .72rem;
+  }
+
+}
+
+
+/* ---------- Arabic ---------- */
+
+html[dir="rtl"] .hilya-filters .hilya-price-input span {
+  font-size: .78rem;
+  letter-spacing: 0;
+}
+
+html[dir="rtl"] .hilya-filters .hilya-price-values__to {
+  font-size: .85rem;
+  letter-spacing: 0;
+}
 
 /* =========================================
    PRODUCTS TOOLBAR
@@ -3898,15 +3974,6 @@ body.hilya-filter-lock {
   .hilya-filter-option {
     min-height: 1.7rem;
     font-size: .70rem;
-  }
-
-  .hilya-price-slider {
-    margin: .12rem 0 .38rem;
-  }
-
-  .hilya-price-input {
-    height: 1.7rem;
-    padding-inline: .38rem;
   }
 
   .hilya-filters__products-toolbar {
@@ -4420,10 +4487,6 @@ html[dir="rtl"] .hilya-filter-chip__remove { font-size: .95rem; }
 html[dir="rtl"] .hilya-filters__clear { font-size: .8rem; }
 html[dir="rtl"] .hilya-filter-group__toggle { font-size: .95rem; }
 html[dir="rtl"] .hilya-filter-option { font-size: .92rem; }
-html[dir="rtl"] .hilya-price-values { font-size: .85rem; }
-html[dir="rtl"] .hilya-price-input span { font-size: .75rem; }
-html[dir="rtl"] .hilya-price-input input { font-size: .85rem; }
-html[dir="rtl"] .hilya-price-values__to { font-size: .8rem; }
 html[dir="rtl"] .hilya-filters__results { font-size: .85rem; }
 html[dir="rtl"] .hilya-filters__sort-label { font-size: .82rem; }
 html[dir="rtl"] .hilya-filters__sort-trigger { font-size: .85rem; }
@@ -4446,401 +4509,6 @@ html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
   html[dir="rtl"] .hilya-filters__mobile-results { font-size: .72rem; }
   html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-label,
   html[dir="rtl"] .hilya-filters__sort--mobile .hilya-filters__sort-trigger { font-size: .7rem; }
-}
-
-/* =========================================
-   HILYA PRICE FILTER REFINEMENT
-   --hilya-rose below is the accent colour of the price filter (black now).
-========================================= */
-
-.hilya-filters {
-  --hilya-rose: #B87F6F;
-  --hilya-rose-soft: rgb(184 127 111 / 18%);
-  --hilya-slider-h: 22px;
-  --hilya-thumb: 14px;
-}
-
-
-/* ---------- SLIDER: the line + the dots on the same axis ---------- */
-
-.hilya-filters .hilya-price-slider {
-  height: var(--hilya-slider-h);
-  margin: .35rem 0 .7rem;
-}
-
-/* grey line (thin) */
-.hilya-filters .hilya-price-slider__track {
-  height: 1px;
-  background: rgb(0 0 0 / 14%) !important;
-}
-
-/* selected part (rose gold) */
-.hilya-filters .hilya-price-slider__range {
-  height: 2px;
-  background: var(--hilya-rose) !important;
-  border-radius: 2px;
-}
-
-/* the two real inputs: same height as the wrapper, thumb centered by math */
-.hilya-filters .hilya-price-slider input[type="range"] {
-  height: var(--hilya-slider-h) !important;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-runnable-track {
-  height: var(--hilya-slider-h);
-  background: transparent !important;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-thumb {
-  width: var(--hilya-thumb);
-  height: var(--hilya-thumb);
-  margin-top: calc((var(--hilya-slider-h) - var(--hilya-thumb)) / 2);
-  border: 2px solid #fff !important;
-  border-radius: 50%;
-  background: var(--hilya-rose) !important;
-  box-shadow: 0 0 0 1px var(--hilya-rose), 0 1px 3px rgb(0 0 0 / 18%) !important;
-  transition: box-shadow 160ms ease, transform 160ms ease;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-track {
-  height: var(--hilya-slider-h);
-  background: transparent !important;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-thumb {
-  box-sizing: border-box;
-  width: var(--hilya-thumb);
-  height: var(--hilya-thumb);
-  border: 2px solid #fff !important;
-  border-radius: 50%;
-  background: var(--hilya-rose) !important;
-  box-shadow: 0 0 0 1px var(--hilya-rose), 0 1px 3px rgb(0 0 0 / 18%) !important;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]:hover::-webkit-slider-thumb,
-.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 1px var(--hilya-rose), 0 0 0 6px var(--hilya-rose-soft) !important;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]:hover::-moz-range-thumb,
-.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 1px var(--hilya-rose), 0 0 0 6px var(--hilya-rose-soft) !important;
-}
-
-
-/* ---------- PRICE FIELDS: no boxes, just a thin underline ---------- */
-
-.hilya-filters .hilya-price-values {
-  gap: .9rem;
-  align-items: end;
-}
-
-.hilya-filters .hilya-price-input {
-  display: flex;
-  align-items: baseline;
-  gap: .45rem;
-  height: auto;
-  padding: 0 0 .4rem !important;
-  border: 0 !important;
-  border-bottom: 1px solid rgb(0 0 0 / 20%) !important;
-  border-radius: 0;
-  background: transparent !important;
-  box-shadow: none !important;
-  transition: border-color 180ms ease;
-}
-
-.hilya-filters .hilya-price-input:hover {
-  border-bottom-color: rgb(0 0 0 / 45%) !important;
-}
-
-.hilya-filters .hilya-price-input:focus-within {
-  border-bottom-color: var(--hilya-rose) !important;
-}
-
-.hilya-filters .hilya-price-input span {
-  font-size: .62rem;
-  font-weight: 500;
-  letter-spacing: .1em;
-  color: var(--color-muted);
-}
-
-.hilya-filters .hilya-price-input input {
-  height: auto;
-  font-size: .82rem;
-  font-weight: 500;
-  line-height: 1.2;
-  text-align: left;
-  color: var(--color-foreground);
-}
-
-.hilya-filters .hilya-price-values__to {
-  padding-bottom: .4rem;
-  font-size: .62rem;
-  letter-spacing: .08em;
-  text-transform: lowercase;
-}
-
-/* Arabic: keep sizes readable */
-html[dir="rtl"] .hilya-filters .hilya-price-input span { font-size: .78rem; letter-spacing: 0; }
-html[dir="rtl"] .hilya-filters .hilya-price-input input { font-size: 1rem; }
-html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; letter-spacing: 0; }
-
-
-/* ---------- FIX: theme gives every input a big min-height, which pushed
-   the dots ~12px below the line and stretched the price boxes.
-   Cancel it for the price controls only. ---------- */
-
-.hilya-filters .hilya-price-slider input[type="range"] {
-  box-sizing: border-box !important;
-  min-height: 0 !important;
-  max-height: var(--hilya-slider-h) !important;
-  line-height: 0 !important;
-  -webkit-appearance: none !important;
-  appearance: none !important;
-}
-
-.hilya-filters .hilya-price-input input[type="number"] {
-  box-sizing: border-box !important;
-  min-height: 0 !important;
-  height: auto !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.hilya-filters .hilya-price-input {
-  min-height: 0 !important;
-}
-
-
-/* ---------- FINAL LOOK: room for the dots + quiet number fields ---------- */
-
-/* full-width line, starting exactly under the first letter of EGP */
-.hilya-filters .hilya-price-slider {
-  width: 100%;
-  margin: .35rem 0 .7rem;
-}
-
-/* ONE small solid black dot, no ring, no halo */
-.hilya-filters {
-  --hilya-thumb: 11px;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]::-webkit-slider-thumb,
-.hilya-filters .hilya-price-slider input[type="range"]:hover::-webkit-slider-thumb,
-.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
-  border: 0 !important;
-  background: var(--hilya-rose) !important;
-  box-shadow: none !important;
-}
-
-.hilya-filters .hilya-price-slider input[type="range"]::-moz-range-thumb,
-.hilya-filters .hilya-price-slider input[type="range"]:hover::-moz-range-thumb,
-.hilya-filters .hilya-price-slider input[type="range"]:focus-visible::-moz-range-thumb {
-  border: 0 !important;
-  background: var(--hilya-rose) !important;
-  box-shadow: none !important;
-}
-
-.hilya-filters .hilya-price-values {
-  align-items: center;
-  gap: .6rem;
-  margin-top: .15rem;
-}
-
-/* two soft raised fields, centered text, same width, under the line */
-
-.hilya-filters .hilya-price-values {
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: .4rem;
-  margin-top: .45rem;
-}
-
-.hilya-filters .hilya-price-input {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: .28rem;
-  box-sizing: border-box;
-  width: 100%;
-  height: 2.1rem !important;
-  padding: 0 .3rem !important;
-  border: 1px solid rgb(140 88 76 / 35%) !important;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #BE8B7B 0%, #B87F6F 100%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    0 1px 2px rgb(120 70 58 / 22%),
-    0 4px 10px rgb(184 127 111 / 28%) !important;
-  cursor: text;
-  transition: box-shadow 180ms ease, border-color 180ms ease;
-}
-
-.hilya-filters .hilya-price-input:hover {
-  border-color: rgb(140 88 76 / 55%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    0 1px 3px rgb(120 70 58 / 28%),
-    0 6px 14px rgb(184 127 111 / 34%) !important;
-}
-
-.hilya-filters .hilya-price-input:focus-within {
-  border-color: rgb(120 70 58 / 70%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 28%),
-    0 0 0 3px rgb(184 127 111 / 28%) !important;
-}
-
-.hilya-filters .hilya-price-input span {
-  flex: 0 0 auto;
-  font-size: .5rem;
-  font-weight: 400;
-  letter-spacing: .08em;
-  line-height: 1;
-  color: rgb(255 255 255 / 78%);
-}
-
-.hilya-filters .hilya-price-input input[type="number"] {
-  flex: 0 1 auto;
-  width: 4.6ch !important;
-  min-width: 0;
-  font-size: .74rem !important;
-  font-weight: 500 !important;
-  line-height: 1.2;
-  text-align: center !important;
-  color: #fff !important;
-}
-
-/* browsers that can size a field to its text keep EGP + number truly centered */
-@supports (field-sizing: content) {
-  .hilya-filters .hilya-price-input input[type="number"] {
-    field-sizing: content;
-    width: auto !important;
-    min-width: 1.2ch;
-    max-width: 100%;
-  }
-}
-
-.hilya-filters .hilya-price-values__to {
-  padding: 0;
-  font-size: .58rem;
-  letter-spacing: .1em;
-  color: var(--color-muted);
-}
-
-
-/* ---------- MOBILE DRAWER: smaller boxes, bigger text ---------- */
-
-@media (max-width: 40rem) {
-
-  .hilya-filters {
-    --hilya-thumb: 15px;
-  }
-
-  .hilya-filters .hilya-price-values {
-    grid-template-columns: 6.8rem auto 6.8rem;
-    justify-content: center;
-    gap: .9rem;
-    margin-top: .7rem;
-  }
-
-  .hilya-filters .hilya-price-input {
-    height: 2.7rem !important;
-    padding: 0 .5rem !important;
-    gap: .4rem;
-    border-radius: 12px;
-  }
-
-  .hilya-filters .hilya-price-input span {
-    font-size: .58rem;
-  }
-
-  .hilya-filters .hilya-price-input input[type="number"] {
-    font-size: .9rem !important;
-  }
-
-  .hilya-filters .hilya-price-values__to {
-    font-size: .72rem;
-  }
-
-}
-
-
-/* ---------- COLOR PASS: deeper rose gold + matching checkboxes ---------- */
-
-.hilya-filters {
-  --hilya-rose: #A9705F;
-  --hilya-rose-soft: rgb(169 112 95 / 18%);
-}
-
-/* checked boxes use the same rose gold */
-.hilya-filters .hilya-filter-option input {
-  accent-color: #A9705F;
-}
-
-.hilya-filters .hilya-price-input {
-  border: 1px solid rgb(110 62 50 / 40%) !important;
-  background: linear-gradient(180deg, #B27B6A 0%, #A9705F 100%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 26%),
-    0 1px 2px rgb(100 56 44 / 24%),
-    0 4px 10px rgb(169 112 95 / 28%) !important;
-}
-
-.hilya-filters .hilya-price-input:hover {
-  border-color: rgb(110 62 50 / 60%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 26%),
-    0 1px 3px rgb(100 56 44 / 30%),
-    0 6px 14px rgb(169 112 95 / 34%) !important;
-}
-
-.hilya-filters .hilya-price-input:focus-within {
-  border-color: rgb(90 48 38 / 75%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 26%),
-    0 0 0 3px rgb(169 112 95 / 28%) !important;
-}
-
-.hilya-filters .hilya-price-input span {
-  color: rgb(255 255 255 / 88%);
-}
-
-/* soft version: light rose tint, rose gold frame, dark brown text */
-
-.hilya-filters .hilya-price-input {
-  border: 1px solid rgb(169 112 95 / 55%) !important;
-  background: linear-gradient(180deg, rgb(169 112 95 / 15%) 0%, rgb(169 112 95 / 8%) 100%) !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 55%),
-    0 1px 2px rgb(169 112 95 / 14%),
-    0 4px 10px rgb(169 112 95 / 10%) !important;
-}
-
-.hilya-filters .hilya-price-input:hover {
-  border-color: rgb(169 112 95 / 85%) !important;
-  background: linear-gradient(180deg, rgb(169 112 95 / 20%) 0%, rgb(169 112 95 / 11%) 100%) !important;
-}
-
-.hilya-filters .hilya-price-input:focus-within {
-  border-color: #A9705F !important;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 55%),
-    0 0 0 3px rgb(169 112 95 / 22%) !important;
-}
-
-.hilya-filters .hilya-price-input span {
-  color: #8a5a4c;
-}
-
-.hilya-filters .hilya-price-input input[type="number"] {
-  color: #4a2f27 !important;
-}
-
-
-/* a little more air under the price boxes, before the Color divider */
-.hilya-filters .hilya-price-values {
-  margin-bottom: .5rem;
 }
 
 
@@ -4889,35 +4557,6 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
   outline-offset: 2px;
 }
 
-/* ---------- EGP label: a little bigger and darker ---------- */
-
-.hilya-filters .hilya-price-input span {
-  font-size: .6rem;
-  font-weight: 500;
-  color: #7a4d40;
-}
-
-/* ---------- price boxes: flatter, less like a button ---------- */
-
-.hilya-filters .hilya-price-input {
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 60%),
-    0 1px 1px rgb(169 112 95 / 10%),
-    0 2px 6px rgb(169 112 95 / 7%) !important;
-}
-
-.hilya-filters .hilya-price-input:hover {
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 60%),
-    0 1px 2px rgb(169 112 95 / 14%),
-    0 3px 8px rgb(169 112 95 / 10%) !important;
-}
-
-.hilya-filters .hilya-price-input:focus-within {
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 60%),
-    0 0 0 3px rgb(169 112 95 / 22%) !important;
-}
 
 /* ---------- mobile ---------- */
 
@@ -4929,10 +4568,6 @@ html[dir="rtl"] .hilya-filters .hilya-price-values__to { font-size: .85rem; lett
     max-width: 18px !important;
     max-height: 18px !important;
     background-size: 13px 13px;
-  }
-
-  .hilya-filters .hilya-price-input span {
-    font-size: .64rem;
   }
 
 }
