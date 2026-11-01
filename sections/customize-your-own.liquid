@@ -279,29 +279,30 @@
     const section = document.currentScript.previousElementSibling;
     if (!section) return;
 
-        /* ظهور متدرج: الكارت الأول وبعده الدواير واحدة ورا التانية */
+    /* ظهور متدرج: الصورة الخلفية الأول، وبعدها الكارت، وبعده الدواير واحدة ورا التانية */
     if (
       'IntersectionObserver' in window &&
       !(window.Shopify && window.Shopify.designMode) &&
       !window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) {
       const band = section.querySelector('.custom-order__inner');
+      const media = section.querySelector('.custom-order__media');
       const card = section.querySelector('.custom-order__content');
       const circles = Array.from(section.querySelectorAll('.custom-order__feature'));
-      const items = [card].concat(circles).filter(Boolean);
+      const items = [media, card].concat(circles).filter(Boolean);
 
       if (band && items.length) {
         section.classList.add('has-reveal');
+
+        const delayFor = (index) =>
+          (index === 0 ? 0 : index === 1 ? 0.8 : 1.5 + (index - 2) * 0.3) + 's';
 
         const show = (instant) => {
           items.forEach((el, index) => {
             if (instant) {
               el.classList.add('hilya-instant');
             } else {
-              el.style.setProperty(
-                '--reveal-delay',
-                (index === 0 ? 0 : 0.8 + (index - 1) * 0.3) + 's'
-              );
+              el.style.setProperty('--reveal-delay', delayFor(index));
             }
             el.classList.add('is-revealed');
           });
@@ -1241,9 +1242,22 @@ html.co-lock {
   }
 }
 
+@keyframes co-media-reveal {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+.custom-order.has-reveal .custom-order__media:not(.is-revealed),
 .custom-order.has-reveal .custom-order__content:not(.is-revealed),
 .custom-order.has-reveal .custom-order__feature:not(.is-revealed) {
   opacity: 0;
+}
+
+.custom-order.has-reveal .custom-order__media.is-revealed {
+  animation: co-media-reveal 2.4s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
 }
 
 .custom-order.has-reveal .custom-order__content.is-revealed,
