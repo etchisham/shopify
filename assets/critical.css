@@ -153,8 +153,11 @@ textarea {
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
+  background: color-mix(in srgb, var(--hilya-rose) 30%, transparent);
+}
+
+img::selection {
+  background: color-mix(in srgb, var(--hilya-rose) 30%, transparent);
 }
 
 .main-content {
