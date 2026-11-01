@@ -279,7 +279,7 @@
     const section = document.currentScript.previousElementSibling;
     if (!section) return;
 
-    /* ظهور متدرج: الصورة الخلفية الأول، وبعدها الكارت، وبعده الدواير واحدة ورا التانية */
+    /* ظهور متدرج: الصورة الخلفية الأول، وبعدها الكارت، وبعده الدواير */
     if (
       'IntersectionObserver' in window &&
       !(window.Shopify && window.Shopify.designMode) &&
@@ -294,35 +294,48 @@
       if (band && items.length) {
         section.classList.add('has-reveal');
 
-        const delayFor = (index) =>
-          (index === 0 ? 0 : index === 1 ? 0.8 : 1.5 + (index - 2) * 0.3) + 's';
-
-        const show = (instant) => {
-          items.forEach((el, index) => {
+        const run = (list, instant, base) => {
+          list.filter(Boolean).forEach((el, index) => {
             if (instant) {
               el.classList.add('hilya-instant');
             } else {
-              el.style.setProperty('--reveal-delay', delayFor(index));
+              el.style.setProperty('--reveal-delay', (base + index * 0.4) + 's');
             }
             el.classList.add('is-revealed');
           });
         };
 
-        const io = new IntersectionObserver((entries) => {
-          if (!entries.some((entry) => entry.isIntersecting)) return;
-          show(false);
-          io.disconnect();
-        }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+        const watch = (options, callback) => {
+          const io = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            callback();
+            io.disconnect();
+          }, options);
 
-        io.observe(band);
+          io.observe(band);
+          return io;
+        };
+
+        /* the picture starts to appear a little before the section reaches the screen */
+        const early = watch(
+          { threshold: 0, rootMargin: '0px 0px 15% 0px' },
+          () => run([media], false, 0)
+        );
+
+        /* the card and the circles follow when the section is really in view */
+        const later = watch(
+          { threshold: 0.25, rootMargin: '0px 0px -10% 0px' },
+          () => run([card].concat(circles), false, 0.3)
+        );
 
         /* after a refresh in the middle of the page, a section already passed shows without motion */
         const settle = () => {
-          if (items[0].classList.contains('is-revealed')) return;
+          if (items.every((el) => el.classList.contains('is-revealed'))) return;
 
           if (band.getBoundingClientRect().bottom < 0) {
-            show(true);
-            io.disconnect();
+            run(items, true, 0);
+            early.disconnect();
+            later.disconnect();
           }
         };
 
