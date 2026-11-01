@@ -97,4 +97,26 @@ body .story-section__link:hover {
   }
 }
 
+/* =========================================================
+   PAGE TRANSITION: a soft fade between pages of the site
+   ========================================================= */
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: .45s;
+  animation-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 </style>
