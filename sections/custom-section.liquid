@@ -244,11 +244,10 @@
   display: flex;
   flex-direction: column;
   margin: 0 0 28px;
-
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   font-size: clamp(42px, 4.3vw, 64px);
   font-weight: 400;
-  font-style: normal;
+  font-style: italic;
   line-height: var(--story-heading-leading, .84);
   letter-spacing: -.025em;
 }
@@ -294,6 +293,7 @@
   font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
+  transition: color .3s ease;
 }
 
 .story-section__arrow {
@@ -310,6 +310,10 @@
 
 .story-section__link:hover .story-section__arrow {
   transform: translateX(4px);
+}
+
+.story-section__link:hover {
+  color: var(--hilya-rose-deep);
 }
 
 /* LARGE DESKTOP */
@@ -500,6 +504,7 @@
 
 [dir="rtl"] .story-section__heading {
   line-height: 1.2;
+  font-style: normal;
 }
 
 
