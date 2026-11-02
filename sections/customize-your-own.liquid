@@ -713,27 +713,36 @@
   line-height: 1.7;
 }
 
+/* الأزرار السودا: زرار القسم، زرار اختيار الصورة، زرار الإرسال */
+.custom-order__button,
+.co-file__button,
+.co-submit {
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .3s ease, color .3s ease;
+}
+
+.custom-order__button:hover,
+.co-submit:hover,
+.co-file:hover .co-file__button,
+.co-file__input:focus-visible + .co-file__button {
+  background: transparent;
+  color: #111;
+}
+
 .custom-order__button {
   display: inline-flex;
   align-items: center;
   gap: 12px;
   padding: 16px 30px;
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
   font-family: inherit;
   font-size: 14px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .03em;
   text-shadow: none;
-  cursor: pointer;
-  transition: background-color .3s ease, color .3s ease;
-}
-
-.custom-order__button:hover {
-  background: transparent;
-  color: #111;
 }
 
 .custom-order__button:focus-visible {
@@ -1128,27 +1137,17 @@ html.co-lock {
 
 .co-file__button {
   pointer-events: auto;
-  cursor: pointer;
   flex-shrink: 0;
   padding: 11px 16px;
-  border: 1px solid #111;
   border-radius: 8px;
-  background: #111;
-  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
-  transition: background-color .3s ease, color .3s ease;
 }
 
-.co-file:hover .co-file__button,
-.co-file__input:focus-visible + .co-file__button {
-  background: transparent;
-  color: #111;
-}
 
 .co-file__name {
   min-width: 0;
@@ -1166,24 +1165,15 @@ html.co-lock {
   display: block;
   width: 100%;
   padding: 16px;
-  border: 1px solid #111;
   border-radius: 10px;
-  background: #111;
-  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .18em;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color .3s ease, color .3s ease;
 }
 
-.co-submit:hover {
-  background: transparent;
-  color: #111;
-}
 
 .co-submit:disabled {
   opacity: .6;
