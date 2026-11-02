@@ -435,6 +435,25 @@
   gap: 0.5rem;
 }
 
+.product-option-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.product-option-selected {
+  color: var(--hilya-muted);
+
+  font-size: 0.82rem;
+  font-weight: 400;
+}
+
+.product-option-selected:not(:empty)::before {
+  content: ':';
+
+  margin-inline-end: 0.35rem;
+}
+
 .product-option-label {
   color: var(--hilya-ink);
 
