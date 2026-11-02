@@ -522,25 +522,11 @@
   color: var(--hilya-ink);
 }
 
-/* chosen: thin rose gold ring, a very light tint and a small check (no heavy fill) */
+/* chosen: thin rose gold ring and a very light tint (no check mark, so the pill never changes size) */
 .product-option-pill[aria-checked='true'] {
   border-color: var(--hilya-rose);
   background: rgb(var(--hilya-rose-rgb) / 9%);
   color: var(--hilya-ink);
-}
-
-.product-option-pill[aria-checked='true']::after {
-  content: '';
-
-  width: 0.3rem;
-  height: 0.55rem;
-
-  margin-inline-start: 0.15rem;
-
-  border: solid var(--hilya-rose);
-  border-width: 0 1.5px 1.5px 0;
-
-  transform: rotate(45deg) translateY(-1px);
 }
 
 .product-option-pill:focus-visible {
@@ -644,8 +630,8 @@
 }
 
 /* Buttons
-   Add to cart  : black, turns into a black outline on hover
-   Buy it now   : soft rose gold tile, gets a little deeper on hover
+   Add to cart  : black with a small cart icon, turns deep rose gold on hover (tiny lift)
+   Buy it now   : rose gold outline, soft rose tint on hover
    The two never look the same, whichever one the mouse is on. */
 
 .product-form__actions {
@@ -682,15 +668,13 @@
 }
 
 .product-form__actions [data-product-add] {
-  background: var(--hilya-ink);
-  color: #fff;
-}
-
-.product-form__actions [data-product-add] {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+
+  background: var(--hilya-ink);
+  color: #fff;
 }
 
 /* hover: deep rose gold with white text (never white), a tiny lift and a soft shadow */
@@ -728,12 +712,6 @@
 .product-form[aria-busy='true'] .product-add__icon,
 [data-product-add][data-unavailable] .product-add__icon {
   display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .product-form__actions [data-product-add]:hover:not(:disabled) {
-    transform: none;
-  }
 }
 
 .product-form__actions .product-form__buy-now,
@@ -1490,6 +1468,41 @@
 
 
 /* =========================================================
+   ENGLISH LAYOUT (wide screens only)
+   Text on the left, the big picture on the right and the small pictures on the far right.
+   Arabic keeps its own layout, and phones keep the stacked layout.
+   ========================================================= */
+
+@media (min-width: 46.875rem) {
+  /* the columns run from right to left: the gallery (first) goes right, the text (second) goes left */
+  html:not([dir='rtl']) .product-layout {
+    direction: rtl;
+  }
+
+  /* the extra space sits between the text and the pictures */
+  html:not([dir='rtl']) .product-gallery {
+    padding-inline-end: 0;
+    padding-inline-start: 1.25rem;
+  }
+
+  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
+    grid-template-areas: 'stage thumbnails';
+    grid-template-columns: minmax(0, 1fr) 4rem;
+  }
+}
+
+@media (min-width: 46.875rem) and (max-width: 62.4375rem) {
+  html:not([dir='rtl']) .product-gallery {
+    padding-inline-start: 0;
+  }
+
+  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
+    grid-template-columns: minmax(0, 1fr) 3.25rem;
+  }
+}
+
+
+/* =========================================================
    MOBILE
    ========================================================= */
 
@@ -1602,6 +1615,10 @@
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+  .product-form__actions [data-product-add]:hover:not(:disabled) {
+    transform: none;
+  }
+
   .product-page *,
   .product-page *::before,
   .product-page *::after {
