@@ -189,7 +189,7 @@
   margin: 0;
 
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  font-size: clamp(1.85rem, 2.6vw, 2.3rem);
   font-weight: 500;
   font-style: italic;
 
@@ -227,7 +227,7 @@
 
 .product-page__price {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.45rem 0.65rem;
 
@@ -235,15 +235,16 @@
 }
 
 .product-page__price .price {
+  align-items: center;
   flex-direction: row-reverse;
   justify-content: flex-end;
   gap: 0.45rem;
 
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .product-page__price .price__current {
-  font-size: clamp(1.55rem, 2.2vw, 1.85rem);
+  font-size: clamp(1.3rem, 1.8vw, 1.5rem);
   font-weight: 600;
 
   letter-spacing: -0.025em;
@@ -626,9 +627,10 @@
 }
 
 /* Buttons
-   Add to cart  : black with a small cart icon, turns deep rose gold on hover (tiny lift)
-   Buy it now   : rose gold outline, soft rose tint on hover
-   The two never look the same, whichever one the mouse is on. */
+   Add to cart  : white with a rose gold outline and a small cart icon
+   Buy it now   : black
+   On hover both turn deep rose gold with white text (white and black never match each other
+   at rest, and the hovered one never looks like the other one). */
 
 .product-form__actions {
   display: grid;
@@ -668,20 +670,13 @@
   justify-content: center;
   gap: 0.6rem;
 
-  background: var(--hilya-ink);
-  color: #fff;
+  border-color: var(--hilya-rose);
+  background: #fff;
+  color: var(--hilya-rose-deep);
 }
 
-/* hover: deep rose gold with white text (never white) and a tiny lift, no shadow */
-.product-form__actions [data-product-add]:hover:not(:disabled) {
-  border-color: var(--hilya-rose-deep);
-  background: var(--hilya-rose-deep);
-  color: #fff;
-
-  transform: translateY(-1px);
-}
-
-.product-form__actions [data-product-add]:active:not(:disabled) {
+.product-form__actions [data-product-add]:active:not(:disabled),
+.product-form__actions .product-form__buy-now:active:not(:disabled) {
   transform: translateY(0);
 }
 
@@ -710,17 +705,21 @@
 
 .product-form__actions .product-form__buy-now,
 .product-form__actions .shopify-payment-button__button--unbranded {
-  border-color: var(--hilya-rose);
-  background: transparent;
-  color: var(--hilya-rose-deep);
+  border-color: var(--hilya-ink);
+  background: var(--hilya-ink);
+  color: #fff;
 }
 
+/* hover (both buttons): deep rose gold with white text and a tiny lift, no shadow */
+.product-form__actions [data-product-add]:hover:not(:disabled),
 .product-form__actions .product-form__buy-now:hover:not(:disabled),
 .product-form__actions
   .shopify-payment-button__button--unbranded:hover:not([disabled]) {
   border-color: var(--hilya-rose-deep);
-  background: rgb(var(--hilya-rose-rgb) / 10%);
-  color: var(--hilya-rose-deep);
+  background: var(--hilya-rose-deep);
+  color: #fff;
+
+  transform: translateY(-1px);
 }
 
 .product-form__actions button:disabled {
@@ -1606,7 +1605,8 @@
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .product-form__actions [data-product-add]:hover:not(:disabled) {
+  .product-form__actions [data-product-add]:hover:not(:disabled),
+  .product-form__actions .product-form__buy-now:hover:not(:disabled) {
     transform: none;
   }
 
