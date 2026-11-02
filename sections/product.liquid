@@ -474,57 +474,96 @@
 
 </article>
 
-{% stylesheet %}
+<script>
+  (() => {
+    const page = document.currentScript.previousElementSibling;
 
-.product-page__title-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 0.9rem;
-}
+    if (
+      !page ||
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) return;
 
-.product-page__title-row h1 {
-  margin: 0;
-}
+    /* the pictures fade in place (they never slide) */
+    const fades = [
+      page.querySelector('.product-gallery__stage'),
+      page.querySelector('.product-gallery__thumbnails')
+    ].filter(Boolean);
 
-.product-page__rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.95rem;
-  white-space: nowrap;
-}
+    /* the information rises, one piece after the other (empty or hidden pieces are skipped) */
+    const items = Array.from(page.querySelectorAll([
+      '.product-page__seller',
+      '.product-page__title-row',
+      '.product-page__price',
+      '.product-page__tax-note',
+      '[data-product-inventory]',
+      '.product-page__delivery',
+      '.product-option-field',
+      '.product-personalization',
+      '.product-form__quantity',
+      '.product-form__actions',
+      '.product-page__accordions .product-accordion'
+    ].join(','))).filter((el) => el.offsetHeight > 0);
 
-.product-page__rating-star {
-  color: #f5b301;
-  font-size: 1.15rem;
-  line-height: 1;
-}
+    const targets = fades.concat(items);
 
-.product-page__rating-value {
-  font-weight: 600;
-}
+    if (!targets.length) return;
 
-.product-page__rating-count {
-  color: #666;
-}
+    fades.forEach((el) => el.classList.add('hr-fade'));
+    items.forEach((el) => el.classList.add('hr-item'));
+    page.classList.add('has-reveal');
 
-/* Mobile / touch: no gallery arrows, swipe instead */
-@media (max-width: 749px), (hover: none) {
-  [data-product-previous],
-  [data-product-next],
-  [data-product-zoom-previous],
-  [data-product-zoom-next] {
-    display: none !important;
-  }
+    let firstBatch = true;
 
-  /* Lets the swipe code take the sideways drag */
-  [data-product-zoom-canvas]:not(.is-zoomed) {
-    touch-action: pan-y;
-  }
-}
+    const io = new IntersectionObserver((entries) => {
+      const shown = entries
+        .filter((entry) => entry.isIntersecting)
+        .map((entry) => entry.target);
 
-{% endstylesheet %}
+      if (!shown.length) return;
+
+      shown.sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+      );
+
+      const base = firstBatch ? 0.3 : 0;
+      let position = 0;
+
+      firstBatch = false;
+
+      shown.forEach((el) => {
+        if (el.classList.contains('hr-fade')) {
+          el.style.setProperty('--reveal-delay', (el === fades[0] ? 0 : 0.3) + 's');
+        } else {
+          el.style.setProperty('--reveal-delay', (base + position * 0.22) + 's');
+          position++;
+        }
+
+        el.classList.add('is-revealed');
+        io.unobserve(el);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -12% 0px' });
+
+    /* what is already passed (above the screen) shows without motion */
+    const settle = () => {
+      targets.forEach((el) => {
+        if (el.classList.contains('is-revealed')) return;
+
+        if (el.getBoundingClientRect().bottom < 0) {
+          el.classList.add('hilya-instant', 'is-revealed');
+          io.unobserve(el);
+        }
+      });
+    };
+
+    targets.forEach((el) => io.observe(el));
+    settle();
+    window.addEventListener('load', () => setTimeout(settle, 150));
+  })();
+</script>
+
+
 
 {% schema %}
 {
