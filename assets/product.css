@@ -149,10 +149,6 @@
   direction: rtl;
 }
 
-.product-page--media-right .product-gallery {
-  order: 2;
-}
-
 
 /* =========================================================
    PRODUCT INFORMATION
@@ -657,8 +653,7 @@
     background-color 0.3s ease,
     border-color 0.3s ease,
     color 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.3s ease;
 }
 
 [dir='rtl'] .product-form__actions .button,
@@ -677,14 +672,13 @@
   color: #fff;
 }
 
-/* hover: deep rose gold with white text (never white), a tiny lift and a soft shadow */
+/* hover: deep rose gold with white text (never white) and a tiny lift, no shadow */
 .product-form__actions [data-product-add]:hover:not(:disabled) {
   border-color: var(--hilya-rose-deep);
   background: var(--hilya-rose-deep);
   color: #fff;
 
   transform: translateY(-1px);
-  box-shadow: 0 8px 18px -8px rgb(var(--hilya-rose-rgb) / 70%);
 }
 
 .product-form__actions [data-product-add]:active:not(:disabled) {
@@ -1468,35 +1462,37 @@
 
 
 /* =========================================================
-   ENGLISH LAYOUT (wide screens only)
-   Text on the left, the big picture on the right and the small pictures on the far right.
-   Arabic keeps its own layout, and phones keep the stacked layout.
+   PICTURES ON THE RIGHT (wide screens only)
+   The setting "image position" is read the same way in both languages:
+   in English "right" puts the pictures on the right, in Arabic the page is mirrored,
+   so "right" puts them on the left. Phones keep the stacked layout.
+   Pictures sit on the right when: English + "right", or Arabic + "left".
    ========================================================= */
 
 @media (min-width: 46.875rem) {
   /* the columns run from right to left: the gallery (first) goes right, the text (second) goes left */
-  html:not([dir='rtl']) .product-layout {
+  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-layout {
     direction: rtl;
   }
 
-  /* the extra space sits between the text and the pictures */
-  html:not([dir='rtl']) .product-gallery {
+  /* the extra space sits between the text and the pictures, the small pictures go to the far right */
+  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery {
     padding-inline-end: 0;
     padding-inline-start: 1.25rem;
   }
 
-  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
+  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery:has([data-product-thumbnails]) {
     grid-template-areas: 'stage thumbnails';
     grid-template-columns: minmax(0, 1fr) 4rem;
   }
 }
 
 @media (min-width: 46.875rem) and (max-width: 62.4375rem) {
-  html:not([dir='rtl']) .product-gallery {
+  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery {
     padding-inline-start: 0;
   }
 
-  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
+  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery:has([data-product-thumbnails]) {
     grid-template-columns: minmax(0, 1fr) 3.25rem;
   }
 }
@@ -1523,10 +1519,6 @@
     grid-template-columns: minmax(0, 1fr);
 
     gap: 1.5rem;
-  }
-
-  .product-page--media-right .product-gallery {
-    order: 0;
   }
 
   .product-gallery {
