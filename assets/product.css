@@ -632,6 +632,14 @@
    and the hovered one never looks like the other one). */
 
 .product-form__actions {
+  /* a small soft depth so the buttons look like real buttons, not flat shapes:
+     a light top edge, a faint dark bottom edge and a short soft shadow underneath */
+  --product-button-depth:
+    inset 0 1px 0 rgb(255 255 255 / 22%),
+    inset 0 -2px 0 rgb(0 0 0 / 8%),
+    0 1px 2px rgb(0 0 0 / 14%),
+    0 5px 12px -6px rgb(0 0 0 / 28%);
+
   display: grid;
   gap: 0.7rem;
 
@@ -645,6 +653,8 @@
   border: 1px solid var(--hilya-ink);
   border-radius: var(--product-button-radius);
 
+  box-shadow: var(--product-button-depth);
+
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -652,7 +662,8 @@
 
   transition:
     background-color 0.3s ease,
-    border-color 0.3s ease;
+    border-color 0.3s ease,
+    box-shadow 0.2s ease;
 
   /* the text colour changes at once (fading it made the letters look blurry) */
   -webkit-font-smoothing: antialiased;
@@ -716,7 +727,15 @@
   color: #fff;
 }
 
+/* pressed: the button sinks a little (only the shadow changes, nothing moves) */
+.product-form__actions [data-product-add]:active:not(:disabled),
+.product-form__actions .product-form__buy-now:active:not(:disabled) {
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 22%);
+}
+
 .product-form__actions button:disabled {
+  box-shadow: none;
+
   cursor: not-allowed;
   opacity: 0.45;
 }
@@ -1020,7 +1039,11 @@
   grid-area: stage;
 
   min-width: 0;
-  max-width: 46rem;
+
+  /* never taller than the screen: the picture shrinks a little on short screens */
+  max-width: min(46rem, max(24rem, calc(100dvh - 14rem)));
+
+  justify-self: center;
 }
 
 .product-gallery__track {
