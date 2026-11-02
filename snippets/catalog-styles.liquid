@@ -38,7 +38,7 @@
   width: 2.1rem;
   height: 1px;
   margin: .65rem auto 0;
-  background: #b18a51;
+  background: var(--hilya-rose);
 }
 
 
@@ -65,11 +65,9 @@
    PRODUCT GRID
 ========================================= */
 
+/* عدد الأعمدة والمسافات بين الكروت مكتوبين في ملف product-card.liquid */
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(.7rem, 1.5vw, 1.5rem);
-  row-gap: clamp(2.5rem, 4vw, 4.25rem);
   grid-area: products;
   align-self: start;
 }
@@ -154,34 +152,6 @@
 
 
 /* =========================================
-   3 COLUMNS
-========================================= */
-
-@media (min-width: 46.875rem) {
-
-  .catalog-grid {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
-  }
-
-}
-
-
-/* =========================================
-   4 COLUMNS
-========================================= */
-
-@media (min-width: 64rem) {
-
-  .catalog-grid {
-    grid-template-columns:
-      repeat(4, minmax(0, 1fr));
-  }
-
-}
-
-
-/* =========================================
    MOBILE
 ========================================= */
 
@@ -190,6 +160,7 @@
   .catalog-page {
     margin-top: -2rem;
   }
+
   .catalog-page__inner {
     padding-inline: 1rem;
   }
@@ -212,11 +183,6 @@
     margin-block-end: .65rem;
   }
 
-  .catalog-grid {
-    column-gap: .7rem;
-    row-gap: 2.75rem;
-  }
-
   .catalog-page__pagination {
     margin-block-start: 3.5rem;
   }
@@ -232,10 +198,6 @@
 
   .catalog-page__inner {
     padding-inline: .8rem;
-  }
-
-  .catalog-grid {
-    column-gap: .6rem;
   }
 
 }
