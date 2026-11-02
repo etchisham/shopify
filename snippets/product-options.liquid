@@ -10,6 +10,7 @@
 
   <div
     class="product-options"
+    id="ProductOptions-{{ section_id }}"
     data-product-options
   >
 
@@ -28,14 +29,33 @@
         {%- assign option_label = option.name -%}
       {%- endif -%}
 
+      {%- assign selected_label = '' -%}
+      {%- for value in option.values -%}
+        {%- if value.selected -%}
+          {%- assign selected_key = value.name | handleize | replace: '-', '_' -%}
+          {%- capture selected_label_key -%}products.option_values.{{ selected_key }}{%- endcapture -%}
+          {%- assign selected_label = selected_label_key | t: default: value.name -%}
+        {%- endif -%}
+      {%- endfor -%}
+
       <div class="product-form__field product-option-field">
 
-        <span
-          class="product-option-label"
-          id="ProductOptionLabel-{{ section_id }}-{{ option.position }}"
-        >
-          {{ option_label | escape }}
-        </span>
+        <div class="product-option-heading">
+
+          <span
+            class="product-option-label"
+            id="ProductOptionLabel-{{ section_id }}-{{ option.position }}"
+          >
+            {{ option_label | escape }}
+          </span>
+
+          <span
+            class="product-option-selected"
+            data-option-selected
+            aria-hidden="true"
+          >{{ selected_label | escape }}</span>
+
+        </div>
 
         <div
           class="product-option-pills"
@@ -160,5 +180,34 @@
     </div>
 
   </noscript>
+
+  <script>
+    (function () {
+      var root = document.getElementById('ProductOptions-{{ section_id }}');
+
+      if (!root || root.hasAttribute('data-selected-ready')) return;
+
+      root.setAttribute('data-selected-ready', '');
+
+      /* keeps the chosen value next to the option name (Color: Gold Plated) */
+      function sync(group) {
+        var field = group.closest('.product-option-field');
+        var target = field && field.querySelector('[data-option-selected]');
+        var chosen = group.querySelector('[aria-checked="true"]');
+
+        if (target && chosen) target.textContent = chosen.textContent.trim();
+      }
+
+      root.querySelectorAll('[data-option-pills]').forEach(function (group) {
+        new MutationObserver(function () { sync(group); }).observe(group, {
+          attributes: true,
+          attributeFilter: ['aria-checked'],
+          subtree: true
+        });
+
+        sync(group);
+      });
+    })();
+  </script>
 
 {% endunless %}
