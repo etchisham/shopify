@@ -189,7 +189,7 @@
   margin: 0;
 
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: clamp(1.85rem, 2.6vw, 2.3rem);
+  font-size: clamp(1.7rem, 2.3vw, 2.05rem);
   font-weight: 500;
   font-style: italic;
 
@@ -241,11 +241,11 @@
   justify-content: flex-end;
   gap: 0.45rem;
 
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .product-page__price .price__current {
-  font-size: clamp(1.3rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.15rem, 1.5vw, 1.3rem);
   font-weight: 600;
 
   letter-spacing: -0.025em;
@@ -558,7 +558,7 @@
   border: 1px solid var(--product-border);
   border-radius: var(--product-button-radius);
 
-  background: #fff;
+  background: rgb(var(--hilya-rose-rgb) / 12%);
 
   transition: border-color 140ms ease;
 }
@@ -586,16 +586,14 @@
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   line-height: 1;
-
-  transition: background-color 140ms ease;
 }
 
 .quantity-selector__button:hover {
-  background: var(--hilya-beige);
+  background: rgb(var(--hilya-rose-rgb) / 18%);
 }
 
 .quantity-selector__button:active {
-  background: var(--hilya-line);
+  background: rgb(var(--hilya-rose-rgb) / 26%);
 }
 
 /* the number box has no border or shadow of its own (the whole quantity box has them) */
@@ -628,7 +626,7 @@
 }
 
 /* Buttons
-   Add to cart  : see-through (the page colour) with a rose gold outline and a small cart icon
+   Add to cart  : soft rose gold tint with a thin rose outline and a small cart icon
    Buy it now   : black
    On hover both turn deep rose gold with white text (the two never match each other at rest,
    and the hovered one never looks like the other one). */
@@ -654,9 +652,11 @@
 
   transition:
     background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease,
-    transform 0.3s ease;
+    border-color 0.3s ease;
+
+  /* the text colour changes at once (fading it made the letters look blurry) */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 [dir='rtl'] .product-form__actions .button,
@@ -671,14 +671,9 @@
   justify-content: center;
   gap: 0.6rem;
 
-  border-color: var(--hilya-rose);
-  background: transparent;
+  border-color: rgb(var(--hilya-rose-rgb) / 45%);
+  background: rgb(var(--hilya-rose-rgb) / 12%);
   color: var(--hilya-rose-deep);
-}
-
-.product-form__actions [data-product-add]:active:not(:disabled),
-.product-form__actions .product-form__buy-now:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .product-form__actions [data-product-add]:focus-visible {
@@ -711,7 +706,7 @@
   color: #fff;
 }
 
-/* hover (both buttons): deep rose gold with white text and a tiny lift, no shadow */
+/* hover (both buttons): deep rose gold with white text (no movement, so the text stays sharp) */
 .product-form__actions [data-product-add]:hover:not(:disabled),
 .product-form__actions .product-form__buy-now:hover:not(:disabled),
 .product-form__actions
@@ -719,8 +714,6 @@
   border-color: var(--hilya-rose-deep);
   background: var(--hilya-rose-deep);
   color: #fff;
-
-  transform: translateY(-1px);
 }
 
 .product-form__actions button:disabled {
@@ -1098,7 +1091,7 @@
   aspect-ratio: var(--product-image-ratio, 1 / 1);
 }
 
-/* Arrows: the same white rounded square as the home page rows (black on hover) */
+/* Arrows: the same white rounded square as the home page rows (deep rose gold on hover) */
 
 .product-gallery__arrow {
   position: absolute;
@@ -1118,7 +1111,7 @@
   border-radius: 0.9rem;
 
   background: #fff;
-  color: #222;
+  color: var(--hilya-ink);
 
   box-shadow: 0 2px 12px rgb(0 0 0 / 16%);
 
@@ -1128,12 +1121,11 @@
 
   transition:
     background-color 160ms ease,
-    color 160ms ease,
     opacity 200ms ease;
 }
 
 .product-gallery__arrow:hover:not(:disabled) {
-  background: #222;
+  background: var(--hilya-rose-deep);
   color: #fff;
 }
 
@@ -1606,11 +1598,6 @@
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .product-form__actions [data-product-add]:hover:not(:disabled),
-  .product-form__actions .product-form__buy-now:hover:not(:disabled) {
-    transform: none;
-  }
-
   .product-page *,
   .product-page *::before,
   .product-page *::after {
