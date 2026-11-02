@@ -1060,7 +1060,7 @@
   min-width: 0;
 
   /* never taller than the screen: the picture shrinks a little on short screens */
-  max-width: min(46rem, max(24rem, calc(100dvh - 14rem)));
+  max-width: min(42rem, max(24rem, calc(100dvh - 19rem)));
 
   justify-self: center;
 }
