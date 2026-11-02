@@ -22,7 +22,7 @@
   --product-button-radius: var(--hilya-radius);
 
   /* the two metal colors of the Gold Plated / Silver Plated pills (the light shades are made from them) */
-  --pill-gold: #c8a45c;
+  --pill-gold: #dcc06a;
   --pill-silver: #aeb4b9;
 
   width: 100%;
@@ -266,8 +266,13 @@
 .product-page__discount {
   margin: 0;
 
+  padding: 0.2rem 0.65rem;
+
+  border-radius: 999px;
+
+  background: rgb(var(--hilya-rose-rgb) / 10%);
   color: var(--hilya-rose-deep);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -444,15 +449,20 @@
 }
 
 .product-option-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+
   min-height: 2.75rem;
 
-  padding: 0.5rem 1.2rem;
+  padding-block: 0.5rem;
+  padding-inline: 1rem 1.2rem;
 
-  border: 1px solid var(--product-border);
+  border: 1px solid var(--hilya-line);
   border-radius: 999px;
 
-  background: #fff;
-  color: var(--hilya-ink);
+  background: transparent;
+  color: var(--hilya-muted);
 
   cursor: pointer;
 
@@ -461,25 +471,61 @@
   line-height: 1.2;
 
   transition:
-    background-color 140ms ease,
-    border-color 140ms ease,
-    box-shadow 140ms ease,
-    color 140ms ease;
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+/* a small metal dot next to the word (Gold Plated / Silver Plated) */
+.product-option-pill[data-option-value*='gold' i]::before,
+.product-option-pill[data-option-value*='silver' i]::before {
+  content: '';
+
+  width: 1rem;
+  height: 1rem;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
+}
+
+.product-option-pill[data-option-value*='gold' i]::before {
+  background: linear-gradient(135deg, #f4e7b4, var(--pill-gold) 55%, #c4a24c);
+}
+
+.product-option-pill[data-option-value*='silver' i]::before {
+  background: linear-gradient(135deg, #fafafa, var(--pill-silver) 55%, #9ea3aa);
 }
 
 .product-option-pill:hover {
-  border-color: var(--hilya-ink);
-  background: var(--hilya-beige);
+  border-color: var(--hilya-rose);
+  color: var(--hilya-ink);
 }
 
+/* chosen: thin rose gold ring, a very light tint and a small check (no heavy fill) */
 .product-option-pill[aria-checked='true'] {
-  border-color: var(--hilya-ink);
-  background: var(--hilya-ink);
-  color: #fff;
+  border-color: var(--hilya-rose);
+  background: rgb(var(--hilya-rose-rgb) / 9%);
+  color: var(--hilya-ink);
+}
+
+.product-option-pill[aria-checked='true']::after {
+  content: '';
+
+  width: 0.3rem;
+  height: 0.55rem;
+
+  margin-inline-start: 0.15rem;
+
+  border: solid var(--hilya-rose);
+  border-width: 0 1.5px 1.5px 0;
+
+  transform: rotate(45deg) translateY(-1px);
 }
 
 .product-option-pill:focus-visible {
-  outline: 2px solid var(--hilya-ink);
+  outline: 2px solid var(--hilya-rose);
   outline-offset: 2px;
 }
 
@@ -487,44 +533,6 @@
   border-style: dashed;
   opacity: 0.6;
   text-decoration: line-through;
-}
-
-/* Gold Plated and Silver Plated pills have the color of their metal.
-   Not chosen: a pale shade of the metal. Chosen: the full metal color with a thin ring around it. */
-
-.product-option-pill[data-option-value*='gold' i] {
-  --metal: var(--pill-gold);
-}
-
-.product-option-pill[data-option-value*='silver' i] {
-  --metal: var(--pill-silver);
-}
-
-.product-option-pill[data-option-value*='gold' i],
-.product-option-pill[data-option-value*='silver' i] {
-  border-color: color-mix(in srgb, var(--metal) 65%, #fff);
-  background: color-mix(in srgb, var(--metal) 16%, #fff);
-  color: color-mix(in srgb, var(--metal) 30%, #000);
-}
-
-.product-option-pill[data-option-value*='gold' i]:hover,
-.product-option-pill[data-option-value*='silver' i]:hover {
-  border-color: var(--metal);
-  background: color-mix(in srgb, var(--metal) 28%, #fff);
-}
-
-.product-option-pill[data-option-value*='gold' i][aria-checked='true'],
-.product-option-pill[data-option-value*='silver' i][aria-checked='true'] {
-  border-color: color-mix(in srgb, var(--metal) 80%, #000);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--metal) 70%, #fff),
-    var(--metal)
-  );
-  color: color-mix(in srgb, var(--metal) 25%, #000);
-  box-shadow:
-    0 0 0 3px var(--hilya-cream),
-    0 0 0 4px color-mix(in srgb, var(--metal) 80%, #000);
 }
 
 /* Quantity */
@@ -641,9 +649,11 @@
   text-transform: uppercase;
 
   transition:
-    background-color 0.4s ease,
-    border-color 0.4s ease,
-    color 0.4s ease;
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 [dir='rtl'] .product-form__actions .button,
@@ -657,23 +667,68 @@
   color: #fff;
 }
 
+.product-form__actions [data-product-add] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+/* hover: deep rose gold with white text (never white), a tiny lift and a soft shadow */
 .product-form__actions [data-product-add]:hover:not(:disabled) {
-  background: transparent;
-  color: var(--hilya-ink);
+  border-color: var(--hilya-rose-deep);
+  background: var(--hilya-rose-deep);
+  color: #fff;
+
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px -8px rgb(var(--hilya-rose-rgb) / 70%);
+}
+
+.product-form__actions [data-product-add]:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.product-form__actions [data-product-add]:focus-visible {
+  outline: 2px solid var(--hilya-rose);
+  outline-offset: 3px;
+}
+
+.product-add__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+
+  flex-shrink: 0;
+
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.product-form[aria-busy='true'] .product-add__icon,
+[data-product-add][data-unavailable] .product-add__icon {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-form__actions [data-product-add]:hover:not(:disabled) {
+    transform: none;
+  }
 }
 
 .product-form__actions .product-form__buy-now,
 .product-form__actions .shopify-payment-button__button--unbranded {
-  border-color: rgb(var(--hilya-rose-rgb) / 35%);
-  background: rgb(var(--hilya-rose-rgb) / 12%);
+  border-color: var(--hilya-rose);
+  background: transparent;
   color: var(--hilya-rose-deep);
 }
 
 .product-form__actions .product-form__buy-now:hover:not(:disabled),
 .product-form__actions
   .shopify-payment-button__button--unbranded:hover:not([disabled]) {
-  border-color: var(--hilya-rose);
-  background: rgb(var(--hilya-rose-rgb) / 22%);
+  border-color: var(--hilya-rose-deep);
+  background: rgb(var(--hilya-rose-rgb) / 10%);
   color: var(--hilya-rose-deep);
 }
 
@@ -743,6 +798,8 @@
   fill: none;
   stroke: currentcolor;
   stroke-width: 2;
+
+  color: var(--hilya-rose);
 
   transition: transform 160ms ease;
 }
@@ -947,7 +1004,7 @@
 }
 
 .product-gallery__thumbnail[aria-current='true'] {
-  border-color: var(--hilya-ink);
+  border-color: var(--hilya-rose);
   opacity: 1;
 }
 
