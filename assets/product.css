@@ -18,8 +18,12 @@
   /* the thin border of fields, option pills and the quantity box */
   --product-border: color-mix(in srgb, var(--hilya-ink) 45%, transparent);
 
-  /* corners of the Buy it now / Add to cart buttons (0 = square like the other black buttons) */
-  --product-button-radius: 0;
+  /* corners of the Add to cart / Buy it now buttons and of the boxes (same soft corner as the pictures) */
+  --product-button-radius: var(--hilya-radius);
+
+  /* the two metal colors of the Gold Plated / Silver Plated pills (the light shades are made from them) */
+  --pill-gold: #c8a45c;
+  --pill-silver: #aeb4b9;
 
   width: 100%;
   max-width: 87.5rem;
@@ -372,7 +376,7 @@
   min-height: 3rem;
 
   border: 1px solid var(--product-border);
-  border-radius: 0.5rem;
+  border-radius: var(--product-button-radius);
 
   background: #fff;
   color: var(--hilya-ink);
@@ -459,6 +463,7 @@
   transition:
     background-color 140ms ease,
     border-color 140ms ease,
+    box-shadow 140ms ease,
     color 140ms ease;
 }
 
@@ -480,12 +485,46 @@
 
 .product-option-pill.is-soldout {
   border-style: dashed;
-  color: var(--hilya-muted);
+  opacity: 0.6;
   text-decoration: line-through;
 }
 
-.product-option-pill.is-soldout[aria-checked='true'] {
-  color: #fff;
+/* Gold Plated and Silver Plated pills have the color of their metal.
+   Not chosen: a pale shade of the metal. Chosen: the full metal color with a thin ring around it. */
+
+.product-option-pill[data-option-value*='gold' i] {
+  --metal: var(--pill-gold);
+}
+
+.product-option-pill[data-option-value*='silver' i] {
+  --metal: var(--pill-silver);
+}
+
+.product-option-pill[data-option-value*='gold' i],
+.product-option-pill[data-option-value*='silver' i] {
+  border-color: color-mix(in srgb, var(--metal) 65%, #fff);
+  background: color-mix(in srgb, var(--metal) 16%, #fff);
+  color: color-mix(in srgb, var(--metal) 30%, #000);
+}
+
+.product-option-pill[data-option-value*='gold' i]:hover,
+.product-option-pill[data-option-value*='silver' i]:hover {
+  border-color: var(--metal);
+  background: color-mix(in srgb, var(--metal) 28%, #fff);
+}
+
+.product-option-pill[data-option-value*='gold' i][aria-checked='true'],
+.product-option-pill[data-option-value*='silver' i][aria-checked='true'] {
+  border-color: color-mix(in srgb, var(--metal) 80%, #000);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--metal) 70%, #fff),
+    var(--metal)
+  );
+  color: color-mix(in srgb, var(--metal) 25%, #000);
+  box-shadow:
+    0 0 0 3px var(--hilya-cream),
+    0 0 0 4px color-mix(in srgb, var(--metal) 80%, #000);
 }
 
 /* Quantity */
@@ -506,7 +545,7 @@
   overflow: hidden;
 
   border: 1px solid var(--product-border);
-  border-radius: 0.5rem;
+  border-radius: var(--product-button-radius);
 
   background: #fff;
 
@@ -579,7 +618,7 @@
 
 /* Buttons
    Add to cart  : black, turns into a black outline on hover
-   Buy it now   : rose gold outline, turns soft beige on hover
+   Buy it now   : soft rose gold tile, gets a little deeper on hover
    The two never look the same, whichever one the mouse is on. */
 
 .product-form__actions {
@@ -625,16 +664,16 @@
 
 .product-form__actions .product-form__buy-now,
 .product-form__actions .shopify-payment-button__button--unbranded {
-  border-color: var(--hilya-rose);
-  background: transparent;
+  border-color: rgb(var(--hilya-rose-rgb) / 35%);
+  background: rgb(var(--hilya-rose-rgb) / 12%);
   color: var(--hilya-rose-deep);
 }
 
 .product-form__actions .product-form__buy-now:hover:not(:disabled),
 .product-form__actions
   .shopify-payment-button__button--unbranded:hover:not([disabled]) {
-  border-color: var(--hilya-rose-deep);
-  background: var(--hilya-beige);
+  border-color: var(--hilya-rose);
+  background: rgb(var(--hilya-rose-rgb) / 22%);
   color: var(--hilya-rose-deep);
 }
 
