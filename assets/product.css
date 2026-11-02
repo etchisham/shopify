@@ -1462,37 +1462,36 @@
 
 
 /* =========================================================
-   PICTURES ON THE RIGHT (wide screens only)
-   The setting "image position" is read the same way in both languages:
-   in English "right" puts the pictures on the right, in Arabic the page is mirrored,
-   so "right" puts them on the left. Phones keep the stacked layout.
-   Pictures sit on the right when: English + "right", or Arabic + "left".
+   PICTURES ON THE RIGHT IN ENGLISH (wide screens only)
+   English: text on the left, the big picture on the right, the small pictures on the far right.
+   Arabic: the opposite, so it keeps the original layout. Phones keep the stacked layout.
+   This does not depend on the "image position" setting.
    ========================================================= */
 
 @media (min-width: 46.875rem) {
   /* the columns run from right to left: the gallery (first) goes right, the text (second) goes left */
-  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-layout {
+  html:not([dir='rtl']) .product-layout {
     direction: rtl;
   }
 
   /* the extra space sits between the text and the pictures, the small pictures go to the far right */
-  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery {
+  html:not([dir='rtl']) .product-gallery {
     padding-inline-end: 0;
     padding-inline-start: 1.25rem;
   }
 
-  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery:has([data-product-thumbnails]) {
+  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
     grid-template-areas: 'stage thumbnails';
     grid-template-columns: minmax(0, 1fr) 4rem;
   }
 }
 
 @media (min-width: 46.875rem) and (max-width: 62.4375rem) {
-  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery {
+  html:not([dir='rtl']) .product-gallery {
     padding-inline-start: 0;
   }
 
-  :is(html:not([dir='rtl']) .product-page--media-right, [dir='rtl'] .product-page--media-left) .product-gallery:has([data-product-thumbnails]) {
+  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
     grid-template-columns: minmax(0, 1fr) 3.25rem;
   }
 }
