@@ -558,7 +558,7 @@
   border: 1px solid var(--product-border);
   border-radius: var(--product-button-radius);
 
-  background: rgb(var(--hilya-rose-rgb) / 12%);
+  background: var(--color-background, #fffcf7);
 
   transition: border-color 140ms ease;
 }
@@ -626,7 +626,7 @@
 }
 
 /* Buttons
-   Add to cart  : soft rose gold tint with a thin rose outline and a small cart icon
+   Add to cart  : the same colour as the small Add to cart on the product cards, with a thin rose outline and a small cart icon
    Buy it now   : black
    On hover both turn deep rose gold with white text (the two never match each other at rest,
    and the hovered one never looks like the other one). */
@@ -672,8 +672,8 @@
   gap: 0.6rem;
 
   border-color: rgb(var(--hilya-rose-rgb) / 45%);
-  background: rgb(var(--hilya-rose-rgb) / 12%);
-  color: var(--hilya-rose-deep);
+  background: var(--color-background, #fffcf7);
+  color: var(--hilya-ink);
 }
 
 .product-form__actions [data-product-add]:focus-visible {
