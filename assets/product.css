@@ -577,51 +577,65 @@
   -webkit-appearance: none;
 }
 
-/* Buttons: Buy it now (black, transparent on hover) and Add to cart (light, black on hover) */
+/* Buttons
+   Add to cart  : black, turns into a black outline on hover
+   Buy it now   : rose gold outline, turns soft beige on hover
+   The two never look the same, whichever one the mouse is on. */
 
 .product-form__actions {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.7rem;
 
   padding-block-start: 0.15rem;
 }
 
 .product-form__actions .button,
 .product-form__actions .shopify-payment-button__button--unbranded {
-  min-height: 3rem;
+  min-height: 3.4rem;
 
   border: 1px solid var(--hilya-ink);
   border-radius: var(--product-button-radius);
 
-  font-size: 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 
   transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease;
+}
+
+[dir='rtl'] .product-form__actions .button,
+[dir='rtl'] .product-form__actions .shopify-payment-button__button--unbranded {
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+
+.product-form__actions [data-product-add] {
+  background: var(--hilya-ink);
+  color: #fff;
+}
+
+.product-form__actions [data-product-add]:hover:not(:disabled) {
+  background: transparent;
+  color: var(--hilya-ink);
 }
 
 .product-form__actions .product-form__buy-now,
 .product-form__actions .shopify-payment-button__button--unbranded {
-  background: var(--hilya-ink);
-  color: #fff;
+  border-color: var(--hilya-rose);
+  background: transparent;
+  color: var(--hilya-rose-deep);
 }
 
 .product-form__actions .product-form__buy-now:hover:not(:disabled),
 .product-form__actions
   .shopify-payment-button__button--unbranded:hover:not([disabled]) {
-  background: transparent;
-  color: var(--hilya-ink);
-}
-
-.product-form__actions [data-product-add] {
-  background: transparent;
-  color: var(--hilya-ink);
-}
-
-.product-form__actions [data-product-add]:hover:not(:disabled) {
-  background: var(--hilya-ink);
-  color: #fff;
+  border-color: var(--hilya-rose-deep);
+  background: var(--hilya-beige);
+  color: var(--hilya-rose-deep);
 }
 
 .product-form__actions button:disabled {
