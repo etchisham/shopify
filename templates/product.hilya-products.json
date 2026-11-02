@@ -96,7 +96,7 @@
         "show_quantity": true,
         "show_buy_now": true,
         "show_dynamic_checkout": true,
-        "media_position": "left",
+        "media_position": "right",
         "image_ratio": "1 / 1",
         "image_fit": "contain"
       }
@@ -106,8 +106,16 @@
       "settings": {
         "heading_en": "Explore the Collection",
         "heading_ar": "نفس المجموعة",
+        "subheading_en": "",
+        "subheading_ar": "",
         "tag_prefix": "collection-",
-        "products": []
+        "products": [],
+        "bundle_eyebrow_en": "",
+        "bundle_eyebrow_ar": "",
+        "bundle_button_en": "",
+        "bundle_button_ar": "",
+        "bundle_note_en": "",
+        "bundle_note_ar": ""
       }
     },
     "product_recommendations_N3GPQf": {
