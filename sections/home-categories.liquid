@@ -416,6 +416,10 @@ window.addEventListener('load', centerMiddle, { once: true });
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   box-sizing: border-box;
+
+  /* مساحة تحت الكروت عشان ما تتقصش وهي بتطلع */
+  padding-bottom: 40px;
+  margin-bottom: -40px;
 }
 
 .collection-list__grid::-webkit-scrollbar {
