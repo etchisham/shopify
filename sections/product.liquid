@@ -375,27 +375,6 @@
             data-product-actions
           >
 
-            {% if section.settings.show_buy_now %}
-
-              <button
-                class="button button--full product-form__buy-now"
-                type="submit"
-                name="return_to"
-                value="{{ checkout_url }}"
-                data-product-buy
-                {% unless current_variant.available %}
-                  disabled
-                {% endunless %}
-              >
-                {{ 'products.details.buy_now' | t }}
-              </button>
-
-            {% elsif section.settings.show_dynamic_checkout and current_variant.available %}
-
-              {{ form | payment_button }}
-
-            {% endif %}
-
             <button
               class="button button--full"
               type="submit"
@@ -430,6 +409,27 @@
               </span>
 
             </button>
+
+            {% if section.settings.show_buy_now %}
+
+              <button
+                class="button button--full product-form__buy-now"
+                type="submit"
+                name="return_to"
+                value="{{ checkout_url }}"
+                data-product-buy
+                {% unless current_variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                {{ 'products.details.buy_now' | t }}
+              </button>
+
+            {% elsif section.settings.show_dynamic_checkout and current_variant.available %}
+
+              {{ form | payment_button }}
+
+            {% endif %}
 
           </div>
 
