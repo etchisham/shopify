@@ -1,61 +1,132 @@
 {% doc %}
   Product information with editable labels and product-admin content sources.
+  The look (and the open / close animation) lives in product.css.
   @param {product} product - Current product.
   @param {block} block - Accordion settings.
   @param {string} section_id - Owning section ID.
 {% enddoc %}
-{% liquid
+
+{%- liquid
   assign locale_root = request.locale.iso_code | split: '-' | first
+
   assign heading = block.settings.heading_en
   assign body = block.settings.content_en
   assign metafield_key = block.settings.metafield_key
+
   if locale_root == 'ar'
     assign heading = block.settings.heading_ar | default: heading
     assign body = block.settings.content_ar | default: body
     assign metafield_key = block.settings.metafield_key_ar | default: metafield_key
   endif
+
   if heading == blank
     assign heading = 'products.details.more_information' | t
   endif
+
+  # the Arabic metafield first, then the English one as a fallback
   assign detail_metafield = product.metafields[block.settings.metafield_namespace][metafield_key]
+
   if detail_metafield == blank
     assign detail_metafield = product.metafields[block.settings.metafield_namespace][block.settings.metafield_key]
   endif
-%}
-{% assign description_html = product.description | strip %}
-{% assign description_text = description_html | strip_html | strip %}
-{% capture detail_content %}
-  {% if block.settings.description_first and description_text != blank %}{{ description_html }}
-  {% else %}
-    {% case block.settings.source %}
-      {% when 'description' %}{{ product.description }}
-      {% when 'metafield' %}
-        {% if detail_metafield != blank %}{{ detail_metafield | metafield_tag }}{% endif %}
-      {% else %}{{ body }}
-    {% endcase %}
-  {% endif %}
-{% endcapture %}
-{% assign detail_content = detail_content | strip %}
-{% assign detail_text = detail_content | strip_html | strip %}
-{% if detail_text == blank %}
-  {% unless detail_content contains '<img' or detail_content contains '<video' or detail_content contains '<iframe' or detail_content contains '<model-viewer' or detail_content contains '<svg' %}
-    {% assign detail_content = body | strip %}
-  {% endunless %}
-{% endif %}
-{% if detail_content != blank or request.design_mode %}
-  <details class="product-accordion" data-product-accordion{% if block.settings.open_by_default %} open{% endif %} {{ block.shopify_attributes }}>
-    <summary>{{ heading | escape }}{% render 'icon', name: 'chevron' %}</summary>
+
+  assign description_html = product.description | strip
+  assign description_text = description_html | strip_html | strip
+-%}
+
+{%- capture detail_content -%}
+  {%- if block.settings.description_first and description_text != blank -%}
+    {{ description_html }}
+  {%- elsif block.settings.source == 'description' -%}
+    {{ product.description }}
+  {%- elsif block.settings.source == 'metafield' -%}
+    {%- if detail_metafield != blank -%}{{ detail_metafield | metafield_tag }}{%- endif -%}
+  {%- else -%}
+    {{ body }}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign detail_content = detail_content | strip -%}
+{%- assign detail_text = detail_content | strip_html | strip -%}
+
+{%- comment -%} nothing to show (no text and no picture or video): fall back to the written text {%- endcomment -%}
+{%- if detail_text == blank -%}
+  {%- unless detail_content contains '<img' or detail_content contains '<video' or detail_content contains '<iframe' or detail_content contains '<model-viewer' or detail_content contains '<svg' -%}
+    {%- assign detail_content = body | strip -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{%- if detail_content != blank or request.design_mode -%}
+
+  <details
+    class="product-accordion"
+    data-product-accordion
+    {% if block.settings.open_by_default %}open{% endif %}
+    {{ block.shopify_attributes }}
+  >
+
+    <summary>
+      {{ heading | escape }}
+      {% render 'icon', name: 'chevron' %}
+    </summary>
+
     <div class="product-accordion__content">
-      {% if block.settings.show_highlights %}
+
+      {%- if block.settings.show_highlights -%}
         <ul class="product-highlights" role="list">
-          {% if product.vendor != blank %}<li>{% render 'icon', name: 'check' %}<span>{{ 'products.details.brand' | t }}: <strong>{{ product.vendor | escape }}</strong></span></li>{% endif %}
-          {% if product.metafields.custom.materials != blank %}<li>{% render 'icon', name: 'materials' %}<span>{{ 'products.details.materials' | t }}: {{ product.metafields.custom.materials | metafield_tag }}</span></li>{% endif %}
+
+          {%- if product.vendor != blank -%}
+            <li>
+              <span>{{ 'products.details.brand' | t }}: <strong>{{ product.vendor | escape }}</strong></span>
+            </li>
+          {%- endif -%}
+
+          {%- if product.metafields.custom.materials != blank -%}
+            <li>
+              <span>{{ 'products.details.materials' | t }}: {{ product.metafields.custom.materials | metafield_tag }}</span>
+            </li>
+          {%- endif -%}
+
         </ul>
-      {% endif %}
-      <div class="product-accordion__description" data-product-description{% if block.settings.truncate_content %} data-truncate{% endif %}>
-        <div class="rte" id="ProductDetail-{{ section_id }}-{{ block.id }}" data-description-text>{% if detail_content != blank %}{{ detail_content }}{% else %}<p>{{ 'products.details.editor_content_hint' | t }}</p>{% endif %}</div>
-        {% if block.settings.truncate_content %}<button type="button" class="product-accordion__more" data-description-more aria-controls="ProductDetail-{{ section_id }}-{{ block.id }}" aria-expanded="false" data-more="{{ 'products.details.learn_more' | t | escape }}" data-less="{{ 'products.details.show_less' | t | escape }}" hidden>{{ 'products.details.learn_more' | t }}</button>{% endif %}
+      {%- endif -%}
+
+      <div
+        class="product-accordion__description"
+        data-product-description
+        {% if block.settings.truncate_content %}data-truncate{% endif %}
+      >
+
+        <div
+          class="rte"
+          id="ProductDetail-{{ section_id }}-{{ block.id }}"
+          data-description-text
+        >
+          {%- if detail_content != blank -%}
+            {{ detail_content }}
+          {%- else -%}
+            <p>{{ 'products.details.editor_content_hint' | t }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- if block.settings.truncate_content -%}
+          <button
+            type="button"
+            class="product-accordion__more"
+            data-description-more
+            aria-controls="ProductDetail-{{ section_id }}-{{ block.id }}"
+            aria-expanded="false"
+            data-more="{{ 'products.details.learn_more' | t | escape }}"
+            data-less="{{ 'products.details.show_less' | t | escape }}"
+            hidden
+          >
+            {{ 'products.details.learn_more' | t }}
+          </button>
+        {%- endif -%}
+
       </div>
+
     </div>
+
   </details>
-{% endif %}
+
+{%- endif -%}
