@@ -571,13 +571,9 @@ window.addEventListener('load', centerMiddle, { once: true });
 @media (max-width: 749px) {
 
   .collection-list {
-    width: 100vw;
-    max-width: 100vw;
-    margin-inline: calc(50% - 50vw);
     --cl-extra-top: var(--cl-content-mobile, 0px);
     margin-top: var(--cl-section-mobile, 0px);
     padding: calc(20px + var(--cl-extra-top)) 0 30px;
-    background: var(--hilya-cream);
     overflow-x: clip;
   }
 
@@ -664,12 +660,6 @@ window.addEventListener('load', centerMiddle, { once: true });
 
 .collection-list.has-reveal .is-revealed.hilya-instant {
   animation: none;
-}
-
-/* room under the cards so they are not cut at the bottom while they rise */
-.collection-list__grid {
-  padding-bottom: 40px;
-  margin-bottom: -40px;
 }
 
 
