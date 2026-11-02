@@ -308,6 +308,10 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   box-sizing: border-box;
+
+  /* مساحة تحت الكروت عشان ما تتقصش وهي بتطلع */
+  padding-bottom: 40px;
+  margin-bottom: -40px;
 }
 
 .featured-collection__grid::-webkit-scrollbar {
@@ -550,11 +554,6 @@
   animation: none;
 }
 
-/* room under the cards so they are not cut at the bottom while they rise */
-.featured-collection__grid {
-  padding-bottom: 40px;
-  margin-bottom: -40px;
-}
 
 /* LINE UNDER THE TITLE */
 
