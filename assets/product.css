@@ -198,6 +198,7 @@
 }
 
 [dir='rtl'] .product__info h1 {
+  font-size: clamp(1.55rem, 2vw, 1.9rem);
   font-style: normal;
   font-weight: 400;
   line-height: 1.4;
@@ -627,10 +628,10 @@
 }
 
 /* Buttons
-   Add to cart  : white with a rose gold outline and a small cart icon
+   Add to cart  : see-through (the page colour) with a rose gold outline and a small cart icon
    Buy it now   : black
-   On hover both turn deep rose gold with white text (white and black never match each other
-   at rest, and the hovered one never looks like the other one). */
+   On hover both turn deep rose gold with white text (the two never match each other at rest,
+   and the hovered one never looks like the other one). */
 
 .product-form__actions {
   display: grid;
@@ -671,7 +672,7 @@
   gap: 0.6rem;
 
   border-color: var(--hilya-rose);
-  background: #fff;
+  background: transparent;
   color: var(--hilya-rose-deep);
 }
 
