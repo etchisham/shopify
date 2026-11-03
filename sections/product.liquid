@@ -476,6 +476,70 @@
 
 <script>
   (() => {
+    /* small pictures under the big one: too many for the width? drag them with the mouse */
+    const row = document.querySelector('.product-gallery__thumbnails');
+
+    if (!row) return;
+
+    let down = false;
+    let moved = false;
+    let swallow = false;
+    let startX = 0;
+    let startScroll = 0;
+
+    const checkOverflow = () => {
+      row.classList.toggle('is-scrollable', row.scrollWidth > row.clientWidth + 1);
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    window.addEventListener('load', checkOverflow);
+
+    row.addEventListener('pointerdown', (event) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+
+      down = true;
+      moved = false;
+      startX = event.clientX;
+      startScroll = row.scrollLeft;
+    });
+
+    window.addEventListener('pointermove', (event) => {
+      if (!down) return;
+
+      const distance = event.clientX - startX;
+
+      if (!moved && Math.abs(distance) < 5) return;
+
+      moved = true;
+      row.classList.add('is-dragging');
+      row.scrollLeft = startScroll - distance;
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (!down) return;
+
+      down = false;
+      row.classList.remove('is-dragging');
+
+      /* a drag is not a click: do not pick the picture the mouse ended on */
+      if (moved) {
+        swallow = true;
+        setTimeout(() => { swallow = false; }, 60);
+      }
+    });
+
+    row.addEventListener('click', (event) => {
+      if (!swallow) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+  })();
+</script>
+
+<script>
+  (() => {
     const page = document.currentScript.previousElementSibling;
 
     if (
