@@ -376,6 +376,68 @@
       }
     });
 
+    /*
+      Scroll reveal, the same feel as the home page: the heading first, then the cards one after
+      the other. What is already passed, or hidden inside the row, shows without motion.
+    */
+    if (
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) return;
+
+    const header = section.querySelector('.product-recommendations__header');
+    const cards = Array.from(track.querySelectorAll('[data-rec-item]'));
+    const targets = [header].concat(cards).filter(Boolean);
+
+    section.classList.add('has-reveal');
+    targets.forEach((el) => el.classList.add('hr-item'));
+
+    const io = new IntersectionObserver((entries) => {
+      const shown = entries
+        .filter((entry) => entry.isIntersecting)
+        .map((entry) => entry.target);
+
+      if (!shown.length) return;
+
+      shown.sort((a, b) =>
+        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+      );
+
+      const withHeader = shown.includes(header);
+      let position = 0;
+
+      shown.forEach((el) => {
+        if (el === header) {
+          el.style.setProperty('--reveal-delay', '0s');
+        } else {
+          el.style.setProperty('--reveal-delay', ((withHeader ? 0.5 : 0) + position * 0.28) + 's');
+          position++;
+        }
+
+        el.classList.add('is-revealed');
+        io.unobserve(el);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -15% 0px' });
+
+    const settle = () => {
+      const row = track.getBoundingClientRect();
+
+      targets.forEach((el) => {
+        if (el.classList.contains('is-revealed')) return;
+
+        const box = el.getBoundingClientRect();
+
+        if (box.bottom < 0 || box.left >= row.right - 1 || box.right <= row.left + 1) {
+          el.classList.add('hilya-instant', 'is-revealed');
+          io.unobserve(el);
+        }
+      });
+    };
+
+    targets.forEach((el) => io.observe(el));
+    settle();
+    window.addEventListener('load', () => setTimeout(settle, 150));
   })();
 </script>
 
@@ -390,9 +452,9 @@
 
 /* Let the section use the full screen width (some themes wrap sections in a narrow container) */
 .shopify-section:has(> .product-recommendations) {
-  width: 100% !important;
-  max-width: none !important;
-  margin-inline: 0 !important;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
 }
 
 .product-recommendations {
@@ -416,18 +478,32 @@
 .product-recommendations__header {
   display: flex;
   justify-content: center;
-  margin-bottom: 1.75rem;
+  margin-bottom: 2.2rem;
   text-align: center;
 }
 
 .product-recommendations__title {
+  position: relative;
   margin: 0;
-  color: #222;
-  font-family: sans-serif;
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
+  color: var(--hilya-ink);
+  font-family: "Cormorant Garamond", "Bodoni Moda", "Didot", serif;
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+/* the thin rose gold line under the title (same as the home page sections) */
+.product-recommendations__title::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  width: 2.4rem;
+  height: 1px;
+  margin-left: -1.2rem;
+  background: var(--hilya-rose);
 }
 
 
@@ -460,10 +536,24 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   scroll-behavior: smooth;
+
+  /* room under the cards so they are not cut at the bottom while they rise */
+  padding-bottom: 40px;
+  margin-bottom: -40px;
 }
 
 .product-recommendations__track::-webkit-scrollbar {
   display: none;
+}
+
+/* Few products: keep them in the middle under the heading.
+   The auto margins turn into 0 when the row is full, so scrolling still works. */
+.product-recommendations__track > :first-child {
+  margin-inline-start: auto;
+}
+
+.product-recommendations__track > :last-child {
+  margin-inline-end: auto;
 }
 
 .product-recommendations__item {
@@ -495,7 +585,7 @@
   border: 0;
   border-radius: 0.9rem;
   background: #fff;
-  color: #222;
+  color: var(--hilya-ink);
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
   opacity: 0;
@@ -503,8 +593,7 @@
   transform: translateY(-50%);
   transition:
     opacity 200ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
+    background-color 160ms ease;
 }
 
 .product-recommendations__arrow--prev {
@@ -532,7 +621,7 @@
 }
 
 .product-recommendations__arrow:hover {
-  background: #222;
+  background: var(--hilya-rose-deep);
   color: #fff;
 }
 
@@ -549,6 +638,7 @@
 }
 
 .product-recommendations__image-link {
+  position: relative;
   display: block;
   width: 100%;
   aspect-ratio: var(--ratio-w) / var(--ratio-h);
@@ -572,10 +662,6 @@
 }
 
 /* Second picture on hover (same material), instead of a zoom */
-.product-recommendations__image-link {
-  position: relative;
-}
-
 .product-recommendations__image-link img.product-recommendations__hover-image {
   position: absolute;
   inset: 0;
@@ -638,10 +724,6 @@
   transform: none;
 }
 
-.product-recommendations__form {
-  margin: 0;
-}
-
 .product-recommendations__quick {
   display: flex;
   width: 100%;
@@ -652,7 +734,7 @@
   border: 0;
   border-radius: 0.85rem;
   background: var(--color-background, #fffcf7);
-  color: #222;
+  color: var(--hilya-ink);
   font: inherit;
   font-size: 0.9rem;
   line-height: 1.2;
@@ -660,14 +742,15 @@
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+
+  /* only the background fades: the text colour changes at once so the letters stay sharp */
+  transition: background-color 160ms ease;
 }
 
+/* hover: the same deep rose gold as the Add to cart on the product page */
 .product-recommendations__quick:hover {
-  background: #222;
-  color: var(--color-background, #fffcf7);
+  background: var(--hilya-rose-deep);
+  color: #fff;
 }
 
 /* The icon is only used on mobile */
@@ -681,10 +764,11 @@
   cursor: not-allowed;
 }
 
+/* sold out: no hover colour */
 .product-recommendations__quick.is-disabled:hover,
 .product-recommendations__quick:disabled:hover {
   background: var(--color-background, #fffcf7);
-  color: #222;
+  color: var(--hilya-ink);
 }
 
 /* Touch screens have no hover: keep the button visible and hide the arrows (swipe instead) */
@@ -775,7 +859,7 @@
 }
 
 .product-recommendations__price .price__compare {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: 0.74rem;
 }
 
@@ -804,7 +888,7 @@
 }
 
 .product-recommendations__rating-count {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: 0.8rem;
   white-space: nowrap;
 }
@@ -816,7 +900,7 @@
 
 @media (max-width: 989px) {
   .product-recommendations__carousel {
-    --per-view: 3;
+    --per-view: 3.3; /* same as the home page rows */
   }
 }
 
@@ -847,12 +931,12 @@
   }
 
   .product-recommendations__title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
-  /* Card size: about 1.7 cards visible (same image shape as every other card) */
+  /* Card size: about 2.2 cards visible, same size as the home page rows */
   .product-recommendations__carousel {
-    --per-view: 1.7;
+    --per-view: 2.2;
     --gap: 0.75rem;
   }
 
@@ -961,6 +1045,46 @@
   }
 }
 
+/* =========================================
+   REVEAL ON SCROLL
+   The script marks the heading and the cards with hr-item.
+   Same feel as the home page sections: they rise one after the other.
+========================================= */
+
+@keyframes recommendations-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.product-recommendations.has-reveal .hr-item:not(.is-revealed) {
+  opacity: 0;
+}
+
+.product-recommendations.has-reveal .hr-item.is-revealed {
+  animation: recommendations-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+.product-recommendations.has-reveal .is-revealed.hilya-instant {
+  animation: none;
+}
+
+/* the line under the title is drawn from the middle to both sides after the title appears */
+.product-recommendations.has-reveal .product-recommendations__header.hr-item .product-recommendations__title::after {
+  transform: scaleX(0);
+  transition: transform 1.6s cubic-bezier(.22, .8, .3, 1) .7s;
+}
+
+.product-recommendations.has-reveal .product-recommendations__header.is-revealed .product-recommendations__title::after {
+  transform: scaleX(1);
+}
+
+.product-recommendations.has-reveal .product-recommendations__header.hilya-instant .product-recommendations__title::after {
+  transition: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .product-recommendations__track {
     scroll-behavior: auto;
@@ -974,7 +1098,10 @@
 
 /* ARABIC / RTL */
 
+/* Arabic: no italic, and more room between the lines */
 [dir="rtl"] .product-recommendations__title {
+  font-style: normal;
+  font-weight: 400;
   line-height: 1.4;
 }
 
