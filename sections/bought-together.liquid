@@ -360,12 +360,28 @@
   {%- if is_bundle_request -%}
     {%- assign bundle_item = collection.products.first -%}
     {%- if bundle_item != blank -%}
+
+      {%- comment -%} The words of the options in the page language (Gold Plated -> the Arabic words) {%- endcomment -%}
+      {%- assign label_separator = '' -%}
+      {%- capture option_labels -%}
+        {%- for option in bundle_item.options_with_values -%}
+          {%- for value in option.values -%}
+            {{- label_separator -}}
+            {%- assign label_key = value.name | handleize | replace: '-', '_' -%}
+            {%- capture label_path -%}products.option_values.{{ label_key }}{%- endcapture -%}
+            {{ value.name | json }}: {{ label_path | t: default: value.name | json }}
+            {%- assign label_separator = ',' -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
       <script type="application/json" data-bundle-data>
         {
           "id": {{ bundle_item.id | json }},
           "url": {{ bundle_item.url | json }},
           "title": {{ bundle_item.title | json }},
           "optionNames": {{ bundle_item.options | json }},
+          "optionLabels": { {{ option_labels }} },
           "variants": [
             {%- for v in bundle_item.variants -%}
               {%- assign v_percent = 0 -%}
@@ -979,7 +995,7 @@
               pill.setAttribute('data-position', String(position));
               pill.setAttribute('data-value', value);
               pill.setAttribute('aria-pressed', 'false');
-              pill.textContent = value;
+              pill.textContent = (bundleData.optionLabels && bundleData.optionLabels[value]) || value;
               group.appendChild(pill);
             });
 
