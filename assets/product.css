@@ -414,7 +414,7 @@
 }
 
 .product-personalization__required {
-  color: var(--hilya-muted);
+  color: var(--hilya-rose-deep);
 
   font-size: 0.7rem;
   font-weight: 600;
@@ -892,14 +892,15 @@
   color: var(--hilya-muted);
 }
 
-.product-highlights__label {
-  color: var(--hilya-rose-deep);
-}
-
 .product-highlights li strong,
 .product-highlights li b {
   color: var(--hilya-ink);
   font-weight: 700;
+}
+
+/* the brand name (not the word "Brand") is deep rose gold */
+.product-highlights li .product-highlights__brand {
+  color: var(--hilya-rose-deep);
 }
 
 .product-accordion__description {
