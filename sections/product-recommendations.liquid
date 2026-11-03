@@ -112,6 +112,53 @@
     window.addEventListener('load', update);
     update();
 
+    /* Mouse: hold the left button and drag the row to the left or right (touch screens already swipe) */
+    let drag = null;
+    let suppressClick = false;
+
+    grid.addEventListener('pointerdown', (event) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      drag = { x: event.clientX, left: grid.scrollLeft, moved: false };
+    });
+
+    window.addEventListener('pointermove', (event) => {
+      if (!drag) return;
+
+      const dx = event.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) < 5) return;
+
+      if (!drag.moved) {
+        drag.moved = true;
+        grid.style.scrollSnapType = 'none';
+        grid.classList.add('is-dragging');
+      }
+
+      grid.scrollLeft = drag.left - dx;
+    });
+
+    const endDrag = () => {
+      if (!drag) return;
+
+      if (drag.moved) {
+        suppressClick = true;
+        setTimeout(() => { suppressClick = false; }, 60);
+        grid.style.scrollSnapType = '';
+        grid.classList.remove('is-dragging');
+      }
+
+      drag = null;
+    };
+
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+
+    /* after a drag, do not open the product under the mouse */
+    grid.addEventListener('click', (event) => {
+      if (!suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
     /* Phones: the row starts with the card in the middle centred (until the shopper touches it) */
     let touched = false;
     grid.addEventListener('pointerdown', () => { touched = true; }, { once: true });
@@ -289,6 +336,21 @@
 
 .product-recommendations__grid::-webkit-scrollbar {
   display: none;
+}
+
+/* the row can be dragged with the mouse, so the pictures and links must not be dragged on their own */
+.product-recommendations__grid {
+  cursor: grab;
+}
+
+.product-recommendations__grid.is-dragging {
+  cursor: grabbing;
+}
+
+.product-recommendations__grid img,
+.product-recommendations__grid a {
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .product-recommendations__product {
