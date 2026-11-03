@@ -90,7 +90,11 @@
       "discount": "خصم {{ percent }}٪",
       "inventory_low": "متبقي {{ count }} فقط",
       "inventory_in_stock": "متوفر",
-      "on_sale": "تخفيض"
+      "on_sale": "تخفيض",
+      "custom_name": "اسم مخصص",
+      "custom_date": "تاريخ مخصص",
+      "custom_letter": "حرف مخصص",
+      "personalized": "مخصّصة لك"
     },
     "bundle": {
       "heading": "منتجات تُشترى معًا",
