@@ -86,7 +86,11 @@
       "discount": "{{ percent }}% off",
       "inventory_low": "Only {{ count }} left",
       "inventory_in_stock": "In stock",
-      "on_sale": "Sale"
+      "on_sale": "Sale",
+      "custom_name": "Custom name",
+      "custom_date": "Custom date",
+      "custom_letter": "Custom letter",
+      "personalized": "Personalized"
     },
     "bundle": {
       "heading": "Frequently bought together",
