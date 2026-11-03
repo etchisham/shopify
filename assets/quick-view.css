@@ -328,7 +328,7 @@ html[dir="rtl"] .quick-view__price .price {
 }
 
 .quick-view__required {
-  color: var(--hilya-muted);
+  color: var(--hilya-rose-deep);
   font-size: 0.72rem;
   font-weight: 400;
 }
