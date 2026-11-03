@@ -375,6 +375,27 @@
             data-product-actions
           >
 
+            {% if section.settings.show_buy_now %}
+
+              <button
+                class="button button--full product-form__buy-now"
+                type="submit"
+                name="return_to"
+                value="{{ checkout_url }}"
+                data-product-buy
+                {% unless current_variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                {{ 'products.details.buy_now' | t }}
+              </button>
+
+            {% elsif section.settings.show_dynamic_checkout and current_variant.available %}
+
+              {{ form | payment_button }}
+
+            {% endif %}
+
             <button
               class="button button--full"
               type="submit"
@@ -385,17 +406,6 @@
                 disabled
               {% endunless %}
             >
-
-              <svg
-                class="product-add__icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M3 4h2.2l2.1 10.2a1.5 1.5 0 0 0 1.5 1.2h8.4a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6.1" />
-                <circle cx="9.5" cy="19.2" r="1.1" />
-                <circle cx="17" cy="19.2" r="1.1" />
-              </svg>
 
               <span
                 class="button-spinner"
@@ -420,27 +430,6 @@
               </span>
 
             </button>
-
-            {% if section.settings.show_buy_now %}
-
-              <button
-                class="button button--full product-form__buy-now"
-                type="submit"
-                name="return_to"
-                value="{{ checkout_url }}"
-                data-product-buy
-                {% unless current_variant.available %}
-                  disabled
-                {% endunless %}
-              >
-                {{ 'products.details.buy_now' | t }}
-              </button>
-
-            {% elsif section.settings.show_dynamic_checkout and current_variant.available %}
-
-              {{ form | payment_button }}
-
-            {% endif %}
 
           </div>
 
