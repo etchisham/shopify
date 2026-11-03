@@ -8,30 +8,11 @@
 }
 
 .product-page {
-  /* The old names are kept because other product files still use them.
-     They now simply point to the shared Hilya colors. */
-  --etsy-ink: var(--hilya-ink);
-  --etsy-muted: var(--hilya-muted);
-  --etsy-line: var(--hilya-line);
-  --etsy-soft: var(--hilya-beige);
-
   /* the thin border of fields, option pills and the quantity box */
   --product-border: color-mix(in srgb, var(--hilya-ink) 45%, transparent);
 
   /* corners of the Add to cart / Buy it now buttons and of the boxes (same soft corner as the pictures) */
   --product-button-radius: var(--hilya-radius);
-
-  /* a small soft depth so the buttons and the quantity box look like real buttons, not flat shapes:
-     a light top edge, a faint dark bottom edge and a short soft shadow underneath */
-  --product-button-depth:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    inset 0 -2px 0 rgb(0 0 0 / 8%),
-    0 1px 2px rgb(0 0 0 / 14%),
-    0 5px 12px -6px rgb(0 0 0 / 28%);
-
-  /* the two metal colors of the Gold Plated / Silver Plated pills come from hilya-style */
-  --pill-gold: var(--hilya-metal-gold, #dcc06a);
-  --pill-silver: var(--hilya-metal-silver, #aeb4b9);
 
   width: 100%;
   max-width: 87.5rem;
@@ -515,11 +496,11 @@
 }
 
 .product-option-pill[data-option-value*='gold' i]::before {
-  background: linear-gradient(135deg, #f4e7b4, var(--pill-gold) 55%, #c4a24c);
+  background: linear-gradient(135deg, #f4e7b4, var(--hilya-metal-gold) 55%, #c4a24c);
 }
 
 .product-option-pill[data-option-value*='silver' i]::before {
-  background: linear-gradient(135deg, #fafafa, var(--pill-silver) 55%, #9ea3aa);
+  background: linear-gradient(135deg, #fafafa, var(--hilya-metal-silver) 55%, #9ea3aa);
 }
 
 .product-option-pill:hover {
@@ -568,7 +549,7 @@
 
   background: var(--color-background, #fffcf7);
 
-  box-shadow: var(--product-button-depth);
+  box-shadow: var(--hilya-button-depth);
 
   transition: border-color 140ms ease;
 }
@@ -662,7 +643,7 @@
   border: 1px solid var(--hilya-ink);
   border-radius: var(--product-button-radius);
 
-  box-shadow: var(--product-button-depth);
+  box-shadow: var(--hilya-button-depth);
 
   font-size: 0.8rem;
   font-weight: 500;
