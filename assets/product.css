@@ -555,16 +555,16 @@
 
   padding: 0.25rem;
 
-  border: 1px solid rgb(var(--hilya-rose-rgb) / 45%);
+  border: 1px solid var(--product-border);
   border-radius: var(--product-button-radius);
 
-  background: rgb(var(--hilya-rose-rgb) / 8%);
+  background: var(--color-background, #fffcf7);
 
   transition: border-color 140ms ease;
 }
 
 .quantity-selector:focus-within {
-  border-color: var(--hilya-rose-deep);
+  border-color: var(--hilya-ink);
 }
 
 /* the two buttons are soft little tiles inside the box */
@@ -598,7 +598,8 @@
   background: rgb(var(--hilya-rose-rgb) / 26%);
 }
 
-/* the number is a small white field with its own thin border, so it is clear that it can be typed in */
+/* the number is a small field in the same beige, with a light dark outline and a tiny lift,
+   so it looks like something that can be pressed and typed in */
 .product-form .quantity-selector__input {
   flex: 1;
 
@@ -608,12 +609,12 @@
 
   padding: 0;
 
-  border: 1px solid var(--hilya-line);
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 20%, transparent);
   border-radius: 8px;
 
-  background: #fff;
+  background: var(--color-background, #fffcf7);
 
-  box-shadow: none;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
 
   text-align: center;
 
@@ -622,7 +623,7 @@
 }
 
 .product-form .quantity-selector__input:focus {
-  border-color: var(--hilya-rose);
+  border-color: var(--hilya-ink);
   outline: 0;
 }
 
