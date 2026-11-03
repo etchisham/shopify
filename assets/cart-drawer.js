@@ -15,6 +15,7 @@
   let feedbackTimer;
   let recommendationsRequest;
   let railObservers = [];
+  let revealNext = false;
 
   function content() { return dialog.querySelector('[data-cart-content]'); }
 
@@ -98,10 +99,22 @@
     return { key: item?.dataset.key, index: item ? [...dialog.querySelectorAll('[data-cart-item]')].indexOf(item) : -1, control: focused.dataset.focus };
   }
 
+  // When the cart opens, its pieces rise one after the other (the CSS does the motion).
+  function reveal(node) {
+    const pieces = node.querySelectorAll('.cart-offer, .drawer-item, .cart-drawer__empty, .cart-recommendations');
+    pieces.forEach((piece, index) => piece.style.setProperty('--reveal-index', index));
+    node.classList.add('is-revealing');
+    window.setTimeout(() => node.classList.remove('is-revealing'), 1700 + pieces.length * 160);
+  }
+
   function render(html, snapshot) {
     const parsed = new DOMParser().parseFromString(html || '', 'text/html');
     const replacement = parsed.querySelector('[data-cart-content]');
     if (!replacement) return false;
+    if (revealNext) {
+      revealNext = false;
+      reveal(replacement);
+    }
     const scrollTop = dialog.querySelector('[data-cart-scroll]').scrollTop;
     recommendationsRequest?.abort();
     railObservers.forEach(observer => observer.disconnect());
@@ -166,9 +179,17 @@
   function openCart(target) {
     opener = target;
     document.querySelector('[data-menu-drawer][open]')?.removeAttribute('open');
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) {
+      dialog.showModal();
+      // keep the old content out of sight until the fresh one arrives, then let it rise
+      revealNext = true;
+      content().classList.add('is-waiting');
+    }
     document.querySelectorAll('[data-cart-open]').forEach(link => link.setAttribute('aria-expanded', 'true'));
-    enqueue(async () => { clearError(); await refresh(); });
+    enqueue(async () => { clearError(); await refresh(); }).then(() => {
+      revealNext = false;
+      content().classList.remove('is-waiting');
+    });
   }
 
   dialog.addEventListener('close', () => {
@@ -328,7 +349,51 @@
         const position = Math.abs(rail.scrollLeft);
         previous.disabled = position <= 2;
         next.disabled = position >= rail.scrollWidth - rail.clientWidth - 2;
+        rail.classList.toggle('is-scrollable', rail.scrollWidth > rail.clientWidth + 1);
       };
+
+      // Drag the row with the mouse (touch screens already swipe).
+      let down = false;
+      let dragging = false;
+      let swallow = false;
+      let startX = 0;
+      let startScroll = 0;
+      rail.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        down = true;
+        dragging = false;
+        startX = event.clientX;
+        startScroll = rail.scrollLeft;
+      });
+      rail.addEventListener('pointermove', event => {
+        if (!down) return;
+        const distance = event.clientX - startX;
+        if (!dragging) {
+          if (Math.abs(distance) < 5) return;
+          dragging = true;
+          rail.setPointerCapture(event.pointerId);
+          rail.classList.add('is-dragging');
+        }
+        rail.scrollLeft = startScroll - distance;
+      });
+      const stopDrag = () => {
+        if (!down) return;
+        down = false;
+        rail.classList.remove('is-dragging');
+        if (dragging) {
+          // a drag is not a click: do not open the product the mouse ended on
+          swallow = true;
+          window.setTimeout(() => { swallow = false; }, 60);
+        }
+        dragging = false;
+      };
+      rail.addEventListener('pointerup', stopDrag);
+      rail.addEventListener('pointercancel', stopDrag);
+      rail.addEventListener('click', event => {
+        if (!swallow) return;
+        event.preventDefault();
+        event.stopPropagation();
+      }, true);
       const scroll = direction => {
         const rtl = getComputedStyle(rail).direction === 'rtl';
         rail.scrollBy({ left: direction * (rtl ? -1 : 1) * (rail.firstElementChild?.getBoundingClientRect().width + 24 || rail.clientWidth * 0.8), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
