@@ -77,13 +77,13 @@
 
           {%- if product.vendor != blank -%}
             <li>
-              <span>{{ 'products.details.brand' | t }}: <strong>{{ product.vendor | escape }}</strong></span>
+              <span><span class="product-highlights__label">{{ 'products.details.brand' | t }}:</span> <strong>{{ product.vendor | escape }}</strong></span>
             </li>
           {%- endif -%}
 
           {%- if product.metafields.custom.materials != blank -%}
             <li>
-              <span>{{ 'products.details.materials' | t }}: {{ product.metafields.custom.materials | metafield_tag }}</span>
+              <span><span class="product-highlights__label">{{ 'products.details.materials' | t }}:</span> {{ product.metafields.custom.materials | metafield_tag }}</span>
             </li>
           {%- endif -%}
 
