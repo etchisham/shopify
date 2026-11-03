@@ -556,12 +556,11 @@
 .quantity-selector {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
 
   width: 9.5rem;
   height: 3.1rem;
 
-  padding: 0.25rem;
+  overflow: hidden;
 
   /* a soft light edge and a little raised bottom instead of a dark outline */
   border: 1px solid color-mix(in srgb, var(--hilya-ink) 14%, transparent);
@@ -578,18 +577,18 @@
   border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
 }
 
-/* the two buttons are soft little tiles inside the box */
+/* each button fills its whole side of the box, so the hover colour covers all of it */
 .quantity-selector__button {
   display: grid;
   place-items: center;
 
-  width: 2.2rem;
+  width: 2.75rem;
   height: 100%;
 
   padding: 0;
 
   border: 0;
-  border-radius: 8px;
+  border-radius: 0;
 
   background: transparent;
   color: var(--hilya-ink);
@@ -615,7 +614,7 @@
 
   width: 3rem;
   min-width: 0;
-  height: 100%;
+  height: calc(100% - 0.7rem);
 
   padding: 0;
 
