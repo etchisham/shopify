@@ -32,6 +32,33 @@
   if product.tags contains 'Letter'
     assign has_letter_tag = true
   endif
+
+  comment
+    The small line under the name: "Custom name", "Custom date", "Custom letter",
+    or "Personalized" when the piece has more than one of them.
+  endcomment
+
+  assign custom_count = 0
+  assign custom_label = ''
+
+  if product.tags contains 'Name'
+    assign custom_count = custom_count | plus: 1
+    assign custom_label = 'products.product.custom_name' | t
+  endif
+
+  if product.tags contains 'Date'
+    assign custom_count = custom_count | plus: 1
+    assign custom_label = 'products.product.custom_date' | t
+  endif
+
+  if product.tags contains 'Letter'
+    assign custom_count = custom_count | plus: 1
+    assign custom_label = 'products.product.custom_letter' | t
+  endif
+
+  if custom_count > 1
+    assign custom_label = 'products.product.personalized' | t
+  endif
 %}
 
 <article
@@ -132,6 +159,10 @@
           {% endif %}
 
         </div>
+
+        {% if custom_label != blank %}
+          <p class="product-page__custom">{{ custom_label }}</p>
+        {% endif %}
 
         <div class="product-page__price" data-product-price-block>
 
@@ -559,6 +590,7 @@
     const items = Array.from(page.querySelectorAll([
       '.product-page__seller',
       '.product-page__title-row',
+      '.product-page__custom',
       '.product-page__price',
       '.product-page__tax-note',
       '[data-product-inventory]',

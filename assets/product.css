@@ -220,6 +220,20 @@
   color: var(--hilya-muted);
 }
 
+.product-page__custom {
+  margin: 0.35rem 0 0;
+
+  color: var(--hilya-muted);
+
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+[dir='rtl'] .product-page__custom {
+  font-size: 0.92rem;
+  letter-spacing: 0;
+}
+
 .product-page__price {
   display: flex;
   align-items: center;
