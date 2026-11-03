@@ -115,12 +115,17 @@
    ========================================================= */
 
 .product-layout {
+  /* width of the big picture (and of the small pictures under it): never taller than the screen */
+  --gallery-width: min(42rem, max(24rem, calc(100dvh - 22rem)));
+
   display: grid;
   grid-template-columns:
-    minmax(0, 1.72fr)
-    minmax(21rem, 0.86fr);
+    minmax(0, var(--gallery-width))
+    minmax(21rem, 27rem);
 
-  gap: clamp(2rem, 4.5vw, 4.75rem);
+  /* the picture and the text sit together in the middle of the page */
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
 
   align-items: start;
   direction: ltr;
@@ -235,7 +240,7 @@
 
 .product-page__price .price__current {
   font-size: clamp(1.15rem, 1.5vw, 1.3rem);
-  font-weight: 600;
+  font-weight: 500;
 
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -394,8 +399,18 @@
   justify-content: space-between;
   gap: 1rem;
 
-  font-size: 0.88rem;
-  font-weight: 700;
+  color: var(--hilya-muted);
+
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Arabic letters must stay joined */
+[dir='rtl'] .product-personalization__heading {
+  font-size: 0.85rem;
+  letter-spacing: 0;
 }
 
 .product-personalization__required {
@@ -409,6 +424,11 @@
 
 .product-personalization .product-form__field {
   gap: 0.4rem;
+}
+
+/* "Name on the piece": a normal label under the small title */
+.product-personalization .product-form__field label {
+  font-weight: 400;
 }
 
 .product-personalization input {
@@ -451,6 +471,7 @@
 .product-option-pills {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.6rem;
 }
 
@@ -537,7 +558,7 @@
 }
 
 .product-option-pill:is([data-option-value*='gold' i], [data-option-value*='silver' i]):not([aria-checked='true']) {
-  opacity: 0.55;
+  opacity: 0.85;
 }
 
 .product-option-pill:is([data-option-value*='gold' i], [data-option-value*='silver' i]):not([aria-checked='true']):hover {
@@ -567,27 +588,17 @@
   display: flex;
   align-items: center;
 
-  width: 9.5rem;
-  height: 3.1rem;
+  width: 8.5rem;
+  height: 3rem;
 
   overflow: hidden;
 
-  /* a soft light edge and a little raised bottom instead of a dark outline */
-  border: 1px solid color-mix(in srgb, var(--hilya-ink) 14%, transparent);
-  border-radius: var(--product-button-radius);
+  border: 1px solid var(--product-border);
+  border-radius: 0.5rem;
 
-  background: var(--color-background, #fffcf7);
-
-  box-shadow: var(--hilya-button-depth);
-
-  transition: border-color 140ms ease;
+  background: #fff;
 }
 
-.quantity-selector:focus-within {
-  border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
-}
-
-/* each button fills its whole side of the box, so the hover colour covers all of it */
 .quantity-selector__button {
   display: grid;
   place-items: center;
@@ -598,7 +609,6 @@
   padding: 0;
 
   border: 0;
-  border-radius: 0;
 
   background: transparent;
   color: var(--hilya-ink);
@@ -606,32 +616,33 @@
   cursor: pointer;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1;
+
+  transition: background-color 140ms ease;
 }
 
 .quantity-selector__button:hover {
-  background: rgb(var(--hilya-rose-rgb) / 18%);
+  background: var(--hilya-beige);
 }
 
 .quantity-selector__button:active {
-  background: rgb(var(--hilya-rose-rgb) / 26%);
+  background: var(--hilya-line);
 }
 
-/* the number is a small white field with a light edge, so it is clear that it can be typed in */
 .product-form .quantity-selector__input {
   flex: 1;
 
   width: 3rem;
   min-width: 0;
-  height: calc(100% - 0.7rem);
+  height: 100%;
 
   padding: 0;
 
-  border: 1px solid color-mix(in srgb, var(--hilya-ink) 12%, transparent);
-  border-radius: 8px;
+  border: 0;
+  border-radius: 0;
 
-  background: #fff;
+  background: transparent;
 
   box-shadow: none;
 
@@ -641,11 +652,6 @@
   -moz-appearance: textfield;
 }
 
-.product-form .quantity-selector__input:focus {
-  border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
-  outline: 0;
-}
-
 .quantity-selector__input::-webkit-inner-spin-button,
 .quantity-selector__input::-webkit-outer-spin-button {
   margin: 0;
@@ -653,7 +659,7 @@
 }
 
 /* Buttons
-   Add to cart  : the same colour as the small Add to cart on the product cards, with a thin rose outline and a small cart icon
+   Add to cart  : the same colour as the small Add to cart on the product cards, with a thin rose outline
    Buy it now   : black
    On hover both turn deep rose gold with white text (the two never match each other at rest,
    and the hovered one never looks like the other one). */
@@ -709,24 +715,6 @@
 .product-form__actions [data-product-add]:focus-visible {
   outline: 2px solid var(--hilya-rose);
   outline-offset: 3px;
-}
-
-.product-add__icon {
-  width: 1.15rem;
-  height: 1.15rem;
-
-  flex-shrink: 0;
-
-  fill: none;
-  stroke: currentcolor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.product-form[aria-busy='true'] .product-add__icon,
-[data-product-add][data-unavailable] .product-add__icon {
-  display: none;
 }
 
 .product-form__actions .product-form__buy-now,
@@ -967,41 +955,59 @@
   display: grid;
 
   min-width: 0;
+  max-width: var(--gallery-width);
 
-  grid-template-areas: 'thumbnails stage';
-
-  grid-template-columns:
-    4rem
-    minmax(0, 1fr);
+  grid-template-areas:
+    'stage'
+    'thumbnails';
+  grid-template-columns: minmax(0, 1fr);
 
   align-items: start;
-  gap: 1rem;
-
-  padding-inline-end: 1.25rem;
+  gap: 0.75rem;
 
   direction: ltr;
 }
 
 .product-gallery:not(:has([data-product-thumbnails])) {
   grid-template-areas: 'stage';
-  grid-template-columns: minmax(0, 1fr);
 }
 
+/* the small pictures: one row right under the big picture.
+   Too many for the width? Drag them with the mouse (script in product.liquid) or swipe. */
 .product-gallery__thumbnails {
   display: flex;
 
   grid-area: thumbnails;
 
-  max-height: min(70vw, 43rem);
-
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.65rem;
 
-  padding: 2px;
+  padding: 0.25rem;
 
-  overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 
-  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.product-gallery__thumbnails::-webkit-scrollbar {
+  display: none;
+}
+
+.product-gallery__thumbnails.is-scrollable {
+  cursor: grab;
+}
+
+.product-gallery__thumbnails.is-dragging {
+  cursor: grabbing;
+}
+
+[dir='rtl'] .product-gallery__thumbnails {
+  direction: rtl;
 }
 
 .product-gallery__thumbnail {
@@ -1009,8 +1015,8 @@
 
   display: block;
 
-  width: 3.75rem;
-  height: 3.75rem;
+  width: 4rem;
+  height: 4rem;
 
   flex-shrink: 0;
 
@@ -1051,6 +1057,8 @@
 
 .product-gallery__thumbnail img {
   display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
 
   width: 100%;
   height: 100%;
@@ -1078,10 +1086,6 @@
 
   min-width: 0;
 
-  /* never taller than the screen: the picture shrinks a little on short screens */
-  max-width: min(42rem, max(24rem, calc(100dvh - 19rem)));
-
-  justify-self: center;
 }
 
 .product-gallery__track {
@@ -1491,33 +1495,24 @@
 @media (max-width: 62.4375rem) {
   .product-layout {
     grid-template-columns:
-      minmax(0, 1.45fr)
-      minmax(18rem, 0.85fr);
+      minmax(0, 1.3fr)
+      minmax(16rem, 1fr);
 
+    justify-content: normal;
     gap: 2rem;
   }
 
-  .product-gallery {
-    grid-template-columns:
-      3.25rem
-      minmax(0, 1fr);
-
-    gap: 0.75rem;
-
-    padding-inline-end: 0;
-  }
-
   .product-gallery__thumbnail {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
 }
 
 
 /* =========================================================
    PICTURES ON THE RIGHT IN ENGLISH (wide screens only)
-   English: text on the left, the big picture on the right, the small pictures on the far right.
-   Arabic: the opposite, so it keeps the original layout. Phones keep the stacked layout.
+   English: text on the left, the picture (with the small pictures under it) on the right.
+   Arabic: the opposite. Phones keep the stacked layout.
    This does not depend on the "image position" setting.
    ========================================================= */
 
@@ -1525,27 +1520,6 @@
   /* the columns run from right to left: the gallery (first) goes right, the text (second) goes left */
   html:not([dir='rtl']) .product-layout {
     direction: rtl;
-  }
-
-  /* the extra space sits between the text and the pictures, the small pictures go to the far right */
-  html:not([dir='rtl']) .product-gallery {
-    padding-inline-end: 0;
-    padding-inline-start: 1.25rem;
-  }
-
-  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
-    grid-template-areas: 'stage thumbnails';
-    grid-template-columns: minmax(0, 1fr) 4rem;
-  }
-}
-
-@media (min-width: 46.875rem) and (max-width: 62.4375rem) {
-  html:not([dir='rtl']) .product-gallery {
-    padding-inline-start: 0;
-  }
-
-  html:not([dir='rtl']) .product-gallery:has([data-product-thumbnails]) {
-    grid-template-columns: minmax(0, 1fr) 3.25rem;
   }
 }
 
@@ -1574,34 +1548,6 @@
   }
 
   .product-gallery {
-    grid-template-areas:
-      'stage'
-      'thumbnails';
-
-    grid-template-columns: minmax(0, 1fr);
-
-    gap: 0.75rem;
-  }
-
-  .product-gallery__thumbnails {
-    max-height: none;
-
-    flex-direction: row;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  [dir='rtl'] .product-gallery__thumbnails {
-    direction: rtl;
-  }
-
-  .product-gallery__thumbnail {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-
-  .product-gallery__stage {
     max-width: none;
   }
 
