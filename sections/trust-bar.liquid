@@ -1,12 +1,32 @@
-<section class="trust-bar section-spacing" aria-label="{{ section.settings.heading | escape }}">
-  {% if section.settings.heading != blank %}<h2 class="visually-hidden">{{ section.settings.heading | escape }}</h2>{% endif %}
+{%- liquid
+  assign trust_locale = request.locale.iso_code | split: '-' | first
+  assign trust_heading = section.settings.heading
+  if trust_locale == 'ar' and section.settings.heading_ar != blank
+    assign trust_heading = section.settings.heading_ar
+  endif
+-%}
+
+<section class="trust-bar section-spacing" aria-label="{{ trust_heading | escape }}">
+  {% if trust_heading != blank %}<h2 class="visually-hidden">{{ trust_heading | escape }}</h2>{% endif %}
   <ul class="trust-bar__grid" role="list">
     {% for block in section.blocks %}
+      {%- liquid
+        assign item_heading = block.settings.heading
+        assign item_text = block.settings.text
+        if trust_locale == 'ar'
+          if block.settings.heading_ar != blank
+            assign item_heading = block.settings.heading_ar
+          endif
+          if block.settings.text_ar != blank
+            assign item_text = block.settings.text_ar
+          endif
+        endif
+      -%}
       <li class="trust-bar__item" {{ block.shopify_attributes }}>
         <span class="trust-bar__mark" aria-hidden="true">✓</span>
         <div>
-          <h3>{{ block.settings.heading | escape }}</h3>
-          {% if block.settings.text != blank %}<p>{{ block.settings.text | escape }}</p>{% endif %}
+          <h3>{{ item_heading | escape }}</h3>
+          {% if item_text != blank %}<p>{{ item_text | escape }}</p>{% endif %}
         </div>
       </li>
     {% endfor %}
@@ -43,7 +63,7 @@
     place-items: center;
     border-radius: 999px;
     background: var(--color-surface);
-    color: var(--color-accent);
+    color: var(--hilya-rose-deep);
     font-weight: 800;
   }
 
@@ -60,6 +80,16 @@
     font-size: 0.85rem;
   }
   
+  /* Arabic */
+  [dir="rtl"] .trust-bar h3 {
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  [dir="rtl"] .trust-bar p {
+    font-size: .92rem;
+    line-height: 1.7;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -68,7 +98,8 @@
   "disabled_on": { "groups": ["header", "footer"] },
   "max_blocks": 4,
   "settings": [
-    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Why shop with us" }
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Why shop with us" },
+    { "type": "text", "id": "heading_ar", "label": "Heading - Arabic", "default": "لماذا تتسوق معنا" }
   ],
   "blocks": [
     {
@@ -76,7 +107,9 @@
       "name": "t:general.content",
       "settings": [
         { "type": "text", "id": "heading", "label": "t:labels.heading", "default": "Secure checkout" },
-        { "type": "text", "id": "text", "label": "t:labels.text", "default": "Protected by Shopify" }
+        { "type": "text", "id": "text", "label": "t:labels.text", "default": "Protected by Shopify" },
+        { "type": "text", "id": "heading_ar", "label": "Heading - Arabic", "info": "Shown on the Arabic site. Leave blank to use the English heading." },
+        { "type": "text", "id": "text_ar", "label": "Text - Arabic" }
       ]
     }
   ],
