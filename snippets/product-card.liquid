@@ -639,14 +639,14 @@
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+    /* only the background fades: the text colour changes at once so the letters stay sharp */
+  transition: background-color 160ms ease;
 }
 
+/* hover: the same deep rose gold as the Add to cart on the product page */
 .product-card__quick:hover {
-  background: #222;
-  color: var(--color-background, #fffcf7);
+  background: var(--hilya-rose-deep);
+  color: #fff;
 }
 
 /* The icon is only used on mobile */
