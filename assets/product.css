@@ -21,6 +21,14 @@
   /* corners of the Add to cart / Buy it now buttons and of the boxes (same soft corner as the pictures) */
   --product-button-radius: var(--hilya-radius);
 
+  /* a small soft depth so the buttons and the quantity box look like real buttons, not flat shapes:
+     a light top edge, a faint dark bottom edge and a short soft shadow underneath */
+  --product-button-depth:
+    inset 0 1px 0 rgb(255 255 255 / 22%),
+    inset 0 -2px 0 rgb(0 0 0 / 8%),
+    0 1px 2px rgb(0 0 0 / 14%),
+    0 5px 12px -6px rgb(0 0 0 / 28%);
+
   /* the two metal colors of the Gold Plated / Silver Plated pills come from hilya-style */
   --pill-gold: var(--hilya-metal-gold, #dcc06a);
   --pill-silver: var(--hilya-metal-silver, #aeb4b9);
@@ -555,16 +563,19 @@
 
   padding: 0.25rem;
 
-  border: 1px solid var(--product-border);
+  /* a soft light edge and a little raised bottom instead of a dark outline */
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 14%, transparent);
   border-radius: var(--product-button-radius);
 
   background: var(--color-background, #fffcf7);
+
+  box-shadow: var(--product-button-depth);
 
   transition: border-color 140ms ease;
 }
 
 .quantity-selector:focus-within {
-  border-color: var(--hilya-ink);
+  border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
 }
 
 /* the two buttons are soft little tiles inside the box */
@@ -598,8 +609,7 @@
   background: rgb(var(--hilya-rose-rgb) / 26%);
 }
 
-/* the number is a small field in the same beige, with a light dark outline and a tiny lift,
-   so it looks like something that can be pressed and typed in */
+/* the number is a small white field with a light edge, so it is clear that it can be typed in */
 .product-form .quantity-selector__input {
   flex: 1;
 
@@ -609,12 +619,12 @@
 
   padding: 0;
 
-  border: 1px solid color-mix(in srgb, var(--hilya-ink) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 12%, transparent);
   border-radius: 8px;
 
   background: #fff;
 
-  box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
+  box-shadow: none;
 
   text-align: center;
 
@@ -623,7 +633,7 @@
 }
 
 .product-form .quantity-selector__input:focus {
-  border-color: var(--hilya-ink);
+  border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
   outline: 0;
 }
 
@@ -640,14 +650,6 @@
    and the hovered one never looks like the other one). */
 
 .product-form__actions {
-  /* a small soft depth so the buttons look like real buttons, not flat shapes:
-     a light top edge, a faint dark bottom edge and a short soft shadow underneath */
-  --product-button-depth:
-    inset 0 1px 0 rgb(255 255 255 / 22%),
-    inset 0 -2px 0 rgb(0 0 0 / 8%),
-    0 1px 2px rgb(0 0 0 / 14%),
-    0 5px 12px -6px rgb(0 0 0 / 28%);
-
   display: grid;
   gap: 0.7rem;
 

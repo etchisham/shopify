@@ -470,8 +470,9 @@
           <div class="explore-collection__bundle-prices">
             <span class="explore-collection__bundle-price" data-bundle-price></span>
             <s class="explore-collection__bundle-compare" data-bundle-compare hidden></s>
-            <span class="explore-collection__bundle-badge" data-bundle-badge hidden></span>
           </div>
+
+          <span class="explore-collection__bundle-badge" data-bundle-badge hidden></span>
 
           <div class="explore-collection__bundle-options" data-bundle-options></div>
 
@@ -1669,7 +1670,7 @@
   opacity: 0.35;
 }
 
-/* the new price, the old price and the saving sit on one line, all centred on the same middle line */
+/* the new price and the old price sit on one line, both centred on the same middle line (the saving goes under them) */
 .explore-collection__bundle-prices {
   display: flex;
   flex-wrap: wrap;
@@ -1825,7 +1826,7 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
 
 @media (max-width: 989px) {
   .explore-collection__carousel {
-    --per-view: 3;
+    --per-view: 3.3; /* same as the home page rows */
   }
 }
 
@@ -1860,9 +1861,9 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
     font-size: 1.5rem;
   }
 
-  /* Card size: about 1.7 cards visible (same image shape as every other card) */
+  /* Card size: about 2.2 cards visible (same image shape as every other card) */
   .explore-collection__carousel {
-    --per-view: 1.7;
+    --per-view: 2.2; /* same size as the home page rows: two cards and a part of the third */
     --gap: 0.75rem;
   }
 
