@@ -576,7 +576,7 @@
   border: 1px solid color-mix(in srgb, var(--hilya-ink) 14%, transparent);
   border-radius: var(--product-button-radius);
 
-  background: var(--color-background, #fffcf7);
+  background: var(--color-background, #ffffff);
 
   box-shadow: var(--hilya-button-depth);
 
