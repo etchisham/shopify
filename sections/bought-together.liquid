@@ -721,16 +721,27 @@
           });
         };
 
+        /* One refresh for the cards and the collection bar (the bar adds itself when it is ready) */
+        var refreshBundle = null;
+
+        var refresh = function () {
+          applyCards();
+          if (refreshBundle) refreshBundle();
+        };
+
         ['change', 'click'].forEach(function (name) {
           document.addEventListener(name, function () {
-            setTimeout(applyCards, 60);
-            setTimeout(applyCards, 400);
+            setTimeout(refresh, 60);
+            setTimeout(refresh, 400);
           }, true);
         });
 
         /* Safety net in case the theme changes the variant without an event */
-        setInterval(applyCards, 700);
-        applyCards();
+        setInterval(function () {
+          if (!document.hidden) refresh();
+        }, 700);
+
+        refresh();
 
         /*
           Touch screens: hold a finger on a card to see its second picture.
@@ -776,6 +787,84 @@
           }
         });
 
+        /*
+          Scroll reveal, the same feel as the home page: the heading first, then the cards one after
+          the other, then the collection bar. What is already passed or hidden inside the row shows
+          without motion. Cards that arrive later (tag mode) join in when they are added.
+        */
+        var canReveal =
+          'IntersectionObserver' in window &&
+          !(window.Shopify && window.Shopify.designMode) &&
+          !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        var header = root.querySelector('.explore-collection__header');
+        var revealObserver = null;
+
+        var settleReveal = function () {
+          var row = track.getBoundingClientRect();
+
+          Array.prototype.forEach.call(root.querySelectorAll('.hr-item:not(.is-revealed)'), function (el) {
+            var box = el.getBoundingClientRect();
+            var insideRow = track.contains(el);
+
+            if (box.bottom < 0 || (insideRow && (box.left >= row.right - 1 || box.right <= row.left + 1))) {
+              el.classList.add('hilya-instant', 'is-revealed');
+              revealObserver.unobserve(el);
+            }
+          });
+        };
+
+        var revealWatch = function (list) {
+          if (!canReveal) return;
+
+          if (!revealObserver) {
+            revealObserver = new IntersectionObserver(function (entries) {
+              var shown = entries
+                .filter(function (entry) { return entry.isIntersecting; })
+                .map(function (entry) { return entry.target; });
+
+              if (!shown.length) return;
+
+              shown.sort(function (a, b) {
+                return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+              });
+
+              var withHeader = shown.indexOf(header) !== -1;
+              var position = 0;
+
+              shown.forEach(function (el) {
+                if (el === header) {
+                  el.style.setProperty('--reveal-delay', '0s');
+                } else {
+                  el.style.setProperty('--reveal-delay', ((withHeader ? 0.5 : 0) + position * 0.28) + 's');
+                  position++;
+                }
+
+                el.classList.add('is-revealed');
+                revealObserver.unobserve(el);
+              });
+            }, { threshold: 0.1, rootMargin: '0px 0px -15% 0px' });
+
+            window.addEventListener('load', function () { setTimeout(settleReveal, 150); });
+          }
+
+          root.classList.add('has-reveal');
+
+          list.forEach(function (el) {
+            if (!el || el.classList.contains('hr-item')) return;
+
+            el.classList.add('hr-item');
+            revealObserver.observe(el);
+          });
+
+          /* a hidden section (tag mode) has no size yet: it settles once it is shown */
+          if (!root.hidden) settleReveal();
+        };
+
+        if (!root.hidden) {
+          revealWatch([header].concat(Array.prototype.slice.call(track.querySelectorAll('[data-explore-item]'))));
+        }
+
         /* Tag mode: bring the products that have the same tag, then show the section */
         var tagUrl = root.getAttribute('data-tag-url');
 
@@ -802,6 +891,8 @@
 
               root.hidden = false;
               requestAnimationFrame(updateArrows);
+
+              revealWatch([header].concat(items));
             })
             .catch(function () {});
         }
@@ -1018,20 +1109,14 @@
               bundle.hidden = false;
 
               /* Follow the Gold / Silver (or any option) change on the main product */
-              ['change', 'click'].forEach(function (name) {
-                document.addEventListener(name, function () {
-                  setTimeout(renderBundle, 60);
-                  setTimeout(renderBundle, 400);
-                }, true);
-              });
+              refreshBundle = renderBundle;
 
               var variantContent = document.querySelector('[data-product-variant-content]');
               if (variantContent && window.MutationObserver) {
                 new MutationObserver(renderBundle).observe(variantContent, { attributes: true });
               }
 
-              /* Safety net in case the theme changes the variant without an event */
-              setInterval(renderBundle, 700);
+              revealWatch([bundle]);
             })
             .catch(function () {});
         }
@@ -1054,13 +1139,10 @@
 
 {% stylesheet %}
 
-[data-explore-collection][hidden] {
-  display: none !important;
-}
-
+/* the collection bar and its pieces have their own display, so [hidden] needs a stronger rule */
 .explore-collection__bundle[hidden],
 .explore-collection__bundle [hidden] {
-  display: none !important;
+  display: none;
 }
 
 .explore-collection,
@@ -1072,9 +1154,9 @@
 
 /* Let the section use the full screen width (some themes wrap sections in a narrow container) */
 .shopify-section:has(> .explore-collection) {
-  width: 100% !important;
-  max-width: none !important;
-  margin-inline: 0 !important;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
 }
 
 .explore-collection {
@@ -1104,18 +1186,32 @@
 }
 
 .explore-collection__title {
+  position: relative;
   margin: 0;
-  color: #222;
-  font-family: sans-serif;
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
+  color: var(--hilya-ink);
+  font-family: "Cormorant Garamond", "Bodoni Moda", "Didot", serif;
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+/* the thin rose gold line under the title */
+.explore-collection__title::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  width: 2.4rem;
+  height: 1px;
+  margin-left: -1.2rem;
+  background: var(--hilya-rose);
 }
 
 .explore-collection__subtitle {
-  margin: 0.55rem 0 0;
-  color: var(--color-muted, #777);
+  margin: 1.6rem 0 0;
+  color: var(--hilya-muted);
   font-size: clamp(0.88rem, 1vw, 1rem);
   line-height: 1.5;
 }
@@ -1149,6 +1245,10 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   scroll-behavior: smooth;
+
+  /* room under the cards so they are not cut at the bottom while they rise */
+  padding-bottom: 40px;
+  margin-bottom: -40px;
 }
 
 .explore-collection__track::-webkit-scrollbar {
@@ -1191,7 +1291,7 @@
   border: 0;
   border-radius: 0.9rem;
   background: #fff;
-  color: #222;
+  color: var(--hilya-ink);
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16);
   opacity: 0;
@@ -1199,8 +1299,7 @@
   transform: translateY(-50%);
   transition:
     opacity 200ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
+    background-color 160ms ease;
 }
 
 .explore-collection__arrow--prev {
@@ -1228,7 +1327,7 @@
 }
 
 .explore-collection__arrow:hover {
-  background: #222;
+  background: var(--hilya-rose-deep);
   color: #fff;
 }
 
@@ -1245,6 +1344,7 @@
 }
 
 .explore-collection__image-link {
+  position: relative;
   display: block;
   width: 100%;
   aspect-ratio: var(--ratio-w) / var(--ratio-h);
@@ -1268,10 +1368,6 @@
 }
 
 /* Second picture on hover (same material), instead of a zoom */
-.explore-collection__image-link {
-  position: relative;
-}
-
 .explore-collection__image-link img.explore-collection__hover-image {
   position: absolute;
   inset: 0;
@@ -1334,10 +1430,6 @@
   transform: none;
 }
 
-.explore-collection__form {
-  margin: 0;
-}
-
 .explore-collection__quick {
   display: flex;
   width: 100%;
@@ -1348,7 +1440,7 @@
   border: 0;
   border-radius: 0.85rem;
   background: var(--color-background, #fffcf7);
-  color: #222;
+  color: var(--hilya-ink);
   font: inherit;
   font-size: 0.9rem;
   line-height: 1.2;
@@ -1356,14 +1448,15 @@
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+
+  /* only the background fades: the text colour changes at once so the letters stay sharp */
+  transition: background-color 160ms ease;
 }
 
+/* hover: the same deep rose gold as the Add to cart on the product page */
 .explore-collection__quick:hover {
-  background: #222;
-  color: var(--color-background, #fffcf7);
+  background: var(--hilya-rose-deep);
+  color: #fff;
 }
 
 /* The icon is only used on mobile */
@@ -1377,10 +1470,11 @@
   cursor: not-allowed;
 }
 
+/* sold out: no hover colour */
 .explore-collection__quick.is-disabled:hover,
 .explore-collection__quick:disabled:hover {
   background: var(--color-background, #fffcf7);
-  color: #222;
+  color: var(--hilya-ink);
 }
 
 /* Touch screens have no hover: keep the button visible and hide the arrows (swipe instead) */
@@ -1471,7 +1565,7 @@
 }
 
 .explore-collection__price .price__compare {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: 0.74rem;
 }
 
@@ -1500,7 +1594,7 @@
 }
 
 .explore-collection__rating-count {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: 0.8rem;
   white-space: nowrap;
 }
@@ -1522,9 +1616,9 @@
   max-width: 64rem;
   margin: clamp(2rem, 4vw, 3rem) auto 0;
   padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 4vw, 3.5rem);
-  border: 1px solid rgb(0 0 0 / 10%);
+  border: 1px solid var(--hilya-line);
   border-radius: 1.25rem;
-  background: rgb(0 0 0 / 3%);
+  background: var(--hilya-beige);
 }
 
 .explore-collection__bundle-info {
@@ -1544,7 +1638,7 @@
   justify-content: center;
   gap: 0.9rem;
   margin: 0;
-  color: var(--color-foreground, #222);
+  color: var(--hilya-rose-deep);
   font-size: 0.78rem;
   letter-spacing: 0.22em;
   text-align: center;
@@ -1569,14 +1663,14 @@
 }
 
 .explore-collection__bundle-price {
-  color: var(--color-foreground, #222);
+  color: var(--hilya-ink);
   font-size: clamp(1.8rem, 2.8vw, 2.4rem);
   font-weight: 400;
   line-height: 1.1;
 }
 
 .explore-collection__bundle-compare {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: clamp(1rem, 1.4vw, 1.2rem);
   text-decoration: line-through;
 }
@@ -1591,9 +1685,10 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   display: inline-block;
   padding: 0.45rem 1.1rem;
   border-radius: 999px;
-  background: #f2dfc3;
-  color: #3a2c1b;
+  background: rgb(var(--hilya-rose-rgb) / 10%);
+  color: var(--hilya-rose-deep);
   font-size: 0.95rem;
+  font-weight: 600;
   line-height: 1.2;
 }
 
@@ -1629,22 +1724,21 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   cursor: pointer;
   transition:
     background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
+    border-color 160ms ease;
 }
 
+/* the same pills as the product page: a rose gold ring, chosen = a very light tint */
 .explore-collection__bundle-pill:hover {
-  border-color: var(--color-foreground, #222);
+  border-color: var(--hilya-rose);
 }
 
 .explore-collection__bundle-pill[aria-pressed="true"] {
-  border-color: var(--color-foreground, #222);
-  background: var(--color-foreground, #222);
-  color: var(--color-background, #fffcf7);
+  border-color: var(--hilya-rose);
+  background: rgb(var(--hilya-rose-rgb) / 9%);
 }
 
 .explore-collection__bundle-pill:focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--hilya-rose);
   outline-offset: 2px;
 }
 
@@ -1653,8 +1747,8 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   max-width: 18rem;
   margin: 0.15rem 0 0;
   padding-top: 1.1rem;
-  border-top: 1px solid rgb(0 0 0 / 10%);
-  color: var(--color-muted, #777);
+  border-top: 1px solid var(--hilya-line);
+  color: var(--hilya-muted);
   font-size: 0.8rem;
   line-height: 1.5;
   text-align: center;
@@ -1668,7 +1762,7 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
 .explore-collection__bundle-divider {
   align-self: stretch;
   width: 1px;
-  background: rgb(0 0 0 / 22%);
+  background: var(--hilya-line);
 }
 
 /* The card is as wide as the old button, so it is bigger than the cards above */
@@ -1721,7 +1815,7 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   }
 
   .explore-collection__title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
   /* Card size: about 1.7 cards visible (same image shape as every other card) */
@@ -1913,6 +2007,46 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   }
 }
 
+/* =========================================
+   REVEAL ON SCROLL
+   The script marks the heading, the cards and the collection bar with hr-item.
+   Same feel as the home page sections: they rise one after the other.
+========================================= */
+
+@keyframes explore-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.explore-collection.has-reveal .hr-item:not(.is-revealed) {
+  opacity: 0;
+}
+
+.explore-collection.has-reveal .hr-item.is-revealed {
+  animation: explore-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+.explore-collection.has-reveal .is-revealed.hilya-instant {
+  animation: none;
+}
+
+/* the line under the title is drawn from the middle to both sides after the title appears */
+.explore-collection.has-reveal .explore-collection__header.hr-item .explore-collection__title::after {
+  transform: scaleX(0);
+  transition: transform 1.6s cubic-bezier(.22, .8, .3, 1) .7s;
+}
+
+.explore-collection.has-reveal .explore-collection__header.is-revealed .explore-collection__title::after {
+  transform: scaleX(1);
+}
+
+.explore-collection.has-reveal .explore-collection__header.hilya-instant .explore-collection__title::after {
+  transition: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .explore-collection__track {
     scroll-behavior: auto;
@@ -1927,7 +2061,10 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
 
 /* ARABIC / RTL */
 
+/* Arabic: no italic, and more room between the lines */
 [dir="rtl"] .explore-collection__title {
+  font-style: normal;
+  font-weight: 400;
   line-height: 1.4;
 }
 
