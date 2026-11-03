@@ -414,7 +414,7 @@
 }
 
 .product-personalization__required {
-  color: var(--hilya-rose-deep);
+  color: var(--hilya-muted);
 
   font-size: 0.7rem;
   font-weight: 600;
@@ -1229,8 +1229,9 @@
   stroke-width: 2;
 }
 
+/* the arrows sit on the edge of the picture: half outside, half inside (half of the 3.25rem arrow) */
 .product-gallery__arrow--previous {
-  left: 0.75rem;
+  left: -1.625rem;
 }
 
 .product-gallery__arrow--previous svg {
@@ -1238,7 +1239,7 @@
 }
 
 .product-gallery__arrow--next {
-  right: 0.75rem;
+  right: -1.625rem;
 }
 
 .product-gallery__arrow--next svg {
@@ -1246,7 +1247,7 @@
 }
 
 [dir='rtl'] .product-gallery__arrow--previous {
-  right: 0.75rem;
+  right: -1.625rem;
   left: auto;
 }
 
@@ -1256,7 +1257,7 @@
 
 [dir='rtl'] .product-gallery__arrow--next {
   right: auto;
-  left: 0.75rem;
+  left: -1.625rem;
 }
 
 [dir='rtl'] .product-gallery__arrow--next svg {
