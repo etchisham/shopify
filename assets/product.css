@@ -21,9 +21,9 @@
   /* corners of the Add to cart / Buy it now buttons and of the boxes (same soft corner as the pictures) */
   --product-button-radius: var(--hilya-radius);
 
-  /* the two metal colors of the Gold Plated / Silver Plated pills (the light shades are made from them) */
-  --pill-gold: #dcc06a;
-  --pill-silver: #aeb4b9;
+  /* the two metal colors of the Gold Plated / Silver Plated pills come from hilya-style */
+  --pill-gold: var(--hilya-metal-gold, #dcc06a);
+  --pill-silver: var(--hilya-metal-silver, #aeb4b9);
 
   width: 100%;
   max-width: 87.5rem;
@@ -489,8 +489,7 @@
 
   transition:
     background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
+    border-color 160ms ease;
 }
 
 /* a small metal dot next to the word (Gold Plated / Silver Plated) */
@@ -607,9 +606,11 @@
   padding: 0;
 
   border: 0;
+  border-inline: 1px solid var(--product-border);
   border-radius: 0;
 
-  background: transparent;
+  /* a white field between the two buttons, so it is clear that a number can be typed here */
+  background: #fff;
 
   box-shadow: none;
 
