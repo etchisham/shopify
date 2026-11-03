@@ -116,16 +116,16 @@
 
 .product-layout {
   /* width of the big picture (and of the small pictures under it): never taller than the screen */
-  --gallery-width: min(46rem, max(24rem, calc(100dvh - 20rem)));
+  --gallery-width: min(46rem, max(24rem, calc(100dvh - 17rem)));
 
   display: grid;
   grid-template-columns:
     minmax(0, var(--gallery-width))
-    minmax(21rem, 27rem);
+    minmax(21rem, 29rem);
 
   /* the picture and the text sit together in the middle of the page */
   justify-content: center;
-  gap: clamp(2.5rem, 6vw, 6rem);
+  gap: clamp(2.5rem, 4.5vw, 4.5rem);
 
   align-items: start;
   direction: ltr;
@@ -892,6 +892,10 @@
   color: var(--hilya-muted);
 }
 
+.product-highlights__label {
+  color: var(--hilya-rose-deep);
+}
+
 .product-highlights li strong,
 .product-highlights li b {
   color: var(--hilya-ink);
@@ -1220,6 +1224,20 @@
   pointer-events: none;
 }
 
+/* mouse screens: the arrows show only while the mouse is over the picture (or a key focuses one) */
+@media (hover: hover) and (pointer: fine) {
+  .product-gallery__stage .product-gallery__arrow:not(:disabled) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .product-gallery__stage:hover .product-gallery__arrow:not(:disabled),
+  .product-gallery__stage:focus-within .product-gallery__arrow:not(:disabled) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .product-gallery__arrow svg {
   width: 1.2rem;
   height: 1.2rem;
@@ -1426,6 +1444,12 @@
 
 .product-zoom .product-gallery__arrow {
   z-index: 10;
+}
+
+/* inside the zoom the arrows always show */
+.product-zoom .product-gallery__arrow:not(:disabled) {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .product-zoom .product-gallery__arrow--previous {
