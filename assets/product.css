@@ -548,34 +548,37 @@
 .quantity-selector {
   display: flex;
   align-items: center;
+  gap: 0.25rem;
 
-  width: 8.5rem;
-  height: 3rem;
+  width: 9.5rem;
+  height: 3.1rem;
 
-  overflow: hidden;
+  padding: 0.25rem;
 
-  border: 1px solid var(--product-border);
+  border: 1px solid rgb(var(--hilya-rose-rgb) / 45%);
   border-radius: var(--product-button-radius);
 
-  background: var(--color-background, #fffcf7);
+  background: rgb(var(--hilya-rose-rgb) / 8%);
 
   transition: border-color 140ms ease;
 }
 
 .quantity-selector:focus-within {
-  border-color: var(--hilya-ink);
+  border-color: var(--hilya-rose-deep);
 }
 
+/* the two buttons are soft little tiles inside the box */
 .quantity-selector__button {
   display: grid;
   place-items: center;
 
-  width: 2.75rem;
+  width: 2.2rem;
   height: 100%;
 
   padding: 0;
 
   border: 0;
+  border-radius: 8px;
 
   background: transparent;
   color: var(--hilya-ink);
@@ -583,7 +586,7 @@
   cursor: pointer;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   line-height: 1;
 }
 
@@ -595,7 +598,7 @@
   background: rgb(var(--hilya-rose-rgb) / 26%);
 }
 
-/* the number box has no border or shadow of its own (the whole quantity box has them) */
+/* the number is a small white field with its own thin border, so it is clear that it can be typed in */
 .product-form .quantity-selector__input {
   flex: 1;
 
@@ -605,11 +608,9 @@
 
   padding: 0;
 
-  border: 0;
-  border-inline: 1px solid var(--product-border);
-  border-radius: 0;
+  border: 1px solid var(--hilya-line);
+  border-radius: 8px;
 
-  /* a white field between the two buttons, so it is clear that a number can be typed here */
   background: #fff;
 
   box-shadow: none;
@@ -618,6 +619,11 @@
 
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+.product-form .quantity-selector__input:focus {
+  border-color: var(--hilya-rose);
+  outline: 0;
 }
 
 .quantity-selector__input::-webkit-inner-spin-button,
