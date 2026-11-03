@@ -77,21 +77,33 @@
                 <div class="drawer-item__details">
                   <h3><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h3>
                   {% unless item.product.has_only_default_variant %}
-  {%- assign variant_parts = item.variant.title | split: ' / ' -%}
-  <p class="drawer-item__variant">
-    {%- for part in variant_parts -%}
-      {%- assign part_key = part | handleize | replace: '-', '_' -%}
-      {%- assign translation_key = 'products.option_values.' | append: part_key -%}
-      {{- translation_key | t: default: part | escape -}}
-      {%- unless forloop.last %} / {% endunless -%}
-    {%- endfor -%}
-  </p>
-{% endunless %}
+                    {%- assign variant_parts = item.variant.title | split: ' / ' -%}
+                    <p class="drawer-item__variant">
+                      {%- for part in variant_parts -%}
+                        {%- assign part_key = part | handleize | replace: '-', '_' -%}
+                        {%- assign translation_key = 'products.option_values.' | append: part_key -%}
+                        {{- translation_key | t: default: part | escape -}}
+                        {%- unless forloop.last %} / {% endunless -%}
+                      {%- endfor -%}
+                    </p>
+                  {% endunless %}
                   {% if item.selling_plan_allocation %}<p class="drawer-item__variant">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
                   {% for property in item.properties %}
                     {% assign property_first_character = property.first | slice: 0 %}
                     {% if property.last != blank and property_first_character != '_' %}
-                      <p class="drawer-item__property">{{ property.first | escape }}: {% if property.last contains '/uploads/' %}<a href="{{ property.last | escape }}">{{ 'cart.upload' | t }}</a>{% else %}{{ property.last | escape }}{% endif %}</p>
+                      {%- comment -%} Name, Date and Letter show with the words of the product page (translated) {%- endcomment -%}
+                      {%- assign property_key = property.first | downcase -%}
+                      {%- case property_key -%}
+                        {%- when 'name' -%}
+                          {%- assign property_label = 'products.details.personalization_name' | t -%}
+                        {%- when 'date' -%}
+                          {%- assign property_label = 'products.details.personalization_date' | t -%}
+                        {%- when 'letter' -%}
+                          {%- assign property_label = 'products.details.personalization_letter' | t -%}
+                        {%- else -%}
+                          {%- assign property_label = property.first -%}
+                      {%- endcase -%}
+                      <p class="drawer-item__property">{{ property_label | escape }}: {% if property.last contains '/uploads/' %}<a href="{{ property.last | escape }}">{{ 'cart.upload' | t }}</a>{% else %}{{ property.last | escape }}{% endif %}</p>
                     {% endif %}
                   {% endfor %}
                   {% for allocation in item.line_level_discount_allocations %}
