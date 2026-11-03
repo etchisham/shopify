@@ -454,9 +454,8 @@
           <div class="explore-collection__bundle-prices">
             <span class="explore-collection__bundle-price" data-bundle-price></span>
             <s class="explore-collection__bundle-compare" data-bundle-compare hidden></s>
+            <span class="explore-collection__bundle-badge" data-bundle-badge hidden></span>
           </div>
-
-          <span class="explore-collection__bundle-badge" data-bundle-badge hidden></span>
 
           <div class="explore-collection__bundle-options" data-bundle-options></div>
 
@@ -1654,10 +1653,11 @@
   opacity: 0.35;
 }
 
+/* the new price, the old price and the saving sit on one line, all centred on the same middle line */
 .explore-collection__bundle-prices {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
   gap: 0.35rem 1rem;
 }
@@ -1713,11 +1713,16 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
 }
 
 .explore-collection__bundle-pill {
-  padding: 0.6rem 1.25rem;
-  border: 1px solid rgb(0 0 0 / 22%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding-block: 0.5rem;
+  padding-inline: 1rem 1.2rem;
+  border: 1px solid var(--hilya-line);
   border-radius: 999px;
   background: transparent;
-  color: var(--color-foreground, #222);
+  color: var(--hilya-muted);
   font: inherit;
   font-size: 0.9rem;
   line-height: 1.2;
@@ -1727,14 +1732,35 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
     border-color 160ms ease;
 }
 
+/* a small metal dot next to the word, exactly like the pills on the product page */
+.explore-collection__bundle-pill[data-value*="gold" i]::before,
+.explore-collection__bundle-pill[data-value*="silver" i]::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
+}
+
+.explore-collection__bundle-pill[data-value*="gold" i]::before {
+  background: linear-gradient(135deg, #f4e7b4, var(--hilya-metal-gold, #dcc06a) 55%, #c4a24c);
+}
+
+.explore-collection__bundle-pill[data-value*="silver" i]::before {
+  background: linear-gradient(135deg, #fafafa, var(--hilya-metal-silver, #aeb4b9) 55%, #9ea3aa);
+}
+
 /* the same pills as the product page: a rose gold ring, chosen = a very light tint */
 .explore-collection__bundle-pill:hover {
   border-color: var(--hilya-rose);
+  color: var(--hilya-ink);
 }
 
 .explore-collection__bundle-pill[aria-pressed="true"] {
   border-color: var(--hilya-rose);
   background: rgb(var(--hilya-rose-rgb) / 9%);
+  color: var(--hilya-ink);
 }
 
 .explore-collection__bundle-pill:focus-visible {
