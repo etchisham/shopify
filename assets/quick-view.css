@@ -1,6 +1,13 @@
+/* =========================================================
+   QUICK VIEW (the "Choose options" drawer that opens from Add to cart on the cards)
+   The drawer is built by quick-view.js. The look follows the product page:
+   same option pills, same quantity box, same Add to cart button.
+   Shared colors come from hilya-style.
+   ========================================================= */
+
 html.quick-view-lock,
 html.quick-view-lock body {
-  overflow: hidden !important;
+  overflow: hidden;
   overscroll-behavior: none;
 }
 
@@ -23,7 +30,7 @@ html.quick-view-lock body {
   padding: 0;
   border: 0;
   background: var(--color-background, #fffcf7);
-  color: var(--color-foreground, #222);
+  color: var(--hilya-ink);
   overflow: hidden;
   box-shadow: -8px 0 40px rgb(0 0 0 / 12%);
 }
@@ -69,7 +76,7 @@ html[dir="rtl"] .quick-view[open] {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  border-bottom: 1px solid var(--hilya-line);
 }
 
 .quick-view__title {
@@ -91,6 +98,10 @@ html[dir="rtl"] .quick-view[open] {
   cursor: pointer;
 }
 
+.quick-view__close:hover {
+  color: var(--hilya-rose-deep);
+}
+
 
 /* Scrolling area */
 
@@ -106,7 +117,7 @@ html[dir="rtl"] .quick-view[open] {
 .quick-view__loading {
   margin: 0;
   padding: 3rem 1rem;
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   text-align: center;
 }
 
@@ -124,8 +135,8 @@ html[dir="rtl"] .quick-view[open] {
 .quick-view__image-wrap {
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: 0.5rem;
-  background: var(--color-surface, #f5f5f1);
+  border-radius: var(--hilya-radius);
+  background: var(--hilya-beige);
 }
 
 .quick-view__image {
@@ -135,8 +146,10 @@ html[dir="rtl"] .quick-view[open] {
   object-fit: cover;
 }
 
+/* the brand looks like the small word above the titles on the home page */
 .quick-view__vendor {
   margin: 0 0 0.3rem;
+  color: var(--hilya-rose-deep);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -149,11 +162,12 @@ html[dir="rtl"] .quick-view[open] {
   line-height: 1.35;
 }
 
+/* the new price and the old price sit on the same middle line */
 .quick-view__price .price {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 0.1rem 0.5rem;
   direction: ltr;
   justify-content: flex-start;
@@ -170,12 +184,12 @@ html[dir="rtl"] .quick-view__price .price {
 }
 
 .quick-view__price .price__compare {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: 0.8rem;
 }
 
 
-/* Options */
+/* Options: the same pills as the product page */
 
 .quick-view__group {
   margin-bottom: 1.25rem;
@@ -183,11 +197,13 @@ html[dir="rtl"] .quick-view__price .price {
 
 .quick-view__legend {
   margin: 0 0 0.7rem;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .quick-view__legend-value {
-  font-weight: 500;
+  color: var(--hilya-muted);
+  font-weight: 400;
 }
 
 .quick-view__pills {
@@ -197,49 +213,68 @@ html[dir="rtl"] .quick-view__price .price {
 }
 
 .quick-view__pill {
-  min-width: 3.25rem;
-  height: 3.25rem;
-  padding: 0 1rem;
-  border: 1px solid rgb(0 0 0 / 14%);
-  border-radius: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding-block: 0.5rem;
+  padding-inline: 1rem 1.2rem;
+  border: 1px solid var(--hilya-line);
+  border-radius: 999px;
   background: transparent;
-  color: inherit;
+  color: var(--hilya-muted);
   font: inherit;
   font-size: 0.9rem;
+  line-height: 1.2;
   cursor: pointer;
+
+  /* only the background and the border fade: the text colour changes at once */
   transition:
-  background-color 150ms ease,
-  border-color 150ms ease,
-  color 150ms ease;
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+/* a small metal dot next to the word (Gold Plated / Silver Plated) */
+.quick-view__pill[data-option-value*="gold" i]::before,
+.quick-view__pill[data-option-value*="silver" i]::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
+}
+
+.quick-view__pill[data-option-value*="gold" i]::before {
+  background: linear-gradient(135deg, #f4e7b4, var(--hilya-metal-gold) 55%, #c4a24c);
+}
+
+.quick-view__pill[data-option-value*="silver" i]::before {
+  background: linear-gradient(135deg, #fafafa, var(--hilya-metal-silver) 55%, #9ea3aa);
 }
 
 .quick-view__pill:hover {
-  border-color: rgb(0 0 0 / 45%);
+  border-color: var(--hilya-rose);
+  color: var(--hilya-ink);
 }
 
+/* chosen: thin rose gold ring and a very light tint */
 .quick-view__pill.is-selected {
-  border-color: #222;
-  background: #222;
-  color: #fff;
-  box-shadow: none;
+  border-color: var(--hilya-rose);
+  background: rgb(var(--hilya-rose-rgb) / 9%);
+  color: var(--hilya-ink);
 }
 
-/* لو الخيار المختار نفده المخزون، يفضل أسود برضه */
-.quick-view__pill.is-selected.is-unavailable {
-  background: #222;
-  color: #fff;
+.quick-view__pill:focus-visible {
+  outline: 2px solid var(--hilya-rose);
+  outline-offset: 2px;
 }
 
-/* Sold out / not available: crossed out but still tappable */
+/* sold out / not available: dashed and crossed out, but still tappable */
 .quick-view__pill.is-unavailable {
-  color: rgb(0 0 0 / 45%);
-  background:
-    linear-gradient(
-      to top right,
-      transparent calc(50% - 0.5px),
-      rgb(0 0 0 / 28%) 50%,
-      transparent calc(50% + 0.5px)
-    );
+  border-style: dashed;
+  opacity: 0.6;
+  text-decoration: line-through;
 }
 
 
@@ -250,8 +285,8 @@ html[dir="rtl"] .quick-view__price .price {
   gap: 0.9rem;
   margin-bottom: 1.25rem;
   padding: 1rem;
-  border: 1px solid rgb(0 0 0 / 10%);
-  border-radius: 0.8rem;
+  border: 1px solid var(--hilya-line);
+  border-radius: var(--hilya-radius);
 }
 
 .quick-view__personalization-heading {
@@ -263,7 +298,7 @@ html[dir="rtl"] .quick-view__price .price {
 }
 
 .quick-view__required {
-  color: var(--color-muted, #777);
+  color: var(--hilya-muted);
   font-size: 0.72rem;
   font-weight: 400;
 }
@@ -287,39 +322,47 @@ html[dir="rtl"] .quick-view__price .price {
   width: 100%;
   height: 3rem;
   padding: 0 0.9rem;
-  border: 1px solid rgb(0 0 0 / 16%);
-  border-radius: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 16%, transparent);
+  border-radius: 10px;
   background: var(--color-background, #fffcf7);
   color: inherit;
   font: inherit;
   font-size: 0.9rem;
 }
 
+/* a thin rose gold edge shows which field is being typed in */
 .quick-view__field input:focus,
 .quick-view__field input:focus-visible {
+  border-color: var(--hilya-rose);
   outline: 0;
   box-shadow: none;
-} 
+}
 
-.quick-view__letter {
+.quick-view__field input.quick-view__letter {
   max-width: 10rem;
   text-align: center;
-  font-size: 1.1rem !important;
+  font-size: 1.1rem;
 }
 
 
-/* Quantity */
+/* Quantity: the same box as the product page */
 
 .quick-view__qty {
   display: inline-flex;
+  align-items: center;
   width: fit-content;
-  height: 3rem;
-  border: 1px solid rgb(0 0 0 / 16%);
-  border-radius: 0.9rem;
+  height: 3.1rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 14%, transparent);
+  border-radius: var(--hilya-radius);
+  background: var(--color-background, #fffcf7);
+  box-shadow: var(--hilya-button-depth);
 }
 
+/* each button fills its whole side of the box, so the hover colour covers all of it */
 .quick-view__qty-button {
-  width: 3rem;
+  width: 2.75rem;
+  height: 100%;
   border: 0;
   background: transparent;
   color: inherit;
@@ -328,16 +371,32 @@ html[dir="rtl"] .quick-view__price .price {
   cursor: pointer;
 }
 
+.quick-view__qty-button:hover {
+  background: rgb(var(--hilya-rose-rgb) / 18%);
+}
+
+.quick-view__qty-button:active {
+  background: rgb(var(--hilya-rose-rgb) / 26%);
+}
+
+/* the number is a small white field with a light edge, so it is clear that it can be typed in */
 .quick-view__qty-input {
   width: 3.4rem;
-  border: 0;
-  background: transparent;
+  height: calc(100% - 0.7rem);
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 12%, transparent);
+  border-radius: 8px;
+  background: #fff;
   color: inherit;
   font: inherit;
   font-size: 0.95rem;
   text-align: center;
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+.quick-view__qty-input:focus {
+  border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
+  outline: 0;
 }
 
 .quick-view__qty-input::-webkit-inner-spin-button,
@@ -357,34 +416,69 @@ html[dir="rtl"] .quick-view__price .price {
   gap: 0.75rem;
   margin: 0.5rem -1.25rem -1.25rem;
   padding: 1rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid rgb(0 0 0 / 8%);
+  border-top: 1px solid var(--hilya-line);
   background: var(--color-background, #fffcf7);
 }
 
+/* the same Add to cart as the product page: card colour with a thin rose outline, deep rose gold on hover */
 .quick-view__add {
   height: 3.4rem;
-  border: 0;
-  border-radius: 0.9rem;
-  background: #222;
-  color: var(--color-background, #fffcf7);
+  border: 1px solid rgb(var(--hilya-rose-rgb) / 45%);
+  border-radius: var(--hilya-radius);
+  background: var(--color-background, #fffcf7);
+  box-shadow: var(--hilya-button-depth);
+  color: var(--hilya-ink);
   font: inherit;
   font-size: 0.8rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
+
+  /* only the background and the border fade: the text colour changes at once */
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.quick-view__add:hover:not(:disabled) {
+  border-color: var(--hilya-rose-deep);
+  background: var(--hilya-rose-deep);
+  color: #fff;
+}
+
+.quick-view__add:active:not(:disabled) {
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 22%);
+}
+
+.quick-view__add:focus-visible {
+  outline: 2px solid var(--hilya-rose);
+  outline-offset: 3px;
 }
 
 .quick-view__add:disabled {
+  box-shadow: none;
   opacity: 0.45;
   cursor: not-allowed;
 }
 
+html[dir="rtl"] .quick-view__add {
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+
 .quick-view__details {
-  color: inherit;
+  color: var(--hilya-rose-deep);
   font-size: 0.85rem;
   text-align: center;
   text-decoration: underline;
   text-underline-offset: 0.2rem;
+}
+
+.quick-view__details:hover {
+  color: var(--hilya-ink);
 }
 
 
