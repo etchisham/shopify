@@ -222,7 +222,7 @@ html[dir="rtl"] .quick-view__price .price {
   padding-inline: 1rem 1.2rem;
   border: 1px solid var(--hilya-line);
   border-radius: 999px;
-  background: transparent;
+  background: #fff;
   color: var(--hilya-muted);
   font: inherit;
   font-size: 0.9rem;
@@ -380,6 +380,8 @@ html[dir="rtl"] .quick-view__price .price {
 .quick-view__qty {
   display: inline-flex;
   align-items: center;
+  justify-self: center;
+  margin-inline: auto;
   width: 8.5rem;
   height: 3rem;
   overflow: hidden;
