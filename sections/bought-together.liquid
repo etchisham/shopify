@@ -1746,7 +1746,9 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   cursor: pointer;
   transition:
     background-color 160ms ease,
-    border-color 160ms ease;
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
 }
 
 /* a small metal dot next to the word, exactly like the pills on the product page */
@@ -1774,10 +1776,37 @@ html[dir="rtl"] .explore-collection__bundle-prices .explore-collection__bundle-c
   color: var(--hilya-ink);
 }
 
-.explore-collection__bundle-pill[aria-pressed="true"] {
+.explore-collection__bundle-pill[aria-pressed="true"]:not(:is([data-value*="gold" i], [data-value*="silver" i])) {
   border-color: var(--hilya-rose);
   background: rgb(var(--hilya-rose-rgb) / 9%);
   color: var(--hilya-ink);
+}
+
+/* Gold / Silver: the chosen pill glows softly in its own metal colour, the other one fades */
+.explore-collection__bundle-pill[data-value*="gold" i][aria-pressed="true"] {
+  border-color: var(--hilya-metal-gold);
+  background: color-mix(in srgb, var(--hilya-metal-gold) 16%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--hilya-metal-gold) 18%, transparent),
+    0 2px 10px color-mix(in srgb, var(--hilya-metal-gold) 35%, transparent);
+  color: var(--hilya-ink);
+}
+
+.explore-collection__bundle-pill[data-value*="silver" i][aria-pressed="true"] {
+  border-color: var(--hilya-metal-silver);
+  background: color-mix(in srgb, var(--hilya-metal-silver) 18%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--hilya-metal-silver) 20%, transparent),
+    0 2px 10px color-mix(in srgb, var(--hilya-metal-silver) 40%, transparent);
+  color: var(--hilya-ink);
+}
+
+.explore-collection__bundle-pill:is([data-value*="gold" i], [data-value*="silver" i]):not([aria-pressed="true"]) {
+  opacity: 0.55;
+}
+
+.explore-collection__bundle-pill:is([data-value*="gold" i], [data-value*="silver" i]):not([aria-pressed="true"]):hover {
+  opacity: 1;
 }
 
 .explore-collection__bundle-pill:focus-visible {
