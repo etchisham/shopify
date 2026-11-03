@@ -69,6 +69,33 @@
     Add to cart button on the image: it opens the "Choose options" drawer
   endcomment
   assign card_add_label = 'products.product.add_to_cart' | t
+
+  comment
+    The small line under the name: "Custom name", "Custom date", "Custom letter",
+    or "Personalized" when the piece has more than one of them.
+  endcomment
+
+  assign custom_count = 0
+  assign custom_label = ''
+
+  if product.tags contains 'Name'
+    assign custom_count = custom_count | plus: 1
+    assign custom_label = 'products.product.custom_name' | t
+  endif
+
+  if product.tags contains 'Date'
+    assign custom_count = custom_count | plus: 1
+    assign custom_label = 'products.product.custom_date' | t
+  endif
+
+  if product.tags contains 'Letter'
+    assign custom_count = custom_count | plus: 1
+    assign custom_label = 'products.product.custom_letter' | t
+  endif
+
+  if custom_count > 1
+    assign custom_label = 'products.product.personalized' | t
+  endif
 %}
 
 
@@ -197,6 +224,13 @@
         </a>
 
       </h3>
+
+    {% endif %}
+
+
+    {% if custom_label != blank %}
+
+      <p class="product-card__custom">{{ custom_label }}</p>
 
     {% endif %}
 
@@ -493,6 +527,20 @@
   z-index: 2;
   color: inherit;
   text-decoration: none;
+}
+
+
+/* ================================
+   CUSTOM LINE (Custom name / Custom date / Custom letter / Personalized)
+================================ */
+
+.product-card__custom {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-align: center;
 }
 
 
@@ -812,6 +860,11 @@
 
 [dir="rtl"] .product-card__title {
   line-height: 1.6;
+}
+
+[dir="rtl"] .product-card__custom {
+  font-size: 0.8rem;
+  letter-spacing: 0;
 }
 
 @media (max-width: 27rem) {
