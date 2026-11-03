@@ -612,7 +612,7 @@
   border: 1px solid color-mix(in srgb, var(--hilya-ink) 20%, transparent);
   border-radius: 8px;
 
-  background: var(--color-background, #fffcf7);
+  background: #fff;
 
   box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
 
