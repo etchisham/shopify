@@ -1,9 +1,10 @@
-/* Panel sits at the inline end: right in English, left in Arabic. */
+/* =========================================================
+   CART DRAWER
+   Colors and shapes come from the shared Hilya variables (snippet hilya-style).
+   The panel sits at the inline end: right in English, left in Arabic.
+   ========================================================= */
+
 .cart-drawer {
-  --cart-background: var(--hilya-cream);
-  --cart-color: var(--hilya-ink);
-  --cart-muted: var(--hilya-muted);
-  --cart-border: var(--hilya-line);
   position: fixed;
   inset: 0;
   width: 100%;
@@ -14,7 +15,7 @@
   margin: 0;
   border: 0;
   background: transparent;
-  color: var(--cart-color);
+  color: var(--hilya-ink);
   padding: 0;
   overflow: hidden;
   font-family: var(--font-body-family);
@@ -31,12 +32,17 @@
   top: 0;
   inset-inline-end: 0;
   display: flex;
-  width: min(100%, 46.75rem);
+  width: min(100%, 40rem);
   height: 100%;
   flex-direction: column;
-  background: var(--cart-background);
+  background: var(--hilya-cream);
   box-shadow: -1rem 0 3rem rgb(0 0 0 / 12%);
   animation: cart-slide-in 240ms ease-out;
+}
+
+[dir='rtl'] .cart-drawer__panel {
+  box-shadow: 1rem 0 3rem rgb(0 0 0 / 12%);
+  animation-name: cart-slide-in-rtl;
 }
 
 .cart-drawer__header {
@@ -46,7 +52,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-block-end: 1px solid var(--cart-border);
+  border-block-end: 1px solid var(--hilya-line);
   padding: 1rem 4.5rem;
 }
 
@@ -62,6 +68,8 @@
   text-transform: uppercase;
 }
 
+/* round buttons: close, and the arrows of "You may also like".
+   Deep rose gold with a white icon on hover (only the background fades, so the icon stays sharp) */
 .cart-icon-button {
   display: inline-grid;
   width: 2.75rem;
@@ -71,8 +79,20 @@
   border: 0;
   border-radius: 50%;
   background: var(--hilya-beige);
-  color: var(--cart-color);
+  color: var(--hilya-ink);
   padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.cart-icon-button:hover:not(:disabled) {
+  background: var(--hilya-rose-deep);
+  color: #fff;
+}
+
+.cart-icon-button:disabled {
+  cursor: default;
+  opacity: 0.4;
 }
 
 :is(.cart-icon-button, .cart-drawer__title) svg {
@@ -100,6 +120,11 @@
   cursor: progress;
 }
 
+/* the cart is hidden for a moment while its fresh content is on the way (see openCart in cart-drawer.js) */
+.cart-drawer__content.is-waiting {
+  opacity: 0;
+}
+
 .cart-drawer__scroll {
   min-height: 0;
   flex: 1;
@@ -111,10 +136,17 @@
   scrollbar-gutter: stable;
 }
 
+
+/* =========================================================
+   OFFER
+   ========================================================= */
+
 .cart-offer {
   margin-block-end: 2.5rem;
   border: 1px solid var(--hilya-line);
+  border-radius: var(--hilya-radius);
   background: var(--hilya-beige);
+  overflow: hidden;
   text-align: center;
 }
 
@@ -155,6 +187,11 @@
   font-size: 0.75rem;
   font-style: italic;
 }
+
+
+/* =========================================================
+   ITEMS
+   ========================================================= */
 
 .drawer-item {
   display: grid;
@@ -202,7 +239,7 @@
 .drawer-item__variant,
 .drawer-item__property {
   margin: 0.2rem 0 0;
-  color: var(--cart-muted);
+  color: var(--hilya-muted);
   font-size: 0.85rem;
   overflow-wrap: anywhere;
 }
@@ -214,6 +251,7 @@
 .drawer-item__discount {
   display: inline-block;
   margin: 0.65rem 0 0;
+  border-radius: 0.4rem;
   background: var(--hilya-rose-deep);
   color: #fff;
   padding: 0.5rem 0.65rem;
@@ -228,23 +266,55 @@
   margin-block-start: 0.8rem;
 }
 
+/* Quantity: the same simple box as the product page */
 .cart-quantity {
   display: grid;
-  width: 8.25rem;
+  width: 8.5rem;
+  height: 3rem;
   grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
-  border: 1px solid var(--cart-border);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 45%, transparent);
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.cart-quantity:focus-within {
+  border-color: var(--hilya-rose);
 }
 
 .cart-quantity button,
 .cart-quantity input {
   width: 100%;
-  min-height: 2.75rem;
+  height: 100%;
+  min-height: 0;
   border: 0;
   border-radius: 0;
-  background: var(--cart-background);
-  color: var(--cart-color);
+  background: transparent;
+  color: var(--hilya-ink);
   padding: 0;
   text-align: center;
+  outline: 0;
+}
+
+.cart-quantity button {
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: background-color 140ms ease;
+}
+
+.cart-quantity button:hover:not(:disabled),
+.cart-quantity button:focus-visible {
+  background: var(--hilya-beige);
+}
+
+.cart-quantity button:active:not(:disabled) {
+  background: var(--hilya-line);
+}
+
+.cart-quantity button:disabled {
+  cursor: default;
+  opacity: 0.4;
 }
 
 .cart-quantity input {
@@ -263,10 +333,16 @@
   min-height: 2.75rem;
   border: 0;
   background: transparent;
+  color: var(--hilya-ink);
   padding: 0;
+  cursor: pointer;
   font-size: 0.8rem;
   text-decoration: underline;
   text-underline-offset: 0.2em;
+}
+
+.cart-drawer .text-link:hover {
+  color: var(--hilya-rose-deep);
 }
 
 .drawer-item__price {
@@ -278,15 +354,20 @@
 }
 
 .drawer-item__price s {
-  color: var(--cart-muted);
+  color: var(--hilya-muted);
   font-size: 0.8rem;
 }
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
 
 .cart-drawer__footer {
   z-index: 1;
   flex-shrink: 0;
-  border-block-start: 1px solid var(--cart-border);
-  background: var(--cart-background);
+  border-block-start: 1px solid var(--hilya-line);
+  background: var(--hilya-cream);
   padding: 2rem 2.5rem max(1.25rem, env(safe-area-inset-bottom));
 }
 
@@ -294,7 +375,14 @@
   display: flex;
   min-height: 3.3rem;
   margin-block-end: 1.25rem;
-  border: 1px solid var(--cart-border);
+  overflow: hidden;
+  border: 1px solid var(--hilya-line);
+  border-radius: var(--hilya-radius);
+  background: #fff;
+}
+
+.cart-discount:focus-within {
+  border-color: var(--hilya-rose);
 }
 
 .cart-discount input {
@@ -303,20 +391,26 @@
   flex: 1;
   border: 0;
   border-radius: 0;
-  background: var(--cart-background);
-  color: var(--cart-color);
+  background: transparent;
+  color: var(--hilya-ink);
   padding-inline: 1.25rem;
   font-size: 0.85rem;
+  outline: 0;
 }
 
 .cart-discount button {
   flex-shrink: 0;
   border: 0;
   background: transparent;
-  color: var(--cart-color);
+  color: var(--hilya-ink);
   padding-inline: 1.1rem;
+  cursor: pointer;
   font-size: 0.8rem;
   text-decoration: underline;
+}
+
+.cart-discount button:hover {
+  color: var(--hilya-rose-deep);
 }
 
 .cart-drawer__total,
@@ -343,31 +437,60 @@
   font-size: 0.8rem;
 }
 
-.cart-drawer__checkout,
-.cart-drawer__shop {
+/* Checkout and Continue shopping: the same soft black button as Add to cart on the product page.
+   Deep rose gold with white text on hover (no movement, and the text colour changes at once so it stays sharp) */
+.cart-drawer :is(.cart-drawer__checkout, .cart-drawer__shop) {
   min-height: 3.5rem;
-  border: 1px solid var(--hilya-ink);
-  border-radius: 0;
-  background: var(--hilya-ink);
+  border: 1px solid var(--hilya-ink-soft);
+  border-radius: var(--hilya-radius);
+  background: var(--hilya-ink-soft);
+  box-shadow: var(--hilya-button-depth);
   color: #fff;
-  font-size: 0.9rem;
+  cursor: pointer;
+  font-size: 0.8rem;
   font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background-color .3s ease, color .3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.cart-drawer__checkout:hover,
-.cart-drawer__shop:hover {
-  background: transparent;
-  color: var(--hilya-ink);
+[dir='rtl'] .cart-drawer :is(.cart-drawer__checkout, .cart-drawer__shop) {
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+
+.cart-drawer :is(.cart-drawer__checkout, .cart-drawer__shop):hover:not(:disabled) {
+  border-color: var(--hilya-rose-deep);
+  background: var(--hilya-rose-deep);
+  color: #fff;
+}
+
+.cart-drawer :is(.cart-drawer__checkout, .cart-drawer__shop):active:not(:disabled) {
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 22%);
+}
+
+.cart-drawer :is(.cart-drawer__checkout, .cart-drawer__shop):disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .cart-drawer__taxes {
   margin: 0.65rem 0 0;
-  color: var(--cart-muted);
+  color: var(--hilya-muted);
   font-size: 0.72rem;
   text-align: center;
 }
+
+
+/* =========================================================
+   EMPTY CART
+   ========================================================= */
 
 .cart-drawer__empty {
   display: grid;
@@ -394,9 +517,15 @@
   font-weight: 500;
 }
 
+
+/* =========================================================
+   YOU MAY ALSO LIKE
+   Drag the row with the mouse (cart-drawer.js) or use the arrows.
+   ========================================================= */
+
 .cart-recommendations {
   margin-block-start: 0.5rem;
-  border-block-start: 1px solid var(--cart-border);
+  border-block-start: 1px solid var(--hilya-line);
   padding-block-start: 1.75rem;
 }
 
@@ -422,7 +551,6 @@
   gap: 0.5rem;
 }
 
-
 [data-cart-previous] svg,
 [dir='rtl'] [data-cart-next] svg {
   transform: rotate(180deg);
@@ -438,8 +566,22 @@
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  padding-block-end: 0.6rem;
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.cart-recommendations__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.cart-recommendations__rail.is-scrollable {
+  cursor: grab;
+}
+
+.cart-recommendations__rail.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
 }
 
 .cart-recommendation {
@@ -460,11 +602,12 @@
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
+  -webkit-user-drag: none;
 }
 
 .cart-recommendation__price {
   margin: 0.2rem 0 0;
-  color: var(--cart-muted);
+  color: var(--hilya-muted);
   font-size: 0.85rem;
 }
 
@@ -472,9 +615,19 @@
   display: inline-flex;
   min-height: 2.75rem;
   align-items: center;
+  color: var(--hilya-rose-deep);
   font-size: 0.8rem;
   text-transform: uppercase;
 }
+
+.cart-recommendation__choose:hover {
+  color: var(--hilya-ink);
+}
+
+
+/* =========================================================
+   NOTICES
+   ========================================================= */
 
 .cart-toast,
 .cart-feedback {
@@ -521,6 +674,7 @@
   background: transparent;
   color: inherit;
   padding: 0.75rem;
+  cursor: pointer;
 }
 
 .cart-toast button svg {
@@ -555,8 +709,21 @@
   display: none;
 }
 
+
+/* =========================================================
+   MOTION
+   When the cart opens, the offer, the products and the suggestions rise one after the other
+   and the footer fades in. Adding or removing a product later does not replay it.
+   cart-drawer.js adds .is-revealing and gives every piece its --reveal-index.
+   ========================================================= */
+
 @keyframes cart-slide-in {
   from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes cart-slide-in-rtl {
+  from { transform: translateX(-100%); }
   to { transform: translateX(0); }
 }
 
@@ -564,6 +731,37 @@
   from { opacity: 0; transform: translateY(-0.5rem); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes cart-rise {
+  from { opacity: 0; transform: translateY(1.5rem); }
+}
+
+@keyframes cart-fade {
+  from { opacity: 0; }
+}
+
+.cart-drawer__content.is-revealing :is(.cart-offer, .drawer-item, .cart-drawer__empty, .cart-recommendations) {
+  animation: cart-rise 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+  animation-delay: calc(0.2s + var(--reveal-index, 0) * 0.16s);
+}
+
+.cart-drawer__content.is-revealing .cart-drawer__footer {
+  animation: cart-fade 1.1s ease 0.45s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-drawer__panel,
+  [dir='rtl'] .cart-drawer__panel,
+  .cart-toast,
+  .cart-drawer__content.is-revealing :is(.cart-offer, .drawer-item, .cart-drawer__empty, .cart-recommendations, .cart-drawer__footer) {
+    animation: none;
+  }
+}
+
+
+/* =========================================================
+   PHONES AND SHORT SCREENS
+   ========================================================= */
 
 @media (max-width: 749px) {
   .cart-drawer__header { min-height: 4.5rem; }
@@ -590,32 +788,4 @@
   .drawer-item { grid-template-columns: 4.75rem minmax(0, 1fr); row-gap: 0.5rem; }
   .drawer-item__media { grid-row: 1 / 3; }
   .drawer-item__price { grid-column: 2; justify-items: start; display: flex; flex-wrap: wrap; }
-}
-
-.cart-quantity input:focus-visible,
-.cart-quantity button:focus-visible {
-  outline: none;
-}
-
-.cart-quantity:focus-within {
-  border-color: var(--cart-color);
-}
-
-/* RTL: الدرج بيفتح من الشمال */
-[dir="rtl"] .cart-drawer__panel {
-  box-shadow: 1rem 0 3rem rgb(0 0 0 / 12%);
-  animation-name: cart-slide-in-rtl;
-}
-
-@keyframes cart-slide-in-rtl {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cart-drawer__panel,
-  [dir="rtl"] .cart-drawer__panel,
-  .cart-toast {
-    animation: none;
-  }
 }
