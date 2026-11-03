@@ -116,7 +116,7 @@
 
 .product-layout {
   /* width of the big picture (and of the small pictures under it): never taller than the screen */
-  --gallery-width: min(42rem, max(24rem, calc(100dvh - 22rem)));
+  --gallery-width: min(46rem, max(24rem, calc(100dvh - 20rem)));
 
   display: grid;
   grid-template-columns:
@@ -125,7 +125,7 @@
 
   /* the picture and the text sit together in the middle of the page */
   justify-content: center;
-  gap: clamp(1.5rem, 3vw, 3rem);
+  gap: clamp(2.5rem, 6vw, 6rem);
 
   align-items: start;
   direction: ltr;
@@ -657,8 +657,8 @@
 }
 
 /* Buttons
-   Add to cart  : the same colour as the small Add to cart on the product cards, with a thin rose outline
-   Buy it now   : black
+   Add to cart (on top)  : soft black with the cart icon
+   Buy it now (below)    : white, like the gallery arrows, with a thin rose outline
    On hover both turn deep rose gold with white text (the two never match each other at rest,
    and the hovered one never looks like the other one). */
 
@@ -705,9 +705,31 @@
   justify-content: center;
   gap: 0.6rem;
 
-  border-color: rgb(var(--hilya-rose-rgb) / 45%);
-  background: #fff;
-  color: var(--hilya-ink);
+  border-color: var(--hilya-ink-soft);
+  background: var(--hilya-ink-soft);
+  color: #fff;
+}
+
+/* the cart icon of the card button (hidden while adding and when sold out) */
+.product-form__actions [data-product-add]::before {
+  content: '';
+
+  width: 1.15rem;
+  height: 1.15rem;
+
+  flex-shrink: 0;
+
+  background: currentcolor;
+
+  --cart-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6'/%3E%3Ccircle cx='10' cy='20' r='1'/%3E%3Ccircle cx='18' cy='20' r='1'/%3E%3C/svg%3E");
+
+  -webkit-mask: var(--cart-icon) center / contain no-repeat;
+  mask: var(--cart-icon) center / contain no-repeat;
+}
+
+.product-form[aria-busy='true'] [data-product-add]::before,
+[data-product-add][data-unavailable]::before {
+  display: none;
 }
 
 .product-form__actions [data-product-add]:focus-visible {
@@ -717,9 +739,9 @@
 
 .product-form__actions .product-form__buy-now,
 .product-form__actions .shopify-payment-button__button--unbranded {
-  border-color: var(--hilya-ink-soft);
-  background: var(--hilya-ink-soft);
-  color: #fff;
+  border-color: rgb(var(--hilya-rose-rgb) / 45%);
+  background: #fff;
+  color: var(--hilya-ink);
 }
 
 /* hover (both buttons): deep rose gold with white text (no movement, so the text stays sharp) */
