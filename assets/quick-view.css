@@ -1,7 +1,7 @@
 /* =========================================================
    QUICK VIEW (the "Choose options" drawer that opens from Add to cart on the cards)
    The drawer is built by quick-view.js. The look follows the product page:
-   same option pills, same quantity box, same Add to cart button.
+   same option pills; the Add to cart button has the soft black of Buy it now.
    Shared colors come from hilya-style.
    ========================================================= */
 
@@ -209,6 +209,7 @@ html[dir="rtl"] .quick-view__price .price {
 .quick-view__pills {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.6rem;
 }
 
@@ -287,7 +288,7 @@ html[dir="rtl"] .quick-view__price .price {
 }
 
 .quick-view__pill:is([data-option-value*="gold" i], [data-option-value*="silver" i]):not(.is-selected) {
-  opacity: 0.55;
+  opacity: 0.85;
 }
 
 .quick-view__pill:is([data-option-value*="gold" i], [data-option-value*="silver" i]):not(.is-selected):hover {
@@ -353,7 +354,7 @@ html[dir="rtl"] .quick-view__price .price {
   padding: 0 0.9rem;
   border: 1px solid color-mix(in srgb, var(--hilya-ink) 16%, transparent);
   border-radius: 10px;
-  background: var(--color-background, #fffcf7);
+  background: #fff;
   color: inherit;
   font: inherit;
   font-size: 0.9rem;
@@ -374,58 +375,54 @@ html[dir="rtl"] .quick-view__price .price {
 }
 
 
-/* Quantity: the same box as the product page */
+/* Quantity: the simple box, like it was before */
 
 .quick-view__qty {
   display: inline-flex;
   align-items: center;
-  width: fit-content;
-  height: 3.1rem;
+  width: 8.5rem;
+  height: 3rem;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--hilya-ink) 14%, transparent);
-  border-radius: var(--hilya-radius);
-  background: var(--color-background, #fffcf7);
-  box-shadow: var(--hilya-button-depth);
+  border: 1px solid color-mix(in srgb, var(--hilya-ink) 45%, transparent);
+  border-radius: 0.5rem;
+  background: #fff;
 }
 
-/* each button fills its whole side of the box, so the hover colour covers all of it */
 .quick-view__qty-button {
   width: 2.75rem;
   height: 100%;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: inherit;
+  color: var(--hilya-ink);
   font: inherit;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   cursor: pointer;
+  transition: background-color 140ms ease;
 }
 
 .quick-view__qty-button:hover {
-  background: rgb(var(--hilya-rose-rgb) / 18%);
+  background: var(--hilya-beige);
 }
 
 .quick-view__qty-button:active {
-  background: rgb(var(--hilya-rose-rgb) / 26%);
+  background: var(--hilya-line);
 }
 
-/* the number is a small white field with a light edge, so it is clear that it can be typed in */
 .quick-view__qty-input {
-  width: 3.4rem;
-  height: calc(100% - 0.7rem);
-  border: 1px solid color-mix(in srgb, var(--hilya-ink) 12%, transparent);
-  border-radius: 8px;
-  background: #fff;
+  flex: 1;
+  width: 3rem;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: inherit;
   font: inherit;
   font-size: 0.95rem;
   text-align: center;
   appearance: textfield;
   -moz-appearance: textfield;
-}
-
-.quick-view__qty-input:focus {
-  border-color: color-mix(in srgb, var(--hilya-ink) 40%, transparent);
-  outline: 0;
 }
 
 .quick-view__qty-input::-webkit-inner-spin-button,
@@ -449,14 +446,18 @@ html[dir="rtl"] .quick-view__price .price {
   background: var(--color-background, #fffcf7);
 }
 
-/* the same Add to cart as the product page: card colour with a thin rose outline, deep rose gold on hover */
+/* the soft black of Buy it now on the product page, with the cart icon of the card button; deep rose gold on hover */
 .quick-view__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
   height: 3.4rem;
-  border: 1px solid rgb(var(--hilya-rose-rgb) / 45%);
+  border: 1px solid var(--hilya-ink-soft);
   border-radius: var(--hilya-radius);
-  background: var(--color-background, #fffcf7);
+  background: var(--hilya-ink-soft);
   box-shadow: var(--hilya-button-depth);
-  color: var(--hilya-ink);
+  color: #fff;
   font: inherit;
   font-size: 0.8rem;
   letter-spacing: 0.14em;
@@ -470,6 +471,17 @@ html[dir="rtl"] .quick-view__price .price {
     box-shadow 0.2s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.quick-view__add::before {
+  content: "";
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  background: currentcolor;
+  -webkit-mask: var(--cart-icon) center / contain no-repeat;
+  mask: var(--cart-icon) center / contain no-repeat;
+  --cart-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 7H6'/%3E%3Ccircle cx='10' cy='20' r='1'/%3E%3Ccircle cx='18' cy='20' r='1'/%3E%3C/svg%3E");
 }
 
 .quick-view__add:hover:not(:disabled) {
