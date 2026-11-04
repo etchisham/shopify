@@ -51,11 +51,11 @@
 >
   <div class="sales__inner">
 
-    <div class="sales__content">
+    {% if sales_offer != blank %}
+      <p class="sales__offer" data-reveal>{{ sales_offer | escape }}</p>
+    {% endif %}
 
-      {% if sales_offer != blank %}
-        <p class="sales__offer" data-reveal>{{ sales_offer | escape }}</p>
-      {% endif %}
+    <div class="sales__content">
 
       {% if sales_eyebrow != blank %}
         <p class="sales__eyebrow" data-reveal>{{ sales_eyebrow | escape }}</p>
@@ -85,8 +85,7 @@
           href="{{ section.settings.button_link | default: '#' }}"
           data-reveal
         >
-          <span>{{ sales_button | escape }}</span>
-          <span class="sales__arrow" aria-hidden="true">→</span>
+          {{ sales_button | escape }}
         </a>
       {% endif %}
 
@@ -233,6 +232,19 @@
       window.addEventListener('load', () => setTimeout(settle, 150));
     }
 
+    /* ---------- the text starts under the middle of the offer name ---------- */
+
+    const offerName = section.querySelector('.sales__offer');
+
+    if (offerName) {
+      const syncOffer = () => section.style.setProperty('--sales-offer-half', offerName.offsetWidth / 2 + 'px');
+
+      syncOffer();
+
+      if ('ResizeObserver' in window) new ResizeObserver(syncOffer).observe(offerName);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncOffer);
+    }
+
     /* ---------- countdown (the end time is Cairo time) ---------- */
 
     const timer = section.querySelector('[data-sales-timer]');
@@ -339,6 +351,9 @@
     let target = null;
     let drag = null;
     let suppressClick = false;
+    let needsSnap = false;
+    let lastInput = 0;
+    let started = false;
     let visible = false;
     let running = false;
     let lastTime = 0;
@@ -350,6 +365,9 @@
       const u = (x - width / 2) / (width / 2);
       return EDGE + sag * (1 - u * u);
     };
+
+    /* the tags always come to rest with one tag in the middle, so the window shows whole tags and half tags at the sides */
+    const snapTo = (value) => width / 2 + spacing * Math.round((value - width / 2) / spacing);
 
     const layout = () => {
       /* the tags must be in their real (absolute) mode before anything is measured */
@@ -432,6 +450,13 @@
 
       ropeLines.forEach((line) => line.setAttribute('d', d));
 
+      if (!fixed) {
+        offset = started ? snapTo(offset) : width / 2 - spacing;
+        target = null;
+        velocity = 0;
+      }
+
+      started = true;
       stage.classList.toggle('is-draggable', !fixed);
     };
 
@@ -480,11 +505,15 @@
             offset = target;
             target = null;
           }
-        } else if (Math.abs(velocity) > 0.008) {
+        } else if (Math.abs(velocity) > 0.06) {
           offset += velocity * dt;
           velocity *= Math.pow(0.94, step);
-        } else {
+        } else if (needsSnap && now - lastInput > 140) {
           velocity = 0;
+          needsSnap = false;
+
+          if (reduce) offset = snapTo(offset);
+          else target = snapTo(offset);
         }
       }
 
@@ -501,7 +530,7 @@
 
       render(now);
 
-      const busy = Boolean(drag && drag.moved) || target !== null || Math.abs(velocity) > 0;
+      const busy = Boolean(drag && drag.moved) || target !== null || Math.abs(velocity) > 0 || needsSnap;
 
       if (reduce && !busy) {
         running = false;
@@ -573,6 +602,8 @@
 
         if (reduceQuery.matches) velocity = 0;
 
+        needsSnap = true;
+        lastInput = 0;
         suppressClick = true;
         setTimeout(() => { suppressClick = false; }, 60);
         stage.classList.remove('is-dragging');
@@ -603,6 +634,8 @@
       offset += sign * -event.deltaX;
       target = null;
       velocity = 0;
+      needsSnap = true;
+      lastInput = performance.now();
       wake();
     }, { passive: false });
 
@@ -706,8 +739,8 @@
 .sales {
   --sales-extra-top: var(--sales-content-desktop, 0px);
   --sales-heading-leading: .84; /* heading line spacing: lower = closer lines */
-  --sales-card-w: 124px;
-  --sales-gap: 14px;
+  --sales-card-w: 140px;
+  --sales-gap: 36px;
   --sales-light: color-mix(in srgb, var(--hilya-rose-light) 30%, #fff);
   --sales-soft: color-mix(in srgb, var(--hilya-rose-light) 55%, #fff);
   width: 100vw;
@@ -721,12 +754,13 @@
 
 .sales__inner {
   display: grid;
-  grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    "timer timer"
+    "offer timer"
     "content stage";
   align-items: center;
   column-gap: clamp(32px, 4vw, 64px);
+  row-gap: 8px;
 }
 
 .sales__content {
@@ -736,33 +770,33 @@
   justify-content: center;
   align-items: flex-start;
   max-width: 520px;
-  padding: 20px 0;
+  /* the text starts under the middle of the offer name (the script measures it) */
+  padding: 20px 0 20px var(--sales-offer-half, 0px);
 }
 
-/* OFFER NAME (shown only when it is filled in) */
+[dir="rtl"] .sales__content {
+  padding: 20px var(--sales-offer-half, 0px) 20px 0;
+}
+
+/* OFFER NAME (shown only when it is filled in): top row, same level as the countdown label */
 
 .sales__offer {
+  grid-area: offer;
+  align-self: start;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 18px;
-  padding: 5px 14px;
+  height: 32px;
+  margin: 0;
+  padding: 0 20px;
   border-radius: 999px;
   background: var(--hilya-rose-deep);
   color: #fff;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1;
   letter-spacing: .08em;
-}
-
-.sales__offer::before {
-  content: "";
-  flex: none;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--sales-soft);
+  white-space: nowrap;
 }
 
 /* EYEBROW (its look comes from hilya-style) */
@@ -826,34 +860,26 @@
 .sales__link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   align-self: flex-start;
-  gap: 8px;
-  color: var(--hilya-ink);
+  padding: 14px 28px;
+  border: 1px solid var(--hilya-rose-deep);
+  border-radius: var(--hilya-radius);
+  background: var(--hilya-rose-deep);
+  box-shadow: var(--hilya-button-depth);
+  color: #fff;
   text-decoration: none;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .14em;
   text-transform: uppercase;
-  transition: color .3s ease;
-}
-
-.sales__arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  line-height: 1;
-  margin-top: -1px;
-  transition: transform .3s ease;
+  transition: background-color .3s ease, border-color .3s ease;
 }
 
 .sales__link:hover {
-  color: var(--hilya-rose-deep);
-}
-
-.sales__link:hover .sales__arrow {
-  transform: translateX(4px);
+  border-color: var(--hilya-rose);
+  background: var(--hilya-rose);
 }
 
 /* COUNTDOWN: top right in English, top left in Arabic */
@@ -869,7 +895,10 @@
 }
 
 .sales__timer-label {
-  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin: 0;
   color: var(--hilya-rose);
   font-size: 10px;
   line-height: 1;
@@ -917,6 +946,8 @@
 .sales__stage {
   grid-area: stage;
   position: relative;
+  width: calc(4 * (var(--sales-card-w) + var(--sales-gap)));
+  max-width: 100%;
   min-height: 420px;
   overflow: hidden;
   touch-action: pan-y;
@@ -1084,7 +1115,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: 56px;
-  padding: 0 9px 12px;
+  padding: 0 10px 15px;
   border-radius: var(--hilya-radius);
   background: var(--tag-bg);
   color: var(--tag-ink);
@@ -1123,7 +1154,7 @@
   margin-top: 10px;
   color: var(--tag-off);
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: 25px;
+  font-size: 29px;
   font-style: italic;
   line-height: 1;
 }
@@ -1134,14 +1165,14 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
-  margin-top: 6px;
-  font-size: 11px;
+  margin-top: 7px;
+  font-size: 12.5px;
   line-height: 1.35;
 }
 
 .sales-tag__price {
-  margin-top: 3px;
-  font-size: 11px;
+  margin-top: 4px;
+  font-size: 12.5px;
   line-height: 1.3;
 }
 
@@ -1198,17 +1229,27 @@
     padding: calc(25px + var(--sales-extra-top)) 28px 0;
   }
 
+  .sales {
+    --sales-card-w: 124px;
+    --sales-gap: 22px;
+  }
+
   .sales__inner {
-    grid-template-columns: minmax(230px, .8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
     column-gap: 32px;
+  }
+
+  .sales__stage {
+    width: 100%;
   }
 
   .sales__heading {
     font-size: 46px;
   }
 
-  .sales__content {
-    padding: 15px 0;
+  .sales__content,
+  [dir="rtl"] .sales__content {
+    padding-block: 15px;
   }
 }
 
@@ -1217,7 +1258,8 @@
 @media (max-width: 749px) {
   .sales {
     --sales-extra-top: var(--sales-content-mobile, 0px);
-    --sales-card-w: 132px;
+    --sales-card-w: 136px;
+    --sales-gap: 20px;
     margin-top: var(--sales-section-mobile, 0px);
     padding: calc(25px + var(--sales-extra-top)) 16px 35px;
   }
@@ -1225,15 +1267,40 @@
   .sales__inner {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
+      "offer"
       "content"
       "timer"
       "stage";
     row-gap: 0;
   }
 
-  .sales__content {
+  /* everything is centered on phones */
+
+  .sales__offer {
+    justify-self: center;
+    height: 36px;
+    margin-bottom: 18px;
+  }
+
+  .sales__content,
+  [dir="rtl"] .sales__content {
+    align-items: center;
     max-width: none;
     padding: 0 10px 10px;
+    text-align: center;
+  }
+
+  .sales__eyebrow {
+    text-align: center;
+  }
+
+  .sales__heading {
+    align-items: center;
+    text-align: center;
+  }
+
+  .sales__stage {
+    width: 100%;
   }
 
   .sales__eyebrow {
@@ -1247,6 +1314,16 @@
   .sales__text {
     max-width: 340px;
     margin-bottom: 28px;
+    margin-inline: auto;
+  }
+
+  .sales__text::before {
+    margin-inline: auto;
+  }
+
+  .sales.has-reveal .sales__text::before,
+  [dir="rtl"] .sales.has-reveal .sales__text::before {
+    transform-origin: center;
   }
 
   .sales__text p {
@@ -1255,19 +1332,20 @@
   }
 
   .sales__link {
-    font-size: 9px;
-    gap: 6px;
-  }
-
-  .sales__arrow {
-    font-size: 12px;
-    position: relative;
-    top: -2px;
+    align-self: center;
+    padding: 13px 26px;
+    font-size: 10px;
   }
 
   .sales__timer {
-    justify-self: start;
-    margin: 6px 10px 18px;
+    justify-self: center;
+    margin: 6px 0 18px;
+  }
+
+  .sales__timer-label {
+    justify-content: center;
+    height: auto;
+    margin-bottom: 8px;
   }
 
   .sales__timer-cell {
@@ -1330,14 +1408,6 @@
   transform-origin: right center;
 }
 
-[dir="rtl"] .sales__arrow {
-  transform: scaleX(-1);
-}
-
-[dir="rtl"] .sales__link:hover .sales__arrow {
-  transform: scaleX(-1) translateX(4px);
-}
-
 [dir="rtl"] .sales__heading {
   line-height: 1.2;
   font-style: normal;
@@ -1353,7 +1423,7 @@
 }
 
 [dir="rtl"] .sales__offer {
-  font-size: 13px;
+  font-size: 15px;
 }
 
 [dir="rtl"] .sales__timer-label {
@@ -1366,7 +1436,7 @@
 
 [dir="rtl"] .sales-tag__name,
 [dir="rtl"] .sales-tag__price {
-  font-size: 12px;
+  font-size: 13.5px;
 }
 
 @media (max-width: 749px) {
@@ -1376,15 +1446,6 @@
 
   [dir="rtl"] .sales__link {
     font-size: 12px;
-  }
-}
-
-/* REDUCED MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-  .sales__link:hover .sales__arrow,
-  [dir="rtl"] .sales__link:hover .sales__arrow {
-    transform: none;
   }
 }
 
