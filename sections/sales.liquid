@@ -1,14 +1,23 @@
 {%- liquid
   assign story_locale = request.locale.iso_code | split: '-' | first
 
+  assign story_badge = section.settings.badge
   assign story_eyebrow = section.settings.eyebrow
   assign story_line_1 = section.settings.heading_line_1
   assign story_line_2 = section.settings.heading_line_2
   assign story_description = section.settings.description
   assign story_button = section.settings.button_label
-  assign story_alt = section.settings.image_alt
+  assign story_timer_label = section.settings.countdown_label
+
+  assign unit_d = 'Days'
+  assign unit_h = 'Hours'
+  assign unit_m = 'Min'
+  assign unit_s = 'Sec'
 
   if story_locale == 'ar'
+    if section.settings.badge_ar != blank
+      assign story_badge = section.settings.badge_ar
+    endif
     if section.settings.eyebrow_ar != blank
       assign story_eyebrow = section.settings.eyebrow_ar
     endif
@@ -24,55 +33,71 @@
     if section.settings.button_label_ar != blank
       assign story_button = section.settings.button_label_ar
     endif
-    if section.settings.image_alt_ar != blank
-      assign story_alt = section.settings.image_alt_ar
+    if section.settings.countdown_label_ar != blank
+      assign story_timer_label = section.settings.countdown_label_ar
     endif
+    assign unit_d = 'أيام'
+    assign unit_h = 'ساعات'
+    assign unit_m = 'دقائق'
+    assign unit_s = 'ثواني'
   endif
 
-  case section.settings.mobile_shape
-    when 'square'
-      assign story_mobile_ratio = '1 / 1'
-    when 'portrait'
-      assign story_mobile_ratio = '4 / 5'
-    else
-      assign story_mobile_ratio = '2.05 / 1'
-  endcase
+  # Shop time zone offset (e.g. +0200 becomes +02:00) so the countdown ends
+  # at the same moment for every visitor.
+  assign tz_raw = 'now' | date: '%z'
+  assign tz_hours = tz_raw | slice: 0, 3
+  assign tz_mins = tz_raw | slice: 3, 2
+  assign tz_offset = tz_hours | append: ':' | append: tz_mins
+
+  # Tags sit on the rope in fixed spots:
+  # 1 tag = centre, 2 tags = left + right, 3 tags = left, centre, right
+  assign tags_count = section.blocks.size
+  if tags_count == 1
+    assign slots_arr = 'p2' | split: ','
+    assign tones_arr = 'lt' | split: ','
+  elsif tags_count == 2
+    assign slots_arr = 'p1,p3' | split: ','
+    assign tones_arr = 'dk,lt' | split: ','
+  else
+    assign slots_arr = 'p1,p2,p3' | split: ','
+    assign tones_arr = 'dk,lt,dk' | split: ','
+  endif
 -%}
 
 <section
   class="story-section"
-  style="--story-section-desktop: {{ section.settings.section_space_desktop }}px; --story-section-mobile: {{ section.settings.section_space_mobile }}px; --story-content-desktop: {{ section.settings.content_space_desktop }}px; --story-content-mobile: {{ section.settings.content_space_mobile }}px; --story-pos-x: {{ section.settings.desktop_position_x }}%; --story-pos-y: {{ section.settings.desktop_position_y }}%; --story-mobile-pos-x: {{ section.settings.mobile_position_x }}%; --story-mobile-pos-y: {{ section.settings.mobile_position_y }}%; --story-mobile-ratio: {{ story_mobile_ratio }};"
+  style="--story-section-desktop: {{ section.settings.section_space_desktop }}px; --story-section-mobile: {{ section.settings.section_space_mobile }}px; --story-content-desktop: {{ section.settings.content_space_desktop }}px; --story-content-mobile: {{ section.settings.content_space_mobile }}px;"
 >
+
+  {% if section.settings.countdown_end != blank %}
+    <div class="story-section__top">
+      <div
+        class="story-timer"
+        data-countdown
+        data-end="{{ section.settings.countdown_end | escape }}"
+        data-offset="{{ tz_offset }}"
+        role="timer"
+      >
+        {% if story_timer_label != blank %}
+          <small class="story-timer__label">{{ story_timer_label | escape }}</small>
+        {% endif %}
+        <div class="story-timer__units">
+          <div class="story-timer__unit"><b class="story-timer__num" data-unit="d">00</b><span class="story-timer__name">{{ unit_d }}</span></div>
+          <div class="story-timer__unit"><b class="story-timer__num" data-unit="h">00</b><span class="story-timer__name">{{ unit_h }}</span></div>
+          <div class="story-timer__unit"><b class="story-timer__num" data-unit="m">00</b><span class="story-timer__name">{{ unit_m }}</span></div>
+          <div class="story-timer__unit"><b class="story-timer__num" data-unit="s">00</b><span class="story-timer__name">{{ unit_s }}</span></div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
   <div class="story-section__inner">
 
-    <div class="story-section__media">
-      {% if section.settings.image != blank %}
-        <picture>
-          {% if section.settings.mobile_image != blank %}
-            <source
-              media="(max-width: 749px)"
-              srcset="{{ section.settings.mobile_image | image_url: width: 750 }} 750w, {{ section.settings.mobile_image | image_url: width: 1125 }} 1125w, {{ section.settings.mobile_image | image_url: width: 1500 }} 1500w"
-              sizes="100vw"
-            >
-          {% endif %}
-          {{
-            section.settings.image
-            | image_url: width: 1800
-            | image_tag:
-              widths: '600, 900, 1200, 1500, 1800',
-              sizes: '(min-width: 750px) 60vw, 100vw',
-              loading: 'lazy',
-              alt: story_alt
-          }}
-        </picture>
-      {% else %}
-        {{ 'lifestyle-1' | placeholder_svg_tag: 'story-section__placeholder' }}
-      {% endif %}
-    </div>
-    
-
     <div class="story-section__content">
+
+      {% if story_badge != blank %}
+        <p class="story-section__badge">{{ story_badge | escape }}</p>
+      {% endif %}
 
       {% if story_eyebrow != blank %}
         <p class="story-section__eyebrow">
@@ -110,6 +135,109 @@
 
     </div>
 
+    <div class="story-stage">
+      <svg class="story-rope" viewBox="0 0 400 392" aria-hidden="true" focusable="false">
+        <path d="M-23 -7 Q200 183 423 -7" fill="none" stroke="#6f4235" stroke-width="5.5" stroke-linecap="round"></path>
+        <path d="M-23 -7 Q200 183 423 -7" fill="none" stroke="#8f5a4b" stroke-width="4.5" stroke-linecap="round"></path>
+        <path d="M-23 -7 Q200 183 423 -7" fill="none" stroke="#d9b3a6" stroke-width="4.5" stroke-dasharray="1.4 4.2" opacity=".6"></path>
+      </svg>
+
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign slot = slots_arr[forloop.index0]
+          assign tone = tones_arr[forloop.index0]
+
+          assign product = block.settings.product
+
+          assign tag_name = block.settings.name
+          if story_locale == 'ar' and block.settings.name_ar != blank
+            assign tag_name = block.settings.name_ar
+          endif
+          if tag_name == blank and product != blank
+            assign tag_name = product.title
+          endif
+
+          assign tag_price = block.settings.price
+          assign tag_compare = block.settings.compare_price
+          assign tag_discount = block.settings.discount
+          assign tag_img = block.settings.image
+          assign tag_url = block.settings.link
+
+          if product != blank
+            if tag_price == blank
+              assign tag_price = product.price | money_without_trailing_zeros
+            endif
+            if product.compare_at_price > product.price
+              if tag_compare == blank
+                assign tag_compare = product.compare_at_price | money_without_trailing_zeros
+              endif
+              if tag_discount == blank
+                assign tag_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
+                assign tag_discount = tag_pct | prepend: '-' | append: '%'
+              endif
+            endif
+            if tag_img == blank
+              assign tag_img = product.featured_image
+            endif
+            if tag_url == blank
+              assign tag_url = product.url
+            endif
+          endif
+
+          if tag_url == blank
+            assign tag_url = section.settings.button_link
+          endif
+
+          if tag_url != blank
+            assign tag_el = 'a'
+          else
+            assign tag_el = 'div'
+          endif
+        -%}
+
+        <svg class="story-ring story-ring--back is-{{ slot }} tone-{{ tone }}" viewBox="0 0 16 24" aria-hidden="true" focusable="false"><path d="M8 1.5 A5.5 10.5 0 0 1 8 22.5" fill="none" stroke-width="2.2"></path></svg>
+        <svg class="story-ring story-ring--front is-{{ slot }} tone-{{ tone }}" viewBox="0 0 16 24" aria-hidden="true" focusable="false"><path d="M8 1.5 A5.5 10.5 0 0 0 8 22.5" fill="none" stroke-width="2.2"></path></svg>
+
+        <{{ tag_el }}
+          class="story-tag is-{{ slot }} tone-{{ tone }}"
+          {% if tag_url != blank %}href="{{ tag_url }}"{% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <svg class="story-tag__thread" viewBox="0 0 12 56" aria-hidden="true" focusable="false">
+            <path class="t1" d="M6 0 C9 14 3 30 6 56" fill="none" stroke-width="2.6" stroke-linecap="round"></path>
+            <path class="t2" d="M6 0 C9 14 3 30 6 56" fill="none" stroke-width="2.6" stroke-dasharray="1 3" opacity=".5"></path>
+          </svg>
+          <span class="story-tag__card">
+            <span class="story-tag__hole"></span>
+            <span class="story-tag__photo">
+              {%- if tag_img != blank -%}
+                {{
+                  tag_img
+                  | image_url: width: 300
+                  | image_tag:
+                    widths: '150, 225, 300',
+                    sizes: '(min-width: 750px) 160px, 100px',
+                    loading: 'lazy',
+                    alt: tag_name
+                }}
+              {%- else -%}
+                <i></i>
+              {%- endif -%}
+            </span>
+            {% if tag_discount != blank %}
+              <span class="story-tag__off" dir="ltr">{{ tag_discount | escape }}</span>
+            {% endif %}
+            {% if tag_name != blank %}
+              <span class="story-tag__name">{{ tag_name | escape }}</span>
+            {% endif %}
+            {% if tag_price != blank %}
+              <span class="story-tag__price" dir="ltr">{{ tag_price | escape }}{% if tag_compare != blank %}<s>{{ tag_compare | escape }}</s>{% endif %}</span>
+            {% endif %}
+          </span>
+        </{{ tag_el }}>
+      {%- endfor -%}
+    </div>
+
   </div>
 
 </section>
@@ -117,20 +245,64 @@
 <script>
   (() => {
     const section = document.currentScript.previousElementSibling;
+    if (!section) return;
 
+    /* COUNTDOWN (runs everywhere, also in the theme editor) */
+    const timer = section.querySelector('[data-countdown]');
+
+    if (timer) {
+      const top = timer.closest('.story-section__top') || timer;
+      const m = (timer.dataset.end || '').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})/);
+      const end = m
+        ? Date.parse(m[1] + '-' + m[2] + '-' + m[3] + 'T' + m[4].padStart(2, '0') + ':' + m[5] + ':00' + (timer.dataset.offset || 'Z'))
+        : NaN;
+      const cells = {
+        d: timer.querySelector('[data-unit="d"]'),
+        h: timer.querySelector('[data-unit="h"]'),
+        m: timer.querySelector('[data-unit="m"]'),
+        s: timer.querySelector('[data-unit="s"]')
+      };
+      const pad = (n) => String(n).padStart(2, '0');
+      let tick;
+
+      const update = () => {
+        if (!section.isConnected) { clearInterval(tick); return; }
+
+        const left = end - Date.now();
+
+        if (isNaN(end) || left <= 0) {
+          top.hidden = true;
+          clearInterval(tick);
+          return;
+        }
+
+        top.hidden = false;
+        const s = Math.floor(left / 1000);
+        cells.d.textContent = pad(Math.floor(s / 86400));
+        cells.h.textContent = pad(Math.floor((s % 86400) / 3600));
+        cells.m.textContent = pad(Math.floor((s % 3600) / 60));
+        cells.s.textContent = pad(s % 60);
+      };
+
+      update();
+      tick = setInterval(update, 1000);
+    }
+
+    /* REVEAL ON SCROLL */
     if (
-      !section ||
       !('IntersectionObserver' in window) ||
       (window.Shopify && window.Shopify.designMode) ||
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) return;
 
     const items = [].concat(
-      section.querySelector('.story-section__media'),
+      section.querySelector('.story-section__top'),
+      section.querySelector('.story-section__badge'),
       section.querySelector('.story-section__eyebrow'),
       Array.from(section.querySelectorAll('.story-section__heading span')),
       section.querySelector('.story-section__text'),
-      section.querySelector('.story-section__link')
+      section.querySelector('.story-section__link'),
+      section.querySelector('.story-stage')
     ).filter(Boolean);
 
     if (!items.length) return;
@@ -187,39 +359,76 @@
   margin-top: var(--story-section-desktop, 0px);
   padding: calc(35px + var(--story-extra-top)) max(24px, calc((100vw - 1400px) / 2)) 45px;
   box-sizing: border-box;
-  background: var(--hilya-beige);
+  background: var(--hilya-beige, #F7F4EE);
 }
+
+/* COUNTDOWN */
+
+.story-section__top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+}
+
+.story-section__top[hidden] {
+  display: none;
+}
+
+.story-timer {
+  text-align: end;
+}
+
+.story-timer__label {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--hilya-rose, #A9705F);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.story-timer__units {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.story-timer__unit {
+  width: 48px;
+  padding: 8px 0 6px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid rgb(169 112 95 / 28%);
+  border-radius: 10px;
+}
+
+.story-timer__num {
+  display: block;
+  color: #151515;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.story-timer__name {
+  display: block;
+  margin-top: 3px;
+  color: var(--hilya-muted, #6b6560);
+  font-size: 8px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* LAYOUT */
 
 .story-section__inner {
   display: grid;
-  grid-template-columns: 50% minmax(0, 1fr);
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
   align-items: center;
-  gap: clamp(40px, 4vw, 65px);
-}
-
-/* IMAGE */
-
-.story-section__media {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background: var(--hilya-beige);
-  border-radius: var(--hilya-radius);
-}
-
-.story-section__media img,
-.story-section__placeholder {
-  display: block;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 2.15 / 1;
-  object-fit: cover;
-  object-position: var(--story-pos-x, 50%) var(--story-pos-y, 50%);
-}
-
-.story-section__media picture {
-  display: block;
-  width: 100%;
+  gap: clamp(24px, 4vw, 64px);
 }
 
 /* CONTENT */
@@ -232,10 +441,39 @@
   padding: 20px 0;
 }
 
+/* BADGE (pill) */
+
+.story-section__badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 4px 12px;
+  color: #fff;
+  background: #8f5a4b;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: .06em;
+}
+
+.story-section__badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ecd5cb;
+}
+
 /* EYEBROW */
 
 .story-section__eyebrow {
-  margin: 0 0 20px;
+  margin: 0 0 18px;
+  color: var(--hilya-rose, #A9705F);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
 }
 
 /* HEADING */
@@ -265,7 +503,7 @@
 
 .story-section__text p {
   margin: 0;
-  color: var(--hilya-muted);
+  color: var(--hilya-muted, #6b6560);
   font-size: 13px;
   line-height: 1.8;
   font-weight: 400;
@@ -275,7 +513,6 @@
   color: #111111;
   font-weight: 600;
 }
-
 
 /* LINK */
 
@@ -313,8 +550,209 @@
 }
 
 .story-section__link:hover {
-  color: var(--hilya-rose-deep);
+  color: var(--hilya-rose-deep, #8f5a4b);
 }
+
+/* =========================================================
+   ROPE + HANGING TAGS
+   Everything inside the stage is sized with --u (1 unit =
+   1/400 of the stage width), so it scales as one picture.
+   ========================================================= */
+
+.story-stage {
+  --u: 1.4px;
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  justify-self: center;
+  aspect-ratio: 400 / 392;
+  container-type: inline-size;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+@supports (width: 1cqw) {
+  .story-stage {
+    --u: calc(100cqw / 400);
+  }
+}
+
+.story-rope {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* tag colours */
+
+.tone-dk {
+  --c1: #e2bdb0;
+  --c2: #8f5a4b;
+}
+
+.tone-lt {
+  --c1: #8f5a4b;
+  --c2: #e2bdb0;
+}
+
+/* swing: each tag has its own angle and delay */
+
+.is-p1 { --a: 1.2deg;  animation-delay: -1.2s; }
+.is-p2 { --a: -.8deg;  animation-delay: -3.1s; }
+.is-p3 { --a: 1.6deg;  animation-delay: -4.4s; }
+
+@keyframes story-sway {
+  0%, 100% { transform: rotate(calc(var(--a) + 1.4deg)); }
+  50%      { transform: rotate(calc(var(--a) - 1.4deg)); }
+}
+
+/* rings threaded on the rope (back half behind the rope, front half over it) */
+
+.story-ring {
+  position: absolute;
+  width: calc(16 * var(--u));
+  height: calc(24 * var(--u));
+  transform-origin: 50% 50%;
+  animation: story-sway 5.6s ease-in-out infinite;
+}
+
+.story-ring path {
+  stroke: var(--c1);
+}
+
+.story-ring--back  { z-index: 1; }
+.story-ring--front { z-index: 3; }
+
+.story-ring.is-p1 { left: calc(18% - 8 * var(--u)); top: calc(14.5% - 12 * var(--u)); }
+.story-ring.is-p2 { left: calc(50% - 8 * var(--u)); top: calc(22.4% - 12 * var(--u)); }
+.story-ring.is-p3 { left: calc(82% - 8 * var(--u)); top: calc(14.5% - 12 * var(--u)); }
+
+/* the tag */
+
+.story-tag {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(112 * var(--u));
+  color: inherit;
+  text-decoration: none;
+  transform-origin: 50% calc(-10 * var(--u));
+  animation: story-sway 5.6s ease-in-out infinite;
+}
+
+.story-tag:hover {
+  animation-play-state: paused;
+}
+
+.story-tag.is-p1 { left: calc(18% - 56 * var(--u)); top: calc(14.5% + 10 * var(--u)); }
+.story-tag.is-p2 { left: calc(50% - 56 * var(--u)); top: calc(22.4% + 10 * var(--u)); }
+.story-tag.is-p3 { left: calc(82% - 56 * var(--u)); top: calc(14.5% + 10 * var(--u)); }
+
+.story-tag__thread {
+  display: block;
+  width: calc(12 * var(--u));
+  height: calc(56 * var(--u));
+  overflow: visible;
+}
+
+.story-tag__thread .t1 { stroke: var(--c1); }
+.story-tag__thread .t2 { stroke: var(--c2); }
+
+.story-tag__card {
+  position: relative;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(112 * var(--u));
+  height: calc(228 * var(--u));
+  margin-top: calc(-18 * var(--u));
+  padding: 0 calc(8 * var(--u)) calc(9 * var(--u));
+  box-sizing: border-box;
+  border-radius: calc(12 * var(--u));
+  text-align: center;
+}
+
+.story-tag__hole {
+  flex: 0 0 auto;
+  width: calc(16 * var(--u));
+  height: calc(16 * var(--u));
+  margin: calc(10 * var(--u)) 0 calc(8 * var(--u));
+  border-radius: 50%;
+  background: var(--hilya-beige, #F7F4EE);
+}
+
+.story-tag__photo {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: calc(8 * var(--u));
+}
+
+.story-tag__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-tag__photo i {
+  display: block;
+  width: calc(24 * var(--u));
+  height: calc(24 * var(--u));
+  border: calc(3 * var(--u)) solid #c9a24a;
+  border-radius: 50%;
+}
+
+.story-tag__off {
+  display: block;
+  margin-top: calc(9 * var(--u));
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: calc(21 * var(--u));
+  font-style: italic;
+  line-height: 1;
+}
+
+.story-tag__name,
+.story-tag__price {
+  display: block;
+  font-size: max(9px, calc(10.5 * var(--u)));
+  line-height: 1.25;
+}
+
+.story-tag__name {
+  margin-top: calc(3 * var(--u));
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.story-tag__price s {
+  margin-inline-start: 3px;
+  opacity: .7;
+}
+
+.tone-dk .story-tag__card { background: #8f5a4b; }
+.tone-dk .story-tag__photo { background: #eadfce; }
+.tone-dk .story-tag__off { color: #e2bdb0; }
+.tone-dk .story-tag__name,
+.tone-dk .story-tag__price { color: #f5e9e3; }
+
+.tone-lt .story-tag__card { background: #ecd5cb; }
+.tone-lt .story-tag__photo { background: #f7f0e6; }
+.tone-lt .story-tag__off { color: #8f5a4b; }
+.tone-lt .story-tag__name,
+.tone-lt .story-tag__price { color: #5a352b; }
 
 /* LARGE DESKTOP */
 
@@ -329,17 +767,12 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .story-section {
-    padding: calc(25px + var(--story-extra-top)) 28px 0;
+    padding: calc(25px + var(--story-extra-top)) 28px 20px;
   }
 
   .story-section__inner {
-    gap: 45px;
-    grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
-  }
-
-  .story-section__media img,
-  .story-section__placeholder {
-    aspect-ratio: 2 / 1;
+    gap: 28px;
+    grid-template-columns: minmax(250px, .8fr) minmax(0, 1.2fr);
   }
 
   .story-section__heading {
@@ -357,27 +790,37 @@
   .story-section {
     --story-extra-top: var(--story-content-mobile, 0px);
     margin-top: var(--story-section-mobile, 0px);
-    padding: calc(25px + var(--story-extra-top)) 16px 35px;
+    padding: calc(25px + var(--story-extra-top)) 16px 30px;
+  }
+
+  .story-section__top {
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    padding: 0 10px;
+  }
+
+  .story-timer {
+    text-align: start;
+  }
+
+  .story-timer__units {
+    justify-content: flex-start;
+  }
+
+  .story-timer__unit {
+    width: 52px;
   }
 
   .story-section__inner {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-  }
-
-  /* RECTANGULAR IMAGE */
-
-  .story-section__media img,
-  .story-section__placeholder {
-    height: auto;
-    aspect-ratio: var(--story-mobile-ratio, 2.05 / 1);
-    object-position: var(--story-mobile-pos-x, 50%) var(--story-mobile-pos-y, 50%);
+    align-items: stretch;
+    gap: 16px;
   }
 
   .story-section__content {
     max-width: none;
-    padding: 0 10px 10px;
+    padding: 0 10px;
   }
 
   .story-section__eyebrow {
@@ -408,6 +851,11 @@
     position: relative;
     top: -2px;
   }
+
+  .story-stage {
+    max-width: 440px;
+    margin-inline: auto;
+  }
 }
 
 /* REVEAL ON SCROLL */
@@ -419,19 +867,23 @@
   }
 }
 
-.story-section.has-reveal .story-section__media:not(.is-revealed),
+.story-section.has-reveal .story-section__top:not(.is-revealed),
+.story-section.has-reveal .story-section__badge:not(.is-revealed),
 .story-section.has-reveal .story-section__eyebrow:not(.is-revealed),
 .story-section.has-reveal .story-section__heading span:not(.is-revealed),
 .story-section.has-reveal .story-section__text:not(.is-revealed),
-.story-section.has-reveal .story-section__link:not(.is-revealed) {
+.story-section.has-reveal .story-section__link:not(.is-revealed),
+.story-section.has-reveal .story-stage:not(.is-revealed) {
   opacity: 0;
 }
 
-.story-section.has-reveal .story-section__media.is-revealed,
+.story-section.has-reveal .story-section__top.is-revealed,
+.story-section.has-reveal .story-section__badge.is-revealed,
 .story-section.has-reveal .story-section__eyebrow.is-revealed,
 .story-section.has-reveal .story-section__heading span.is-revealed,
 .story-section.has-reveal .story-section__text.is-revealed,
-.story-section.has-reveal .story-section__link.is-revealed {
+.story-section.has-reveal .story-section__link.is-revealed,
+.story-section.has-reveal .story-stage.is-revealed {
   animation: story-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
   animation-delay: var(--reveal-delay, 0s);
 }
@@ -450,7 +902,7 @@
   width: 2.4rem;
   height: 1px;
   margin-bottom: 16px;
-  background: var(--hilya-rose);
+  background: var(--hilya-rose, #A9705F);
 }
 
 /* drawn from the start of the line after the text appears */
@@ -488,6 +940,33 @@
   font-style: normal;
 }
 
+[dir="rtl"] .story-section__badge,
+[dir="rtl"] .story-section__eyebrow,
+[dir="rtl"] .story-timer__label,
+[dir="rtl"] .story-timer__name,
+[dir="rtl"] .story-section__link {
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .story-section__badge {
+  font-size: 13px;
+}
+
+[dir="rtl"] .story-section__eyebrow {
+  font-size: 13px;
+}
+
+[dir="rtl"] .story-timer__label {
+  font-size: 12px;
+}
+
+[dir="rtl"] .story-timer__name {
+  font-size: 10px;
+}
+
+[dir="rtl"] .story-tag__name {
+  font-size: max(10px, calc(11 * var(--u)));
+}
 
 [dir="rtl"] .story-section__text p {
   font-size: 14px;
@@ -516,6 +995,12 @@
   [dir="rtl"] .story-section__link:hover .story-section__arrow {
     transform: none;
   }
+
+  .story-ring,
+  .story-tag {
+    animation: none;
+    transform: rotate(var(--a, 0deg));
+  }
 }
 
 {% endstylesheet %}
@@ -528,89 +1013,30 @@
       "index"
     ]
   },
+  "max_blocks": 3,
   "settings": [
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Offer image"
-    },
-    {
-      "type": "image_picker",
-      "id": "mobile_image",
-      "label": "Mobile image",
-      "info": "Optional picture used on phones. Leave blank to use the offer image."
-    },
-    {
-      "type": "select",
-      "id": "mobile_shape",
-      "label": "Mobile image shape",
-      "options": [
-        {
-          "value": "wide",
-          "label": "Wide (current)"
-        },
-        {
-          "value": "square",
-          "label": "Square"
-        },
-        {
-          "value": "portrait",
-          "label": "Portrait (4:5)"
-        }
-      ],
-      "default": "wide"
-    },
-    {
       "type": "header",
-      "content": "Image crop - Desktop"
+      "content": "Countdown"
     },
     {
-      "type": "range",
-      "id": "desktop_position_x",
-      "label": "Horizontal position",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "0% = left, 100% = right"
+      "type": "text",
+      "id": "countdown_end",
+      "label": "Offer end date and time",
+      "info": "Format: YYYY-MM-DD HH:MM (store time zone), e.g. 2026-11-30 23:59. Leave blank to hide the countdown. It hides itself when the time is over.",
+      "default": "2026-11-30 23:59"
     },
     {
-      "type": "range",
-      "id": "desktop_position_y",
-      "label": "Vertical position",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "0% = top, 100% = bottom"
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Countdown label",
+      "default": "Offer ends in"
     },
     {
-      "type": "header",
-      "content": "Image crop - Mobile"
-    },
-    {
-      "type": "range",
-      "id": "mobile_position_x",
-      "label": "Horizontal position",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "0% = left, 100% = right"
-    },
-    {
-      "type": "range",
-      "id": "mobile_position_y",
-      "label": "Vertical position",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "0% = top, 100% = bottom"
+      "type": "text",
+      "id": "countdown_label_ar",
+      "label": "Countdown label - Arabic",
+      "default": "ينتهي العرض خلال"
     },
     {
       "type": "header",
@@ -661,22 +1087,27 @@
       "default": 24
     },
     {
-      "type": "text",
-      "id": "image_alt",
-      "label": "Image alt text",
-      "default": "Hilya special offers"
+      "type": "header",
+      "content": "Text"
     },
     {
       "type": "text",
-      "id": "image_alt_ar",
-      "label": "Image description - Arabic",
-      "default": "عروض حلية الخاصة"
+      "id": "badge",
+      "label": "Badge (pill)",
+      "info": "Leave blank to hide.",
+      "default": "Black Friday"
+    },
+    {
+      "type": "text",
+      "id": "badge_ar",
+      "label": "Badge - Arabic",
+      "default": "الجمعة السوداء"
     },
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Special Offers"
+      "default": "Special offer"
     },
     {
       "type": "text",
@@ -689,7 +1120,7 @@
       "type": "text",
       "id": "heading_line_1",
       "label": "Heading - Line 1",
-      "default": "Special Offers."
+      "default": "Limited time."
     },
     {
       "type": "text",
@@ -701,31 +1132,31 @@
       "type": "text",
       "id": "heading_line_2",
       "label": "Heading - Line 2",
-      "default": "Made for You."
+      "default": "Up to 25% off"
     },
     {
       "type": "text",
       "id": "heading_line_2_ar",
       "label": "Heading line 2 - Arabic",
-      "default": "خصم يصل إلى 30%"
+      "default": "خصم يصل إلى 25%"
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Discover selected pieces at special prices, made to bring timeless elegance to your everyday style.</p>"
+      "default": "<p>Discover selected pieces at special prices.</p>"
     },
     {
       "type": "richtext",
       "id": "description_ar",
       "label": "Description - Arabic",
-      "default": "<p>اكتشف قطعًا مختارة بأسعار خاصة، لتمنح إطلالتك اليومية أناقة خالدة.</p>"
+      "default": "<p>اكتشف قطعًا مختارة بأسعار خاصة.</p>"
     },
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Shop Offers"
+      "default": "Shop sale"
     },
     {
       "type": "text",
@@ -736,12 +1167,97 @@
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button link"
+      "label": "Button link",
+      "info": "Also used by any tag that has no product or link of its own."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tag",
+      "name": "Hanging tag",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Optional. Fills name, price, old price, discount, image and link automatically. Anything you type below overrides it."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Optional. Leave blank to use the product image."
+        },
+        {
+          "type": "text",
+          "id": "discount",
+          "label": "Discount label",
+          "info": "e.g. -31%. Leave blank to calculate it from the product."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "name_ar",
+          "label": "Name - Arabic",
+          "info": "Shown on the Arabic site. Leave blank to use the name above."
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "info": "e.g. EGP 450"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Old price (crossed out)",
+          "info": "e.g. 650"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Special Offers"
+      "name": "Special Offers",
+      "blocks": [
+        {
+          "type": "tag",
+          "settings": {
+            "discount": "-31%",
+            "name": "Hob bracelet",
+            "price": "EGP 450",
+            "compare_price": "650"
+          }
+        },
+        {
+          "type": "tag",
+          "settings": {
+            "discount": "-33%",
+            "name": "More love necklace",
+            "price": "EGP 400",
+            "compare_price": "600"
+          }
+        },
+        {
+          "type": "tag",
+          "settings": {
+            "discount": "-24%",
+            "name": "Palestine necklace",
+            "price": "EGP 650",
+            "compare_price": "850"
+          }
+        }
+      ]
     }
   ]
 }
