@@ -6,6 +6,8 @@
 }
 
 html {
+  /* checkboxes, radios and other native controls use the brand color */
+  accent-color: var(--hilya-rose-deep);
   scroll-behavior: smooth;
   text-size-adjust: 100%;
 }
@@ -152,10 +154,7 @@ textarea {
   outline-offset: 0.2rem;
 }
 
-::selection {
-  background: color-mix(in srgb, var(--hilya-rose) 30%, transparent);
-}
-
+::selection,
 img::selection {
   background: color-mix(in srgb, var(--hilya-rose) 30%, transparent);
 }
