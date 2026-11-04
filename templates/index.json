@@ -109,7 +109,7 @@
     },
     "sales_collection_ETjLrM": {
       "type": "sales",
-      "name": "Special Offers",
+      "name": "Sales collection",
       "settings": {
         "countdown_end": "2026-11-30 23:59",
         "countdown_label": "Offer ends in",
