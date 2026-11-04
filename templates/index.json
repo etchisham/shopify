@@ -50,7 +50,6 @@
       "custom_css": [],
       "name": "categories",
       "settings": {
-        "grid_gap": 48,
         "section_space_desktop": 0,
         "section_space_mobile": 0,
         "content_space_desktop": 12,
@@ -141,7 +140,7 @@
       "type": "featured-collection",
       "name": "t:general.featured_collection",
       "settings": {
-        "eyebrow": "NEW ARRIVLAS",
+        "eyebrow": "NEW ARRIVALS",
         "eyebrow_ar": "وصل حديثًا",
         "heading": "Fresh Pieces, For New Moments",
         "heading_ar": "قطع جديدة، للحظات جديدة",
