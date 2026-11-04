@@ -1,484 +1,779 @@
 {%- liquid
-  assign story_locale = request.locale.iso_code | split: '-' | first
+  assign sales_locale = request.locale.iso_code | split: '-' | first
 
-  assign story_badge = section.settings.badge
-  assign story_eyebrow = section.settings.eyebrow
-  assign story_line_1 = section.settings.heading_line_1
-  assign story_line_2 = section.settings.heading_line_2
-  assign story_description = section.settings.description
-  assign story_button = section.settings.button_label
-  assign story_timer_label = section.settings.countdown_label
+  assign sales_eyebrow = section.settings.eyebrow
+  assign sales_line_1 = section.settings.heading_line_1
+  assign sales_line_2 = section.settings.heading_line_2
+  assign sales_description = section.settings.description
+  assign sales_button = section.settings.button_label
+  assign sales_offer = section.settings.offer_name
 
-  assign unit_d = 'Days'
-  assign unit_h = 'Hours'
-  assign unit_m = 'Min'
-  assign unit_s = 'Sec'
+  assign timer_label = 'Offer ends in'
+  assign unit_days = 'Days'
+  assign unit_hours = 'Hours'
+  assign unit_minutes = 'Min'
+  assign unit_seconds = 'Sec'
 
-  if story_locale == 'ar'
-    if section.settings.badge_ar != blank
-      assign story_badge = section.settings.badge_ar
-    endif
+  if sales_locale == 'ar'
+    assign timer_label = 'ينتهي العرض خلال'
+    assign unit_days = 'يوم'
+    assign unit_hours = 'ساعة'
+    assign unit_minutes = 'دقيقة'
+    assign unit_seconds = 'ثانية'
+
     if section.settings.eyebrow_ar != blank
-      assign story_eyebrow = section.settings.eyebrow_ar
+      assign sales_eyebrow = section.settings.eyebrow_ar
     endif
     if section.settings.heading_line_1_ar != blank
-      assign story_line_1 = section.settings.heading_line_1_ar
+      assign sales_line_1 = section.settings.heading_line_1_ar
     endif
     if section.settings.heading_line_2_ar != blank
-      assign story_line_2 = section.settings.heading_line_2_ar
+      assign sales_line_2 = section.settings.heading_line_2_ar
     endif
     if section.settings.description_ar != blank
-      assign story_description = section.settings.description_ar
+      assign sales_description = section.settings.description_ar
     endif
     if section.settings.button_label_ar != blank
-      assign story_button = section.settings.button_label_ar
+      assign sales_button = section.settings.button_label_ar
     endif
-    if section.settings.countdown_label_ar != blank
-      assign story_timer_label = section.settings.countdown_label_ar
+    if section.settings.offer_name_ar != blank
+      assign sales_offer = section.settings.offer_name_ar
     endif
-    assign unit_d = 'أيام'
-    assign unit_h = 'ساعات'
-    assign unit_m = 'دقائق'
-    assign unit_s = 'ثواني'
   endif
 
-  # Shop time zone offset (e.g. +0200 becomes +02:00) so the countdown ends
-  # at the same moment for every visitor.
-  assign tz_raw = 'now' | date: '%z'
-  assign tz_hours = tz_raw | slice: 0, 3
-  assign tz_mins = tz_raw | slice: 3, 2
-  assign tz_offset = tz_hours | append: ':' | append: tz_mins
-
-  # Tags sit on the rope in fixed spots:
-  # 1 tag = centre, 2 tags = left + right, 3 tags = left, centre, right
-  assign tags_count = section.blocks.size
-  if tags_count == 1
-    assign slots_arr = 'p2' | split: ','
-    assign tones_arr = 'lt' | split: ','
-  elsif tags_count == 2
-    assign slots_arr = 'p1,p3' | split: ','
-    assign tones_arr = 'dk,lt' | split: ','
-  else
-    assign slots_arr = 'p1,p2,p3' | split: ','
-    assign tones_arr = 'dk,lt,dk' | split: ','
-  endif
+  assign sales_collection = section.settings.collection
+  assign sales_count = section.settings.card_count
 -%}
 
 <section
-  class="story-section"
-  style="--story-section-desktop: {{ section.settings.section_space_desktop }}px; --story-section-mobile: {{ section.settings.section_space_mobile }}px; --story-content-desktop: {{ section.settings.content_space_desktop }}px; --story-content-mobile: {{ section.settings.content_space_mobile }}px;"
+  class="sales"
+  style="--sales-section-desktop: {{ section.settings.section_space_desktop }}px; --sales-section-mobile: {{ section.settings.section_space_mobile }}px; --sales-content-desktop: {{ section.settings.content_space_desktop }}px; --sales-content-mobile: {{ section.settings.content_space_mobile }}px;"
 >
+  <div class="sales__inner">
 
-  {% if section.settings.countdown_end != blank %}
-    <div class="story-section__top">
-      <div
-        class="story-timer"
-        data-countdown
-        data-end="{{ section.settings.countdown_end | escape }}"
-        data-offset="{{ tz_offset }}"
-        role="timer"
-      >
-        {% if story_timer_label != blank %}
-          <small class="story-timer__label">{{ story_timer_label | escape }}</small>
-        {% endif %}
-        <div class="story-timer__units">
-          <div class="story-timer__unit"><b class="story-timer__num" data-unit="d">00</b><span class="story-timer__name">{{ unit_d }}</span></div>
-          <div class="story-timer__unit"><b class="story-timer__num" data-unit="h">00</b><span class="story-timer__name">{{ unit_h }}</span></div>
-          <div class="story-timer__unit"><b class="story-timer__num" data-unit="m">00</b><span class="story-timer__name">{{ unit_m }}</span></div>
-          <div class="story-timer__unit"><b class="story-timer__num" data-unit="s">00</b><span class="story-timer__name">{{ unit_s }}</span></div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
+    <div class="sales__content">
 
-  <div class="story-section__inner">
-
-    <div class="story-section__content">
-
-      {% if story_badge != blank %}
-        <p class="story-section__badge">{{ story_badge | escape }}</p>
+      {% if sales_offer != blank %}
+        <p class="sales__offer" data-reveal>{{ sales_offer | escape }}</p>
       {% endif %}
 
-      {% if story_eyebrow != blank %}
-        <p class="story-section__eyebrow">
-          {{ story_eyebrow | escape }}
-        </p>
+      {% if sales_eyebrow != blank %}
+        <p class="sales__eyebrow" data-reveal>{{ sales_eyebrow | escape }}</p>
       {% endif %}
 
-      {% if story_line_1 != blank or story_line_2 != blank %}
-        <h2 class="story-section__heading">
-          {% if story_line_1 != blank %}
-            <span>{{ story_line_1 | escape }}</span>
+      {% if sales_line_1 != blank or sales_line_2 != blank %}
+        <h2 class="sales__heading">
+          {% if sales_line_1 != blank %}
+            <span data-reveal>{{ sales_line_1 | escape }}</span>
           {% endif %}
 
-          {% if story_line_2 != blank %}
-            <span>{{ story_line_2 | escape }}</span>
+          {% if sales_line_2 != blank %}
+            <span data-reveal>{{ sales_line_2 | escape }}</span>
           {% endif %}
         </h2>
       {% endif %}
 
-      {% if story_description != blank %}
-        <div class="story-section__text">
-          {{ story_description }}
+      {% if sales_description != blank %}
+        <div class="sales__text" data-reveal>
+          {{ sales_description }}
         </div>
       {% endif %}
 
-      {% if story_button != blank %}
+      {% if sales_button != blank %}
         <a
-          class="story-section__link"
+          class="sales__link"
           href="{{ section.settings.button_link | default: '#' }}"
+          data-reveal
         >
-          <span>{{ story_button | escape }}</span>
-          <span class="story-section__arrow" aria-hidden="true">→</span>
+          <span>{{ sales_button | escape }}</span>
+          <span class="sales__arrow" aria-hidden="true">→</span>
         </a>
       {% endif %}
 
     </div>
 
-    <div class="story-stage">
-      <svg class="story-rope" viewBox="0 0 400 392" aria-hidden="true" focusable="false">
-        <path d="M-23 -7 Q200 183 423 -7" fill="none" stroke="#6f4235" stroke-width="5.5" stroke-linecap="round"></path>
-        <path d="M-23 -7 Q200 183 423 -7" fill="none" stroke="#8f5a4b" stroke-width="4.5" stroke-linecap="round"></path>
-        <path d="M-23 -7 Q200 183 423 -7" fill="none" stroke="#d9b3a6" stroke-width="4.5" stroke-dasharray="1.4 4.2" opacity=".6"></path>
-      </svg>
+    {% if section.settings.end_at != blank %}
+      <div class="sales__timer" data-sales-timer data-end="{{ section.settings.end_at | escape }}" data-reveal hidden>
+        <p class="sales__timer-label">{{ timer_label }}</p>
+        <div class="sales__timer-units">
+          <div class="sales__timer-cell"><b data-unit="d">00</b><span>{{ unit_days }}</span></div>
+          <div class="sales__timer-cell"><b data-unit="h">00</b><span>{{ unit_hours }}</span></div>
+          <div class="sales__timer-cell"><b data-unit="m">00</b><span>{{ unit_minutes }}</span></div>
+          <div class="sales__timer-cell"><b data-unit="s">00</b><span>{{ unit_seconds }}</span></div>
+        </div>
+      </div>
+    {% endif %}
 
-      {%- for block in section.blocks -%}
-        {%- liquid
-          assign slot = slots_arr[forloop.index0]
-          assign tone = tones_arr[forloop.index0]
+    {% if sales_collection != blank and sales_count > 0 and sales_collection.products_count > 0 %}
+      <div class="sales__stage" data-sales-stage data-reveal="fade" tabindex="0" role="group" aria-label="{{ sales_line_1 | escape }} {{ sales_line_2 | escape }}">
 
-          assign product = block.settings.product
+        <div class="sales__layer sales__layer--back" data-back>
+          {% for product in sales_collection.products limit: sales_count %}
+            {% assign parity = forloop.index0 | modulo: 2 %}
+            <span class="sales-ring sales-ring--back {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" aria-hidden="true"></span>
+          {% endfor %}
+        </div>
 
-          assign tag_name = block.settings.name
-          if story_locale == 'ar' and block.settings.name_ar != blank
-            assign tag_name = block.settings.name_ar
-          endif
-          if tag_name == blank and product != blank
-            assign tag_name = product.title
-          endif
+        <svg class="sales__rope" data-rope aria-hidden="true" focusable="false">
+          <path></path>
+          <path></path>
+          <path></path>
+        </svg>
 
-          assign tag_price = block.settings.price
-          assign tag_compare = block.settings.compare_price
-          assign tag_discount = block.settings.discount
-          assign tag_img = block.settings.image
-          assign tag_url = block.settings.link
-
-          if product != blank
-            if tag_price == blank
-              assign tag_price = product.price | money_without_trailing_zeros
-            endif
-            if product.compare_at_price > product.price
-              if tag_compare == blank
-                assign tag_compare = product.compare_at_price | money_without_trailing_zeros
+        <div class="sales__layer sales__layer--front" data-front>
+          {% for product in sales_collection.products limit: sales_count %}
+            {%- liquid
+              assign parity = forloop.index0 | modulo: 2
+              assign compare = product.compare_at_price
+              assign discount = 0
+              if compare > product.price
+                assign discount = compare | minus: product.price | times: 100.0 | divided_by: compare | round
               endif
-              if tag_discount == blank
-                assign tag_pct = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
-                assign tag_discount = tag_pct | prepend: '-' | append: '%'
-              endif
-            endif
-            if tag_img == blank
-              assign tag_img = product.featured_image
-            endif
-            if tag_url == blank
-              assign tag_url = product.url
-            endif
-          endif
+            -%}
+            <div class="sales-card {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" data-card>
+              <span class="sales-ring sales-ring--front" aria-hidden="true"></span>
+              <svg class="sales-thread" viewBox="0 0 12 52" aria-hidden="true" focusable="false">
+                <path d="M6 0 C9 13 3 28 6 52"></path>
+                <path d="M6 0 C9 13 3 28 6 52"></path>
+              </svg>
 
-          if tag_url == blank
-            assign tag_url = section.settings.button_link
-          endif
+              <a class="sales-tag" href="{{ product.url }}" draggable="false">
+                <span class="sales-tag__hole" aria-hidden="true"></span>
 
-          if tag_url != blank
-            assign tag_el = 'a'
-          else
-            assign tag_el = 'div'
-          endif
-        -%}
+                <span class="sales-tag__photo">
+                  {% if product.featured_image != blank %}
+                    {{
+                      product.featured_image
+                      | image_url: width: 360
+                      | image_tag:
+                        widths: '240, 360',
+                        sizes: '140px',
+                        loading: 'eager',
+                        alt: '',
+                        draggable: 'false'
+                    }}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  {% endif %}
+                </span>
 
-        <svg class="story-ring story-ring--back is-{{ slot }} tone-{{ tone }}" viewBox="0 0 16 24" aria-hidden="true" focusable="false"><path d="M8 1.5 A5.5 10.5 0 0 1 8 22.5" fill="none" stroke-width="2.2"></path></svg>
-        <svg class="story-ring story-ring--front is-{{ slot }} tone-{{ tone }}" viewBox="0 0 16 24" aria-hidden="true" focusable="false"><path d="M8 1.5 A5.5 10.5 0 0 0 8 22.5" fill="none" stroke-width="2.2"></path></svg>
+                {% if discount > 0 %}
+                  <span class="sales-tag__off" dir="ltr">-{{ discount }}%</span>
+                {% endif %}
 
-        <{{ tag_el }}
-          class="story-tag is-{{ slot }} tone-{{ tone }}"
-          {% if tag_url != blank %}href="{{ tag_url }}"{% endif %}
-          {{ block.shopify_attributes }}
-        >
-          <svg class="story-tag__thread" viewBox="0 0 12 56" aria-hidden="true" focusable="false">
-            <path class="t1" d="M6 0 C9 14 3 30 6 56" fill="none" stroke-width="2.6" stroke-linecap="round"></path>
-            <path class="t2" d="M6 0 C9 14 3 30 6 56" fill="none" stroke-width="2.6" stroke-dasharray="1 3" opacity=".5"></path>
-          </svg>
-          <span class="story-tag__card">
-            <span class="story-tag__hole"></span>
-            <span class="story-tag__photo">
-              {%- if tag_img != blank -%}
-                {{
-                  tag_img
-                  | image_url: width: 300
-                  | image_tag:
-                    widths: '150, 225, 300',
-                    sizes: '(min-width: 750px) 160px, 100px',
-                    loading: 'lazy',
-                    alt: tag_name
-                }}
-              {%- else -%}
-                <i></i>
-              {%- endif -%}
-            </span>
-            {% if tag_discount != blank %}
-              <span class="story-tag__off" dir="ltr">{{ tag_discount | escape }}</span>
-            {% endif %}
-            {% if tag_name != blank %}
-              <span class="story-tag__name">{{ tag_name | escape }}</span>
-            {% endif %}
-            {% if tag_price != blank %}
-              <span class="story-tag__price" dir="ltr">{{ tag_price | escape }}{% if tag_compare != blank %}<s>{{ tag_compare | escape }}</s>{% endif %}</span>
-            {% endif %}
-          </span>
-        </{{ tag_el }}>
-      {%- endfor -%}
-    </div>
+                <span class="sales-tag__name">{{ product.title | escape }}</span>
+
+                <span class="sales-tag__price">
+                  {{ product.price | money }}
+                  {% if discount > 0 %}<s>{{ compare | money }}</s>{% endif %}
+                </span>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    {% elsif request.design_mode and sales_collection == blank %}
+      <p class="sales__hint">Choose the sales collection in this section's settings.</p>
+    {% endif %}
 
   </div>
-
 </section>
 
 <script>
   (() => {
     const section = document.currentScript.previousElementSibling;
+
     if (!section) return;
 
-    /* COUNTDOWN (runs everywhere, also in the theme editor) */
-    const timer = section.querySelector('[data-countdown]');
+    /* ---------- reveal on scroll ---------- */
+
+    const items = Array.from(section.querySelectorAll('[data-reveal]'));
+
+    if (
+      items.length &&
+      'IntersectionObserver' in window &&
+      !(window.Shopify && window.Shopify.designMode) &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      section.classList.add('has-reveal');
+
+      const io = new IntersectionObserver((entries) => {
+        const shown = entries
+          .filter((entry) => entry.isIntersecting)
+          .map((entry) => entry.target);
+
+        if (!shown.length) return;
+
+        shown.sort((a, b) =>
+          a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+        );
+
+        shown.forEach((el, index) => {
+          el.style.setProperty('--reveal-delay', (index * 0.3) + 's');
+          el.classList.add('is-revealed');
+          io.unobserve(el);
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -15% 0px' });
+
+      /* what is already passed (above the screen) shows without motion */
+      const settle = () => {
+        items.forEach((el) => {
+          if (el.classList.contains('is-revealed')) return;
+
+          if (el.getBoundingClientRect().bottom < 0) {
+            el.classList.add('hilya-instant', 'is-revealed');
+            io.unobserve(el);
+          }
+        });
+      };
+
+      items.forEach((el) => io.observe(el));
+      settle();
+      window.addEventListener('load', () => setTimeout(settle, 150));
+    }
+
+    /* ---------- countdown (the end time is Cairo time) ---------- */
+
+    const timer = section.querySelector('[data-sales-timer]');
 
     if (timer) {
-      const top = timer.closest('.story-section__top') || timer;
-      const m = (timer.dataset.end || '').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})/);
-      const end = m
-        ? Date.parse(m[1] + '-' + m[2] + '-' + m[3] + 'T' + m[4].padStart(2, '0') + ':' + m[5] + ':00' + (timer.dataset.offset || 'Z'))
-        : NaN;
-      const cells = {
-        d: timer.querySelector('[data-unit="d"]'),
-        h: timer.querySelector('[data-unit="h"]'),
-        m: timer.querySelector('[data-unit="m"]'),
-        s: timer.querySelector('[data-unit="s"]')
+      const zone = 'Africa/Cairo';
+
+      const zoneOffset = (stamp) => {
+        const parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: zone,
+          hourCycle: 'h23',
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric'
+        }).formatToParts(stamp);
+
+        const value = {};
+        parts.forEach((part) => { value[part.type] = Number(part.value); });
+
+        return Date.UTC(value.year, value.month - 1, value.day, value.hour, value.minute, value.second) - stamp;
       };
-      const pad = (n) => String(n).padStart(2, '0');
-      let tick;
+
+      const parseEnd = (text) => {
+        const match = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})$/.exec((text || '').trim());
+
+        if (!match) return null;
+
+        const [year, month, day, hour, minute] = match.slice(1).map(Number);
+        const guess = Date.UTC(year, month - 1, day, hour, minute);
+        let stamp = guess - zoneOffset(guess);
+        stamp = guess - zoneOffset(stamp);
+
+        return stamp;
+      };
+
+      const end = parseEnd(timer.dataset.end);
+      const cells = {};
+
+      timer.querySelectorAll('[data-unit]').forEach((node) => { cells[node.dataset.unit] = node; });
+
+      let clock = 0;
+
+      const pad = (number) => String(number).padStart(2, '0');
 
       const update = () => {
-        if (!section.isConnected) { clearInterval(tick); return; }
-
         const left = end - Date.now();
 
-        if (isNaN(end) || left <= 0) {
-          top.hidden = true;
-          clearInterval(tick);
+        if (!section.isConnected || left <= 0) {
+          timer.hidden = true;
+          clearInterval(clock);
           return;
         }
 
-        top.hidden = false;
-        const s = Math.floor(left / 1000);
-        cells.d.textContent = pad(Math.floor(s / 86400));
-        cells.h.textContent = pad(Math.floor((s % 86400) / 3600));
-        cells.m.textContent = pad(Math.floor((s % 3600) / 60));
-        cells.s.textContent = pad(s % 60);
+        const seconds = Math.floor(left / 1000);
+
+        cells.d.textContent = pad(Math.floor(seconds / 86400));
+        cells.h.textContent = pad(Math.floor(seconds % 86400 / 3600));
+        cells.m.textContent = pad(Math.floor(seconds % 3600 / 60));
+        cells.s.textContent = pad(seconds % 60);
+        timer.hidden = false;
       };
 
-      update();
-      tick = setInterval(update, 1000);
+      if (end) {
+        update();
+        clock = setInterval(update, 1000);
+      }
     }
 
-    /* REVEAL ON SCROLL */
-    if (
-      !('IntersectionObserver' in window) ||
-      (window.Shopify && window.Shopify.designMode) ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) return;
+    /* ---------- the rope and the hanging tags ---------- */
 
-    const items = [].concat(
-      section.querySelector('.story-section__top'),
-      section.querySelector('.story-section__badge'),
-      section.querySelector('.story-section__eyebrow'),
-      Array.from(section.querySelectorAll('.story-section__heading span')),
-      section.querySelector('.story-section__text'),
-      section.querySelector('.story-section__link'),
-      section.querySelector('.story-stage')
-    ).filter(Boolean);
+    const stage = section.querySelector('[data-sales-stage]');
 
-    if (!items.length) return;
+    if (!stage) return;
 
-    section.classList.add('has-reveal');
+    const backLayer = stage.querySelector('[data-back]');
+    const frontLayer = stage.querySelector('[data-front]');
+    const rope = stage.querySelector('[data-rope]');
+    const ropeLines = rope.querySelectorAll('path');
+    const rtl = getComputedStyle(stage).direction === 'rtl';
+    const sign = rtl ? -1 : 1;
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const io = new IntersectionObserver((entries) => {
-      const shown = entries
-        .filter((entry) => entry.isIntersecting)
-        .map((entry) => entry.target);
+    const originals = Array.from(frontLayer.children).map((front, index) => ({
+      front,
+      back: backLayer.children[index]
+    }));
 
-      if (!shown.length) return;
+    const RING_HALF = 12;
+    const EDGE = 16;
 
-      shown.sort((a, b) =>
-        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
-      );
+    let tags = [];
+    let width = 0;
+    let cardWidth = 0;
+    let spacing = 0;
+    let loopLength = 0;
+    let sag = 0;
+    let fixed = true;
 
-      shown.forEach((el, index) => {
-        el.style.setProperty('--reveal-delay', (index * 0.3) + 's');
-        el.classList.add('is-revealed');
-        io.unobserve(el);
+    let offset = 0;
+    let velocity = 0;
+    let target = null;
+    let drag = null;
+    let suppressClick = false;
+    let visible = false;
+    let running = false;
+    let lastTime = 0;
+    let lastOffset = 0;
+
+    const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+
+    const ropeY = (x) => {
+      const u = (x - width / 2) / (width / 2);
+      return EDGE + sag * (1 - u * u);
+    };
+
+    const layout = () => {
+      /* the tags must be in their real (absolute) mode before anything is measured */
+      stage.classList.add('is-ready');
+
+      const styles = getComputedStyle(stage);
+
+      width = stage.clientWidth;
+      cardWidth = parseFloat(styles.getPropertyValue('--sales-card-w')) || 124;
+
+      const gap = parseFloat(styles.getPropertyValue('--sales-gap')) || 14;
+      const count = originals.length;
+
+      stage.querySelectorAll('[data-clone]').forEach((node) => node.remove());
+
+      spacing = cardWidth + gap;
+      fixed = count * spacing - gap <= width - 24;
+
+      let list = originals.slice();
+
+      /* an odd number of tags would put two tags of the same color side by side where the loop closes:
+         the set is repeated once so dark and light keep alternating all the way round */
+      if (!fixed && count % 2 === 1) {
+        originals.forEach((tag) => {
+          const back = tag.back.cloneNode(true);
+          const front = tag.front.cloneNode(true);
+
+          [back, front].forEach((node) => {
+            node.dataset.clone = '';
+            node.setAttribute('aria-hidden', 'true');
+          });
+
+          front.setAttribute('inert', '');
+          backLayer.appendChild(back);
+          frontLayer.appendChild(front);
+          list.push({ front, back });
+        });
+      }
+
+      tags = list.map((tag, index) => {
+        const dark = index % 2 === 0;
+
+        [tag.back, tag.front].forEach((node) => {
+          node.classList.toggle('is-dark', dark);
+          node.classList.toggle('is-light', !dark);
+        });
+
+        return Object.assign(tag, {
+          angle: 0,
+          speed: 0,
+          phase: index * 1.7,
+          stiffness: 0.0043 * (0.86 + ((index * 37) % 29) / 100)
+        });
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -15% 0px' });
 
-    /* what is already passed (above the screen) shows without motion */
-    const settle = () => {
-      items.forEach((el) => {
-        if (el.classList.contains('is-revealed')) return;
+      if (!fixed) {
+        loopLength = tags.length * spacing;
 
-        if (el.getBoundingClientRect().bottom < 0) {
-          el.classList.add('hilya-instant', 'is-revealed');
-          io.unobserve(el);
+        const least = width + cardWidth + 16;
+
+        if (loopLength < least) {
+          spacing = least / tags.length;
+          loopLength = least;
         }
+      }
+
+      sag = clamp(width * 0.16, 52, 110);
+
+      const frontHeight = tags[0].front.offsetHeight;
+      const height = Math.ceil(EDGE + sag - RING_HALF + frontHeight + 26);
+
+      stage.style.height = height + 'px';
+      rope.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+      const x0 = -width * 0.25;
+      const x1 = width * 1.25;
+      const y0 = ropeY(x0);
+      const control = 2 * (EDGE + sag) - y0;
+      const d = `M${x0} ${y0} Q${width / 2} ${control} ${x1} ${ropeY(x1)}`;
+
+      ropeLines.forEach((line) => line.setAttribute('d', d));
+
+      stage.classList.toggle('is-draggable', !fixed);
+    };
+
+    const render = (time) => {
+      const reduce = reduceQuery.matches;
+      const count = tags.length;
+
+      tags.forEach((tag, index) => {
+        let x;
+
+        if (fixed) {
+          x = width / 2 + (index - (count - 1) / 2) * spacing;
+        } else {
+          const start = width / 2 - loopLength / 2;
+          x = (((index * spacing + offset - start) % loopLength) + loopLength) % loopLength + start;
+        }
+
+        if (rtl) x = width - x;
+
+        const y = ropeY(x);
+        const sway = reduce ? 0 : Math.sin(time / 1000 * 1.12 + tag.phase) * 1.3;
+        const angle = clamp(tag.angle, -16, 16) + sway;
+
+        tag.front.style.transform = `translate3d(${x - cardWidth / 2}px, ${y - RING_HALF}px, 0) rotate(${angle}deg)`;
+        tag.back.style.transform = `translate3d(${x - 8}px, ${y - RING_HALF}px, 0) rotate(${angle}deg)`;
+        tag.screenX = x;
       });
     };
 
-    items.forEach((el) => io.observe(el));
-    settle();
-    window.addEventListener('load', () => setTimeout(settle, 150));
+    const tick = (now) => {
+      if (!running) return;
+
+      const dt = Math.min(now - lastTime, 40);
+      const step = dt / 16.67;
+      const reduce = reduceQuery.matches;
+
+      lastTime = now;
+
+      if (!fixed && !(drag && drag.moved)) {
+        if (target !== null) {
+          const gap = target - offset;
+
+          offset += gap * Math.min(1, 0.14 * step);
+
+          if (Math.abs(gap) < 0.5) {
+            offset = target;
+            target = null;
+          }
+        } else if (Math.abs(velocity) > 0.008) {
+          offset += velocity * dt;
+          velocity *= Math.pow(0.94, step);
+        } else {
+          velocity = 0;
+        }
+      }
+
+      const moved = sign * (offset - lastOffset);
+
+      lastOffset = offset;
+
+      if (!reduce) {
+        tags.forEach((tag) => {
+          tag.speed += (-tag.stiffness * tag.angle - 0.023 * tag.speed) * step - moved * 0.0039;
+          tag.angle += tag.speed * step;
+        });
+      }
+
+      render(now);
+
+      const busy = Boolean(drag && drag.moved) || target !== null || Math.abs(velocity) > 0;
+
+      if (reduce && !busy) {
+        running = false;
+        return;
+      }
+
+      requestAnimationFrame(tick);
+    };
+
+    const wake = () => {
+      if (running || !visible || document.hidden) return;
+
+      running = true;
+      lastTime = performance.now();
+      lastOffset = offset;
+      requestAnimationFrame(tick);
+    };
+
+    /* drag with the mouse or a finger */
+
+    stage.addEventListener('pointerdown', (event) => {
+      if (fixed || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+      drag = {
+        id: event.pointerId,
+        x: event.clientX,
+        start: offset,
+        moved: false,
+        samples: [{ time: event.timeStamp, x: event.clientX }]
+      };
+
+      velocity = 0;
+      target = null;
+    });
+
+    stage.addEventListener('pointermove', (event) => {
+      if (!drag || event.pointerId !== drag.id) return;
+
+      const dx = event.clientX - drag.x;
+
+      if (!drag.moved) {
+        if (Math.abs(dx) < 5) return;
+
+        drag.moved = true;
+        stage.setPointerCapture(event.pointerId);
+        stage.classList.add('is-dragging');
+      }
+
+      offset = drag.start + sign * dx;
+
+      drag.samples.push({ time: event.timeStamp, x: event.clientX });
+
+      if (drag.samples.length > 5) drag.samples.shift();
+
+      wake();
+    });
+
+    const endDrag = (event) => {
+      if (!drag || event.pointerId !== drag.id) return;
+
+      if (drag.moved) {
+        const first = drag.samples[0];
+        const last = drag.samples[drag.samples.length - 1];
+        const span = last.time - first.time;
+
+        velocity = span > 0 && event.timeStamp - last.time < 80
+          ? clamp(sign * (last.x - first.x) / span, -3, 3)
+          : 0;
+
+        if (reduceQuery.matches) velocity = 0;
+
+        suppressClick = true;
+        setTimeout(() => { suppressClick = false; }, 60);
+        stage.classList.remove('is-dragging');
+        wake();
+      }
+
+      drag = null;
+    };
+
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointercancel', endDrag);
+
+    stage.addEventListener('click', (event) => {
+      if (!suppressClick) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
+    stage.addEventListener('dragstart', (event) => event.preventDefault());
+
+    /* a trackpad swipe sideways moves the tags too */
+
+    stage.addEventListener('wheel', (event) => {
+      if (fixed || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+
+      event.preventDefault();
+      offset += sign * -event.deltaX;
+      target = null;
+      velocity = 0;
+      wake();
+    }, { passive: false });
+
+    /* keyboard: arrows move the tags, focusing a hidden tag brings it into view */
+
+    stage.addEventListener('keydown', (event) => {
+      if (fixed || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+
+      event.preventDefault();
+
+      const direction = event.key === 'ArrowRight' ? -1 : 1;
+
+      velocity = 0;
+      target = (target === null ? offset : target) + sign * direction * spacing;
+      wake();
+    });
+
+    stage.addEventListener('focusin', (event) => {
+      if (fixed) return;
+
+      const tag = tags.find((item) => item.front.contains(event.target));
+
+      if (!tag || tag.screenX === undefined) return;
+
+      if (tag.screenX < cardWidth / 2 || tag.screenX > width - cardWidth / 2) {
+        target = offset + sign * (width / 2 - tag.screenX);
+        wake();
+      }
+    });
+
+    /* a gentle push when the mouse touches a tag */
+
+    frontLayer.addEventListener('pointerover', (event) => {
+      if (event.pointerType !== 'mouse' || reduceQuery.matches) return;
+
+      const tag = tags.find((item) => item.front.contains(event.target));
+
+      if (!tag || tag.hover) return;
+
+      tag.hover = true;
+      tag.speed += (tags.indexOf(tag) % 2 ? -1 : 1) * 0.9;
+      wake();
+    });
+
+    frontLayer.addEventListener('pointerout', (event) => {
+      const tag = tags.find((item) => item.front.contains(event.target));
+
+      if (tag && !tag.front.contains(event.relatedTarget)) tag.hover = false;
+    });
+
+    /* run only while the section is on screen */
+
+    new IntersectionObserver((entries) => {
+      visible = entries.some((entry) => entry.isIntersecting);
+
+      if (visible) wake();
+      else running = false;
+    }).observe(stage);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) running = false;
+      else wake();
+    });
+
+    let resizeFrame = 0;
+
+    const refresh = () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        layout();
+        render(performance.now());
+        wake();
+      });
+    };
+
+    if ('ResizeObserver' in window) {
+      let lastWidth = stage.clientWidth;
+
+      new ResizeObserver(() => {
+        if (stage.clientWidth === lastWidth) return;
+
+        lastWidth = stage.clientWidth;
+        refresh();
+      }).observe(stage);
+    } else {
+      window.addEventListener('resize', refresh);
+    }
+
+    reduceQuery.addEventListener('change', () => { render(performance.now()); wake(); });
+
+    layout();
+    render(performance.now());
   })();
 </script>
 
 {% stylesheet %}
 
-/* --story-section-* : moves the WHOLE section
-   --story-content-* : moves the content INSIDE the section */
+/* --sales-section-* : moves the WHOLE section
+   --sales-content-* : moves the content INSIDE the section */
 
-.story-section {
+.sales {
+  --sales-extra-top: var(--sales-content-desktop, 0px);
+  --sales-heading-leading: .84; /* heading line spacing: lower = closer lines */
+  --sales-card-w: 124px;
+  --sales-gap: 14px;
+  --sales-light: color-mix(in srgb, var(--hilya-rose-light) 30%, #fff);
+  --sales-soft: color-mix(in srgb, var(--hilya-rose-light) 55%, #fff);
   width: 100vw;
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
-  --story-extra-top: var(--story-content-desktop, 0px);
-  --story-heading-leading: .84; /* heading line spacing: lower = closer lines */
-  margin-top: var(--story-section-desktop, 0px);
-  padding: calc(35px + var(--story-extra-top)) max(24px, calc((100vw - 1400px) / 2)) 45px;
+  margin-top: var(--sales-section-desktop, 0px);
+  padding: calc(35px + var(--sales-extra-top)) max(24px, calc((100vw - 1400px) / 2)) 45px;
   box-sizing: border-box;
-  background: var(--hilya-beige, #F7F4EE);
+  background: var(--hilya-beige);
 }
 
-/* COUNTDOWN */
-
-.story-section__top {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 4px;
-}
-
-.story-section__top[hidden] {
-  display: none;
-}
-
-.story-timer {
-  text-align: end;
-}
-
-.story-timer__label {
-  display: block;
-  margin: 0 0 8px;
-  color: var(--hilya-rose, #A9705F);
-  font-size: 10px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-
-.story-timer__units {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-}
-
-.story-timer__unit {
-  width: 48px;
-  padding: 8px 0 6px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid rgb(169 112 95 / 28%);
-  border-radius: 10px;
-}
-
-.story-timer__num {
-  display: block;
-  color: #151515;
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: 24px;
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.story-timer__name {
-  display: block;
-  margin-top: 3px;
-  color: var(--hilya-muted, #6b6560);
-  font-size: 8px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
-/* LAYOUT */
-
-.story-section__inner {
+.sales__inner {
   display: grid;
-  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+  grid-template-areas:
+    "timer timer"
+    "content stage";
   align-items: center;
-  gap: clamp(24px, 4vw, 64px);
+  column-gap: clamp(32px, 4vw, 64px);
 }
 
-/* CONTENT */
-
-.story-section__content {
+.sales__content {
+  grid-area: content;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
   max-width: 520px;
   padding: 20px 0;
 }
 
-/* BADGE (pill) */
+/* OFFER NAME (shown only when it is filled in) */
 
-.story-section__badge {
+.sales__offer {
   display: inline-flex;
   align-items: center;
-  align-self: flex-start;
-  gap: 6px;
-  margin: 0 0 14px;
-  padding: 4px 12px;
-  color: #fff;
-  background: #8f5a4b;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 5px 14px;
   border-radius: 999px;
+  background: var(--hilya-rose-deep);
+  color: #fff;
   font-size: 11px;
-  line-height: 1.4;
-  letter-spacing: .06em;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .08em;
 }
 
-.story-section__badge::before {
+.sales__offer::before {
   content: "";
+  flex: none;
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #ecd5cb;
+  background: var(--sales-soft);
 }
 
-/* EYEBROW */
+/* EYEBROW (its look comes from hilya-style) */
 
-.story-section__eyebrow {
-  margin: 0 0 18px;
-  color: var(--hilya-rose, #A9705F);
-  font-size: 11px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
+.sales__eyebrow {
+  margin: 0 0 20px;
 }
 
 /* HEADING */
 
-.story-section__heading {
+.sales__heading {
   display: flex;
   flex-direction: column;
   margin: 0 0 28px;
@@ -486,45 +781,55 @@
   font-size: clamp(42px, 4.3vw, 64px);
   font-weight: 400;
   font-style: italic;
-  line-height: var(--story-heading-leading, .84);
+  line-height: var(--sales-heading-leading, .84);
   letter-spacing: -.025em;
 }
 
-.story-section__heading span {
+.sales__heading span {
   display: block;
 }
 
 /* TEXT */
 
-.story-section__text {
+.sales__text {
   max-width: 380px;
   margin: 0 0 32px;
 }
 
-.story-section__text p {
+.sales__text p {
   margin: 0;
-  color: var(--hilya-muted, #6b6560);
+  color: var(--hilya-muted);
   font-size: 13px;
   line-height: 1.8;
   font-weight: 400;
   letter-spacing: .01em;
 }
-.story-section__text strong {
-  color: #111111;
+
+.sales__text strong {
+  color: var(--hilya-ink);
   font-weight: 600;
+}
+
+/* line above the text (under the heading), drawn slowly after the text appears */
+
+.sales__text::before {
+  content: "";
+  display: block;
+  width: 2.4rem;
+  height: 1px;
+  margin-bottom: 16px;
+  background: var(--hilya-rose);
 }
 
 /* LINK */
 
-.story-section__link {
+.sales__link {
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
   gap: 8px;
-
-  color: #111111;
+  color: var(--hilya-ink);
   text-decoration: none;
-
   font-size: 10px;
   line-height: 1;
   font-weight: 500;
@@ -533,231 +838,353 @@
   transition: color .3s ease;
 }
 
-.story-section__arrow {
+.sales__arrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   font-size: 13px;
   line-height: 1;
   margin-top: -1px;
-
   transition: transform .3s ease;
 }
 
-.story-section__link:hover .story-section__arrow {
+.sales__link:hover {
+  color: var(--hilya-rose-deep);
+}
+
+.sales__link:hover .sales__arrow {
   transform: translateX(4px);
 }
 
-.story-section__link:hover {
-  color: var(--hilya-rose-deep, #8f5a4b);
+/* COUNTDOWN: top right in English, top left in Arabic */
+
+.sales__timer {
+  grid-area: timer;
+  justify-self: end;
+  margin-bottom: 8px;
 }
 
-/* =========================================================
-   ROPE + HANGING TAGS
-   Everything inside the stage is sized with --u (1 unit =
-   1/400 of the stage width), so it scales as one picture.
-   ========================================================= */
-
-.story-stage {
-  --u: 1.4px;
-  position: relative;
-  width: 100%;
-  max-width: 640px;
-  justify-self: center;
-  aspect-ratio: 400 / 392;
-  container-type: inline-size;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+.sales__timer[hidden] {
+  display: none;
 }
 
-@supports (width: 1cqw) {
-  .story-stage {
-    --u: calc(100cqw / 400);
-  }
+.sales__timer-label {
+  margin: 0 0 8px;
+  color: var(--hilya-rose);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
 
-.story-rope {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-}
-
-/* tag colours */
-
-.tone-dk {
-  --c1: #e2bdb0;
-  --c2: #8f5a4b;
-}
-
-.tone-lt {
-  --c1: #8f5a4b;
-  --c2: #e2bdb0;
-}
-
-/* swing: each tag has its own angle and delay */
-
-.is-p1 { --a: 1.2deg;  animation-delay: -1.2s; }
-.is-p2 { --a: -.8deg;  animation-delay: -3.1s; }
-.is-p3 { --a: 1.6deg;  animation-delay: -4.4s; }
-
-@keyframes story-sway {
-  0%, 100% { transform: rotate(calc(var(--a) + 1.4deg)); }
-  50%      { transform: rotate(calc(var(--a) - 1.4deg)); }
-}
-
-/* rings threaded on the rope (back half behind the rope, front half over it) */
-
-.story-ring {
-  position: absolute;
-  width: calc(16 * var(--u));
-  height: calc(24 * var(--u));
-  transform-origin: 50% 50%;
-  animation: story-sway 5.6s ease-in-out infinite;
-}
-
-.story-ring path {
-  stroke: var(--c1);
-}
-
-.story-ring--back  { z-index: 1; }
-.story-ring--front { z-index: 3; }
-
-.story-ring.is-p1 { left: calc(18% - 8 * var(--u)); top: calc(14.5% - 12 * var(--u)); }
-.story-ring.is-p2 { left: calc(50% - 8 * var(--u)); top: calc(22.4% - 12 * var(--u)); }
-.story-ring.is-p3 { left: calc(82% - 8 * var(--u)); top: calc(14.5% - 12 * var(--u)); }
-
-/* the tag */
-
-.story-tag {
-  position: absolute;
-  z-index: 4;
+.sales__timer-units {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: calc(112 * var(--u));
-  color: inherit;
-  text-decoration: none;
-  transform-origin: 50% calc(-10 * var(--u));
-  animation: story-sway 5.6s ease-in-out infinite;
+  gap: 6px;
 }
 
-.story-tag:hover {
-  animation-play-state: paused;
-}
-
-.story-tag.is-p1 { left: calc(18% - 56 * var(--u)); top: calc(14.5% + 10 * var(--u)); }
-.story-tag.is-p2 { left: calc(50% - 56 * var(--u)); top: calc(22.4% + 10 * var(--u)); }
-.story-tag.is-p3 { left: calc(82% - 56 * var(--u)); top: calc(14.5% + 10 * var(--u)); }
-
-.story-tag__thread {
-  display: block;
-  width: calc(12 * var(--u));
-  height: calc(56 * var(--u));
-  overflow: visible;
-}
-
-.story-tag__thread .t1 { stroke: var(--c1); }
-.story-tag__thread .t2 { stroke: var(--c2); }
-
-.story-tag__card {
-  position: relative;
-  z-index: -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: calc(112 * var(--u));
-  height: calc(228 * var(--u));
-  margin-top: calc(-18 * var(--u));
-  padding: 0 calc(8 * var(--u)) calc(9 * var(--u));
-  box-sizing: border-box;
-  border-radius: calc(12 * var(--u));
+.sales__timer-cell {
+  min-width: 52px;
+  padding: 9px 8px 7px;
+  border: 1px solid rgb(var(--hilya-rose-rgb) / 28%);
+  border-radius: 10px;
+  background: #fff;
   text-align: center;
 }
 
-.story-tag__hole {
-  flex: 0 0 auto;
-  width: calc(16 * var(--u));
-  height: calc(16 * var(--u));
-  margin: calc(10 * var(--u)) 0 calc(8 * var(--u));
-  border-radius: 50%;
-  background: var(--hilya-beige, #F7F4EE);
+.sales__timer-cell b {
+  display: block;
+  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-size: 26px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--hilya-ink);
 }
 
-.story-tag__photo {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 0;
+.sales__timer-cell span {
+  display: block;
+  margin-top: 4px;
+  color: var(--hilya-muted);
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* STAGE: the display window */
+
+.sales__stage {
+  grid-area: stage;
+  position: relative;
+  min-height: 420px;
   overflow: hidden;
-  border-radius: calc(8 * var(--u));
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
-.story-tag__photo img {
+.sales__stage:focus-visible {
+  outline-offset: -4px;
+}
+
+.sales__stage.is-draggable {
+  cursor: grab;
+}
+
+.sales__stage.is-dragging,
+.sales__stage.is-dragging * {
+  cursor: grabbing;
+}
+
+.sales__hint {
+  grid-area: stage;
+  margin: 0;
+  color: var(--hilya-muted);
+  font-size: 13px;
+}
+
+/* the rope: runs off both sides of the window, sags in the middle */
+
+.sales__rope {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.sales__rope path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.sales__rope path:nth-child(1) {
+  stroke: color-mix(in srgb, #000 30%, var(--hilya-rose-deep));
+  stroke-width: 5.5;
+}
+
+.sales__rope path:nth-child(2) {
+  stroke: var(--hilya-rose-deep);
+  stroke-width: 4.5;
+}
+
+/* the twist of the rope */
+.sales__rope path:nth-child(3) {
+  stroke: var(--sales-soft);
+  stroke-width: 4.5;
+  stroke-dasharray: 1.4 4.2;
+  opacity: .6;
+}
+
+/* three layers: back half of the rings, then the rope, then the tags (so the rope runs through each ring) */
+
+.sales__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sales__layer--back {
+  z-index: 1;
+}
+
+.sales__layer--front {
+  z-index: 3;
+}
+
+.sales-card,
+.sales-ring--back {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.sales-card {
+  width: var(--sales-card-w);
+  transform-origin: 50% 12px;
+  pointer-events: auto;
+  will-change: transform;
+}
+
+/* DARK AND LIGHT TAGS: the engraved text and the thread take the opposite tone */
+
+.sales .is-dark {
+  --tag-bg: var(--hilya-rose-deep);
+  --tag-ink: #fff;
+  --tag-off: var(--sales-soft);
+  --thread: var(--sales-soft);
+  --thread-alt: var(--hilya-rose-deep);
+}
+
+.sales .is-light {
+  --tag-bg: var(--sales-light);
+  --tag-ink: var(--hilya-ink);
+  --tag-off: var(--hilya-rose-deep);
+  --thread: var(--hilya-rose-deep);
+  --thread-alt: var(--sales-soft);
+}
+
+.sales-ring {
+  width: 16px;
+  height: 24px;
+  border: 2.2px solid var(--thread);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.sales-ring--back {
+  clip-path: inset(0 0 0 50%);
+  transform-origin: 8px 12px;
+}
+
+.sales-ring--front {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 8px);
+  z-index: 2;
+  clip-path: inset(0 50% 0 0);
+}
+
+.sales-thread {
+  position: absolute;
+  top: 22px;
+  left: calc(50% - 6px);
+  z-index: 2;
+  width: 12px;
+  height: 52px;
+  overflow: visible;
+}
+
+.sales-thread path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 2.6;
+}
+
+.sales-thread path:first-child {
+  stroke: var(--thread);
+}
+
+.sales-thread path:last-child {
+  stroke: var(--thread-alt);
+  stroke-dasharray: 1 3;
+  opacity: .5;
+}
+
+/* THE TAG */
+
+.sales-tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 56px;
+  padding: 0 9px 12px;
+  border-radius: var(--hilya-radius);
+  background: var(--tag-bg);
+  color: var(--tag-ink);
+  text-decoration: none;
+  text-align: center;
+}
+
+.sales-tag__hole {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 10px 0 8px;
+  border-radius: 50%;
+  background: var(--hilya-beige);
+}
+
+.sales-tag__photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--hilya-beige);
+}
+
+.sales-tag__photo img,
+.sales-tag__photo svg {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
 }
 
-.story-tag__photo i {
-  display: block;
-  width: calc(24 * var(--u));
-  height: calc(24 * var(--u));
-  border: calc(3 * var(--u)) solid #c9a24a;
-  border-radius: 50%;
-}
-
-.story-tag__off {
-  display: block;
-  margin-top: calc(9 * var(--u));
+.sales-tag__off {
+  margin-top: 10px;
+  color: var(--tag-off);
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: calc(21 * var(--u));
+  font-size: 25px;
   font-style: italic;
   line-height: 1;
 }
 
-.story-tag__name,
-.story-tag__price {
-  display: block;
-  font-size: max(9px, calc(10.5 * var(--u)));
-  line-height: 1.25;
-}
-
-.story-tag__name {
-  margin-top: calc(3 * var(--u));
+.sales-tag__name {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.35;
 }
 
-.story-tag__price s {
-  margin-inline-start: 3px;
+.sales-tag__price {
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.sales-tag__price s {
+  display: block;
+  margin-top: 1px;
   opacity: .7;
 }
 
-.tone-dk .story-tag__card { background: #8f5a4b; }
-.tone-dk .story-tag__photo { background: #eadfce; }
-.tone-dk .story-tag__off { color: #e2bdb0; }
-.tone-dk .story-tag__name,
-.tone-dk .story-tag__price { color: #f5e9e3; }
+/* without the script: a plain row of tags, no rope */
 
-.tone-lt .story-tag__card { background: #ecd5cb; }
-.tone-lt .story-tag__photo { background: #f7f0e6; }
-.tone-lt .story-tag__off { color: #8f5a4b; }
-.tone-lt .story-tag__name,
-.tone-lt .story-tag__price { color: #5a352b; }
+.sales__stage:not(.is-ready) {
+  min-height: 0;
+  overflow-x: auto;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.sales__stage:not(.is-ready) .sales__rope,
+.sales__stage:not(.is-ready) [data-back],
+.sales__stage:not(.is-ready) .sales-ring,
+.sales__stage:not(.is-ready) .sales-thread {
+  display: none;
+}
+
+.sales__stage:not(.is-ready) [data-front] {
+  position: static;
+  display: flex;
+  gap: var(--sales-gap);
+}
+
+.sales__stage:not(.is-ready) .sales-card {
+  position: relative;
+  flex: none;
+}
+
+.sales__stage:not(.is-ready) .sales-tag {
+  margin-top: 0;
+}
 
 /* LARGE DESKTOP */
 
 @media (min-width: 1500px) {
-  .story-section {
+  .sales {
     padding-left: max(32px, calc((100vw - 1500px) / 2));
     padding-right: max(32px, calc((100vw - 1500px) / 2));
   }
@@ -766,20 +1193,20 @@
 /* TABLET */
 
 @media (min-width: 750px) and (max-width: 1100px) {
-  .story-section {
-    padding: calc(25px + var(--story-extra-top)) 28px 20px;
+  .sales {
+    padding: calc(25px + var(--sales-extra-top)) 28px 0;
   }
 
-  .story-section__inner {
-    gap: 28px;
-    grid-template-columns: minmax(250px, .8fr) minmax(0, 1.2fr);
+  .sales__inner {
+    grid-template-columns: minmax(230px, .8fr) minmax(0, 1.2fr);
+    column-gap: 32px;
   }
 
-  .story-section__heading {
+  .sales__heading {
     font-size: 46px;
   }
 
-  .story-section__content {
+  .sales__content {
     padding: 15px 0;
   }
 }
@@ -787,203 +1214,166 @@
 /* MOBILE */
 
 @media (max-width: 749px) {
-  .story-section {
-    --story-extra-top: var(--story-content-mobile, 0px);
-    margin-top: var(--story-section-mobile, 0px);
-    padding: calc(25px + var(--story-extra-top)) 16px 30px;
+  .sales {
+    --sales-extra-top: var(--sales-content-mobile, 0px);
+    --sales-card-w: 132px;
+    margin-top: var(--sales-section-mobile, 0px);
+    padding: calc(25px + var(--sales-extra-top)) 16px 35px;
   }
 
-  .story-section__top {
-    justify-content: flex-start;
-    margin-bottom: 20px;
-    padding: 0 10px;
+  .sales__inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "content"
+      "timer"
+      "stage";
+    row-gap: 0;
   }
 
-  .story-timer {
-    text-align: start;
-  }
-
-  .story-timer__units {
-    justify-content: flex-start;
-  }
-
-  .story-timer__unit {
-    width: 52px;
-  }
-
-  .story-section__inner {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-
-  .story-section__content {
+  .sales__content {
     max-width: none;
-    padding: 0 10px;
+    padding: 0 10px 10px;
   }
 
-  .story-section__eyebrow {
+  .sales__eyebrow {
     margin-bottom: 16px;
   }
 
-  .story-section__heading {
+  .sales__heading {
     margin-bottom: 22px;
   }
 
-  .story-section__text {
+  .sales__text {
     max-width: 340px;
     margin-bottom: 28px;
   }
 
-  .story-section__text p {
+  .sales__text p {
     font-size: 12.5px;
     line-height: 1.75;
   }
 
-  .story-section__link {
+  .sales__link {
     font-size: 9px;
     gap: 6px;
   }
 
-  .story-section__arrow {
+  .sales__arrow {
     font-size: 12px;
     position: relative;
     top: -2px;
   }
 
-  .story-stage {
-    max-width: 440px;
-    margin-inline: auto;
+  .sales__timer {
+    justify-self: start;
+    margin: 6px 10px 18px;
+  }
+
+  .sales__timer-cell {
+    min-width: 48px;
   }
 }
 
 /* REVEAL ON SCROLL */
 
-@keyframes story-reveal {
+@keyframes sales-reveal {
   from {
     opacity: 0;
     transform: translateY(40px);
   }
 }
 
-.story-section.has-reveal .story-section__top:not(.is-revealed),
-.story-section.has-reveal .story-section__badge:not(.is-revealed),
-.story-section.has-reveal .story-section__eyebrow:not(.is-revealed),
-.story-section.has-reveal .story-section__heading span:not(.is-revealed),
-.story-section.has-reveal .story-section__text:not(.is-revealed),
-.story-section.has-reveal .story-section__link:not(.is-revealed),
-.story-section.has-reveal .story-stage:not(.is-revealed) {
+@keyframes sales-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.sales.has-reveal [data-reveal]:not(.is-revealed) {
   opacity: 0;
 }
 
-.story-section.has-reveal .story-section__top.is-revealed,
-.story-section.has-reveal .story-section__badge.is-revealed,
-.story-section.has-reveal .story-section__eyebrow.is-revealed,
-.story-section.has-reveal .story-section__heading span.is-revealed,
-.story-section.has-reveal .story-section__text.is-revealed,
-.story-section.has-reveal .story-section__link.is-revealed,
-.story-section.has-reveal .story-stage.is-revealed {
-  animation: story-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
+.sales.has-reveal [data-reveal].is-revealed {
+  animation: sales-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
   animation-delay: var(--reveal-delay, 0s);
 }
 
-.story-section.has-reveal .is-revealed.hilya-instant,
-.story-section.has-reveal span.is-revealed.hilya-instant {
+/* the display window only fades in place, it never slides */
+.sales.has-reveal [data-reveal="fade"].is-revealed {
+  animation: sales-fade 1.8s ease backwards;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+.sales.has-reveal [data-reveal].is-revealed.hilya-instant {
   animation: none;
 }
 
-
-/* LINE ABOVE THE TEXT (under the heading) */
-
-.story-section__text::before {
-  content: "";
-  display: block;
-  width: 2.4rem;
-  height: 1px;
-  margin-bottom: 16px;
-  background: var(--hilya-rose, #A9705F);
-}
-
-/* drawn from the start of the line after the text appears */
-.story-section.has-reveal .story-section__text::before {
+.sales.has-reveal .sales__text::before {
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 1.6s cubic-bezier(.22, .8, .3, 1);
   transition-delay: calc(var(--reveal-delay, 0s) + .5s);
 }
 
-.story-section.has-reveal .story-section__text.is-revealed::before {
+.sales.has-reveal .sales__text.is-revealed::before {
   transform: scaleX(1);
 }
 
-.story-section.has-reveal .story-section__text.hilya-instant::before {
+.sales.has-reveal .sales__text.hilya-instant::before {
   transition: none;
-}
-
-[dir="rtl"] .story-section.has-reveal .story-section__text::before {
-  transform-origin: right center;
 }
 
 /* ARABIC / RTL */
 
-[dir="rtl"] .story-section__arrow {
+[dir="rtl"] .sales.has-reveal .sales__text::before {
+  transform-origin: right center;
+}
+
+[dir="rtl"] .sales__arrow {
   transform: scaleX(-1);
 }
 
-[dir="rtl"] .story-section__link:hover .story-section__arrow {
+[dir="rtl"] .sales__link:hover .sales__arrow {
   transform: scaleX(-1) translateX(4px);
 }
 
-[dir="rtl"] .story-section__heading {
+[dir="rtl"] .sales__heading {
   line-height: 1.2;
   font-style: normal;
 }
 
-[dir="rtl"] .story-section__badge,
-[dir="rtl"] .story-section__eyebrow,
-[dir="rtl"] .story-timer__label,
-[dir="rtl"] .story-timer__name,
-[dir="rtl"] .story-section__link {
-  letter-spacing: 0;
-}
-
-[dir="rtl"] .story-section__badge {
-  font-size: 13px;
-}
-
-[dir="rtl"] .story-section__eyebrow {
-  font-size: 13px;
-}
-
-[dir="rtl"] .story-timer__label {
-  font-size: 12px;
-}
-
-[dir="rtl"] .story-timer__name {
-  font-size: 10px;
-}
-
-[dir="rtl"] .story-tag__name {
-  font-size: max(10px, calc(11 * var(--u)));
-}
-
-[dir="rtl"] .story-section__text p {
+[dir="rtl"] .sales__text p {
   font-size: 14px;
   line-height: 1.9;
 }
 
-[dir="rtl"] .story-section__link {
+[dir="rtl"] .sales__link {
   font-size: 13px;
 }
 
-@media (max-width: 749px) {
+[dir="rtl"] .sales__offer {
+  font-size: 13px;
+}
 
-  [dir="rtl"] .story-section__text p {
+[dir="rtl"] .sales__timer-label {
+  font-size: 12px;
+}
+
+[dir="rtl"] .sales__timer-cell span {
+  font-size: 11px;
+}
+
+[dir="rtl"] .sales-tag__name,
+[dir="rtl"] .sales-tag__price {
+  font-size: 12px;
+}
+
+@media (max-width: 749px) {
+  [dir="rtl"] .sales__text p {
     font-size: 13px;
   }
 
-  [dir="rtl"] .story-section__link {
+  [dir="rtl"] .sales__link {
     font-size: 12px;
   }
 }
@@ -991,15 +1381,9 @@
 /* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
-  .story-section__link:hover .story-section__arrow,
-  [dir="rtl"] .story-section__link:hover .story-section__arrow {
+  .sales__link:hover .sales__arrow,
+  [dir="rtl"] .sales__link:hover .sales__arrow {
     transform: none;
-  }
-
-  .story-ring,
-  .story-tag {
-    animation: none;
-    transform: rotate(var(--a, 0deg));
   }
 }
 
@@ -1013,30 +1397,48 @@
       "index"
     ]
   },
-  "max_blocks": 3,
   "settings": [
     {
       "type": "header",
-      "content": "Countdown"
+      "content": "Products on the rope"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Sales collection",
+      "info": "The tags show the products of this collection (every product that has a discount goes there by itself)."
+    },
+    {
+      "type": "range",
+      "id": "card_count",
+      "label": "Number of tags",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "info": "0 hides the rope. If the collection has fewer products, only those are shown. When they do not all fit, the tags loop round when you drag them."
+    },
+    {
+      "type": "header",
+      "content": "Countdown and offer name"
     },
     {
       "type": "text",
-      "id": "countdown_end",
-      "label": "Offer end date and time",
-      "info": "Format: YYYY-MM-DD HH:MM (store time zone), e.g. 2026-11-30 23:59. Leave blank to hide the countdown. It hides itself when the time is over.",
-      "default": "2026-11-30 23:59"
+      "id": "end_at",
+      "label": "Offer end date and time (Cairo time)",
+      "info": "Write it like 2026-11-28 23:59. Leave blank for no countdown. The countdown disappears by itself when the time comes."
     },
     {
       "type": "text",
-      "id": "countdown_label",
-      "label": "Countdown label",
-      "default": "Offer ends in"
+      "id": "offer_name",
+      "label": "Offer name",
+      "info": "For example Black Friday or Summer Sale. Leave blank to hide it."
     },
     {
       "type": "text",
-      "id": "countdown_label_ar",
-      "label": "Countdown label - Arabic",
-      "default": "ينتهي العرض خلال"
+      "id": "offer_name_ar",
+      "label": "Offer name - Arabic",
+      "info": "Shown on the Arabic site. Leave blank to hide it there."
     },
     {
       "type": "header",
@@ -1092,22 +1494,9 @@
     },
     {
       "type": "text",
-      "id": "badge",
-      "label": "Badge (pill)",
-      "info": "Leave blank to hide.",
-      "default": "Black Friday"
-    },
-    {
-      "type": "text",
-      "id": "badge_ar",
-      "label": "Badge - Arabic",
-      "default": "الجمعة السوداء"
-    },
-    {
-      "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Special offer"
+      "default": "Special Offers"
     },
     {
       "type": "text",
@@ -1120,7 +1509,7 @@
       "type": "text",
       "id": "heading_line_1",
       "label": "Heading - Line 1",
-      "default": "Limited time."
+      "default": "Special Offers."
     },
     {
       "type": "text",
@@ -1132,31 +1521,31 @@
       "type": "text",
       "id": "heading_line_2",
       "label": "Heading - Line 2",
-      "default": "Up to 25% off"
+      "default": "Made for You."
     },
     {
       "type": "text",
       "id": "heading_line_2_ar",
       "label": "Heading line 2 - Arabic",
-      "default": "خصم يصل إلى 25%"
+      "default": "خصم يصل إلى 30%"
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Discover selected pieces at special prices.</p>"
+      "default": "<p>Discover selected pieces at special prices, made to bring timeless elegance to your everyday style.</p>"
     },
     {
       "type": "richtext",
       "id": "description_ar",
       "label": "Description - Arabic",
-      "default": "<p>اكتشف قطعًا مختارة بأسعار خاصة.</p>"
+      "default": "<p>اكتشف قطعًا مختارة بأسعار خاصة، لتمنح إطلالتك اليومية أناقة خالدة.</p>"
     },
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Shop sale"
+      "default": "Shop Offers"
     },
     {
       "type": "text",
@@ -1167,97 +1556,12 @@
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button link",
-      "info": "Also used by any tag that has no product or link of its own."
-    }
-  ],
-  "blocks": [
-    {
-      "type": "tag",
-      "name": "Hanging tag",
-      "limit": 3,
-      "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product",
-          "info": "Optional. Fills name, price, old price, discount, image and link automatically. Anything you type below overrides it."
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image",
-          "info": "Optional. Leave blank to use the product image."
-        },
-        {
-          "type": "text",
-          "id": "discount",
-          "label": "Discount label",
-          "info": "e.g. -31%. Leave blank to calculate it from the product."
-        },
-        {
-          "type": "text",
-          "id": "name",
-          "label": "Name"
-        },
-        {
-          "type": "text",
-          "id": "name_ar",
-          "label": "Name - Arabic",
-          "info": "Shown on the Arabic site. Leave blank to use the name above."
-        },
-        {
-          "type": "text",
-          "id": "price",
-          "label": "Price",
-          "info": "e.g. EGP 450"
-        },
-        {
-          "type": "text",
-          "id": "compare_price",
-          "label": "Old price (crossed out)",
-          "info": "e.g. 650"
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "Link"
-        }
-      ]
+      "label": "Button link"
     }
   ],
   "presets": [
     {
-      "name": "Special Offers",
-      "blocks": [
-        {
-          "type": "tag",
-          "settings": {
-            "discount": "-31%",
-            "name": "Hob bracelet",
-            "price": "EGP 450",
-            "compare_price": "650"
-          }
-        },
-        {
-          "type": "tag",
-          "settings": {
-            "discount": "-33%",
-            "name": "More love necklace",
-            "price": "EGP 400",
-            "compare_price": "600"
-          }
-        },
-        {
-          "type": "tag",
-          "settings": {
-            "discount": "-24%",
-            "name": "Palestine necklace",
-            "price": "EGP 650",
-            "compare_price": "850"
-          }
-        }
-      ]
+      "name": "Special Offers"
     }
   ]
 }
