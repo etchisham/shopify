@@ -112,7 +112,7 @@
       "name": "Sales collection",
       "settings": {
         "collection": "sales",
-        "card_count": 3,
+        "card_count": 10,
         "end_at": "2026-11-30 23:59",
         "offer_name": "White Friday Offers",
         "offer_name_ar": "عروض الجمعة البيضاء",
