@@ -4586,6 +4586,9 @@ html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
   .hilya-filters .hilya-filter-sidebar {
     display: flex;
     flex-direction: column;
+    /* a little wider than its column: that extra room is where the scrollbar sits,
+       so the filters keep the same width whether the scrollbar shows or not */
+    width: calc(100% + var(--hilya-scrollbar, 11px));
     overflow: hidden;
     padding-right: 0;
   }
@@ -4612,6 +4615,7 @@ html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
     min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-gutter: stable;   /* the scrollbar's place is always kept */
     border-top: 1px solid rgb(0 0 0 / 10%);
     padding: 0;
     scrollbar-width: thin;
