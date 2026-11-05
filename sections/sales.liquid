@@ -68,10 +68,10 @@
     assign bar_case = 'uppercase'
   endif
 
-  assign soon_texts = 'New offers soon|No offers right now|Stay tuned|Something special is coming|Check back soon|More offers on the way|Great prices ahead|Offers coming your way|Watch this space|Back soon with new deals' | split: '|'
+  assign soon_texts = 'New offers~Soon|No offers~Right now|Stay~Tuned|Something special~Is coming|Check back~Soon|More offers~On the way|Great prices~Ahead|Offers coming~Your way|Watch~This space|Back soon~New deals' | split: '|'
 
   if sales_locale == 'ar'
-    assign soon_texts = 'عروض جديدة قريباً|لا توجد عروض حالياً|ترقبوا العروض|شيء مميز في الطريق|عودوا قريباً|المزيد من العروض قادم|أسعار مميزة قادمة|عروض تصلكم قريباً|ترقبوا الجديد|نعود قريباً بخصومات جديدة' | split: '|'
+    assign soon_texts = 'عروض جديدة~قريباً|لا توجد~عروض حالياً|ترقبوا~العروض|شيء مميز~في الطريق|عودوا~قريباً|المزيد~من العروض|أسعار مميزة~قادمة|عروض~تصلكم قريباً|ترقبوا~الجديد|نعود قريباً~بخصومات جديدة' | split: '|'
   endif
 
   assign sales_collection = section.settings.collection
@@ -233,7 +233,7 @@
       </div>
     {% else %}
       {%- comment -%} no products to show: the tags stay on the rope, with a short message across each one, as many as "Cards in view" {%- endcomment -%}
-      <div class="sales__stage" data-sales-stage data-visible="{{ section.settings.visible_cards }}" data-reveal="fade" role="group" aria-label="{{ soon_texts[0] | escape }}">
+      <div class="sales__stage" data-sales-stage data-visible="{{ section.settings.visible_cards }}" data-reveal="fade" role="group" aria-label="{{ soon_texts[0] | replace: '~', ' ' | escape }}">
 
         <div class="sales__layer sales__layer--back" data-back>
           {% for item in (1..section.settings.visible_cards) %}
@@ -252,6 +252,7 @@
           {% for item in (1..section.settings.visible_cards) %}
             {% assign parity = forloop.index0 | modulo: 2 %}
             {% assign soon_index = forloop.index0 | modulo: soon_texts.size %}
+            {% assign soon_pair = soon_texts[soon_index] | split: '~' %}
             <div class="sales-card {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" data-card>
               <span class="sales-ring sales-ring--front" aria-hidden="true"></span>
               <svg class="sales-thread" viewBox="0 0 12 52" aria-hidden="true" focusable="false">
@@ -262,7 +263,7 @@
               <div class="sales-tag__shell">
                 <div class="sales-tag sales-tag--soon">
                   <span class="sales-tag__hole" aria-hidden="true"></span>
-                  <span class="sales-tag__soon"><span>{{ soon_texts[soon_index] | escape }}</span></span>
+                  <span class="sales-tag__soon"><span>{{ soon_pair[0] | escape }}</span><span>{{ soon_pair[1] | escape }}</span></span>
                 </div>
               </div>
             </div>
@@ -1352,13 +1353,15 @@
   align-items: center;
   margin-top: 56px;
   padding: 0 12px 18px;
+  --cut-x: calc(var(--sales-card-w) * .3); /* how far the top corners are cut in, sideways and down */
+  --cut-y: calc(var(--sales-card-w) * .22);
   background: linear-gradient(135deg, rgb(255 255 255 / 16%), transparent 45%), var(--tag-bg);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 30%);
   clip-path: polygon(
-    22px 0, calc(100% - 22px) 0, 100% 22px,
+    var(--cut-x) 0, calc(100% - var(--cut-x)) 0, 100% var(--cut-y),
     100% calc(100% - 8px), calc(100% - 2.3px) calc(100% - 2.3px), calc(100% - 8px) 100%,
     8px 100%, 2.3px calc(100% - 2.3px), 0 calc(100% - 8px),
-    0 22px
+    0 var(--cut-y)
   );
   color: var(--tag-ink);
   text-decoration: none;
@@ -1370,37 +1373,53 @@
   box-shadow: inset 0 0 0 3px var(--hilya-ink);
 }
 
-/* "no offers yet" tag: a message across the middle instead of a photo */
+/* "no offers yet" tag: the message is engraved along the tag, reading upwards, like on a real hang tag */
+
+.sales-tag--soon {
+  container-type: inline-size;
+  aspect-ratio: 1 / 1.85;
+}
 
 .sales-tag__soon {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
-  width: 100%;
-  aspect-ratio: 3 / 4.2;
-  padding: 10px;
-  border: 1px solid color-mix(in srgb, var(--tag-ink) 26%, transparent);
-  border-radius: 8px;
-  container-type: inline-size;
-  color: color-mix(in srgb, var(--tag-off) 45%, var(--tag-ink));
+  min-height: 0;
+  gap: .9em;
+  color: color-mix(in srgb, var(--tag-off) 55%, var(--tag-ink));
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-style: italic;
-  line-height: 1.15;
+  font-size: 8cqw;
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1.1;
   text-align: center;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 22%), 0 -1px 0 rgb(255 255 255 / 14%);
+  text-transform: uppercase;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
-.sales-tag__soon > span {
-  font-size: clamp(14px, 12cqw, 30px);
+.sales .is-light .sales-tag__soon {
+  text-shadow: 0 1px 0 rgb(255 255 255 / 70%);
 }
+
+.sales-tag__soon > span:last-child {
+  font-size: 1.75em;
+  letter-spacing: .06em;
+}
+
+/* the hole has a metal rim, like the eyelet of a hang tag */
 
 .sales-tag__hole {
   flex: none;
-  width: 16px;
-  height: 16px;
-  margin: 10px 0 8px;
+  width: 18px;
+  height: 18px;
+  margin: 9px 0 12px;
   border-radius: 50%;
   background: var(--hilya-beige);
+  box-shadow: 0 0 0 3px color-mix(in srgb, #fff 28%, var(--hilya-rose-light)), 0 1px 3px 3px rgb(0 0 0 / 18%), inset 0 1px 2px rgb(0 0 0 / 28%);
 }
 
 .sales-tag__photo {
@@ -1597,9 +1616,15 @@
 
 /* ARABIC / RTL */
 
-[dir="rtl"] .sales__heading,
-[dir="rtl"] .sales-tag__soon {
+[dir="rtl"] .sales__heading {
   font-style: normal;
+}
+
+/* Arabic letters are joined: no letter spacing and no capitals on the engraved message */
+[dir="rtl"] .sales-tag__soon {
+  font-size: 10cqw;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 {% endstylesheet %}
@@ -1627,7 +1652,7 @@
       "type": "range",
       "id": "card_count",
       "label": "Number of products on the rope",
-      "min": 0,
+      "min": 1,
       "max": 20,
       "step": 1,
       "default": 6,
