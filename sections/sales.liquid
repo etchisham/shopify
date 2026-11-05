@@ -4,6 +4,7 @@
   assign sales_eyebrow = section.settings.eyebrow
   assign sales_line_1 = section.settings.heading_line_1
   assign sales_line_2 = section.settings.heading_line_2
+  assign sales_line_3 = section.settings.heading_line_3
   assign sales_description = section.settings.description
   assign sales_button = section.settings.button_label
   assign sales_offer = section.settings.offer_name
@@ -30,6 +31,9 @@
     if section.settings.heading_line_2_ar != blank
       assign sales_line_2 = section.settings.heading_line_2_ar
     endif
+    if section.settings.heading_line_3_ar != blank
+      assign sales_line_3 = section.settings.heading_line_3_ar
+    endif
     if section.settings.description_ar != blank
       assign sales_description = section.settings.description_ar
     endif
@@ -41,31 +45,56 @@
     endif
   endif
 
+  comment
+    The offer bar: the switch hides it even when it has text. In Arabic the text moves the other way and the letters are not spaced out.
+  endcomment
+  unless section.settings.offer_show
+    assign sales_offer = blank
+  endunless
+
+  assign bar_shift = '-50%'
+  assign bar_tracking = '.18em'
+  assign bar_reverse = false
+  if section.settings.offer_direction == 'ltr'
+    assign bar_reverse = true
+  endif
+  if sales_locale == 'ar'
+    assign bar_shift = '50%'
+    assign bar_tracking = '0'
+  endif
+
+  assign bar_case = 'none'
+  if section.settings.offer_uppercase
+    assign bar_case = 'uppercase'
+  endif
+
   assign sales_collection = section.settings.collection
   assign sales_count = section.settings.card_count
 -%}
 
 <section
-  class="sales{% if sales_offer != blank %} sales--bar{% endif %}"
+  class="sales"
   style="--sales-section-desktop: {{ section.settings.section_space_desktop }}px; --sales-section-mobile: {{ section.settings.section_space_mobile }}px; --sales-content-desktop: {{ section.settings.content_space_desktop }}px; --sales-content-mobile: {{ section.settings.content_space_mobile }}px;"
 >
 
   {% if sales_offer != blank %}
-    {%- comment -%} the offer bar across the top: scrolls when "Move the offer bar" is on, otherwise the name stands still in the middle {%- endcomment -%}
-    <div class="sales__bar">
-      {% if section.settings.offer_scroll %}
-        <div class="sales__bar-track">
+    {%- comment -%} the offer bar: sits a little below the top of the section, so the section colour shows above it {%- endcomment -%}
+    <div
+      class="sales__bar{% if section.settings.offer_animation == 'marquee' %} is-moving{% endif %}{% if bar_reverse %} is-reverse{% endif %}{% unless section.settings.offer_animate_mobile %} is-still-mobile{% endunless %}"
+      style="--sales-bar-bg: {{ section.settings.offer_bg }}; --sales-bar-ink: {{ section.settings.offer_color }}; --sales-bar-height: {{ section.settings.offer_height }}px; --sales-bar-pad-y: {{ section.settings.offer_padding_y }}px; --sales-bar-pad-x: {{ section.settings.offer_padding_x }}px; --sales-bar-font: {{ section.settings.offer_font_desktop }}px; --sales-bar-font-mobile: {{ section.settings.offer_font_mobile }}px; --sales-bar-weight: {{ section.settings.offer_weight }}; --sales-bar-case: {{ bar_case }}; --sales-bar-tracking: {{ bar_tracking }}; --sales-bar-space: {{ section.settings.offer_gap }}px; --sales-bar-shift: {{ bar_shift }}; --sales-bar-align: {{ section.settings.offer_align }};"
+    >
+      {% if section.settings.offer_animation == 'marquee' %}
+        <div class="sales__bar-track" data-bar-track data-speed="{{ section.settings.offer_speed }}">
           {% for group in (1..2) %}
-            <ul class="sales__bar-group"{% if group == 2 %} aria-hidden="true"{% endif %}>
-              {% for item in (1..14) %}
-                <li>{{ sales_offer | escape }}</li>
+            <ul class="sales__bar-group">
+              {% for item in (1..8) %}
+                <li{% unless group == 1 and forloop.first %} aria-hidden="true"{% endunless %}>{{ sales_offer | escape }}</li>
               {% endfor %}
             </ul>
           {% endfor %}
         </div>
-      {% else %}
-        <p class="sales__bar-text">{{ sales_offer | escape }}</p>
       {% endif %}
+      <p class="sales__bar-text">{{ sales_offer | escape }}</p>
     </div>
   {% endif %}
 
@@ -78,7 +107,7 @@
         <p class="sales__eyebrow" data-reveal>{{ sales_eyebrow | escape }}</p>
       {% endif %}
 
-      {% if sales_line_1 != blank or sales_line_2 != blank %}
+      {% if sales_line_1 != blank or sales_line_2 != blank or sales_line_3 != blank %}
         <h2 class="sales__heading">
           {% if sales_line_1 != blank %}
             <span data-reveal>{{ sales_line_1 | escape }}</span>
@@ -86,6 +115,10 @@
 
           {% if sales_line_2 != blank %}
             <span data-reveal>{{ sales_line_2 | escape }}</span>
+          {% endif %}
+
+          {% if sales_line_3 != blank %}
+            <span data-reveal>{{ sales_line_3 | escape }}</span>
           {% endif %}
         </h2>
       {% endif %}
@@ -122,7 +155,7 @@
     {% endif %}
 
     {% if sales_collection != blank and sales_count > 0 and sales_collection.products_count > 0 %}
-      <div class="sales__stage" data-sales-stage data-reveal="fade" tabindex="0" role="group" aria-label="{{ sales_line_1 | escape }} {{ sales_line_2 | escape }}">
+      <div class="sales__stage" data-sales-stage data-reveal="fade" tabindex="0" role="group" aria-label="{{ sales_line_1 | escape }} {{ sales_line_2 | escape }} {{ sales_line_3 | escape }}">
 
         <div class="sales__layer sales__layer--back" data-back>
           {% for product in sales_collection.products limit: sales_count %}
@@ -202,6 +235,39 @@
     const section = document.currentScript.previousElementSibling;
 
     if (!section) return;
+
+    /* ---------- offer bar: enough repeats to fill the width, and a speed in pixels per second ---------- */
+
+    const barTrack = section.querySelector('[data-bar-track]');
+
+    if (barTrack) {
+      const groups = Array.from(barTrack.querySelectorAll('.sales__bar-group'));
+      const speed = Math.max(Number(barTrack.dataset.speed) || 40, 5);
+
+      const tuneBar = () => {
+        const width = barTrack.parentElement.clientWidth;
+        const first = groups[0];
+
+        if (!width || !first.offsetWidth) return;
+
+        let guard = 0;
+
+        while (first.offsetWidth < width && guard++ < 80) {
+          groups.forEach((group) => {
+            const copy = group.firstElementChild.cloneNode(true);
+            copy.setAttribute('aria-hidden', 'true');
+            group.appendChild(copy);
+          });
+        }
+
+        barTrack.style.setProperty('--sales-bar-duration', (first.offsetWidth / speed) + 's');
+      };
+
+      tuneBar();
+      window.addEventListener('resize', tuneBar);
+
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(tuneBar);
+    }
 
     /* ---------- reveal on scroll ---------- */
 
@@ -747,8 +813,10 @@
 
 .sales {
   position: relative;
+  display: flow-root;
+  --sales-pad-x: max(24px, calc((100vw - 1400px) / 2));
   --sales-extra-top: var(--sales-content-desktop, 0px);
-  --sales-heading-leading: .84; /* heading line spacing: lower = closer lines */
+  --sales-heading-leading: .9; /* heading line spacing: lower = closer lines */
   --sales-card-w: 176px;
   --sales-gap: 34px;
   --sales-pale: color-mix(in srgb, var(--hilya-rose-light) 22%, #fff);
@@ -758,7 +826,7 @@
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
   margin-top: var(--sales-section-desktop, 0px);
-  padding: calc(35px + var(--sales-extra-top) + var(--sales-bar-h, 0px)) max(24px, calc((100vw - 1400px) / 2)) 45px;
+  padding: 0 var(--sales-pad-x) 45px;
   box-sizing: border-box;
   background: var(--hilya-beige);
 }
@@ -771,6 +839,7 @@
 .sales__inner {
   position: relative;
   display: grid;
+  margin-top: calc(35px + var(--sales-extra-top));
   grid-template-columns: minmax(300px, 480px) minmax(0, 1fr);
   grid-template-areas: "content stage";
   align-items: center;
@@ -802,39 +871,46 @@
   margin-inline-start: var(--sales-inset);
 }
 
-/* OFFER BAR (shown only when the offer name is filled in): a deep rose strip along the top of the section */
-
-.sales--bar {
-  --sales-bar-h: 46px;
-}
+/* OFFER BAR (shown only when it has text and is switched on): a strip a little below the top of the section */
 
 .sales__bar {
-  position: absolute;
-  top: 0;
-  inset-inline: 0;
+  position: relative;
   display: flex;
   align-items: center;
-  height: var(--sales-bar-h);
+  box-sizing: border-box;
+  min-height: var(--sales-bar-height);
+  /* the section colour shows above the bar, a little less than the bar is tall; the bar runs edge to edge */
+  margin: calc(var(--sales-bar-height) * .8) calc(-1 * var(--sales-pad-x)) 0;
+  padding: var(--sales-bar-pad-y) 0;
   overflow: hidden;
-  background: var(--hilya-rose-deep);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: .2em;
-  text-transform: uppercase;
+  background: var(--sales-bar-bg);
+  color: var(--sales-bar-ink);
+  font-size: var(--sales-bar-font);
+  font-weight: var(--sales-bar-weight);
+  letter-spacing: var(--sales-bar-tracking);
+  text-transform: var(--sales-bar-case);
   white-space: nowrap;
 }
 
 .sales__bar-text {
   width: 100%;
   margin: 0;
-  text-align: center;
+  padding-inline: var(--sales-bar-pad-x);
+  text-align: var(--sales-bar-align);
+}
+
+.sales__bar.is-moving .sales__bar-text {
+  display: none;
 }
 
 .sales__bar-track {
   display: flex;
   width: max-content;
-  animation: sales-marquee 60s linear infinite;
+  animation: sales-marquee var(--sales-bar-duration, 60s) linear infinite;
+}
+
+.sales__bar.is-reverse .sales__bar-track {
+  animation-direction: reverse;
 }
 
 .sales__bar:hover .sales__bar-track {
@@ -850,38 +926,28 @@
 }
 
 .sales__bar-group li {
-  display: flex;
-  align-items: center;
-}
-
-.sales__bar-group li::after {
-  content: "";
-  width: 5px;
-  height: 5px;
-  margin-inline: 40px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: .55;
+  margin-inline-end: var(--sales-bar-space);
 }
 
 @keyframes sales-marquee {
   to {
-    transform: translateX(-50%);
+    transform: translateX(var(--sales-bar-shift));
   }
 }
 
-@keyframes sales-marquee-rtl {
-  to {
-    transform: translateX(50%);
+@media (max-width: 749px) {
+  .sales__bar {
+    font-size: var(--sales-bar-font-mobile);
   }
-}
 
-[dir="rtl"] .sales__bar {
-  letter-spacing: 0;
-}
+  /* "Animate on mobile" off: one still text in the middle of the bar */
+  .sales__bar.is-still-mobile .sales__bar-track {
+    display: none;
+  }
 
-[dir="rtl"] .sales__bar-track {
-  animation-name: sales-marquee-rtl;
+  .sales__bar.is-still-mobile .sales__bar-text {
+    display: block;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1318,8 +1384,7 @@
 
 @media (min-width: 1500px) {
   .sales {
-    padding-left: max(32px, calc((100vw - 1500px) / 2));
-    padding-right: max(32px, calc((100vw - 1500px) / 2));
+    --sales-pad-x: max(32px, calc((100vw - 1500px) / 2));
   }
 }
 
@@ -1340,7 +1405,8 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .sales {
-    padding: calc(25px + var(--sales-extra-top) + var(--sales-bar-h, 0px)) 28px 0;
+    --sales-pad-x: 28px;
+    padding-bottom: 0;
   }
 
   .sales {
@@ -1349,6 +1415,7 @@
   }
 
   .sales__inner {
+    margin-top: calc(25px + var(--sales-extra-top));
     grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
     column-gap: 32px;
   }
@@ -1379,11 +1446,13 @@
     --sales-card-w: 150px;
     --sales-gap: 18px;
     margin-top: var(--sales-section-mobile, 0px);
-    padding: calc(25px + var(--sales-extra-top) + var(--sales-bar-h, 0px)) 16px 35px;
+    --sales-pad-x: 16px;
+    padding-bottom: 35px;
   }
 
   .sales__inner {
     display: flex;
+    margin-top: calc(25px + var(--sales-extra-top));
     flex-direction: column;
     align-items: stretch;
     padding-top: 0;
@@ -1576,32 +1645,189 @@
     },
     {
       "type": "header",
-      "content": "Countdown and offer bar"
+      "content": "Offer bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "offer_show",
+      "label": "Show offer bar",
+      "info": "The bar also stays hidden when its text is empty. When it is hidden, the section content moves up.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "offer_name",
+      "label": "Offer bar text",
+      "info": "For example Black Friday or Summer Sale. Shown when the site language is English (or any language other than Arabic)."
+    },
+    {
+      "type": "text",
+      "id": "offer_name_ar",
+      "label": "Offer bar text - Arabic",
+      "info": "Shown when the site language is Arabic. If a language's field is empty, the bar is hidden for that language."
+    },
+    {
+      "type": "header",
+      "content": "Offer bar animation"
+    },
+    {
+      "type": "select",
+      "id": "offer_animation",
+      "label": "Animation",
+      "options": [
+        { "value": "marquee", "label": "Scrolling (marquee)" },
+        { "value": "static", "label": "Static (no movement)" }
+      ],
+      "default": "marquee"
+    },
+    {
+      "type": "select",
+      "id": "offer_direction",
+      "label": "Marquee direction",
+      "info": "In Arabic the direction flips by itself.",
+      "options": [
+        { "value": "rtl", "label": "Right to left" },
+        { "value": "ltr", "label": "Left to right" }
+      ],
+      "default": "rtl"
+    },
+    {
+      "type": "range",
+      "id": "offer_speed",
+      "label": "Marquee speed (pixels per second)",
+      "info": "Higher is faster. About 25 is slow, 40 is calm, 80 or more is fast.",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "offer_gap",
+      "label": "Space between repeated texts",
+      "min": 16,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "checkbox",
+      "id": "offer_animate_mobile",
+      "label": "Animate on mobile",
+      "info": "Turn off to show one centered, still text on phones.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "offer_align",
+      "label": "Text alignment (Static)",
+      "options": [
+        { "value": "start", "label": "Start (left in English, right in Arabic)" },
+        { "value": "center", "label": "Center" },
+        { "value": "end", "label": "End (right in English, left in Arabic)" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Offer bar colors"
+    },
+    {
+      "type": "color",
+      "id": "offer_bg",
+      "label": "Background color",
+      "default": "#8f5a4b"
+    },
+    {
+      "type": "color",
+      "id": "offer_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Offer bar size and spacing"
+    },
+    {
+      "type": "range",
+      "id": "offer_height",
+      "label": "Bar height",
+      "info": "The space above the bar follows this size.",
+      "min": 28,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "offer_padding_y",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "offer_padding_x",
+      "label": "Side padding",
+      "info": "Space between the text and the edges of the bar (Static, and mobile without animation).",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "offer_font_desktop",
+      "label": "Font size (desktop)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "offer_font_mobile",
+      "label": "Font size (mobile)",
+      "min": 9,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "offer_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "checkbox",
+      "id": "offer_uppercase",
+      "label": "Uppercase text",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Countdown"
     },
     {
       "type": "text",
       "id": "end_at",
       "label": "Offer end date and time (Cairo time)",
       "info": "Write it like 2026-11-28 23:59. Leave blank for no countdown. The countdown disappears by itself when the time comes."
-    },
-    {
-      "type": "text",
-      "id": "offer_name",
-      "label": "Offer bar text",
-      "info": "For example Black Friday or Summer Sale. Shown in the bar across the top of the section. Leave blank to hide the bar."
-    },
-    {
-      "type": "text",
-      "id": "offer_name_ar",
-      "label": "Offer bar text - Arabic",
-      "info": "Shown on the Arabic site. Leave blank to hide the bar there."
-    },
-    {
-      "type": "checkbox",
-      "id": "offer_scroll",
-      "label": "Move the offer bar",
-      "info": "On: the text scrolls along the bar. Off: it stands still in the middle.",
-      "default": true
     },
     {
       "type": "header",
@@ -1691,6 +1917,17 @@
       "id": "heading_line_2_ar",
       "label": "Heading line 2 - Arabic",
       "default": "خصم يصل إلى 30%"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_3",
+      "label": "Heading - Line 3 (optional)",
+      "info": "Use it to split the heading into three lines, for example Line 2 = Up to, Line 3 = 25% Off."
+    },
+    {
+      "type": "text",
+      "id": "heading_line_3_ar",
+      "label": "Heading line 3 - Arabic (optional)"
     },
     {
       "type": "richtext",
