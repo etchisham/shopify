@@ -112,7 +112,7 @@
       "name": "Sales collection",
       "settings": {
         "collection": "sales",
-        "card_count": 10,
+        "card_count": 12,
         "offer_show": true,
         "offer_name": "White Friday Offers",
         "offer_name_ar": "عروض الجمعة البيضاء",
