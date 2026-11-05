@@ -279,7 +279,11 @@
 
       let clock = 0;
 
-      const pad = (number) => String(number).padStart(2, '0');
+      const arabicDigits = getComputedStyle(timer).direction === 'rtl';
+      const pad = (number) => {
+        const text = String(number).padStart(2, '0');
+        return arabicDigits ? text.replace(/\d/g, (digit) => '٠١٢٣٤٥٦٧٨٩'[digit]) : text;
+      };
 
       const update = () => {
         const left = end - Date.now();
@@ -770,7 +774,6 @@
 }
 
 .sales__body {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -781,8 +784,8 @@
 
 .sales__offer {
   position: absolute;
-  bottom: calc(100% + 22px);
-  inset-inline-start: calc(-1 * var(--sales-inset));
+  top: var(--sales-offer-top, 37px);
+  inset-inline-start: 0;
   display: inline-flex;
   align-items: center;
   height: 46px;
