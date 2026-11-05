@@ -1461,12 +1461,18 @@
     inset 1px 0 0 rgb(255 255 255 / 12%),
     inset 0 -1px 0 rgb(0 0 0 / 14%),
     inset 0 0 14px rgb(40 18 10 / 12%);
-  /* the edges are cut by hand: a fraction of a pixel off the straight line */
+  /* the corners are rounded, and the edges are cut by hand: a fraction of a pixel off the straight line */
   clip-path: polygon(
-    var(--cut-x) 0, 50% var(--ja, 0px), calc(100% - var(--cut-x)) 0, 100% var(--cut-y),
-    calc(100% - var(--jc, 0px)) 45%, 100% calc(100% - 8px), calc(100% - 2.3px) calc(100% - 2.3px), calc(100% - 8px) 100%,
-    55% calc(100% - var(--jd, 0px)), 8px 100%, 2.3px calc(100% - 2.3px), 0 calc(100% - 8px),
-    var(--je, 0px) 55%, 0 var(--cut-y)
+    calc(var(--cut-x) - 12.1px) 8.87px, calc(var(--cut-x) - 5.87px) 4.99px, calc(var(--cut-x) + 0.73px) 2.22px, calc(var(--cut-x) + 7.68px) 0.55px, calc(var(--cut-x) + 15.0px) 0.0px,
+    50% var(--ja, 0px),
+    calc(calc(100% - var(--cut-x)) - 15.0px) 0.0px, calc(calc(100% - var(--cut-x)) - 7.68px) 0.55px, calc(calc(100% - var(--cut-x)) - 0.73px) 2.22px, calc(calc(100% - var(--cut-x)) + 5.87px) 4.99px, calc(calc(100% - var(--cut-x)) + 12.1px) 8.87px,
+    calc(100% - 12.1px) calc(var(--cut-y) - 8.87px), calc(100% - 6.8px) calc(var(--cut-y) - 4.05px), calc(100% - 3.02px) calc(var(--cut-y) + 1.53px), calc(100% - 0.76px) calc(var(--cut-y) + 7.88px), 100% calc(var(--cut-y) + 15.0px),
+    calc(100% - var(--jc, 0px)) 45%,
+    100% calc(100% - 9px), calc(100% - 0.56px) calc(100% - 5.06px), calc(100% - 2.25px) calc(100% - 2.25px), calc(100% - 5.06px) calc(100% - 0.56px), calc(100% - 9px) 100%,
+    55% calc(100% - var(--jd, 0px)),
+    9px 100%, 5.06px calc(100% - 0.56px), 2.25px calc(100% - 2.25px), 0.56px calc(100% - 5.06px), 0px calc(100% - 9px),
+    var(--je, 0px) 55%,
+    0.0px calc(var(--cut-y) + 15.0px), 0.76px calc(var(--cut-y) + 7.88px), 3.02px calc(var(--cut-y) + 1.53px), 6.8px calc(var(--cut-y) - 4.05px), 12.1px calc(var(--cut-y) - 8.87px)
   );
   color: var(--tag-ink);
   text-decoration: none;
@@ -1491,6 +1497,24 @@
   }
 
   .sales-tag::after {
+    display: none;
+  }
+
+  .sales-tag {
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 34%);
+  }
+
+  .sales-tag__shell {
+    filter: drop-shadow(1px 2px 0 var(--tag-edge)) drop-shadow(0 6px 7px rgb(60 30 20 / 18%));
+  }
+
+  .sales-tag__hole {
+    background: var(--metal-mid);
+  }
+
+  .sales-thread__twist,
+  .sales-ring ellipse:last-child,
+  .sales__rope path:nth-child(4) {
     display: none;
   }
 }
