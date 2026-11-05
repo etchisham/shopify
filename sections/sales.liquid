@@ -479,10 +479,6 @@
     const RING_HALF = 15;
     const RING_DROP = 8.25; /* the loop hangs on the rope: the rope rests on the inside top of the loop, so the loop sits lower than the rope line */
     const EDGE = 16;
-    const ROPE_INSET = 0.045; /* computers: how far inside the window the rope starts and ends, as a share of its width */
-    const ROPE_INSET_PHONE = 0.012; /* phones: the tags sit closer to the edge, so the rope reaches almost to it */
-    const ROPE_PAD = 16; /* the outermost tags hang this far inside the end of the rope */
-    const ROPE_FADE = 36; /* a tag that moves past the end of the rope fades out over this distance, so no loop is ever seen hanging in the air */
 
     let tags = [];
     let width = 0;
@@ -490,8 +486,6 @@
     let spacing = 0;
     let loopLength = 0;
     let sag = 0;
-    let ropeX0 = 0;
-    let ropeX1 = 0;
     let fixed = true;
 
     let offset = 0;
@@ -531,13 +525,10 @@
       const onComputer = window.matchMedia('(min-width: 750px)').matches;
       const slots = onComputer ? visible + 1 : 0;
 
-      ropeX0 = width * (onComputer ? ROPE_INSET : ROPE_INSET_PHONE);
-      ropeX1 = width - ropeX0;
       anchor = width / 2;
 
       if (slots) {
-        /* the tags are spread over the length of the rope (not the whole window), so the tags at the sides hang on the rope too */
-        const step = (ropeX1 - ropeX0 - 2 * ROPE_PAD) / slots;
+        const step = width / slots;
         const slotCard = Math.min(step * 0.84, 230);
 
         if (visible % 2 === 0) anchor += step / 2;
@@ -616,7 +607,7 @@
          so the space between it and the countdown / button does not change, while the sides of the rope sit higher */
       const baseSag = clamp(width * 0.14, 52, 96);
 
-      sag = clamp(width * 0.17, 62, 116);
+      sag = clamp(width * 0.17, 62, 150);
       stage.style.setProperty('--sales-lift', (sag - baseSag) + 'px');
 
       const frontHeight = tags[0].front.offsetHeight;
@@ -625,9 +616,9 @@
       stage.style.height = height + 'px';
       rope.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
-      /* the rope no longer runs off both sides of the window: it starts and ends a little inside, so both ends show */
-      const x0 = ropeX0;
-      const x1 = ropeX1;
+      /* the rope runs past both sides of the window and fades out there, so every tag always hangs on it */
+      const x0 = -width * 0.25;
+      const x1 = width * 1.25;
       const y0 = ropeY(x0);
       const control = 2 * (EDGE + sag) - y0;
       const d = `M${x0} ${y0} Q${width / 2} ${control} ${x1} ${ropeY(x1)}`;
@@ -667,15 +658,6 @@
         tag.front.style.transform = `translate3d(${x - cardWidth / 2}px, ${y - RING_HALF + RING_DROP}px, 0) rotate(${angle}deg)`;
         tag.back.style.transform = `translate3d(${x - 10}px, ${y - RING_HALF + RING_DROP}px, 0) rotate(${angle}deg)`;
         tag.screenX = x;
-
-        /* past the end of the rope the loop would hang in the air: the tag fades out instead */
-        const fade = Math.round(clamp(1 + Math.min(x - ropeX0, ropeX1 - x) / ROPE_FADE, 0, 1) * 100) / 100;
-
-        if (tag.fade !== fade) {
-          tag.fade = fade;
-          tag.front.style.opacity = fade === 1 ? '' : fade;
-          tag.back.style.opacity = fade === 1 ? '' : fade;
-        }
       });
     };
 
@@ -1230,8 +1212,8 @@
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
 }
 
 .sales__stage:focus-visible {
@@ -1253,7 +1235,17 @@
   font-size: 13px;
 }
 
-/* the rope: starts and ends a little inside the window, and sags in the middle */
+/* computers: the window is a little narrower than the section, so the rope is shorter and the tags are closer together;
+   the rope still runs past both edges of the window and fades out there, with half a tag showing at each side */
+@media (min-width: 750px) {
+  .sales__stage {
+    width: 91%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* the rope: runs past both sides of the window, sags in the middle */
 
 .sales__rope {
   position: absolute;
