@@ -155,7 +155,7 @@
     {% endif %}
 
     {% if sales_collection != blank and sales_count > 0 and sales_collection.products_count > 0 %}
-      <div class="sales__stage" data-sales-stage data-reveal="fade" tabindex="0" role="group" aria-label="{{ sales_line_1 | escape }} {{ sales_line_2 | escape }} {{ sales_line_3 | escape }}">
+      <div class="sales__stage" data-sales-stage data-visible="{{ section.settings.visible_cards }}" data-reveal="fade" tabindex="0" role="group" aria-label="{{ sales_line_1 | escape }} {{ sales_line_2 | escape }} {{ sales_line_3 | escape }}">
 
         <div class="sales__layer sales__layer--back" data-back>
           {% for product in sales_collection.products limit: sales_count %}
@@ -442,7 +442,8 @@
     };
 
     /* the tags always come to rest with one tag in the middle, so the window shows whole tags and half tags at the sides */
-    const snapTo = (value) => width / 2 + spacing * Math.round((value - width / 2) / spacing);
+    let anchor = 0; /* where a resting tag sits in the middle: on the middle line, or half a step beside it when an even number of tags shows */
+    const snapTo = (value) => anchor + spacing * Math.round((value - anchor) / spacing);
 
     const layout = () => {
       /* the tags must be in their real (absolute) mode before anything is measured */
@@ -450,16 +451,23 @@
 
       width = stage.clientWidth;
 
-      /* on computers the window always shows 5 whole tags in the middle and half a tag at each side:
-         the step between two tags is 1/6 of the window, so the tags at the edges are cut exactly in half */
-      const slots = window.matchMedia('(min-width: 750px)').matches ? 6 : 0;
+      /* on computers the window shows the chosen number of whole tags in the middle and half a tag at each side:
+         the step between two tags is the window divided by (number + 1), so the tags at the edges are cut exactly in half.
+         The tag has a largest size, so with few tags the space between them grows instead */
+      const visible = clamp(Math.round(Number(stage.dataset.visible)) || 5, 1, 10);
+      const onComputer = window.matchMedia('(min-width: 750px)').matches;
+      const slots = onComputer ? visible + 1 : 0;
+
+      anchor = width / 2;
 
       if (slots) {
         const step = width / slots;
-        const slotGap = clamp(step * 0.16, 18, 44);
+        const slotCard = Math.min(step * 0.84, 260);
 
-        stage.style.setProperty('--sales-card-w', (step - slotGap) + 'px');
-        stage.style.setProperty('--sales-gap', slotGap + 'px');
+        if (visible % 2 === 0) anchor += step / 2;
+
+        stage.style.setProperty('--sales-card-w', slotCard + 'px');
+        stage.style.setProperty('--sales-gap', (step - slotCard) + 'px');
       } else {
         stage.style.removeProperty('--sales-card-w');
         stage.style.removeProperty('--sales-gap');
@@ -475,7 +483,7 @@
       stage.querySelectorAll('[data-clone]').forEach((node) => node.remove());
 
       spacing = cardWidth + gap;
-      fixed = slots ? count < slots : count * spacing - gap <= width - 24;
+      fixed = slots ? count <= visible : count * spacing - gap <= width - 24;
 
       let list = originals.slice();
 
@@ -524,7 +532,7 @@
 
       if (!fixed) loopLength = tags.length * spacing;
 
-      sag = clamp(width * 0.16, 52, 120);
+      sag = clamp(width * 0.14, 52, 96);
 
       const frontHeight = tags[0].front.offsetHeight;
       const height = Math.ceil(EDGE + sag - RING_HALF + frontHeight + 26);
@@ -541,7 +549,7 @@
       ropeLines.forEach((line) => line.setAttribute('d', d));
 
       if (!fixed) {
-        offset = started ? snapTo(offset) : width / 2 - spacing;
+        offset = started ? snapTo(offset) : anchor - spacing;
         target = null;
         velocity = 0;
       }
@@ -1116,6 +1124,7 @@
 .sales__stage {
   position: relative;
   width: 100%;
+  margin-top: -24px; /* the rope starts a little higher, closer to the countdown and the text */
   min-height: 440px;
   overflow: hidden;
   touch-action: pan-y;
@@ -1419,6 +1428,10 @@
     --sales-inner-top: var(--sales-bar-gap);
   }
 
+  .sales__stage {
+    margin-top: 0;
+  }
+
   .sales__text {
     max-width: 340px;
   }
@@ -1517,12 +1530,22 @@
     {
       "type": "range",
       "id": "card_count",
-      "label": "Number of tags",
-      "min": 0,
-      "max": 12,
+      "label": "Number of products on the rope",
+      "min": 1,
+      "max": 20,
       "step": 1,
       "default": 6,
-      "info": "0 hides the rope. If the collection has fewer products, only those are shown. When they do not all fit, the tags loop round when you drag them."
+      "info": "How many products of the collection are loaded onto the rope. If the collection has fewer products, only those are shown. When they do not all fit in the window, the tags loop round when you drag them."
+    },
+    {
+      "type": "range",
+      "id": "visible_cards",
+      "label": "Cards in view (computer and tablet)",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "info": "How many whole cards show in the middle of the window. Half a card shows at each side. The space between the cards adjusts by itself, and a single card stays at its largest size. If there are fewer products than this, they stand still in the middle."
     },
     {
       "type": "header",
