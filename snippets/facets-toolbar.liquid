@@ -3572,7 +3572,7 @@ body.hilya-filter-lock {
 
 .hilya-filters .hilya-price-input span {
   flex: 0 0 auto;
-  color: #7a4d40;
+  color: color-mix(in srgb, var(--hilya-rose-deep) 86%, #000);
   font-size: .6rem;
   font-weight: 500;
   letter-spacing: .08em;
@@ -3593,7 +3593,7 @@ body.hilya-filter-lock {
   outline: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  color: #4a2f27 !important;
+  color: color-mix(in srgb, var(--hilya-rose-deep) 52%, #000) !important;
   font: inherit;
   font-size: .74rem !important;
   font-weight: 500 !important;
@@ -4553,7 +4553,7 @@ html[dir="rtl"] .hilya-filter-drawer__header h2 { font-size: 1.3rem; }
 }
 
 .hilya-filters .hilya-filter-option input[type="checkbox"]:focus-visible {
-  outline: 2px solid rgb(169 112 95 / 45%);
+  outline: 2px solid rgb(var(--hilya-rose-rgb) / 45%);
   outline-offset: 2px;
 }
 
