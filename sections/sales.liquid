@@ -936,11 +936,6 @@
 }
 
 @media (max-width: 749px) {
-  /* with the offer bar, the space above it and the space between it and the eyebrow are the same */
-  .sales--bar {
-    --sales-inner-top: 20px;
-  }
-
   .sales__bar {
     --sales-bar-top: 20px;
     font-size: var(--sales-bar-font-mobile);
@@ -1455,6 +1450,11 @@
     --sales-pad-x: 16px;
     --sales-inner-top: calc(25px + var(--sales-extra-top));
     padding-bottom: 35px;
+  }
+
+  /* with the offer bar, the space above it and the space between it and the eyebrow are the same (the content spacing setting does not add to it) */
+  .sales--bar {
+    --sales-inner-top: 20px;
   }
 
   .sales__inner {
