@@ -68,10 +68,10 @@
     assign bar_case = 'uppercase'
   endif
 
-  assign soon_texts = 'New offers~Soon|No offers~Right now|Stay~Tuned|Something special~Is coming|Check back~Soon|More offers~On the way|Great prices~Ahead|Offers coming~Your way|Watch~This space|Back soon~New deals' | split: '|'
+  assign soon_texts = 'New offers~Soon|Worth~The wait|Stay~Tuned|Something special~Is coming|Limited time~Offers soon|No offers~Right now|Check back~Soon|More offers~On the way|Great prices~Ahead|Offers coming~Your way|Watch~This space|Back soon~New deals' | split: '|'
 
   if sales_locale == 'ar'
-    assign soon_texts = 'عروض جديدة~قريباً|لا توجد~عروض حالياً|ترقبوا~العروض|شيء مميز~في الطريق|عودوا~قريباً|المزيد~من العروض|أسعار مميزة~قادمة|عروض~تصلكم قريباً|ترقبوا~الجديد|نعود قريباً~بخصومات جديدة' | split: '|'
+    assign soon_texts = 'عروض جديدة~قريباً|تستاهل~الانتظار|ترقبوا~العروض|شيء مميز~في الطريق|لفترة محدودة~عروض قريبة|لا توجد~عروض حالياً|عودوا~قريباً|المزيد~من العروض|أسعار مميزة~قادمة|عروض~تصلكم قريباً|ترقبوا~الجديد|نعود قريباً~بخصومات جديدة' | split: '|'
   endif
 
   assign sales_collection = section.settings.collection
@@ -232,11 +232,17 @@
 
       </div>
     {% else %}
-      {%- comment -%} no products to show: the tags stay on the rope, with a short message across each one, as many as "Cards in view" {%- endcomment -%}
+      {%- comment -%} no products to show: the tags stay on the rope, with a short message engraved on each one. There are always two more than "Cards in view" (at least 5), so half a tag shows at each side and the tags can be dragged {%- endcomment -%}
+      {%- liquid
+        assign soon_count = section.settings.visible_cards | plus: 2
+        if soon_count < 5
+          assign soon_count = 5
+        endif
+      -%}
       <div class="sales__stage" data-sales-stage data-visible="{{ section.settings.visible_cards }}" data-reveal="fade" role="group" aria-label="{{ soon_texts[0] | replace: '~', ' ' | escape }}">
 
         <div class="sales__layer sales__layer--back" data-back>
-          {% for item in (1..section.settings.visible_cards) %}
+          {% for item in (1..soon_count) %}
             {% assign parity = forloop.index0 | modulo: 2 %}
             <span class="sales-ring sales-ring--back {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" aria-hidden="true"></span>
           {% endfor %}
@@ -249,7 +255,7 @@
         </svg>
 
         <div class="sales__layer sales__layer--front" data-front>
-          {% for item in (1..section.settings.visible_cards) %}
+          {% for item in (1..soon_count) %}
             {% assign parity = forloop.index0 | modulo: 2 %}
             {% assign soon_index = forloop.index0 | modulo: soon_texts.size %}
             {% assign soon_pair = soon_texts[soon_index] | split: '~' %}
@@ -1395,22 +1401,32 @@
   justify-content: center;
   min-height: 0;
   gap: .9em;
-  color: color-mix(in srgb, var(--tag-off) 55%, var(--tag-ink));
+  color: var(--soon-ink);
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   font-size: 8cqw;
   font-weight: 500;
   letter-spacing: .14em;
   line-height: 1.1;
   text-align: center;
-  text-shadow: 0 1px 0 rgb(0 0 0 / 22%), 0 -1px 0 rgb(255 255 255 / 14%);
+  /* pressed into the tag: the text is turned upside down by the rotation below, so the offsets are the other way round:
+     on screen a dark edge shows above each letter and a light edge below it */
+  text-shadow: 0 1px 0 var(--soon-lo), 0 -1px 0 var(--soon-hi), 0 0 1px var(--soon-lo);
   text-transform: uppercase;
   white-space: nowrap;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
 }
 
+.sales .is-dark .sales-tag__soon {
+  --soon-ink: color-mix(in srgb, #1a0905 34%, var(--tag-bg));
+  --soon-hi: rgb(255 255 255 / 30%);
+  --soon-lo: rgb(15 5 2 / 45%);
+}
+
 .sales .is-light .sales-tag__soon {
-  text-shadow: 0 1px 0 rgb(255 255 255 / 70%);
+  --soon-ink: color-mix(in srgb, var(--hilya-rose-deep) 72%, var(--tag-bg));
+  --soon-hi: rgb(255 255 255 / 90%);
+  --soon-lo: rgb(90 45 30 / 34%);
 }
 
 .sales-tag__soon > span:last-child {
