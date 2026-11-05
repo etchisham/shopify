@@ -1279,6 +1279,10 @@
   --tag-off: var(--sales-soft);
   --thread: var(--sales-soft);
   --thread-alt: var(--hilya-rose-deep);
+  --engrave-ink: color-mix(in srgb, #fff 72%, var(--tag-bg));
+  --engrave-off: color-mix(in srgb, var(--sales-soft) 78%, var(--tag-bg));
+  --engrave-hi: rgb(255 255 255 / 22%);
+  --engrave-lo: rgb(30 12 6 / 60%);
 }
 
 .sales .is-light {
@@ -1288,6 +1292,10 @@
   --tag-off: var(--hilya-rose-deep);
   --thread: var(--hilya-rose-deep);
   --thread-alt: var(--sales-soft);
+  --engrave-ink: color-mix(in srgb, var(--hilya-ink) 80%, var(--tag-bg));
+  --engrave-off: color-mix(in srgb, #000 12%, var(--hilya-rose-deep));
+  --engrave-hi: rgb(255 255 255 / 95%);
+  --engrave-lo: rgb(90 45 30 / 32%);
 }
 
 .sales-ring {
@@ -1429,6 +1437,8 @@
   overflow: hidden;
   border-radius: 8px;
   background: var(--hilya-beige);
+  /* push the photo down until its top corners are clear of the slanted corners of the tag (the tag grows taller) */
+  margin-top: max(0px, calc(var(--cut-y) - 29px));
 }
 
 .sales-tag__photo img,
@@ -1442,11 +1452,13 @@
 
 .sales-tag__off {
   margin-top: 10px;
-  color: var(--tag-off);
+  color: var(--engrave-off);
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   font-size: 33px;
   font-style: italic;
   line-height: 1;
+  /* engraved into the tag: a dark edge on top inside the cut, a light edge below it */
+  text-shadow: 0 -1px 0 var(--engrave-lo), 0 1px 0 var(--engrave-hi);
 }
 
 .sales-tag__name {
@@ -1456,14 +1468,20 @@
   line-clamp: 2;
   overflow: hidden;
   margin-top: 8px;
+  color: var(--engrave-ink);
   font-size: 15px;
   line-height: 1.35;
+  letter-spacing: .02em;
+  text-shadow: 0 -1px 0 var(--engrave-lo), 0 1px 0 var(--engrave-hi);
 }
 
 .sales-tag__price {
   margin-top: 5px;
+  color: var(--engrave-ink);
   font-size: 15px;
   line-height: 1.3;
+  letter-spacing: .02em;
+  text-shadow: 0 -1px 0 var(--engrave-lo), 0 1px 0 var(--engrave-hi);
 }
 
 .sales-tag__price s {
@@ -1620,6 +1638,12 @@
   font-style: normal;
 }
 
+/* Arabic letters are joined: no letter spacing on the engraved product name and price */
+[dir="rtl"] .sales-tag__name,
+[dir="rtl"] .sales-tag__price {
+  letter-spacing: 0;
+}
+
 /* Arabic letters are joined: no letter spacing and no capitals on the engraved message */
 [dir="rtl"] .sales-tag__soon {
   font-size: 10cqw;
@@ -1652,7 +1676,7 @@
       "type": "range",
       "id": "card_count",
       "label": "Number of products on the rope",
-      "min": 1,
+      "min": 0,
       "max": 20,
       "step": 1,
       "default": 6,
