@@ -62,7 +62,7 @@
 %}
 
 <article
-  class="product-page product-page--media-{{ section.settings.media_position }}"
+  class="product-page"
   data-product-page
   data-section-id="{{ section.id }}"
   data-product-id="{{ product.id }}"
@@ -813,22 +813,6 @@
       "label": "t:labels.show_dynamic_checkout",
       "info": "t:product_details.accelerated_checkout_info",
       "default": true
-    },
-    {
-      "type": "select",
-      "id": "media_position",
-      "label": "t:labels.image_position",
-      "options": [
-        {
-          "value": "left",
-          "label": "t:options.image_position.left"
-        },
-        {
-          "value": "right",
-          "label": "t:options.image_position.right"
-        }
-      ],
-      "default": "left"
     },
     {
       "type": "select",
