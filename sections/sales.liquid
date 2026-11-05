@@ -1063,6 +1063,8 @@
 /* COUNTDOWN: centered under the button (it only takes room when it is shown) */
 
 .sales__timer {
+  position: relative;
+  z-index: 1; /* stays above the display window, which starts a little higher */
   align-self: center;
   margin: 24px 0 0;
 }
@@ -1124,7 +1126,7 @@
 .sales__stage {
   position: relative;
   width: 100%;
-  margin-top: -24px; /* the rope starts a little higher, closer to the countdown and the text */
+  margin-top: -48px; /* the rope starts higher, closer to the countdown and the text */
   min-height: 440px;
   overflow: hidden;
   touch-action: pan-y;
