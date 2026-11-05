@@ -1,0 +1,43 @@
+/* =========================================================
+   HOME PAGE MOTION
+   (loaded on the home page only, from theme.liquid)
+   ========================================================= */
+
+/* ---------- sections rise and fade in while scrolling ---------- */
+
+.hilya-section-reveal {
+  transition:
+    opacity 1.4s ease,
+    transform 1.8s cubic-bezier(.22, .8, .3, 1);
+}
+
+.hilya-section-reveal:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(64px);
+}
+
+.hilya-section-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* sections already passed (after a refresh) show without motion */
+.hilya-section-reveal.hilya-instant {
+  transition: none;
+}
+
+
+/* ---------- rows dragged with the mouse (wide screens) ---------- */
+
+@media (min-width: 750px) and (hover: hover) and (pointer: fine) {
+  .featured-collection__grid.is-dragging,
+  .collection-list__grid.is-dragging {
+    user-select: none;
+  }
+
+  /* !important kept: the cards inside set their own hand cursor */
+  .featured-collection__grid.is-dragging *,
+  .collection-list__grid.is-dragging * {
+    cursor: grabbing !important;
+  }
+}
