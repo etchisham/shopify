@@ -112,7 +112,7 @@
       "name": "Sales collection",
       "settings": {
         "collection": "sales",
-        "card_count": 1,
+        "card_count": 0,
         "visible_cards": 3,
         "offer_show": true,
         "offer_name": "White Friday Offers",
