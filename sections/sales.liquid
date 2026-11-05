@@ -51,11 +51,12 @@
 >
   <div class="sales__inner">
 
-    {% if sales_offer != blank %}
-      <p class="sales__offer" data-reveal>{{ sales_offer | escape }}</p>
-    {% endif %}
-
     <div class="sales__content">
+    <div class="sales__body">
+
+      {% if sales_offer != blank %}
+        <p class="sales__offer" data-reveal>{{ sales_offer | escape }}</p>
+      {% endif %}
 
       {% if sales_eyebrow != blank %}
         <p class="sales__eyebrow" data-reveal>{{ sales_eyebrow | escape }}</p>
@@ -89,6 +90,7 @@
         </a>
       {% endif %}
 
+    </div>
     </div>
 
     {% if section.settings.end_at != blank %}
@@ -743,7 +745,7 @@
 .sales__inner {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(280px, 440px) minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 540px) minmax(0, 1fr);
   grid-template-areas: "content stage";
   align-items: center;
   column-gap: clamp(32px, 4vw, 64px);
@@ -757,16 +759,30 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  max-width: 520px;
+  max-width: 600px;
   padding: 20px 0;
+}
+
+/* the text block sits a little inward; the offer name hangs above it at the container edge */
+
+.sales {
+  --sales-inset: clamp(24px, 4vw, 64px);
+}
+
+.sales__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-inline-start: var(--sales-inset);
 }
 
 /* OFFER NAME (shown only when it is filled in): top left, same level as the countdown label */
 
 .sales__offer {
   position: absolute;
-  top: 0;
-  inset-inline-start: 0;
+  bottom: calc(100% + 22px);
+  inset-inline-start: calc(-1 * var(--sales-inset));
   display: inline-flex;
   align-items: center;
   height: 46px;
@@ -796,7 +812,7 @@
   flex-direction: column;
   margin: 0 0 28px;
   font-family: "Cormorant Garamond", "Times New Roman", serif;
-  font-size: clamp(42px, 4.3vw, 64px);
+  font-size: var(--sales-heading-size, clamp(52px, 5vw, 72px));
   font-weight: 400;
   font-style: italic;
   line-height: var(--sales-heading-leading, .84);
@@ -817,8 +833,8 @@
 .sales__text p {
   margin: 0;
   color: var(--hilya-muted);
-  font-size: 13px;
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.9;
   font-weight: 400;
   letter-spacing: .01em;
 }
@@ -853,7 +869,7 @@
   box-shadow: var(--hilya-button-depth);
   color: #fff;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .14em;
@@ -1237,8 +1253,13 @@
     width: 100%;
   }
 
-  .sales__heading {
-    font-size: 46px;
+  .sales {
+    --sales-heading-size: 52px;
+    --sales-inset: 24px;
+  }
+
+  [dir="rtl"] .sales {
+    --sales-heading-size: 46px;
   }
 
   .sales__content {
@@ -1265,6 +1286,19 @@
   }
 
   /* everything is centered on phones: the offer name and the countdown take their place in the flow */
+
+  .sales {
+    --sales-inset: 0px;
+    --sales-heading-size: 48px;
+  }
+
+  [dir="rtl"] .sales {
+    --sales-heading-size: 42px;
+  }
+
+  .sales__body {
+    align-items: center;
+  }
 
   .sales__offer {
     position: static;
@@ -1340,10 +1374,6 @@
     order: 2;
   }
 
-  .sales__offer {
-    order: 1;
-  }
-
   .sales__stage {
     order: 4;
   }
@@ -1412,6 +1442,10 @@
 
 [dir="rtl"] .sales.has-reveal .sales__text::before {
   transform-origin: right center;
+}
+
+[dir="rtl"] .sales {
+  --sales-heading-size: clamp(42px, 4.3vw, 64px);
 }
 
 [dir="rtl"] .sales__heading {
