@@ -479,6 +479,7 @@
     const RING_HALF = 15;
     const RING_DROP = 8.25; /* the loop hangs on the rope: the rope rests on the inside top of the loop, so the loop sits lower than the rope line */
     const EDGE = 16;
+    const ROPE_INSET = 0.045; /* how far inside the window the rope starts and ends, as a share of its width */
 
     let tags = [];
     let width = 0;
@@ -603,7 +604,12 @@
 
       if (!fixed) loopLength = tags.length * spacing;
 
-      sag = clamp(width * 0.14, 52, 96);
+      /* a deeper sag, with the stage lifted by the same amount: the lowest point of the rope (above the middle tag) stays exactly where it was,
+         so the space between it and the countdown / button does not change, while the sides of the rope sit higher */
+      const baseSag = clamp(width * 0.14, 52, 96);
+
+      sag = clamp(width * 0.17, 62, 116);
+      stage.style.setProperty('--sales-lift', (sag - baseSag) + 'px');
 
       const frontHeight = tags[0].front.offsetHeight;
       const height = Math.ceil(EDGE + sag - RING_HALF + RING_DROP + frontHeight + 44);
@@ -611,8 +617,9 @@
       stage.style.height = height + 'px';
       rope.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
-      const x0 = -width * 0.25;
-      const x1 = width * 1.25;
+      /* the rope no longer runs off both sides of the window: it starts and ends a little inside, so both ends show */
+      const x0 = width * ROPE_INSET;
+      const x1 = width * (1 - ROPE_INSET);
       const y0 = ropeY(x0);
       const control = 2 * (EDGE + sag) - y0;
       const d = `M${x0} ${y0} Q${width / 2} ${control} ${x1} ${ropeY(x1)}`;
@@ -1200,14 +1207,14 @@
 .sales__stage {
   position: relative;
   width: 100%;
-  margin-top: -48px; /* the rope starts higher, closer to the countdown and the text */
+  margin-top: calc(-48px - var(--sales-lift, 0px)); /* the rope starts higher, closer to the countdown and the text */
   min-height: 440px;
   overflow: hidden;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
 
 .sales__stage:focus-visible {
@@ -1229,7 +1236,7 @@
   font-size: 13px;
 }
 
-/* the rope: runs off both sides of the window, sags in the middle */
+/* the rope: starts and ends a little inside the window, and sags in the middle */
 
 .sales__rope {
   position: absolute;
@@ -1759,7 +1766,7 @@
   }
 
   .sales__stage {
-    margin-top: 0;
+    margin-top: calc(0px - var(--sales-lift, 0px));
   }
 
   .sales__text {
