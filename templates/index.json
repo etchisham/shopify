@@ -116,6 +116,7 @@
         "end_at": "2026-11-28 23:59",
         "offer_name": "White Friday Offers",
         "offer_name_ar": "",
+        "offer_scroll": false,
         "section_space_desktop": 0,
         "section_space_mobile": 0,
         "content_space_desktop": 10,
