@@ -35,12 +35,12 @@
   --header-mobile-height: {{ section.settings.mobile_height }}px;
   --hilya-header-height: {{ section.settings.desktop_height }}px;
 
-  width: 100% !important;
-  max-width: none !important;
+  width: 100%;
+  max-width: none;
 
-  margin: 0 !important;
+  margin: 0;
 
-  padding: 0 !important;
+  padding: 0;
 
   background: var(--header-bg);
   color: var(--header-text);
@@ -77,15 +77,6 @@
   grid-column: 1 / -1;
 }
 
-.site-header--sticky {
-  position: relative !important;
-  width: 100% !important;
-  max-width: none !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-
 /* No reserved body space needed: the header stays in the normal flow (sticky). */
 
 
@@ -94,12 +85,12 @@
    ========================================================= */
 
 .site-header__inner {
-  width: 100% !important;
-  max-width: none !important;
+  width: 100%;
+  max-width: none;
 
   height: var(--header-height);
 
-  margin: 0 !important;
+  margin: 0;
 
   padding-left: {{ section.settings.desktop_padding }}px;
   padding-right: {{ section.settings.desktop_padding }}px;
@@ -553,19 +544,10 @@
 
   .site-header {
     --hilya-header-height: {{ section.settings.mobile_height }}px;
-
-    width: auto !important;
-    max-width: none !important;
-
-    margin-left: 0 !important;
-    margin-right: 0 !important;
   }
 
 
   .site-header__inner {
-    width: 100% !important;
-    max-width: none !important;
-
     height: var(--header-mobile-height);
 
     padding-left: 16px;
@@ -914,6 +896,7 @@
    ========================================================= */
 
 .site-header .site-header__brand--ar {
+  /* !important kept on purpose: the site's Arabic font rule (css-variables) is !important too */
   font-family: "Hilya Arabic", "Cairo", sans-serif !important;
   font-size: 2rem;
   line-height: 1.2;
@@ -989,28 +972,15 @@
 
 
 /* =========================================================
-   DESKTOP / MOBILE DISPLAY
-   ========================================================= */
-
-@media screen and (min-width: 750px) {
-
-  .mobile-menu {
-    display: none !important;
-  }
-
-}
-
-
-/* =========================================================
    FULL WIDTH SHOPIFY SECTION
    ========================================================= */
 
 .shopify-section:has(.site-header) {
-  width: 100% !important;
-  max-width: none !important;
+  width: 100%;
+  max-width: none;
 
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 0;
+  padding: 0;
 }
 
 /* =========================================================
