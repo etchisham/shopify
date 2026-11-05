@@ -35,7 +35,6 @@
     {% if featured_collection != blank %}
       <a class="featured-collection__view-all" href="{{ featured_collection.url }}">
         {{ 'collections.view_all' | t }}
-        <span aria-hidden="true">→</span>
       </a>
     {% endif %}
   </div>
@@ -247,43 +246,36 @@
   text-transform: none;
 }
 
-/* VIEW ALL */
+/* VIEW ALL: a filled deep rose button, sized to its word (same look as the Special Offers button) */
 
 .featured-collection__view-all {
   grid-column: 3;
   grid-row: 1;
   justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 6px;
-  color: #151515;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color .3s ease;
-}
-
-.featured-collection__view-all span {
+  align-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  padding: 13px 26px;
+  border: 1px solid var(--hilya-rose-deep);
+  border-radius: var(--hilya-radius);
+  background: var(--hilya-rose-deep);
+  box-shadow: var(--hilya-button-depth);
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
   line-height: 1;
-  transition: transform .3s ease;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color .3s ease, border-color .3s ease;
 }
 
 .featured-collection__view-all:hover {
-  color: var(--hilya-rose-deep);
-}
-
-.featured-collection__view-all:hover span {
-  transform: translateX(5px);
+  border-color: var(--hilya-rose);
+  background: var(--hilya-rose);
 }
 
 /* SLIDER */
@@ -465,38 +457,8 @@
     align-self: center;
     width: fit-content;
     margin: 0 auto;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 8px 15px;
-    border: 1px solid var(--hilya-rose-deep);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--hilya-rose-deep);
-    font-size: 11px;
-    line-height: 1;
-    letter-spacing: .2em;
+    padding: 12px 24px;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  .featured-collection__view-all span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 1em;
-    font-size: 15px;
-    line-height: 1;
-    position: relative;
-    top: -1px;
-  }
-
-  .featured-collection__view-all:active {
-    background: var(--hilya-rose-deep);
-    color: #fff;
-  }
-
-  [dir="rtl"] .featured-collection__view-all {
-    align-self: flex-start; /* في العربي start هي اليمين */
   }
 
   .featured-collection__slider {
@@ -612,28 +574,9 @@
 [dir="rtl"] .featured-collection__view-all {
   font-size: 13px;
   letter-spacing: 0;
+  line-height: 1.2;
 }
 
-[dir="rtl"] .featured-collection__view-all span {
-  transform: scaleX(-1);
-}
-
-[dir="rtl"] .featured-collection__view-all:hover span {
-  transform: scaleX(-1) translateX(5px);
-}
-
-@media (max-width: 749px) {
-  [dir="rtl"] .featured-collection__view-all {
-    padding: 8px 15px;
-    font-size: 13px;
-    letter-spacing: 0;
-    line-height: 1.2;
-  }
-
-  [dir="rtl"] .featured-collection__view-all span {
-    top: -2px;
-  }
-}
 
 {% endstylesheet %}
 
