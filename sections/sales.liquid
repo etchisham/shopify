@@ -166,11 +166,12 @@
         <div class="sales__layer sales__layer--back" data-back>
           {% for product in sales_collection.products limit: sales_count %}
             {% assign parity = forloop.index0 | modulo: 2 %}
-            <span class="sales-ring sales-ring--back {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" aria-hidden="true"><svg viewBox="0 0 16 24" aria-hidden="true" focusable="false"><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse></svg></span>
+            <span class="sales-ring sales-ring--back {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" aria-hidden="true"><svg viewBox="0 0 20 30" aria-hidden="true" focusable="false"><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse></svg></span>
           {% endfor %}
         </div>
 
         <svg class="sales__rope" data-rope aria-hidden="true" focusable="false">
+          <path></path>
           <path></path>
           <path></path>
           <path></path>
@@ -187,14 +188,14 @@
               endif
             -%}
             <div class="sales-card {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" data-card>
-              <span class="sales-ring sales-ring--front" aria-hidden="true"><svg viewBox="0 0 16 24" aria-hidden="true" focusable="false"><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse></svg></span>
-              <svg class="sales-thread" viewBox="0 0 24 60" aria-hidden="true" focusable="false">
-                <path class="sales-thread__a" d="M12 3 C7 15 17 30 12 54"></path>
-                <path class="sales-thread__b" d="M12 3 C17 15 7 30 12 54"></path>
-                <path class="sales-thread__twist" d="M12 3 C7 15 17 30 12 54"></path>
-                <path class="sales-thread__twist" d="M12 3 C17 15 7 30 12 54"></path>
-                <ellipse class="sales-thread__knot" cx="12" cy="10" rx="3.9" ry="4.5"></ellipse>
-                <path class="sales-thread__fiber" d="M10.4 7.6 L7.6 5.4 M13.6 8.2 L16.6 6.6 M10.6 12.6 L7.8 14.2 M13.4 12 L15.8 13.8"></path>
+              <span class="sales-ring sales-ring--front" aria-hidden="true"><svg viewBox="0 0 20 30" aria-hidden="true" focusable="false"><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse></svg></span>
+              <svg class="sales-thread" viewBox="0 0 28 60" aria-hidden="true" focusable="false">
+                <path class="sales-thread__a" d="M14 3 C8 16 20 34 14 55"></path>
+                <path class="sales-thread__b" d="M14 3 C20 16 8 34 14 55"></path>
+                <path class="sales-thread__twist" d="M14 3 C8 16 20 34 14 55"></path>
+                <path class="sales-thread__twist" d="M14 3 C20 16 8 34 14 55"></path>
+                <ellipse class="sales-thread__knot" cx="14" cy="11" rx="4.4" ry="5"></ellipse>
+                <path class="sales-thread__fiber" d="M12 8.4 L8.6 5.8 M16 9 L19.6 7.2 M12.2 14 L8.8 16 M15.8 13.4 L18.8 15.6"></path>
               </svg>
 
               <div class="sales-tag__shell">
@@ -248,11 +249,12 @@
         <div class="sales__layer sales__layer--back" data-back>
           {% for item in (1..soon_count) %}
             {% assign parity = forloop.index0 | modulo: 2 %}
-            <span class="sales-ring sales-ring--back {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" aria-hidden="true"><svg viewBox="0 0 16 24" aria-hidden="true" focusable="false"><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse></svg></span>
+            <span class="sales-ring sales-ring--back {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" aria-hidden="true"><svg viewBox="0 0 20 30" aria-hidden="true" focusable="false"><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse></svg></span>
           {% endfor %}
         </div>
 
         <svg class="sales__rope" data-rope aria-hidden="true" focusable="false">
+          <path></path>
           <path></path>
           <path></path>
           <path></path>
@@ -264,14 +266,14 @@
             {% assign soon_index = forloop.index0 | modulo: soon_texts.size %}
             {% assign soon_pair = soon_texts[soon_index] | split: '~' %}
             <div class="sales-card {% if parity == 0 %}is-dark{% else %}is-light{% endif %}" data-card>
-              <span class="sales-ring sales-ring--front" aria-hidden="true"><svg viewBox="0 0 16 24" aria-hidden="true" focusable="false"><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse><ellipse cx="8" cy="12" rx="6.8" ry="10.8"></ellipse></svg></span>
-              <svg class="sales-thread" viewBox="0 0 24 60" aria-hidden="true" focusable="false">
-                <path class="sales-thread__a" d="M12 3 C7 15 17 30 12 54"></path>
-                <path class="sales-thread__b" d="M12 3 C17 15 7 30 12 54"></path>
-                <path class="sales-thread__twist" d="M12 3 C7 15 17 30 12 54"></path>
-                <path class="sales-thread__twist" d="M12 3 C17 15 7 30 12 54"></path>
-                <ellipse class="sales-thread__knot" cx="12" cy="10" rx="3.9" ry="4.5"></ellipse>
-                <path class="sales-thread__fiber" d="M10.4 7.6 L7.6 5.4 M13.6 8.2 L16.6 6.6 M10.6 12.6 L7.8 14.2 M13.4 12 L15.8 13.8"></path>
+              <span class="sales-ring sales-ring--front" aria-hidden="true"><svg viewBox="0 0 20 30" aria-hidden="true" focusable="false"><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse><ellipse cx="10" cy="15" rx="8.5" ry="13.5"></ellipse></svg></span>
+              <svg class="sales-thread" viewBox="0 0 28 60" aria-hidden="true" focusable="false">
+                <path class="sales-thread__a" d="M14 3 C8 16 20 34 14 55"></path>
+                <path class="sales-thread__b" d="M14 3 C20 16 8 34 14 55"></path>
+                <path class="sales-thread__twist" d="M14 3 C8 16 20 34 14 55"></path>
+                <path class="sales-thread__twist" d="M14 3 C20 16 8 34 14 55"></path>
+                <ellipse class="sales-thread__knot" cx="14" cy="11" rx="4.4" ry="5"></ellipse>
+                <path class="sales-thread__fiber" d="M12 8.4 L8.6 5.8 M16 9 L19.6 7.2 M12.2 14 L8.8 16 M15.8 13.4 L18.8 15.6"></path>
               </svg>
 
               <div class="sales-tag__shell">
@@ -474,8 +476,8 @@
       back: backLayer.children[index]
     }));
 
-    const RING_HALF = 12;
-    const RING_DROP = 7; /* the loop hangs on the rope: the rope rests on the inside top of the loop, so the loop sits lower than the rope line */
+    const RING_HALF = 15;
+    const RING_DROP = 8.25; /* the loop hangs on the rope: the rope rests on the inside top of the loop, so the loop sits lower than the rope line */
     const EDGE = 16;
 
     let tags = [];
@@ -587,7 +589,11 @@
           node.classList.toggle('is-light', !dark);
         });
 
+        /* at rest every tag hangs a little differently, like real ones: a slight lean, never the same twice in a row */
+        const REST = [-1.6, 1.2, -0.7, 1.8, -1.2, 0.8, -0.4];
+
         return Object.assign(tag, {
+          rest: REST[index % REST.length],
           angle: 0,
           speed: 0,
           phase: index * 1.7,
@@ -641,10 +647,10 @@
 
         const y = ropeY(x);
         const sway = reduce ? 0 : Math.sin(time / 1000 * 1.12 + tag.phase) * 1.3;
-        const angle = clamp(tag.angle, -16, 16) + sway;
+        const angle = clamp(tag.angle, -16, 16) + sway + tag.rest;
 
         tag.front.style.transform = `translate3d(${x - cardWidth / 2}px, ${y - RING_HALF + RING_DROP}px, 0) rotate(${angle}deg)`;
-        tag.back.style.transform = `translate3d(${x - 8}px, ${y - RING_HALF + RING_DROP}px, 0) rotate(${angle}deg)`;
+        tag.back.style.transform = `translate3d(${x - 10}px, ${y - RING_HALF + RING_DROP}px, 0) rotate(${angle}deg)`;
         tag.screenX = x;
       });
     };
@@ -1239,20 +1245,28 @@
 
 .sales__rope path:nth-child(1) {
   stroke: color-mix(in srgb, #000 30%, var(--hilya-rose-deep));
-  stroke-width: 5.5;
+  stroke-width: 7.5;
 }
 
 .sales__rope path:nth-child(2) {
   stroke: var(--hilya-rose-deep);
-  stroke-width: 4.5;
+  stroke-width: 6.2;
 }
 
 /* the twist of the rope */
 .sales__rope path:nth-child(3) {
   stroke: var(--sales-soft);
-  stroke-width: 4.5;
-  stroke-dasharray: 1.4 4.2;
+  stroke-width: 6.2;
+  stroke-dasharray: 1.8 4.6;
   opacity: .6;
+}
+
+/* loose fibres sticking out of the rope */
+.sales__rope path:nth-child(4) {
+  stroke: color-mix(in srgb, var(--sales-soft) 60%, var(--hilya-rose-deep));
+  stroke-width: 9;
+  stroke-dasharray: .7 9.3;
+  opacity: .5;
 }
 
 /* three layers: back half of the rings, then the rope, then the tags (so the rope runs through each ring) */
@@ -1280,7 +1294,7 @@
 
 .sales-card {
   width: var(--sales-card-w);
-  transform-origin: 50% 5px; /* the tag swings from the rope itself, where the loop rests on it */
+  transform-origin: 50% 6.75px; /* the tag swings from the rope itself, where the loop rests on it */
   pointer-events: auto;
   will-change: transform;
 }
@@ -1299,10 +1313,10 @@
   --metal-lo: color-mix(in srgb, var(--tag-bg) 66%, #000);
   --lift: 0%;
   --sink: 0%;
-  --engrave-ink: color-mix(in srgb, #fff 72%, var(--tag-bg));
-  --engrave-off: color-mix(in srgb, var(--sales-soft) 78%, var(--tag-bg));
-  --engrave-hi: rgb(255 255 255 / 22%);
-  --engrave-lo: rgb(30 12 6 / 60%);
+  --engrave-ink: color-mix(in srgb, #fff 90%, var(--tag-bg));
+  --engrave-off: color-mix(in srgb, var(--sales-soft) 92%, #fff);
+  --engrave-hi: rgb(255 255 255 / 16%);
+  --engrave-lo: rgb(25 8 4 / 72%);
 }
 
 .sales .is-light {
@@ -1324,8 +1338,8 @@
 }
 
 .sales-ring {
-  width: 16px;
-  height: 24px;
+  width: 20px;
+  height: 30px;
 }
 
 .sales-ring svg {
@@ -1337,7 +1351,7 @@
 
 .sales-ring ellipse {
   fill: none;
-  stroke-width: 2.4;
+  stroke-width: 3;
 }
 
 .sales-ring ellipse:first-child {
@@ -1347,19 +1361,19 @@
 /* the twist of the twine, the same as on the rope */
 .sales-ring ellipse:last-child {
   stroke: var(--thread-alt);
-  stroke-dasharray: 1 2.4;
+  stroke-dasharray: 1.2 3;
   opacity: .5;
 }
 
 .sales-ring--back {
   clip-path: inset(0 0 0 50%);
-  transform-origin: 8px 5px; /* the same point as the tag: the rope */
+  transform-origin: 10px 6.75px; /* the same point as the tag: the rope */
 }
 
 .sales-ring--front {
   position: absolute;
   top: 0;
-  left: calc(50% - 8px);
+  left: calc(50% - 10px);
   z-index: 2;
   clip-path: inset(0 50% 0 0);
 }
@@ -1368,10 +1382,10 @@
 
 .sales-thread {
   position: absolute;
-  top: 20px;
-  left: calc(50% - 12px);
+  top: 27px;
+  left: calc(50% - 14px);
   z-index: 2;
-  width: 24px;
+  width: 28px;
   height: 60px;
   overflow: visible;
   filter: drop-shadow(0 1px 1px rgb(40 20 12 / 28%));
@@ -1385,7 +1399,7 @@
 .sales-thread__a,
 .sales-thread__b {
   stroke: var(--thread);
-  stroke-width: 2.8;
+  stroke-width: 3.2;
 }
 
 .sales-thread__b {
@@ -1394,9 +1408,9 @@
 
 .sales-thread__twist {
   stroke: var(--thread-alt);
-  stroke-width: 2.8;
+  stroke-width: 3.2;
   stroke-linecap: butt;
-  stroke-dasharray: 1 2.2;
+  stroke-dasharray: 1.1 2.6;
   opacity: .5;
 }
 
@@ -1433,7 +1447,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 56px;
+  margin-top: 64px;
   padding: 0 12px 18px;
   --cut-x: calc(var(--sales-card-w) * .3); /* how far the top corners are cut in, sideways and down */
   --cut-y: calc(var(--sales-card-w) * .22);
@@ -1460,6 +1474,17 @@
   color: var(--tag-ink);
   text-decoration: none;
   text-align: center;
+}
+
+.sales .is-light .sales-tag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23g%29' opacity='.6'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .013' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23b%29' opacity='.48'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  opacity: .26;
 }
 
 .sales-tag::after {
@@ -1608,7 +1633,16 @@
 .sales-tag__price s {
   display: block;
   margin-top: 1px;
-  opacity: .7;
+  opacity: .72;
+}
+
+.sales .is-dark .sales-tag__name,
+.sales .is-dark .sales-tag__price {
+  font-weight: 500;
+}
+
+.sales .is-dark .sales-tag__price s {
+  opacity: .92;
 }
 
 /* without the script: a plain row of tags, no rope */
