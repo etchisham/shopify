@@ -46,17 +46,33 @@
 -%}
 
 <section
-  class="sales"
+  class="sales{% if sales_offer != blank %} sales--bar{% endif %}"
   style="--sales-section-desktop: {{ section.settings.section_space_desktop }}px; --sales-section-mobile: {{ section.settings.section_space_mobile }}px; --sales-content-desktop: {{ section.settings.content_space_desktop }}px; --sales-content-mobile: {{ section.settings.content_space_mobile }}px;"
 >
+
+  {% if sales_offer != blank %}
+    {%- comment -%} the offer bar across the top: scrolls when "Move the offer bar" is on, otherwise the name stands still in the middle {%- endcomment -%}
+    <div class="sales__bar">
+      {% if section.settings.offer_scroll %}
+        <div class="sales__bar-track">
+          {% for group in (1..2) %}
+            <ul class="sales__bar-group"{% if group == 2 %} aria-hidden="true"{% endif %}>
+              {% for item in (1..14) %}
+                <li>{{ sales_offer | escape }}</li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="sales__bar-text">{{ sales_offer | escape }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
   <div class="sales__inner">
 
     <div class="sales__content">
     <div class="sales__body">
-
-      {% if sales_offer != blank %}
-        <p class="sales__offer" data-reveal>{{ sales_offer | escape }}</p>
-      {% endif %}
 
       {% if sales_eyebrow != blank %}
         <p class="sales__eyebrow" data-reveal>{{ sales_eyebrow | escape }}</p>
@@ -730,10 +746,11 @@
    --sales-content-* : moves the content INSIDE the section */
 
 .sales {
+  position: relative;
   --sales-extra-top: var(--sales-content-desktop, 0px);
   --sales-heading-leading: .84; /* heading line spacing: lower = closer lines */
-  --sales-card-w: 164px;
-  --sales-gap: 36px;
+  --sales-card-w: 176px;
+  --sales-gap: 34px;
   --sales-pale: color-mix(in srgb, var(--hilya-rose-light) 22%, #fff);
   --sales-light: color-mix(in srgb, var(--hilya-rose-light) 30%, #fff);
   --sales-soft: color-mix(in srgb, var(--hilya-rose-light) 55%, #fff);
@@ -741,15 +758,20 @@
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
   margin-top: var(--sales-section-desktop, 0px);
-  padding: calc(35px + var(--sales-extra-top)) max(24px, calc((100vw - 1400px) / 2)) 45px;
+  padding: calc(35px + var(--sales-extra-top) + var(--sales-bar-h, 0px)) max(24px, calc((100vw - 1400px) / 2)) 45px;
   box-sizing: border-box;
   background: var(--hilya-beige);
+}
+
+[dir="rtl"] .sales {
+  --sales-heading-leading: 1.15; /* Arabic letters need a little more room between the lines */
+  --sales-heading-size: clamp(42px, 4.3vw, 62px); /* Arabic letters look bigger, so the same visual size needs fewer pixels */
 }
 
 .sales__inner {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(300px, 540px) minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 480px) minmax(0, 1fr);
   grid-template-areas: "content stage";
   align-items: center;
   column-gap: clamp(32px, 4vw, 64px);
@@ -780,32 +802,106 @@
   margin-inline-start: var(--sales-inset);
 }
 
-/* OFFER NAME (shown only when it is filled in): top left, same level as the countdown label */
+/* OFFER BAR (shown only when the offer name is filled in): a deep rose strip along the top of the section */
 
-.sales__offer {
+.sales--bar {
+  --sales-bar-h: 46px;
+}
+
+.sales__bar {
   position: absolute;
-  top: var(--sales-offer-top, 37px);
-  inset-inline-start: 0;
-  display: inline-flex;
+  top: 0;
+  inset-inline: 0;
+  display: flex;
   align-items: center;
-  height: 46px;
-  margin: 0;
-  padding: 0 26px;
-  border: 1px solid var(--hilya-rose);
-  border-radius: 10px;
-  background: var(--sales-pale);
-  color: color-mix(in srgb, #000 38%, var(--hilya-rose-deep));
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: .02em;
+  height: var(--sales-bar-h);
+  overflow: hidden;
+  background: var(--hilya-rose-deep);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
   white-space: nowrap;
+}
+
+.sales__bar-text {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.sales__bar-track {
+  display: flex;
+  width: max-content;
+  animation: sales-marquee 60s linear infinite;
+}
+
+.sales__bar:hover .sales__bar-track {
+  animation-play-state: paused;
+}
+
+.sales__bar-group {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sales__bar-group li {
+  display: flex;
+  align-items: center;
+}
+
+.sales__bar-group li::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  margin-inline: 40px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+}
+
+@keyframes sales-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sales-marquee-rtl {
+  to {
+    transform: translateX(50%);
+  }
+}
+
+[dir="rtl"] .sales__bar {
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .sales__bar-track {
+  animation-name: sales-marquee-rtl;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sales__bar-track {
+    animation: none;
+  }
 }
 
 /* EYEBROW (its look comes from hilya-style) */
 
 .sales__eyebrow {
   margin: 0 0 20px;
+}
+
+/* on computers the eyebrow is the main title of the section */
+@media (min-width: 750px) {
+  .sales .sales__eyebrow {
+    margin-bottom: 26px;
+    font-size: 18px;
+  }
 }
 
 /* HEADING */
@@ -872,7 +968,7 @@
   box-shadow: var(--hilya-button-depth);
   color: #fff;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: .14em;
@@ -903,7 +999,7 @@
   height: 32px;
   margin: 0;
   color: var(--hilya-rose);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -911,6 +1007,7 @@
 
 .sales__timer-units {
   display: flex;
+  direction: ltr; /* days on the left and seconds on the right in both languages */
   gap: 6px;
 }
 
@@ -938,7 +1035,7 @@
   display: block;
   margin-top: 4px;
   color: var(--hilya-muted);
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -951,8 +1048,8 @@
   position: relative;
   width: calc(4 * (var(--sales-card-w) + var(--sales-gap)));
   max-width: 100%;
-  justify-self: center;
-  min-height: 420px;
+  justify-self: start;
+  min-height: 440px;
   overflow: hidden;
   touch-action: pan-y;
   user-select: none;
@@ -1170,13 +1267,13 @@
   line-clamp: 2;
   overflow: hidden;
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.35;
 }
 
 .sales-tag__price {
   margin-top: 5px;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.3;
 }
 
@@ -1230,8 +1327,12 @@
 
 @media (min-width: 1101px) and (max-width: 1320px) {
   .sales {
-    --sales-card-w: 148px;
-    --sales-gap: 26px;
+    --sales-card-w: 156px;
+    --sales-gap: 24px;
+  }
+
+  .sales__inner {
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
   }
 }
 
@@ -1239,12 +1340,12 @@
 
 @media (min-width: 750px) and (max-width: 1100px) {
   .sales {
-    padding: calc(25px + var(--sales-extra-top)) 28px 0;
+    padding: calc(25px + var(--sales-extra-top) + var(--sales-bar-h, 0px)) 28px 0;
   }
 
   .sales {
-    --sales-card-w: 132px;
-    --sales-gap: 22px;
+    --sales-card-w: 140px;
+    --sales-gap: 20px;
   }
 
   .sales__inner {
@@ -1278,7 +1379,7 @@
     --sales-card-w: 150px;
     --sales-gap: 18px;
     margin-top: var(--sales-section-mobile, 0px);
-    padding: calc(25px + var(--sales-extra-top)) 16px 35px;
+    padding: calc(25px + var(--sales-extra-top) + var(--sales-bar-h, 0px)) 16px 35px;
   }
 
   .sales__inner {
@@ -1288,7 +1389,7 @@
     padding-top: 0;
   }
 
-  /* everything is centered on phones: the offer name and the countdown take their place in the flow */
+  /* everything is centered on phones: the countdown takes its place in the flow */
 
   .sales {
     --sales-inset: 0px;
@@ -1301,15 +1402,6 @@
 
   .sales__body {
     align-items: center;
-  }
-
-  .sales__offer {
-    position: static;
-    align-self: center;
-    height: 42px;
-    margin-bottom: 18px;
-    padding: 0 22px;
-    font-size: 15px;
   }
 
   .sales__content {
@@ -1356,21 +1448,21 @@
   }
 
   .sales__text p {
-    font-size: 12.5px;
-    line-height: 1.75;
+    font-size: 13px;
+    line-height: 1.8;
   }
 
   .sales__link {
     align-self: center;
     padding: 13px 26px;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .sales__timer {
     position: static;
     align-self: center;
     order: 3;
-    margin: 6px 0 18px;
+    margin: 24px 0 0;
   }
 
   .sales__content {
@@ -1447,49 +1539,8 @@
   transform-origin: right center;
 }
 
-[dir="rtl"] .sales {
-  --sales-heading-size: clamp(42px, 4.3vw, 64px);
-}
-
 [dir="rtl"] .sales__heading {
-  line-height: 1.2;
   font-style: normal;
-}
-
-[dir="rtl"] .sales__text p {
-  font-size: 14px;
-  line-height: 1.9;
-}
-
-[dir="rtl"] .sales__link {
-  font-size: 13px;
-}
-
-[dir="rtl"] .sales__offer {
-  font-size: 19px;
-}
-
-[dir="rtl"] .sales__timer-label {
-  font-size: 12px;
-}
-
-[dir="rtl"] .sales__timer-cell span {
-  font-size: 11px;
-}
-
-[dir="rtl"] .sales-tag__name,
-[dir="rtl"] .sales-tag__price {
-  font-size: 15px;
-}
-
-@media (max-width: 749px) {
-  [dir="rtl"] .sales__text p {
-    font-size: 13px;
-  }
-
-  [dir="rtl"] .sales__link {
-    font-size: 12px;
-  }
 }
 
 {% endstylesheet %}
@@ -1525,7 +1576,7 @@
     },
     {
       "type": "header",
-      "content": "Countdown and offer name"
+      "content": "Countdown and offer bar"
     },
     {
       "type": "text",
@@ -1536,14 +1587,21 @@
     {
       "type": "text",
       "id": "offer_name",
-      "label": "Offer name",
-      "info": "For example Black Friday or Summer Sale. Leave blank to hide it."
+      "label": "Offer bar text",
+      "info": "For example Black Friday or Summer Sale. Shown in the bar across the top of the section. Leave blank to hide the bar."
     },
     {
       "type": "text",
       "id": "offer_name_ar",
-      "label": "Offer name - Arabic",
-      "info": "Shown on the Arabic site. Leave blank to hide it there."
+      "label": "Offer bar text - Arabic",
+      "info": "Shown on the Arabic site. Leave blank to hide the bar there."
+    },
+    {
+      "type": "checkbox",
+      "id": "offer_scroll",
+      "label": "Move the offer bar",
+      "info": "On: the text scrolls along the bar. Off: it stands still in the middle.",
+      "default": true
     },
     {
       "type": "header",
