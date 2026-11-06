@@ -749,6 +749,17 @@
   display: block;
 }
 
+/* very slow breathing zoom on the background: in and out, about 28s each way */
+@keyframes co-bg-breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.07); }
+}
+
+.custom-order.has-reveal .custom-order__media img {
+  animation: co-bg-breathe 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
 
 /* =========================
    CENTER GLASS PANEL
@@ -1767,6 +1778,10 @@ html.co-lock {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .custom-order.has-reveal .custom-order__media img {
+    animation: none;
+  }
+
   .co-drawer,
   .co-drawer__panel,
   .custom-order__step,
