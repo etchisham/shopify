@@ -10,9 +10,9 @@
   assign co_text = section.settings.description
   assign co_button = section.settings.button_label
   assign co_image = section.settings.image
-  assign co_f1 = section.settings.feature_1
-  assign co_f2 = section.settings.feature_2
-  assign co_f3 = section.settings.feature_3
+  assign co_s1 = section.settings.step_1
+  assign co_s2 = section.settings.step_2
+  assign co_s3 = section.settings.step_3
   assign co_words = section.settings.typed_words
 
   if co_ar
@@ -31,14 +31,14 @@
     if section.settings.image_ar != blank
       assign co_image = section.settings.image_ar
     endif
-    if section.settings.feature_1_ar != blank
-      assign co_f1 = section.settings.feature_1_ar
+    if section.settings.step_1_ar != blank
+      assign co_s1 = section.settings.step_1_ar
     endif
-    if section.settings.feature_2_ar != blank
-      assign co_f2 = section.settings.feature_2_ar
+    if section.settings.step_2_ar != blank
+      assign co_s2 = section.settings.step_2_ar
     endif
-    if section.settings.feature_3_ar != blank
-      assign co_f3 = section.settings.feature_3_ar
+    if section.settings.step_3_ar != blank
+      assign co_s3 = section.settings.step_3_ar
     endif
     if section.settings.typed_words_ar != blank
       assign co_words = section.settings.typed_words_ar
@@ -155,30 +155,33 @@
 
       </div>
 
-      <ul class="custom-order__features">
+      <ol class="custom-order__steps">
 
-        {% if co_f1 != blank %}
-          <li class="custom-order__feature">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20M10 3L8 9l4 12 4-12-2-6"/></svg>
-            <span>{{ co_f1 | escape }}</span>
+        {% if co_s1 != blank %}
+          <li class="custom-order__step">
+            <span class="custom-order__step-no" aria-hidden="true">{% if co_ar %}١{% else %}01{% endif %}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1z"/><path pathLength="1" d="M14 7l3 3"/></svg>
+            <span class="custom-order__step-label">{{ co_s1 | escape }}</span>
           </li>
         {% endif %}
 
-        {% if co_f2 != blank %}
-          <li class="custom-order__feature">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5L16 9.5"/></svg>
-            <span>{{ co_f2 | escape }}</span>
+        {% if co_s2 != blank %}
+          <li class="custom-order__step">
+            <span class="custom-order__step-no" aria-hidden="true">{% if co_ar %}٢{% else %}02{% endif %}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M6 3h12l4 6-10 12L2 9l4-6z"/><path pathLength="1" d="M2 9h20"/><path pathLength="1" d="M10 3L8 9l4 12 4-12-2-6"/></svg>
+            <span class="custom-order__step-label">{{ co_s2 | escape }}</span>
           </li>
         {% endif %}
 
-        {% if co_f3 != blank %}
-          <li class="custom-order__feature">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/></svg>
-            <span>{{ co_f3 | escape }}</span>
+        {% if co_s3 != blank %}
+          <li class="custom-order__step">
+            <span class="custom-order__step-no" aria-hidden="true">{% if co_ar %}٣{% else %}03{% endif %}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 8h18v4H3z"/><path pathLength="1" d="M5 12v8h14v-8"/><path pathLength="1" d="M12 8v12"/><path pathLength="1" d="M12 8c-1.5-3-5-3.5-5-1.5S10.5 8 12 8zm0 0c1.5-3 5-3.5 5-1.5S13.5 8 12 8z"/></svg>
+            <span class="custom-order__step-label">{{ co_s3 | escape }}</span>
           </li>
         {% endif %}
 
-      </ul>
+      </ol>
 
     </div>
 
@@ -291,7 +294,7 @@
     const section = document.currentScript.previousElementSibling;
     if (!section) return;
 
-    /* ظهور متدرج: الصورة الخلفية الأول، وبعدها الكارت، وبعده الدواير */
+    /* ظهور متدرج: الصورة الخلفية الأول، وبعدها الكارت، وبعده الخطوات واحدة ورا التانية */
     if (
       'IntersectionObserver' in window &&
       !(window.Shopify && window.Shopify.designMode) &&
@@ -300,18 +303,18 @@
       const band = section.querySelector('.custom-order__inner');
       const media = section.querySelector('.custom-order__media');
       const card = section.querySelector('.custom-order__content');
-      const circles = Array.from(section.querySelectorAll('.custom-order__feature'));
+      const circles = Array.from(section.querySelectorAll('.custom-order__step'));
       const items = [media, card].concat(circles).filter(Boolean);
 
       if (band && items.length) {
         section.classList.add('has-reveal');
 
-        const run = (list, instant, base) => {
+        const run = (list, instant, base, space) => {
           list.filter(Boolean).forEach((el, index) => {
             if (instant) {
               el.classList.add('hilya-instant');
             } else {
-              el.style.setProperty('--reveal-delay', (base + index * 0.4) + 's');
+              el.style.setProperty('--reveal-delay', (base + index * (space || 0.4)) + 's');
             }
             el.classList.add('is-revealed');
           });
@@ -337,7 +340,11 @@
         /* the card and the circles follow when the section is really in view */
         const later = watch(
           { threshold: 0.25, rootMargin: '0px 0px -10% 0px' },
-          () => run([card].concat(circles), false, 0.3)
+          () => {
+            run([card], false, 0.3);
+            /* the steps come one after the other, like a piece being made */
+            run(circles, false, 1, 1.3);
+          }
         );
 
         /* after a refresh in the middle of the page, a section already passed shows without motion */
@@ -896,22 +903,25 @@
 
 
 /* =========================
-   THREE ROUND BADGES (on the picture, under the panel)
+   THREE STEPS (on the picture, under the panel)
+   round medallions joined by a thin rose gold thread
 ========================= */
 
-.custom-order__features {
+.custom-order__steps {
+  --co-step-gap: 44px;
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 26px;
+  gap: var(--co-step-gap);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.custom-order__feature {
+.custom-order__step {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -921,39 +931,95 @@
   height: 110px;
   padding: 12px;
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgb(var(--hilya-rose-rgb) / 55%);
   border-radius: 50%;
   background: rgba(247, 244, 238, 0.24);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), inset 0 0 0 3px rgb(255 255 255 / 18%);
   text-align: center;
   text-shadow: 0 0 12px rgba(255, 252, 247, 0.7), 0 0 4px rgba(255, 252, 247, 0.5);
-  transition: transform .3s ease, box-shadow .3s ease;
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
 }
 
-.custom-order__feature:hover {
+.custom-order__step:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
+  border-color: var(--hilya-rose);
+  box-shadow: 0 14px 32px rgb(var(--hilya-rose-rgb) / 28%), inset 0 0 0 3px rgb(255 255 255 / 18%);
 }
 
-.custom-order__feature svg {
+/* the number sits on the top edge of the medallion */
+.custom-order__step-no {
+  position: absolute;
+  top: -10px;
+  inset-inline-start: 50%;
+  display: grid;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 7px;
+  place-items: center;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--hilya-rose-deep);
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .08em;
+  text-shadow: none;
+  transform: translateX(-50%);
+}
+
+[dir="rtl"] .custom-order__step-no {
+  transform: translateX(50%);
+  letter-spacing: 0;
+  font-size: 12px;
+}
+
+.custom-order__step svg {
   flex-shrink: 0;
   width: 26px;
   height: 26px;
   fill: none;
-  stroke: #111;
+  stroke: var(--hilya-rose-deep);
   stroke-width: 1.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.custom-order__feature span {
+.custom-order__step-label {
   max-width: 88px;
   color: #111;
   font-size: 11.5px;
   line-height: 1.3;
   letter-spacing: .02em;
+}
+
+/* the thread to the next step, with a small bead where it arrives */
+.custom-order__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 100%;
+  width: var(--co-step-gap);
+  height: 1px;
+  background: var(--hilya-rose-light);
+  transform-origin: 0 50%;
+}
+
+.custom-order__step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  inset-inline-start: calc(100% + var(--co-step-gap) - 3.5px);
+  width: 7px;
+  height: 7px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--hilya-rose);
+}
+
+[dir="rtl"] .custom-order__step:not(:last-child)::after {
+  transform-origin: 100% 50%;
 }
 
 
@@ -975,9 +1041,13 @@
     font-size: 14px;
   }
 
-  .custom-order__feature {
+  .custom-order__step {
     width: 96px;
     height: 96px;
+  }
+
+  .custom-order__steps {
+    --co-step-gap: 36px;
   }
 }
 
@@ -1039,26 +1109,26 @@
     font-size: 13px;
   }
 
-  .custom-order__features {
+  .custom-order__steps {
+    --co-step-gap: clamp(16px, 5vw, 26px);
     width: 100%;
-    gap: clamp(8px, 3vw, 14px);
   }
 
-  .custom-order__feature {
+  .custom-order__step {
     flex: 0 0 auto;
-    width: clamp(80px, 26vw, 104px);
+    width: clamp(76px, 24vw, 100px);
     height: auto;
     aspect-ratio: 1;
     gap: 5px;
     padding: 8px;
   }
 
-  .custom-order__feature svg {
+  .custom-order__step svg {
     width: 22px;
     height: 22px;
   }
 
-  .custom-order__feature span {
+  .custom-order__step-label {
     max-width: 72px;
     font-size: 10px;
     line-height: 1.25;
@@ -1379,7 +1449,7 @@ html.co-lock {
 
 .custom-order.has-reveal .custom-order__media:not(.is-revealed),
 .custom-order.has-reveal .custom-order__content:not(.is-revealed),
-.custom-order.has-reveal .custom-order__feature:not(.is-revealed) {
+.custom-order.has-reveal .custom-order__step:not(.is-revealed) {
   opacity: 0;
 }
 
@@ -1389,13 +1459,48 @@ html.co-lock {
 }
 
 .custom-order.has-reveal .custom-order__content.is-revealed,
-.custom-order.has-reveal .custom-order__feature.is-revealed {
+.custom-order.has-reveal .custom-order__step.is-revealed {
   animation: co-reveal 2s cubic-bezier(.22, .8, .3, 1) backwards;
   animation-delay: var(--reveal-delay, 0s);
 }
 
 .custom-order.has-reveal .is-revealed.hilya-instant {
   animation: none;
+}
+
+/* each step draws its own icon, then its thread to the next step, like a piece being made */
+.custom-order.has-reveal .custom-order__step path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1.02;
+  transition: stroke-dashoffset 1.1s ease calc(var(--reveal-delay, 0s) + .3s);
+}
+
+.custom-order.has-reveal .custom-order__step.is-revealed path {
+  stroke-dashoffset: 0;
+}
+
+.custom-order.has-reveal .custom-order__step:not(:last-child)::after {
+  transform: scaleX(0);
+  transition: transform .7s cubic-bezier(.22, .8, .3, 1) calc(var(--reveal-delay, 0s) + .8s);
+}
+
+.custom-order.has-reveal .custom-order__step:not(:last-child)::before {
+  opacity: 0;
+  transition: opacity .4s ease calc(var(--reveal-delay, 0s) + 1.4s);
+}
+
+.custom-order.has-reveal .custom-order__step.is-revealed:not(:last-child)::after {
+  transform: scaleX(1);
+}
+
+.custom-order.has-reveal .custom-order__step.is-revealed:not(:last-child)::before {
+  opacity: 1;
+}
+
+.custom-order.has-reveal .custom-order__step.hilya-instant path,
+.custom-order.has-reveal .custom-order__step.hilya-instant::before,
+.custom-order.has-reveal .custom-order__step.hilya-instant::after {
+  transition: none;
 }
 
 /* the frame and the small line under the title draw themselves after the card shows */
@@ -1454,7 +1559,7 @@ html.co-lock {
   letter-spacing: 0;
 }
 
-[dir="rtl"] .custom-order__feature span {
+[dir="rtl"] .custom-order__step-label {
   font-size: 12.5px;
   letter-spacing: 0;
 }
@@ -1487,7 +1592,7 @@ html.co-lock {
     font-size: 14px;
   }
 
-  [dir="rtl"] .custom-order__feature span {
+  [dir="rtl"] .custom-order__step-label {
     font-size: 12px;
   }
 }
@@ -1519,7 +1624,7 @@ html.co-lock {
 @media (prefers-reduced-motion: reduce) {
   .co-drawer,
   .co-drawer__panel,
-  .custom-order__feature,
+  .custom-order__step,
   .custom-order__arrow {
     transition: none;
   }
@@ -1741,43 +1846,43 @@ html.co-lock {
     },
     {
       "type": "header",
-      "content": "Three highlights"
+      "content": "Three steps (round badges)"
     },
     {
       "type": "text",
-      "id": "feature_1",
-      "label": "Highlight 1",
-      "default": "Your Design Your Story"
+      "id": "step_1",
+      "label": "Step 1",
+      "default": "Share your idea"
     },
     {
       "type": "text",
-      "id": "feature_1_ar",
-      "label": "Highlight 1 - Arabic",
-      "default": "تصميمك قصتك"
+      "id": "step_1_ar",
+      "label": "Step 1 - Arabic",
+      "default": "شاركنا فكرتك"
     },
     {
       "type": "text",
-      "id": "feature_2",
-      "label": "Highlight 2",
-      "default": "Premium Quality Materials"
+      "id": "step_2",
+      "label": "Step 2",
+      "default": "We design it"
     },
     {
       "type": "text",
-      "id": "feature_2_ar",
-      "label": "Highlight 2 - Arabic",
-      "default": "خامات عالية الجودة"
+      "id": "step_2_ar",
+      "label": "Step 2 - Arabic",
+      "default": "نصممها لك"
     },
     {
       "type": "text",
-      "id": "feature_3",
-      "label": "Highlight 3",
-      "default": "Made With Love"
+      "id": "step_3",
+      "label": "Step 3",
+      "default": "Delivered to you"
     },
     {
       "type": "text",
-      "id": "feature_3_ar",
-      "label": "Highlight 3 - Arabic",
-      "default": "صُنعت بحب"
+      "id": "step_3_ar",
+      "label": "Step 3 - Arabic",
+      "default": "تصلك قطعتك"
     },
     {
       "type": "header",
