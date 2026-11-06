@@ -1698,14 +1698,15 @@ body:has(.site-header--over-hero) .shopify-section:has(> .hero) {
 
     if (!menu) return;
 
+    /* Lock only the page (html), never the body: locking the body too makes it
+       a scroll container, and the sticky header then slides out of view. */
     function lockPage() {
       document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
     }
 
     function unlockPage() {
       document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
+      document.body.style.overflow = ''; /* cleans up after the old version of this code */
     }
 
     menu.addEventListener('toggle', function () {
