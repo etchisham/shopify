@@ -13,6 +13,7 @@
   assign co_f1 = section.settings.feature_1
   assign co_f2 = section.settings.feature_2
   assign co_f3 = section.settings.feature_3
+  assign co_words = section.settings.typed_words
 
   if co_ar
     if section.settings.eyebrow_ar != blank
@@ -38,6 +39,9 @@
     endif
     if section.settings.feature_3_ar != blank
       assign co_f3 = section.settings.feature_3_ar
+    endif
+    if section.settings.typed_words_ar != blank
+      assign co_words = section.settings.typed_words_ar
     endif
   endif
 
@@ -127,6 +131,15 @@
 
         {% if co_heading != blank %}
           <h2 class="custom-order__heading">{{ co_heading | escape }}</h2>
+        {% endif %}
+
+        {% if section.settings.show_typed and co_words != blank %}
+          {%- assign co_first = co_words | split: '|' | first | strip -%}
+          <p class="custom-order__typed-line">
+            <span class="visually-hidden">{{ co_first | escape }}</span>
+            <span class="custom-order__typed" data-co-typed data-words="{{ co_words | escape }}" aria-hidden="true">{{ co_first | escape }}</span>
+            <span class="custom-order__caret" aria-hidden="true"></span>
+          </p>
         {% endif %}
 
         {% if co_text != blank %}
@@ -340,6 +353,64 @@
 
         settle();
         window.addEventListener('load', () => setTimeout(settle, 150));
+      }
+    }
+
+    /* the word under the title types itself, waits, erases, then types the next one */
+    const typed = section.querySelector('[data-co-typed]');
+
+    if (typed) {
+      const words = (typed.dataset.words || '').split('|').map((word) => word.trim()).filter(Boolean);
+
+      if (words.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        let index = 0;
+        let visible = false;
+
+        /* waits, and keeps waiting while the section is off screen */
+        const wait = (ms, next) => setTimeout(() => (visible ? next() : wait(400, next)), ms);
+
+        const typeWord = () => {
+          const word = words[index];
+          let count = 0;
+
+          const tick = () => {
+            count += 1;
+            typed.textContent = word.slice(0, count);
+
+            if (count < word.length) {
+              wait(95, tick);
+            } else {
+              wait(2200, eraseWord);
+            }
+          };
+
+          tick();
+        };
+
+        const eraseWord = () => {
+          let count = typed.textContent.length;
+
+          const tick = () => {
+            count -= 1;
+            typed.textContent = typed.textContent.slice(0, count);
+
+            if (count > 0) {
+              wait(45, tick);
+            } else {
+              index = (index + 1) % words.length;
+              wait(350, typeWord);
+            }
+          };
+
+          tick();
+        };
+
+        new IntersectionObserver((entries) => {
+          visible = entries[entries.length - 1].isIntersecting;
+        }).observe(typed);
+
+        typed.parentElement.classList.add('is-typing');
+        wait(2200, eraseWord);
       }
     }
 
@@ -678,7 +749,7 @@
   width: min(100%, 540px);
   padding: 30px 40px 32px;
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  border: 1px solid rgb(var(--hilya-rose-rgb) / 35%);
   border-radius: 12px;
   background: rgba(247, 244, 238, var(--co-card-opacity, 0.5));
   -webkit-backdrop-filter: blur(4px);
@@ -690,8 +761,29 @@
   text-shadow: 0 0 14px rgba(255, 252, 247, 0.7), 0 0 4px rgba(255, 252, 247, 0.5);
 }
 
-.custom-order__eyebrow {
+/* rose gold line around the card: it draws itself once when the card appears */
+@property --co-draw {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 360deg;
+}
+
+.custom-order__content::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, var(--hilya-rose-light) var(--co-draw), transparent var(--co-draw));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.custom-order .custom-order__eyebrow {
   margin: 0 0 14px;
+  color: var(--hilya-rose-deep);
 }
 
 .custom-order__heading {
@@ -705,6 +797,47 @@
   letter-spacing: -.01em;
 }
 
+/* thin rose gold line under the title, like the other sections */
+.custom-order__heading::after {
+  content: "";
+  display: block;
+  width: 2.4rem;
+  height: 1px;
+  margin: 14px auto 0;
+  background: var(--hilya-rose);
+}
+
+/* the word that types itself (script font in English) */
+.custom-order__typed-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 1.5em;
+  margin: 4px 0 10px;
+  color: var(--hilya-rose-deep);
+  font-family: "Hilya Script", cursive;
+  font-size: clamp(30px, 2.6vw, 38px);
+  line-height: 1.5;
+  text-shadow: none;
+}
+
+.custom-order__caret {
+  display: none;
+  width: 1.5px;
+  height: .9em;
+  background: var(--hilya-rose);
+}
+
+.custom-order__typed-line.is-typing .custom-order__caret {
+  display: block;
+  animation: co-caret 1s steps(1) infinite;
+}
+
+@keyframes co-caret {
+  50% { opacity: 0; }
+}
+
 .custom-order__text {
   max-width: 420px;
   margin: 0 0 22px;
@@ -713,12 +846,12 @@
   line-height: 1.7;
 }
 
-/* الأزرار السودا: زرار القسم، زرار اختيار الصورة، زرار الإرسال */
+/* أزرار الروز جولد: زرار القسم، زرار اختيار الصورة، زرار الإرسال */
 .custom-order__button,
 .co-file__button,
 .co-submit {
-  border: 1px solid #111;
-  background: #111;
+  border: 1px solid var(--hilya-rose-deep);
+  background: var(--hilya-rose-deep);
   color: #fff;
   cursor: pointer;
   transition: background-color .3s ease, color .3s ease;
@@ -729,7 +862,7 @@
 .co-file:hover .co-file__button,
 .co-file__input:focus-visible + .co-file__button {
   background: transparent;
-  color: #111;
+  color: var(--hilya-rose-deep);
 }
 
 .custom-order__button {
@@ -743,10 +876,12 @@
   font-weight: 500;
   letter-spacing: .03em;
   text-shadow: none;
+  border-radius: var(--hilya-radius);
+  box-shadow: var(--hilya-button-depth);
 }
 
 .custom-order__button:focus-visible {
-  outline: 2px solid #111;
+  outline: 2px solid var(--hilya-rose-deep);
   outline-offset: 3px;
 }
 
@@ -877,8 +1012,14 @@
     border-radius: 14px;
   }
 
-  .custom-order__eyebrow {
+  .custom-order .custom-order__eyebrow {
     margin-bottom: 8px;
+  }
+
+  .custom-order__typed-line {
+    min-height: 1.4em;
+    margin: 2px 0 6px;
+    font-size: 28px;
   }
 
   .custom-order__heading {
@@ -1073,8 +1214,8 @@ html.co-lock {
 
 .co-input:focus {
   outline: none;
-  border-color: #111;
-  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
+  border-color: var(--hilya-rose-deep);
+  box-shadow: 0 0 0 3px rgb(var(--hilya-rose-rgb) / 18%);
 }
 
 .co-input[aria-invalid],
@@ -1257,6 +1398,29 @@ html.co-lock {
   animation: none;
 }
 
+/* the frame and the small line under the title draw themselves after the card shows */
+@keyframes co-draw {
+  from { --co-draw: 0deg; }
+}
+
+.custom-order.has-reveal .custom-order__content.is-revealed::before {
+  animation: co-draw 2.2s cubic-bezier(.22, .8, .3, 1) backwards;
+  animation-delay: calc(var(--reveal-delay, 0s) + .5s);
+}
+
+.custom-order.has-reveal .custom-order__heading::after {
+  transform: scaleX(0);
+  transition: transform 1.6s cubic-bezier(.22, .8, .3, 1) calc(var(--reveal-delay, 0s) + .9s);
+}
+
+.custom-order.has-reveal .custom-order__content.is-revealed .custom-order__heading::after {
+  transform: scaleX(1);
+}
+
+.custom-order.has-reveal .custom-order__content.hilya-instant .custom-order__heading::after {
+  transition: none;
+}
+
 /* =========================
    ARABIC / RTL
 ========================= */
@@ -1271,6 +1435,18 @@ html.co-lock {
 [dir="rtl"] .custom-order__text {
   font-size: 16px;
   line-height: 1.9;
+}
+
+[dir="rtl"] .custom-order__typed-line {
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* no blinking line in Arabic: it looks like the letter alef */
+[dir="rtl"] .custom-order__typed-line.is-typing .custom-order__caret {
+  display: none;
 }
 
 [dir="rtl"] .custom-order__button {
@@ -1301,6 +1477,10 @@ html.co-lock {
   [dir="rtl"] .custom-order__text {
     font-size: 13px;
     line-height: 1.7;
+  }
+
+  [dir="rtl"] .custom-order__typed-line {
+    font-size: 20px;
   }
 
   [dir="rtl"] .custom-order__button {
@@ -1341,6 +1521,10 @@ html.co-lock {
   .co-drawer__panel,
   .custom-order__feature,
   .custom-order__arrow {
+    transition: none;
+  }
+
+  .custom-order__heading::after {
     transition: none;
   }
 }
@@ -1530,6 +1714,30 @@ html.co-lock {
       "id": "button_label_ar",
       "label": "Button label - Arabic",
       "default": "ابدأ التخصيص"
+    },
+    {
+      "type": "header",
+      "content": "Word that types itself (under the title)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_typed",
+      "label": "Show the typing word",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "typed_words",
+      "label": "Words (English)",
+      "info": "Separate the words with the | sign. They type one after the other.",
+      "default": "Your name|A special date|Your initial|Your story"
+    },
+    {
+      "type": "text",
+      "id": "typed_words_ar",
+      "label": "Words - Arabic",
+      "info": "Separate the words with the | sign.",
+      "default": "اسمك|تاريخ مميز|حرف يخصك|قصتك"
     },
     {
       "type": "header",
