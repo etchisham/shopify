@@ -64,6 +64,7 @@
     assign s_err_type = 'من فضلك اختر ملف صورة.'
     assign s_err_size = 'حجم الصورة كبير جدًا (الحد الأقصى 8 ميجابايت).'
     assign s_err_send = 'حدث خطأ ما، حاول مرة أخرى.'
+    assign s_err_fix = 'لم يتم الإرسال بعد. من فضلك أكمل الحقول المميزة باللون الأحمر.'
     assign s_ok_title = 'شكرًا لك!'
     assign s_ok_text = 'استلمنا طلبك وسنتواصل معك قريبًا.'
     assign s_close = 'إغلاق'
@@ -84,6 +85,7 @@
     assign s_err_type = 'Please choose an image file.'
     assign s_err_size = 'The image is too large (max 8 MB).'
     assign s_err_send = 'Something went wrong, please try again.'
+    assign s_err_fix = 'Not sent yet. Please complete the fields marked in red.'
     assign s_ok_title = 'Thank you!'
     assign s_ok_text = 'We received your request and will contact you soon.'
     assign s_close = 'Close'
@@ -229,6 +231,7 @@
             data-err-type="{{ s_err_type | escape }}"
             data-err-size="{{ s_err_size | escape }}"
             data-err-send="{{ s_err_send | escape }}"
+            data-err-fix="{{ s_err_fix | escape }}"
           >
 
             <div class="co-field">
@@ -243,7 +246,7 @@
                 dir="ltr"
                 placeholder="{{ s_phone_ph | escape }}"
               >
-              <p class="co-error" data-error-for="phone" hidden></p>
+              <p class="co-error" data-error-for="phone" role="alert" hidden></p>
             </div>
 
             <div class="co-field">
@@ -255,7 +258,7 @@
                 rows="5"
                 placeholder="{{ s_message_ph | escape }}"
               ></textarea>
-              <p class="co-error" data-error-for="message" hidden></p>
+              <p class="co-error" data-error-for="message" role="alert" hidden></p>
             </div>
 
             <div class="co-field">
@@ -267,13 +270,13 @@
                 <span class="co-file__name" data-co-file-name>{{ s_no_file | escape }}</span>
               </label>
 
-              <p class="co-error" data-error-for="image" hidden></p>
+              <p class="co-error" data-error-for="image" role="alert" hidden></p>
             </div>
 
             {%- comment -%} Spam trap: real people never see or fill this {%- endcomment -%}
             <input type="text" name="website" tabindex="-1" autocomplete="off" class="co-trap" aria-hidden="true">
 
-            <p class="co-error co-error--form" data-error-for="form" hidden></p>
+            <p class="co-error co-error--form" data-error-for="form" role="alert" hidden></p>
 
             <button type="submit" class="co-submit">{{ s_submit | escape }}</button>
 
@@ -632,6 +635,21 @@
     file.addEventListener('change', checkFile);
     phone.addEventListener('blur', () => { if (phone.value) checkPhone(); });
 
+    /* once a field was marked, it is re-checked while typing, so the mark goes away as soon as it is fixed */
+    const clearFormError = () => {
+      if (!form.querySelector('[aria-invalid]')) setError('form', '');
+    };
+
+    phone.addEventListener('input', () => {
+      if (phone.hasAttribute('aria-invalid')) { checkPhone(); clearFormError(); }
+    });
+
+    message.addEventListener('input', () => {
+      if (message.hasAttribute('aria-invalid')) { checkMessage(); clearFormError(); }
+    });
+
+    file.addEventListener('change', clearFormError);
+
     /* Submit */
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -648,7 +666,26 @@
       const okFile = checkFile();
 
       if (!okPhone || !okMessage || !okFile) {
-        (!okPhone ? phone : !okMessage ? message : file).focus();
+        const first = !okPhone ? phone : !okMessage ? message : file;
+        const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const mouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+        /* the summary sits right above the button, where the person just tapped */
+        setError('form', text.errFix);
+
+        /* bring the first problem into view; on a phone do not focus it,
+           because the keyboard would cover the message above the button */
+        first.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' });
+        if (mouse) first.focus({ preventScroll: true });
+
+        [[phone, okPhone], [message, okMessage], [file, okFile]].forEach(([field, ok]) => {
+          const box = field.closest('.co-field');
+          if (!box || ok) return;
+          box.classList.remove('is-shaking');
+          void box.offsetWidth; /* lets the shake start again */
+          box.classList.add('is-shaking');
+        });
+
         return;
       }
 
@@ -1409,8 +1446,31 @@ html.co-lock {
 }
 
 .co-input[aria-invalid],
-.co-file[aria-invalid] {
+.co-file:has([aria-invalid]) {
   border-color: #b3261e;
+  background: #fff8f7;
+}
+
+/* a marked field keeps its red frame even while the cursor is in it */
+.co-input[aria-invalid]:focus {
+  border-color: #b3261e;
+  box-shadow: 0 0 0 3px rgb(179 38 30 / 18%);
+}
+
+.co-field:has([aria-invalid]) .co-label {
+  color: #b3261e;
+}
+
+@keyframes co-shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-7px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(3px); }
+}
+
+.co-field.is-shaking {
+  animation: co-shake .45s ease;
 }
 
 .co-input--message {
@@ -1422,11 +1482,39 @@ html.co-lock {
   text-align: right;
 }
 
+/* error messages: a clear red band with a "!" so it cannot be missed */
 .co-error {
-  margin: 6px 0 0;
-  color: #b3261e;
-  font-size: 12px;
-  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgb(179 38 30 / 35%);
+  border-radius: 10px;
+  background: #fdecea;
+  color: #8f1d16;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.co-error[hidden] {
+  display: none;
+}
+
+.co-error::before {
+  content: "!";
+  display: grid;
+  flex: 0 0 20px;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #b3261e;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .co-error--form {
@@ -1787,6 +1875,10 @@ html.co-lock {
   .custom-order__step,
   .custom-order__arrow {
     transition: none;
+  }
+
+  .co-field.is-shaking {
+    animation: none;
   }
 
   .custom-order__heading::after {
