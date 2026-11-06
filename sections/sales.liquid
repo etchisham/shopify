@@ -513,6 +513,31 @@
     let anchor = 0; /* where a resting tag sits in the middle: on the middle line, or half a step beside it when an even number of tags shows */
     const snapTo = (value) => anchor + spacing * Math.round((value - anchor) / spacing);
 
+    /* the strike on the old price goes exactly through the middle of its numbers: the height of that middle is measured from the font
+       that is really used (every font puts its numbers a little higher or lower in the line) */
+    const strikeCanvas = document.createElement('canvas').getContext('2d');
+
+    const placeStrikes = () => {
+      if (!strikeCanvas) return;
+
+      stage.querySelectorAll('.sales-tag__price s').forEach((el) => {
+        const cs = getComputedStyle(el);
+
+        strikeCanvas.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+
+        const m = strikeCanvas.measureText('EGP0123456789');
+        const lineHeight = parseFloat(cs.lineHeight);
+
+        /* an older browser that cannot measure this: the strike simply stays in the middle of the line */
+        if (m.fontBoundingBoxAscent === undefined || !lineHeight) return;
+
+        const baseline = (lineHeight - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+        const middle = baseline - (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+
+        el.style.setProperty('--strike-y', middle.toFixed(2) + 'px');
+      });
+    };
+
     const layout = () => {
       /* the tags must be in their real (absolute) mode before anything is measured */
       stage.classList.add('is-ready');
@@ -882,6 +907,7 @@
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(() => {
         layout();
+        placeStrikes();
         render(performance.now());
         wake();
       });
@@ -903,7 +929,10 @@
     reduceQuery.addEventListener('change', () => { render(performance.now()); wake(); });
 
     layout();
+    placeStrikes();
     render(performance.now());
+
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeStrikes);
   })();
 </script>
 
@@ -1859,9 +1888,24 @@
 }
 
 .sales-tag__price s {
-  display: block;
-  margin-top: 1px;
+  /* the old price: the strike is drawn by hand, exactly through the middle of the numbers
+     (the line the browser draws sits higher or lower depending on the font) */
+  position: relative;
+  display: table;
+  margin: 1px auto 0;
+  text-decoration: none;
   opacity: .72;
+}
+
+.sales-tag__price s::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: var(--strike-y, 50%);
+  height: max(1px, .07em);
+  background: currentColor;
+  transform: translateY(-50%);
 }
 
 .sales .is-dark .sales-tag__name,
