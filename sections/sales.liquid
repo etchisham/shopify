@@ -201,7 +201,7 @@
               <div class="sales-tag__shell">
               <a class="sales-tag" href="{{ product.url }}" draggable="false">
                 <span class="sales-tag__hole" aria-hidden="true"></span>
-                <span class="sales-tag__brand" aria-hidden="true">{% if sales_locale == 'ar' %}حلية{% else %}Hilya{% endif %}</span>
+                <span class="sales-tag__brand" aria-hidden="true">{% if sales_locale == 'ar' %}حِلْيَة{% else %}Hilya{% endif %}</span>
 
                 <span class="sales-tag__photo">
                   {% if product.featured_image != blank %}
@@ -1246,6 +1246,64 @@
   }
 }
 
+/* computers: a fine engraved line inside the edge of the tag (down the sides, along the bottom and up the slanted corners); it hangs on the name,
+   which is only on the tags with a product, and is left out on phones */
+@media (min-width: 750px) {
+  .sales-tag__brand::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--tag-line);
+    clip-path: polygon(
+      34.42px calc(var(--cut-y) - 16.56px),
+      13.45px calc(var(--cut-y) - 1.18px),
+      10.63px calc(var(--cut-y) + 1.39px),
+      8.61px calc(var(--cut-y) + 4.36px),
+      7.4px calc(var(--cut-y) + 7.75px),
+      7.0px calc(var(--cut-y) + 11.55px),
+      7px calc(100% - 10px),
+      7.19px calc(100% - 8.69px),
+      7.75px calc(100% - 7.75px),
+      8.69px calc(100% - 7.19px),
+      10px calc(100% - 7px),
+      calc(100% - 10px) calc(100% - 7px),
+      calc(100% - 8.69px) calc(100% - 7.19px),
+      calc(100% - 7.75px) calc(100% - 7.75px),
+      calc(100% - 7.19px) calc(100% - 8.69px),
+      calc(100% - 7px) calc(100% - 10px),
+      calc(100% - 7.0px) calc(var(--cut-y) + 11.55px),
+      calc(100% - 7.4px) calc(var(--cut-y) + 7.75px),
+      calc(100% - 8.61px) calc(var(--cut-y) + 4.36px),
+      calc(100% - 10.63px) calc(var(--cut-y) + 1.39px),
+      calc(100% - 13.45px) calc(var(--cut-y) - 1.18px),
+      calc(100% - 34.42px) calc(var(--cut-y) - 16.56px),
+      calc(100% - 35.72px) calc(var(--cut-y) - 15.9px),
+      calc(100% - 13.7px) calc(var(--cut-y) + 0.24px),
+      calc(100% - 11.34px) calc(var(--cut-y) + 2.4px),
+      calc(100% - 9.65px) calc(var(--cut-y) + 4.89px),
+      calc(100% - 8.64px) calc(var(--cut-y) + 7.73px),
+      calc(100% - 8.3px) calc(var(--cut-y) + 10.91px),
+      calc(100% - 8.3px) calc(100% - 10.3px),
+      calc(100% - 8.43px) calc(100% - 9.43px),
+      calc(100% - 8.8px) calc(100% - 8.8px),
+      calc(100% - 9.43px) calc(100% - 8.43px),
+      calc(100% - 10.3px) calc(100% - 8.3px),
+      10.3px calc(100% - 8.3px),
+      9.43px calc(100% - 8.43px),
+      8.8px calc(100% - 8.8px),
+      8.43px calc(100% - 9.43px),
+      8.3px calc(100% - 10.3px),
+      8.3px calc(var(--cut-y) + 10.91px),
+      8.64px calc(var(--cut-y) + 7.73px),
+      9.65px calc(var(--cut-y) + 4.89px),
+      11.34px calc(var(--cut-y) + 2.4px),
+      13.7px calc(var(--cut-y) + 0.24px),
+      35.72px calc(var(--cut-y) - 15.9px)
+    );
+  }
+}
+
 /* computers: some depth (a shadow of the rope, and the loop and twine casting a shadow on the paper); left out on phones, where every extra effect slows scrolling */
 @media (min-width: 750px) {
   .sales__rope {
@@ -1350,6 +1408,7 @@
   --sink: 0%;
   --engrave-ink: color-mix(in srgb, #fff 90%, var(--tag-bg));
   --engrave-off: color-mix(in srgb, var(--sales-soft) 92%, #fff);
+  --tag-line: rgb(255 255 255 / 30%);
   --engrave-hi: rgb(255 255 255 / 16%);
   --engrave-lo: rgb(25 8 4 / 72%);
 }
@@ -1367,7 +1426,8 @@
   --lift: 0%;
   --sink: 0%;
   --engrave-ink: color-mix(in srgb, var(--hilya-ink) 80%, var(--tag-bg));
-  --engrave-off: color-mix(in srgb, #000 12%, var(--hilya-rose-deep));
+  --engrave-off: var(--hilya-rose-deep);
+  --tag-line: rgb(139 94 79 / 38%);
   --engrave-hi: rgb(255 255 255 / 95%);
   --engrave-lo: rgb(90 45 30 / 32%);
 }
@@ -1666,7 +1726,14 @@
 [dir="rtl"] .sales-tag__brand {
   letter-spacing: 0;
   text-indent: 0;
+  font-weight: 700;
   font-size: clamp(13px, calc(var(--sales-card-w) * .07), 17px);
+}
+
+.sales .is-dark .sales-tag__brand {
+  opacity: 1;
+  color: color-mix(in srgb, #fff 96%, var(--tag-bg));
+  text-shadow: 0 -1px 0 rgb(25 8 4 / 85%), 0 1px 0 rgb(255 255 255 / 18%);
 }
 
 .sales-tag__photo {
@@ -1738,9 +1805,10 @@
 }
 
 .sales .is-dark .sales-tag__off {
+  /* the colour of the light tag next to it, but heavier and with a deeper cut so it can be read on the dark paper */
   font-weight: 600;
-  color: color-mix(in srgb, #fff 96%, var(--tag-bg));
-  text-shadow: 0 -1px 0 rgb(25 8 4 / 80%), 0 1px 0 rgb(255 255 255 / 20%), 0 0 1px rgb(25 8 4 / 40%);
+  color: var(--sales-light);
+  text-shadow: 0 -1px 0 rgb(25 8 4 / 85%), 0 1px 0 rgb(255 255 255 / 18%), 0 0 1px rgb(25 8 4 / 45%);
 }
 
 .sales .is-light .sales-tag__off {
