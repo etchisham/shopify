@@ -33,6 +33,45 @@
   </ul>
 </section>
 
+<script>
+  /* The items rise and fade in one after the other when the bar comes into view */
+  (() => {
+    const bar = document.currentScript.previousElementSibling;
+
+    if (
+      !bar ||
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) return;
+
+    const items = Array.from(bar.querySelectorAll('.trust-bar__item'));
+
+    if (!items.length) return;
+
+    bar.classList.add('has-reveal');
+
+    /* already passed (above the screen): show without motion */
+    if (bar.getBoundingClientRect().bottom < 0) {
+      items.forEach((item) => item.classList.add('hilya-instant', 'is-revealed'));
+      return;
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+
+      items.forEach((item, index) => {
+        item.style.setProperty('--reveal-delay', (index * 0.2) + 's');
+        item.classList.add('is-revealed');
+      });
+
+      io.disconnect();
+    }, { threshold: 0.1, rootMargin: '0px 0px -12% 0px' });
+
+    io.observe(bar);
+  })();
+</script>
+
 {% stylesheet %}
   .trust-bar {
     padding-block: var(--space-5);
@@ -79,7 +118,22 @@
     color: var(--color-muted);
     font-size: 0.85rem;
   }
-  
+  /* Rise and fade in (only when the script above switched it on) */
+  .trust-bar.has-reveal .trust-bar__item {
+    transition:
+      opacity 1.2s ease var(--reveal-delay, 0s),
+      transform 1.6s cubic-bezier(.22, .8, .3, 1) var(--reveal-delay, 0s);
+  }
+
+  .trust-bar.has-reveal .trust-bar__item:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .trust-bar.has-reveal .trust-bar__item.hilya-instant {
+    transition: none;
+  }
+
   /* Arabic */
   [dir="rtl"] .trust-bar h3 {
     font-size: 1.05rem;
