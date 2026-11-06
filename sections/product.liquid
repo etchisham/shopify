@@ -659,7 +659,84 @@
   })();
 </script>
 
+<script>
+  /* Judge.me reviews (a separate section lower on the page): rises and fades in like the other sections.
+     The widget only gets its content a moment later, so we animate the section around it. */
+  (() => {
+    if (
+      !('IntersectionObserver' in window) ||
+      (window.Shopify && window.Shopify.designMode) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) return;
 
+    const start = () => {
+      const widgets = document.querySelectorAll('#judgeme_product_reviews, .jdgm-review-widget, .jdgm-rev-widg');
+
+      /* the section that holds the reviews (not the product section itself) */
+      let section = null;
+
+      widgets.forEach((widget) => {
+        const holder = widget.closest('.shopify-section');
+
+        if (!section && holder && !holder.querySelector('[data-product-page]')) section = holder;
+      });
+
+      if (!section) return;
+
+      section.classList.add('hilya-reviews-reveal');
+
+      if (section.getBoundingClientRect().bottom < 0) {
+        section.classList.add('hilya-instant', 'is-revealed');
+        return;
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+
+        section.classList.add('is-revealed');
+        io.disconnect();
+      }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+
+      io.observe(section);
+    };
+
+    /* the reviews section comes later in the page than this script */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', start);
+    } else {
+      start();
+    }
+  })();
+</script>
+
+{% stylesheet %}
+  /* Judge.me reviews section: same rise and fade as the home page sections */
+  .hilya-reviews-reveal {
+    transition:
+      opacity 1.4s ease,
+      transform 1.8s cubic-bezier(.22, .8, .3, 1);
+  }
+
+  .hilya-reviews-reveal:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(64px);
+  }
+
+  .hilya-reviews-reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hilya-reviews-reveal.hilya-instant {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hilya-reviews-reveal {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
