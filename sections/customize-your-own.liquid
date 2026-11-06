@@ -399,7 +399,8 @@
 
           const tick = () => {
             count -= 1;
-            typed.textContent = typed.textContent.slice(0, count);
+            /* a zero-width space keeps the line at full height while the word is empty */
+            typed.textContent = count > 0 ? typed.textContent.slice(0, count) : '\u200b';
 
             if (count > 0) {
               wait(45, tick);
@@ -1088,7 +1089,6 @@
   }
 
   .custom-order__typed-line {
-    min-height: 1.4em;
     margin: 2px 0 6px;
     font-size: 28px;
   }
@@ -1544,6 +1544,7 @@ html.co-lock {
 }
 
 [dir="rtl"] .custom-order__typed-line {
+  min-height: 1.6em;
   font-family: inherit;
   font-size: 24px;
   font-weight: 500;
