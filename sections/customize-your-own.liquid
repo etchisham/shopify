@@ -1215,14 +1215,17 @@
     margin-top: var(--co-section-mobile, 0px);
     padding: var(--co-content-mobile, 0px) 0 0;
     background: var(--hilya-cream);
+    /* stops some phone browsers from enlarging the text by themselves */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
-  /* على الموبايل ارتفاع ثابت أطول بدل ما يتحسب من الصورة */
+  /* على الموبايل الارتفاع حد أدنى بس (مش نسبة ثابتة)، فلو المحتوى أطول السكشن يطول ومفيش حاجة تتقص */
   .custom-order__inner {
-    aspect-ratio: 1 / 1.08;
-    min-height: min-content;
-    gap: 14px;
-    padding: 22px 14px;
+    aspect-ratio: auto;
+    min-height: calc(100vw * 1.08);
+    gap: 22px;
+    padding: 36px 14px 32px;
   }
 
   .custom-order__media img,
