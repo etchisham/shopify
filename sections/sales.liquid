@@ -1246,60 +1246,125 @@
   }
 }
 
-/* computers: a fine engraved line inside the edge of the tag (down the sides, along the bottom and up the slanted corners); it hangs on the name,
-   which is only on the tags with a product, and is left out on phones */
+/* a fine engraved line inside the edge of the tag, all the way round. It hangs on the name (which is only on the tags with a product);
+   the eyelet sits on top of it, so the line seems to run under the metal ring. On phones the line has fewer points, to keep scrolling light */
+.sales-tag__brand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--tag-line);
+  clip-path: polygon(
+    50% 7px,
+    calc(calc(100% - var(--cut-x)) - 10.29px) 7.0px,
+    calc(calc(100% - var(--cut-x)) - 2.68px) 8.18px,
+    calc(calc(100% - var(--cut-x)) + 4.16px) 11.73px,
+    calc(100% - 13.45px) calc(var(--cut-y) - 1.18px),
+    calc(100% - 8.61px) calc(var(--cut-y) + 4.36px),
+    calc(100% - 7.0px) calc(var(--cut-y) + 11.55px),
+    calc(100% - 7px) calc(100% - 10px),
+    calc(100% - 7.75px) calc(100% - 7.75px),
+    calc(100% - 10px) calc(100% - 7px),
+    10px calc(100% - 7px),
+    7.75px calc(100% - 7.75px),
+    7px calc(100% - 10px),
+    7.0px calc(var(--cut-y) + 11.55px),
+    8.61px calc(var(--cut-y) + 4.36px),
+    13.45px calc(var(--cut-y) - 1.18px),
+    calc(var(--cut-x) - 4.16px) 11.73px,
+    calc(var(--cut-x) + 2.68px) 8.18px,
+    calc(var(--cut-x) + 10.29px) 7.0px,
+    calc(50% - .5px) 7px,
+    calc(50% - .5px) 8.3px,
+    calc(var(--cut-x) + 9.42px) 8.3px,
+    calc(var(--cut-x) + 3.04px) 9.29px,
+    calc(var(--cut-x) - 2.69px) 12.26px,
+    13.7px calc(var(--cut-y) + 0.24px),
+    9.65px calc(var(--cut-y) + 4.89px),
+    8.3px calc(var(--cut-y) + 10.91px),
+    8.3px calc(100% - 10.3px),
+    8.8px calc(100% - 8.8px),
+    10.3px calc(100% - 8.3px),
+    calc(100% - 10.3px) calc(100% - 8.3px),
+    calc(100% - 8.8px) calc(100% - 8.8px),
+    calc(100% - 8.3px) calc(100% - 10.3px),
+    calc(100% - 8.3px) calc(var(--cut-y) + 10.91px),
+    calc(100% - 9.65px) calc(var(--cut-y) + 4.89px),
+    calc(100% - 13.7px) calc(var(--cut-y) + 0.24px),
+    calc(calc(100% - var(--cut-x)) + 2.69px) 12.26px,
+    calc(calc(100% - var(--cut-x)) - 3.04px) 9.29px,
+    calc(calc(100% - var(--cut-x)) - 9.42px) 8.3px,
+    50% 8.3px
+  );
+}
+
 @media (min-width: 750px) {
   .sales-tag__brand::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: var(--tag-line);
     clip-path: polygon(
-      34.42px calc(var(--cut-y) - 16.56px),
-      13.45px calc(var(--cut-y) - 1.18px),
-      10.63px calc(var(--cut-y) + 1.39px),
-      8.61px calc(var(--cut-y) + 4.36px),
-      7.4px calc(var(--cut-y) + 7.75px),
-      7.0px calc(var(--cut-y) + 11.55px),
-      7px calc(100% - 10px),
-      7.19px calc(100% - 8.69px),
-      7.75px calc(100% - 7.75px),
-      8.69px calc(100% - 7.19px),
-      10px calc(100% - 7px),
-      calc(100% - 10px) calc(100% - 7px),
-      calc(100% - 8.69px) calc(100% - 7.19px),
-      calc(100% - 7.75px) calc(100% - 7.75px),
-      calc(100% - 7.19px) calc(100% - 8.69px),
-      calc(100% - 7px) calc(100% - 10px),
-      calc(100% - 7.0px) calc(var(--cut-y) + 11.55px),
-      calc(100% - 7.4px) calc(var(--cut-y) + 7.75px),
-      calc(100% - 8.61px) calc(var(--cut-y) + 4.36px),
-      calc(100% - 10.63px) calc(var(--cut-y) + 1.39px),
-      calc(100% - 13.45px) calc(var(--cut-y) - 1.18px),
-      calc(100% - 34.42px) calc(var(--cut-y) - 16.56px),
-      calc(100% - 35.72px) calc(var(--cut-y) - 15.9px),
-      calc(100% - 13.7px) calc(var(--cut-y) + 0.24px),
-      calc(100% - 11.34px) calc(var(--cut-y) + 2.4px),
-      calc(100% - 9.65px) calc(var(--cut-y) + 4.89px),
-      calc(100% - 8.64px) calc(var(--cut-y) + 7.73px),
-      calc(100% - 8.3px) calc(var(--cut-y) + 10.91px),
-      calc(100% - 8.3px) calc(100% - 10.3px),
-      calc(100% - 8.43px) calc(100% - 9.43px),
-      calc(100% - 8.8px) calc(100% - 8.8px),
-      calc(100% - 9.43px) calc(100% - 8.43px),
-      calc(100% - 10.3px) calc(100% - 8.3px),
-      10.3px calc(100% - 8.3px),
-      9.43px calc(100% - 8.43px),
-      8.8px calc(100% - 8.8px),
-      8.43px calc(100% - 9.43px),
-      8.3px calc(100% - 10.3px),
-      8.3px calc(var(--cut-y) + 10.91px),
-      8.64px calc(var(--cut-y) + 7.73px),
-      9.65px calc(var(--cut-y) + 4.89px),
-      11.34px calc(var(--cut-y) + 2.4px),
-      13.7px calc(var(--cut-y) + 0.24px),
-      35.72px calc(var(--cut-y) - 15.9px)
+    50% 7px,
+    calc(calc(100% - var(--cut-x)) - 10.29px) 7.0px,
+    calc(calc(100% - var(--cut-x)) - 6.39px) 7.3px,
+    calc(calc(100% - var(--cut-x)) - 2.68px) 8.18px,
+    calc(calc(100% - var(--cut-x)) + 0.84px) 9.66px,
+    calc(calc(100% - var(--cut-x)) + 4.16px) 11.73px,
+    calc(100% - 13.45px) calc(var(--cut-y) - 1.18px),
+    calc(100% - 10.63px) calc(var(--cut-y) + 1.39px),
+    calc(100% - 8.61px) calc(var(--cut-y) + 4.36px),
+    calc(100% - 7.4px) calc(var(--cut-y) + 7.75px),
+    calc(100% - 7.0px) calc(var(--cut-y) + 11.55px),
+    calc(100% - 7px) calc(100% - 10px),
+    calc(100% - 7.19px) calc(100% - 8.69px),
+    calc(100% - 7.75px) calc(100% - 7.75px),
+    calc(100% - 8.69px) calc(100% - 7.19px),
+    calc(100% - 10px) calc(100% - 7px),
+    10px calc(100% - 7px),
+    8.69px calc(100% - 7.19px),
+    7.75px calc(100% - 7.75px),
+    7.19px calc(100% - 8.69px),
+    7px calc(100% - 10px),
+    7.0px calc(var(--cut-y) + 11.55px),
+    7.4px calc(var(--cut-y) + 7.75px),
+    8.61px calc(var(--cut-y) + 4.36px),
+    10.63px calc(var(--cut-y) + 1.39px),
+    13.45px calc(var(--cut-y) - 1.18px),
+    calc(var(--cut-x) - 4.16px) 11.73px,
+    calc(var(--cut-x) - 0.84px) 9.66px,
+    calc(var(--cut-x) + 2.68px) 8.18px,
+    calc(var(--cut-x) + 6.39px) 7.3px,
+    calc(var(--cut-x) + 10.29px) 7.0px,
+    calc(50% - .5px) 7px,
+    calc(50% - .5px) 8.3px,
+    calc(var(--cut-x) + 9.42px) 8.3px,
+    calc(var(--cut-x) + 6.15px) 8.55px,
+    calc(var(--cut-x) + 3.04px) 9.29px,
+    calc(var(--cut-x) + 0.1px) 10.53px,
+    calc(var(--cut-x) - 2.69px) 12.26px,
+    13.7px calc(var(--cut-y) + 0.24px),
+    11.34px calc(var(--cut-y) + 2.4px),
+    9.65px calc(var(--cut-y) + 4.89px),
+    8.64px calc(var(--cut-y) + 7.73px),
+    8.3px calc(var(--cut-y) + 10.91px),
+    8.3px calc(100% - 10.3px),
+    8.43px calc(100% - 9.43px),
+    8.8px calc(100% - 8.8px),
+    9.43px calc(100% - 8.43px),
+    10.3px calc(100% - 8.3px),
+    calc(100% - 10.3px) calc(100% - 8.3px),
+    calc(100% - 9.43px) calc(100% - 8.43px),
+    calc(100% - 8.8px) calc(100% - 8.8px),
+    calc(100% - 8.43px) calc(100% - 9.43px),
+    calc(100% - 8.3px) calc(100% - 10.3px),
+    calc(100% - 8.3px) calc(var(--cut-y) + 10.91px),
+    calc(100% - 8.64px) calc(var(--cut-y) + 7.73px),
+    calc(100% - 9.65px) calc(var(--cut-y) + 4.89px),
+    calc(100% - 11.34px) calc(var(--cut-y) + 2.4px),
+    calc(100% - 13.7px) calc(var(--cut-y) + 0.24px),
+    calc(calc(100% - var(--cut-x)) + 2.69px) 12.26px,
+    calc(calc(100% - var(--cut-x)) - 0.1px) 10.53px,
+    calc(calc(100% - var(--cut-x)) - 3.04px) 9.29px,
+    calc(calc(100% - var(--cut-x)) - 6.15px) 8.55px,
+    calc(calc(100% - var(--cut-x)) - 9.42px) 8.3px,
+    50% 8.3px
     );
   }
 }
@@ -1406,8 +1471,8 @@
   --metal-lo: color-mix(in srgb, var(--tag-bg) 66%, #000);
   --lift: 0%;
   --sink: 0%;
-  --engrave-ink: color-mix(in srgb, #fff 90%, var(--tag-bg));
-  --engrave-off: color-mix(in srgb, var(--sales-soft) 92%, #fff);
+  --engrave-ink: var(--sales-light); /* all the text on a dark tag has the colour of the light tag next to it */
+  --engrave-off: var(--sales-light);
   --tag-line: rgb(255 255 255 / 30%);
   --engrave-hi: rgb(255 255 255 / 16%);
   --engrave-lo: rgb(25 8 4 / 72%);
@@ -1425,7 +1490,7 @@
   --metal-lo: color-mix(in srgb, var(--tag-bg) 62%, var(--hilya-rose-deep));
   --lift: 0%;
   --sink: 0%;
-  --engrave-ink: color-mix(in srgb, var(--hilya-ink) 80%, var(--tag-bg));
+  --engrave-ink: var(--hilya-rose-deep); /* and on a light tag, the colour of the dark tag next to it */
   --engrave-off: var(--hilya-rose-deep);
   --tag-line: rgb(139 94 79 / 38%);
   --engrave-hi: rgb(255 255 255 / 95%);
@@ -1687,6 +1752,7 @@
 
 .sales-tag__hole {
   position: relative;
+  z-index: 1; /* above the line inside the edge of the tag */
   flex: none;
   width: 22px;
   height: 22px;
@@ -1732,7 +1798,6 @@
 
 .sales .is-dark .sales-tag__brand {
   opacity: 1;
-  color: color-mix(in srgb, #fff 96%, var(--tag-bg));
   text-shadow: 0 -1px 0 rgb(25 8 4 / 85%), 0 1px 0 rgb(255 255 255 / 18%);
 }
 
