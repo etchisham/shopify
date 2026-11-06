@@ -1102,7 +1102,7 @@
   transform-origin: 100% 50%;
 }
 
-/* the last step is the finished piece: two small sparkles shine once on it */
+/* the last step is the finished piece: two small sparkles glint on it now and then */
 .custom-order__step:last-child::before,
 .custom-order__step:last-child::after {
   content: "";
@@ -1612,18 +1612,20 @@ html.co-lock {
   transition: none;
 }
 
+/* one slow glint (about 2.5s), then rest, then again: a cycle of 8.5s */
 @keyframes co-sparkle {
   0%   { opacity: 0; transform: scale(0) rotate(0deg); }
-  45%  { opacity: 1; transform: scale(1.25) rotate(45deg); }
+  14%  { opacity: 1; transform: scale(1.25) rotate(45deg); }
+  30%  { opacity: 0; transform: scale(.2) rotate(90deg); }
   100% { opacity: 0; transform: scale(.2) rotate(90deg); }
 }
 
 .custom-order.has-reveal .custom-order__step.is-revealed:last-child::after {
-  animation: co-sparkle 1.4s ease calc(var(--reveal-delay, 0s) + 1.6s) both;
+  animation: co-sparkle 8.5s ease infinite calc(var(--reveal-delay, 0s) + 1.6s);
 }
 
 .custom-order.has-reveal .custom-order__step.is-revealed:last-child::before {
-  animation: co-sparkle 1.2s ease calc(var(--reveal-delay, 0s) + 1.95s) both;
+  animation: co-sparkle 8.5s ease infinite calc(var(--reveal-delay, 0s) + 2.1s);
 }
 
 .custom-order.has-reveal .custom-order__step.hilya-instant:last-child::before,
