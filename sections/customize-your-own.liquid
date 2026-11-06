@@ -125,6 +125,8 @@
 
       <div class="custom-order__content">
 
+        <span class="custom-order__marks" aria-hidden="true"></span>
+
         {% if co_eyebrow != blank %}
           <p class="custom-order__eyebrow">{{ co_eyebrow | escape }}</p>
         {% endif %}
@@ -148,7 +150,11 @@
 
         {% if co_button != blank %}
           <button type="button" class="custom-order__button" data-co-open aria-haspopup="dialog">
-            <span>{{ co_button | escape }}</span>
+            <span class="custom-order__button-label">
+              {{ co_button | escape }}
+              <i class="custom-order__line"></i>
+              <svg class="custom-order__pencil" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1z"/><path d="M14 7l3 3"/></svg>
+            </span>
             <svg class="custom-order__arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"></path></svg>
           </button>
         {% endif %}
@@ -790,6 +796,27 @@
   pointer-events: none;
 }
 
+/* drawing-table marks: corner brackets and a small tick in the middle of each side */
+.custom-order__marks {
+  position: absolute;
+  inset: -10px;
+  color: var(--hilya-rose-light);
+  pointer-events: none;
+  background:
+    linear-gradient(currentColor, currentColor) left top / 16px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) left top / 1px 16px no-repeat,
+    linear-gradient(currentColor, currentColor) right top / 16px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) right top / 1px 16px no-repeat,
+    linear-gradient(currentColor, currentColor) left bottom / 16px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) left bottom / 1px 16px no-repeat,
+    linear-gradient(currentColor, currentColor) right bottom / 16px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) right bottom / 1px 16px no-repeat,
+    linear-gradient(currentColor, currentColor) center top / 1px 6px no-repeat,
+    linear-gradient(currentColor, currentColor) center bottom / 1px 6px no-repeat,
+    linear-gradient(currentColor, currentColor) left center / 6px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) right center / 6px 1px no-repeat;
+}
+
 .custom-order .custom-order__eyebrow {
   margin: 0 0 14px;
   color: var(--hilya-rose-deep);
@@ -903,6 +930,57 @@
   transform: translateX(4px);
 }
 
+/* on hover a small pencil draws a thin line under the word */
+.custom-order__button-label {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-order__line {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -5px;
+  height: 1px;
+  background: var(--hilya-rose-deep);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform .7s cubic-bezier(.22, .8, .3, 1);
+}
+
+[dir="rtl"] .custom-order__line {
+  transform-origin: 100% 50%;
+}
+
+.custom-order__pencil {
+  position: absolute;
+  bottom: -5px;
+  inset-inline-start: -3px;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--hilya-rose-deep);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: inset-inline-start .7s cubic-bezier(.22, .8, .3, 1), opacity .3s ease;
+}
+
+[dir="rtl"] .custom-order__pencil {
+  transform: scaleX(-1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .custom-order__button:hover .custom-order__line {
+    transform: scaleX(1);
+  }
+
+  .custom-order__button:hover .custom-order__pencil {
+    inset-inline-start: calc(100% - 3px);
+    opacity: 1;
+  }
+}
+
 
 /* =========================
    THREE STEPS (on the picture, under the panel)
@@ -935,9 +1013,9 @@
   box-sizing: border-box;
   border: 1px solid rgb(var(--hilya-rose-rgb) / 55%);
   border-radius: 50%;
-  background: rgba(247, 244, 238, 0.24);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: rgba(247, 244, 238, calc(var(--co-card-opacity, .5) * .85));
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), inset 0 0 0 3px rgb(255 255 255 / 18%);
   text-align: center;
   text-shadow: 0 0 12px rgba(255, 252, 247, 0.7), 0 0 4px rgba(255, 252, 247, 0.5);
@@ -1024,6 +1102,32 @@
   transform-origin: 100% 50%;
 }
 
+/* the last step is the finished piece: two small sparkles shine once on it */
+.custom-order__step:last-child::before,
+.custom-order__step:last-child::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--hilya-rose-light);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 4px rgb(var(--hilya-rose-rgb) / 70%));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.custom-order__step:last-child::after {
+  top: 14px;
+  inset-inline-end: 12px;
+}
+
+.custom-order__step:last-child::before {
+  top: 34px;
+  inset-inline-end: 4px;
+  width: 9px;
+  height: 9px;
+}
+
 
 /* TABLET */
 
@@ -1086,6 +1190,10 @@
 
   .custom-order .custom-order__eyebrow {
     margin-bottom: 8px;
+  }
+
+  .custom-order__marks {
+    inset: -6px;
   }
 
   .custom-order__typed-line {
@@ -1501,6 +1609,39 @@ html.co-lock {
 .custom-order.has-reveal .custom-order__step.hilya-instant path,
 .custom-order.has-reveal .custom-order__step.hilya-instant::before,
 .custom-order.has-reveal .custom-order__step.hilya-instant::after {
+  transition: none;
+}
+
+@keyframes co-sparkle {
+  0%   { opacity: 0; transform: scale(0) rotate(0deg); }
+  45%  { opacity: 1; transform: scale(1.25) rotate(45deg); }
+  100% { opacity: 0; transform: scale(.2) rotate(90deg); }
+}
+
+.custom-order.has-reveal .custom-order__step.is-revealed:last-child::after {
+  animation: co-sparkle 1.4s ease calc(var(--reveal-delay, 0s) + 1.6s) both;
+}
+
+.custom-order.has-reveal .custom-order__step.is-revealed:last-child::before {
+  animation: co-sparkle 1.2s ease calc(var(--reveal-delay, 0s) + 1.95s) both;
+}
+
+.custom-order.has-reveal .custom-order__step.hilya-instant:last-child::before,
+.custom-order.has-reveal .custom-order__step.hilya-instant:last-child::after {
+  animation: none;
+}
+
+/* the drawing marks fade in after the frame is drawn */
+.custom-order.has-reveal .custom-order__marks {
+  opacity: 0;
+  transition: opacity 1.2s ease calc(var(--reveal-delay, 0s) + 1.8s);
+}
+
+.custom-order.has-reveal .custom-order__content.is-revealed .custom-order__marks {
+  opacity: .85;
+}
+
+.custom-order.has-reveal .custom-order__content.hilya-instant .custom-order__marks {
   transition: none;
 }
 
