@@ -544,9 +544,9 @@
 
       width = stage.clientWidth;
 
-      /* on computers the window shows the chosen number of whole tags in the middle and half a tag at each side:
-         the step between two tags is the window divided by (number + 1), so the tags at the edges are cut exactly in half.
-         The tag has a largest size, so with few tags the space between them grows instead */
+      /* on computers the window shows the chosen number of whole tags in the middle and a part of a tag at each side:
+         the tag at each edge shows EDGE_SHOWN of its width (a little more than half, like on the phone), so the step between
+         two tags is worked out from that. The tag has a largest size, so with few tags the space between them grows instead */
       const visible = clamp(Math.round(Number(stage.dataset.visible)) || 5, 1, 10);
       const onComputer = window.matchMedia('(min-width: 750px)').matches;
       const slots = onComputer ? visible + 1 : 0;
@@ -554,8 +554,19 @@
       anchor = width / 2;
 
       if (slots) {
-        const step = width / slots;
-        const slotCard = Math.min(step * 0.84, 230);
+        const EDGE_SHOWN = 0.62; /* the share of the edge tag that stays inside the window */
+        const CARD_RATIO = 0.84;
+        const MAX_CARD = 230;
+        const half = width / 2;
+        const edgeSteps = slots / 2; /* steps from the middle line to the tag at the edge */
+
+        let step = half / (edgeSteps + (EDGE_SHOWN - 0.5) * CARD_RATIO);
+        let slotCard = step * CARD_RATIO;
+
+        if (slotCard > MAX_CARD) {
+          slotCard = MAX_CARD;
+          step = (half - (EDGE_SHOWN - 0.5) * slotCard) / edgeSteps;
+        }
 
         if (visible % 2 === 0) anchor += step / 2;
 
@@ -1272,6 +1283,9 @@
     width: 91%;
     margin-left: auto;
     margin-right: auto;
+    /* a softer fade at the sides, so the tag at each edge stays clear */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent);
   }
 }
 
