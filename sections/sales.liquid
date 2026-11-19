@@ -1174,9 +1174,17 @@
   letter-spacing: .14em;
   text-transform: uppercase;
   transition: background-color .3s ease, border-color .3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.sales__link:hover {
+@media (hover: hover) and (pointer: fine) {
+  .sales__link:hover {
+    border-color: var(--hilya-rose);
+    background: var(--hilya-rose);
+  }
+}
+
+.sales__link:active {
   border-color: var(--hilya-rose);
   background: var(--hilya-rose);
 }
