@@ -1,0 +1,49 @@
+{% doc %}
+  Works out what kind of piece a product is (from its Product type) and which sizes it has.
+  Prints one line: kind|size labels|size details
+  - kind is ring, bracelet, necklace, set, or empty when the Product type is not listed in the settings.
+  - size labels and size details are comma separated lists in the same order
+    (the number on each pill, and what Item details shows for it).
+  Use it by capturing the output and splitting it on the | sign.
+  @param {product} product - The product (or the piece of a set) to look at.
+  @param {object} section_settings - Settings of the product section (types and size lists).
+{% enddoc %}
+
+{%- liquid
+  assign type_key = product.type | downcase | remove: ' '
+  assign kind = ''
+
+  if type_key != blank
+    assign ring_types = section_settings.ring_types | downcase | remove: ' ' | split: ','
+    assign bracelet_types = section_settings.bracelet_types | downcase | remove: ' ' | split: ','
+    assign necklace_types = section_settings.necklace_types | downcase | remove: ' ' | split: ','
+    assign set_types = section_settings.set_types | downcase | remove: ' ' | split: ','
+
+    if ring_types contains type_key
+      assign kind = 'ring'
+    elsif bracelet_types contains type_key
+      assign kind = 'bracelet'
+    elsif necklace_types contains type_key
+      assign kind = 'necklace'
+    elsif set_types contains type_key
+      assign kind = 'set'
+    endif
+  endif
+
+  assign labels = ''
+  assign details = ''
+
+  case kind
+    when 'ring'
+      assign labels = section_settings.ring_sizes | remove: ' '
+      assign details = section_settings.ring_circumferences | remove: ' '
+    when 'bracelet'
+      assign labels = section_settings.bracelet_sizes | remove: ' '
+      assign details = labels
+    when 'necklace'
+      assign labels = section_settings.necklace_lengths | remove: ' '
+      assign details = labels
+  endcase
+
+  echo kind | append: '|' | append: labels | append: '|' | append: details
+-%}
