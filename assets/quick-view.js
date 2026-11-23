@@ -2,8 +2,8 @@
   Hilya quick view
   ----------------
   1. The "Add to cart" button on every card (any link with data-quick-view)
-     opens a drawer with the
-     options, the personalization fields (Name / Date / Letter) and Add to cart.
+     opens a drawer with the options, the size choice (read from the product page),
+     the personalization fields (Name / Date / Letter) and Add to cart.
   2. Fixes the hover button that stayed visible after coming back to a page.
 
   Needs the window.hilyaQuickView settings from theme.liquid.
@@ -141,6 +141,35 @@
   const nameLabel = (name) => labelFor(config.optionNames, name);
 
 
+  /* The size choices (ring size, bracelet size, chain length) are drawn by the product page.
+     We read them from the page, so the numbers always match the product page. */
+  const readSizeFields = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    return Array.from(doc.querySelectorAll('[data-size-field]'))
+      .map((field) => {
+        const input = field.querySelector('[data-size-input]');
+        const label = field.querySelector('.product-option-label');
+        const pills = Array.from(field.querySelectorAll('[data-size-value]'));
+
+        if (!input || !pills.length) return null;
+
+        const checked = pills.find((pill) => pill.getAttribute('aria-checked') === 'true') || pills[0];
+
+        return {
+          label: label ? label.textContent.trim() : '',
+          inputName: input.getAttribute('name'),
+          selected: checked.dataset.sizeValue,
+          pills: pills.map((pill) => ({
+            value: pill.dataset.sizeValue,
+            note: pill.dataset.sizeNote || pill.dataset.sizeValue
+          }))
+        };
+      })
+      .filter(Boolean);
+  };
+
+
   /* =========================================
      DRAWER (built once)
   ========================================= */
@@ -269,7 +298,7 @@
      BUILD THE DRAWER CONTENT
   ========================================= */
 
-  function render(data, wantedVariantId) {
+  function render(data, wantedVariantId, sizeFields = []) {
     product = data;
     variants = data.variants || [];
     ui = { pills: [], legends: [] };
@@ -357,8 +386,54 @@
       });
     }
 
+
+    /* Size (never a variant, never changes the price): saved with the order as a note */
+
+    sizeFields.forEach((field) => {
+      const sizeInput = el('input', { type: 'hidden', name: field.inputName, value: '' });
+      const sizeLegend = el('span', { class: 'quick-view__legend-value' });
+
+      const buttons = field.pills.map((item) =>
+        el('button', {
+          type: 'button',
+          class: 'quick-view__pill quick-view__pill--size',
+          'data-size-value': item.value,
+          text: item.value
+        })
+      );
+
+      /* exactly one is always chosen */
+      const pick = (value) => {
+        const item = field.pills.find((entry) => entry.value === value) || field.pills[0];
+
+        buttons.forEach((button) => {
+          const on = button.dataset.sizeValue === item.value;
+
+          button.classList.toggle('is-selected', on);
+          button.setAttribute('aria-pressed', String(on));
+        });
+
+        sizeLegend.textContent = item.value;
+        sizeInput.value = item.note;
+      };
+
+      buttons.forEach((button) =>
+        button.addEventListener('click', () => pick(button.dataset.sizeValue))
+      );
+
+      pick(field.selected);
+
+      form.append(
+        el('div', { class: 'quick-view__group' }, [
+          el('p', { class: 'quick-view__legend' }, [field.label + ': ', sizeLegend]),
+          el('div', { class: 'quick-view__pills', role: 'group', 'aria-label': field.label }, buttons),
+          sizeInput
+        ])
+      );
+    });
+
     form.addEventListener('click', (event) => {
-      const pill = event.target.closest('.quick-view__pill');
+      const pill = event.target.closest('.quick-view__pill[data-option-index]');
       if (pill) choose(Number(pill.dataset.optionIndex), pill.dataset.optionValue);
     });
 
@@ -546,17 +621,21 @@
     }
 
     try {
-      const response = await fetch(root + 'products/' + encodeURIComponent(handle) + '.js', {
-        credentials: 'same-origin'
-      });
+      const productUrl = root + 'products/' + encodeURIComponent(handle);
 
-      if (!response.ok) throw new Error('Product request failed');
+      const [response, pageResponse] = await Promise.all([
+        fetch(productUrl + '.js', { credentials: 'same-origin' }),
+        fetch(productUrl, { credentials: 'same-origin' })
+      ]);
+
+      if (!response.ok || !pageResponse.ok) throw new Error('Product request failed');
 
       const data = await response.json();
+      const sizeFields = readSizeFields(await pageResponse.text());
 
       if (thisRequest !== requestId) return;
 
-      render(data, variantId);
+      render(data, variantId, sizeFields);
     } catch (error) {
       if (thisRequest !== requestId) return;
 

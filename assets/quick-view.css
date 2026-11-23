@@ -237,6 +237,13 @@ html[dir="rtl"] .quick-view__price .price {
     opacity 150ms ease;
 }
 
+/* the size numbers: narrower than the colour pills so five fit on a phone */
+.quick-view__pill--size {
+  justify-content: center;
+  min-width: 3rem;
+  padding-inline: 0.8rem;
+}
+
 /* a small metal dot next to the word (Gold Plated / Silver Plated) */
 .quick-view__pill[data-option-value*="gold" i]::before,
 .quick-view__pill[data-option-value*="silver" i]::before {
