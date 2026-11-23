@@ -113,6 +113,27 @@
       "explore_full": "Explore the Full Collection",
       "collection_note": "Add all items to your cart and enjoy the special price."
     },
+    "specs": {
+      "unit_cm": "cm",
+      "size_ring": "Ring size",
+      "size_bracelet": "Bracelet size",
+      "chain_length": "Chain length",
+      "material_default": "Copper",
+      "plating": "Plating",
+      "top_width": "Top width",
+      "top_height": "Top height",
+      "top_dimensions": "Top dimensions",
+      "varies_ring": "Varies with ring size",
+      "inner_circumference": "Inner circumference",
+      "note_ring": "Measured closed; opens gently to wear",
+      "center_width": "Center width",
+      "center_height": "Center height",
+      "center_dimensions": "Center dimensions",
+      "varies_bracelet": "Varies with bracelet size",
+      "note_bracelet": "Measured closed; opens gently to wear",
+      "pendant_width": "Pendant width",
+      "pendant_height": "Pendant height"
+    },
     "details": {
       "buy_now": "Buy it now",
       "breadcrumbs": "Breadcrumbs",
