@@ -26,7 +26,8 @@
             "open_by_default": true,
             "truncate_content": true,
             "show_highlights": true,
-            "description_first": true
+            "description_first": true,
+            "show_specs": true
           }
         },
         "details_shipping_returns": {
@@ -43,7 +44,8 @@
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false,
-            "description_first": false
+            "description_first": false,
+            "show_specs": false
           }
         },
         "details_material_care": {
@@ -60,7 +62,8 @@
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false,
-            "description_first": false
+            "description_first": false,
+            "show_specs": false
           }
         },
         "details_did_you_know": {
@@ -77,7 +80,8 @@
             "open_by_default": false,
             "truncate_content": false,
             "show_highlights": false,
-            "description_first": false
+            "description_first": false,
+            "show_specs": false
           }
         }
       },
@@ -96,9 +100,16 @@
         "show_quantity": true,
         "show_buy_now": true,
         "show_dynamic_checkout": true,
-        "media_position": "right",
         "image_ratio": "1 / 1",
-        "image_fit": "contain"
+        "image_fit": "contain",
+        "ring_types": "Rings",
+        "bracelet_types": "Bracelets",
+        "necklace_types": "Necklaces",
+        "set_types": "Collections",
+        "ring_sizes": "14,16,18,20,22",
+        "ring_circumferences": "5.4,5.6,5.8,6.0,6.2",
+        "bracelet_sizes": "15,16,16.5,17,18",
+        "necklace_lengths": "45,55,60"
       }
     },
     "bought_together": {
@@ -125,7 +136,8 @@
         "collection": "best-sellers",
         "heading": "You May Also Like",
         "heading_ar": "قد يعجبك أيضًا",
-        "max_products": 12
+        "max_products": 12,
+        "columns": 5
       }
     },
     "1789423886655db41b": {
