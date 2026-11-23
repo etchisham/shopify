@@ -118,6 +118,7 @@
       "collection_note": "أضف كل القطع إلى سلتك واستمتع بالسعر الخاص."
     },
     "specs": {
+      "note_label": "ملحوظة:",
       "unit_cm": "سم",
       "size_ring": "مقاس الخاتم",
       "size_bracelet": "مقاس الإسورة",

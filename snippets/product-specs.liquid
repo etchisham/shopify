@@ -175,7 +175,7 @@
         </div>
 
         {%- if note != blank -%}
-          <p class="product-specs__note">{{ note }}</p>
+          <p class="product-specs__note"><span class="product-specs__note-label">{{ 'products.specs.note_label' | t }}</span> {{ note }}</p>
         {%- endif -%}
 
       {%- endif -%}
@@ -254,11 +254,29 @@
     letter-spacing: 0;
   }
 
+  /* the closed-measure note: a black bullet and a bold "Note:" so the customer sees it */
   .product-specs__note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.3rem;
+
     margin: 0.6rem 0 0;
 
-    color: var(--hilya-muted);
+    color: var(--hilya-ink);
 
-    font-size: 0.78rem;
+    font-size: 0.82rem;
+  }
+
+  .product-specs__note::before {
+    content: '\2022';
+
+    color: var(--hilya-ink);
+
+    font-size: 1.1em;
+  }
+
+  .product-specs__note-label {
+    font-weight: 700;
   }
 {% endstylesheet %}

@@ -114,6 +114,7 @@
       "collection_note": "Add all items to your cart and enjoy the special price."
     },
     "specs": {
+      "note_label": "Note:",
       "unit_cm": "cm",
       "size_ring": "Ring size",
       "size_bracelet": "Bracelet size",
