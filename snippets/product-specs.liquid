@@ -1,0 +1,264 @@
+{% doc %}
+  Item details as tidy rows.
+  Common rows: brand (the product Vendor), material (the Materials field, or the default word),
+  plating (follows the chosen colour).
+  Then, for each piece: its own dimensions (width and height of the design) and the size row
+  (inner circumference, or chain length) that follows the chosen size.
+  A ring, bracelet or necklace shows its own rows. A set shows the common rows once, then one group
+  for each piece listed in its "Set pieces" field.
+  Prints nothing when the Product type is not one of the kinds set in the product section settings.
+  The script that updates the rows is in product.liquid.
+  @param {product} product - Current product.
+  @param {object} section_settings - Settings of the product section (types and size lists).
+{% enddoc %}
+
+{%- capture product_info -%}
+  {%- render 'product-item-info', product: product, section_settings: section_settings -%}
+{%- endcapture -%}
+{%- assign product_kind = product_info | strip | split: '|' | first -%}
+
+{%- if product_kind != blank -%}
+
+  {%- assign unit = 'products.specs.unit_cm' | t -%}
+  {%- assign materials = product.metafields.custom.materials -%}
+  {%- assign color_position = 0 -%}
+  {%- assign plating_label = '' -%}
+
+  {%- comment -%}
+    The words for each colour (Gold Plated, Silver Plated...) in the language of the page.
+    The variant script of the page tells us which colour was chosen, and the script in product.liquid
+    swaps the plating row with the matching words.
+  {%- endcomment -%}
+  {%- capture plating_map -%}
+    {%- for option in product.options_with_values -%}
+      {%- assign option_name_down = option.name | downcase -%}
+      {%- if option_name_down == 'color' or option.name == 'لون' or option.name == 'اللون' -%}
+        {%- assign color_position = option.position -%}
+        {%- for value in option.values -%}
+          {%- assign value_key = value.name | handleize | replace: '-', '_' -%}
+          {%- capture value_label_key -%}products.option_values.{{ value_key }}{%- endcapture -%}
+          {%- assign value_label = value_label_key | t: default: value.name -%}
+          {%- if value.selected -%}{%- assign plating_label = value_label -%}{%- endif -%}
+          {{ value.name | json }}:{{ value_label | json }}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  {%- if product_kind == 'set' -%}
+    {%- assign pieces = product.metafields.custom.set_pieces.value -%}
+  {%- else -%}
+    {%- assign pieces = '1' | split: ',' -%}
+  {%- endif -%}
+
+  <div class="product-specs" data-product-specs>
+
+    {%- if product.vendor != blank -%}
+      <div class="product-specs__row">
+        <span class="product-specs__label">{{ 'products.details.brand' | t }}</span>
+        <span class="product-specs__value product-specs__value--brand">{{ product.vendor | escape }}</span>
+      </div>
+    {%- endif -%}
+
+    <div class="product-specs__row">
+      <span class="product-specs__label">{{ 'products.option_names.material' | t }}</span>
+      <span class="product-specs__value">
+        {%- if materials != blank -%}
+          {{ materials | metafield_tag }}
+        {%- else -%}
+          {{ 'products.specs.material_default' | t }}
+        {%- endif -%}
+      </span>
+    </div>
+
+    {%- if plating_label != blank -%}
+      <div class="product-specs__row">
+        <span class="product-specs__label">{{ 'products.specs.plating' | t }}</span>
+        <span
+          class="product-specs__value"
+          data-spec-plating
+          data-position="{{ color_position }}"
+        >{{ plating_label | escape }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- for entry in pieces -%}
+
+      {%- if product_kind == 'set' -%}
+        {%- assign piece = entry -%}
+        {%- assign piece_key = entry.id -%}
+      {%- else -%}
+        {%- assign piece = product -%}
+        {%- assign piece_key = 'main' -%}
+      {%- endif -%}
+
+      {%- capture piece_info -%}
+        {%- render 'product-item-info', product: piece, section_settings: section_settings -%}
+      {%- endcapture -%}
+      {%- assign piece_parts = piece_info | strip | split: '|' -%}
+      {%- assign piece_kind = piece_parts[0] -%}
+
+      {%- if piece_kind == 'ring' or piece_kind == 'bracelet' or piece_kind == 'necklace' -%}
+
+        {%- liquid
+          assign labels = piece_parts[1] | split: ','
+          assign details = piece_parts[2] | split: ','
+          assign default_index = labels.size | divided_by: 2
+          assign default_detail = details[default_index] | default: labels[default_index]
+
+          assign piece_width = piece.metafields.custom.design_width_cm.value
+          assign piece_height = piece.metafields.custom.design_height_cm.value
+          assign varies = piece.metafields.custom.dims_vary_with_size.value
+
+          assign both_label = ''
+          assign vary_text = ''
+          assign note = ''
+
+          case piece_kind
+            when 'ring'
+              assign width_label = 'products.specs.top_width' | t
+              assign height_label = 'products.specs.top_height' | t
+              assign both_label = 'products.specs.top_dimensions' | t
+              assign vary_text = 'products.specs.varies_ring' | t
+              assign size_label = 'products.specs.inner_circumference' | t
+              assign note = 'products.specs.note_ring' | t
+            when 'bracelet'
+              assign width_label = 'products.specs.center_width' | t
+              assign height_label = 'products.specs.center_height' | t
+              assign both_label = 'products.specs.center_dimensions' | t
+              assign vary_text = 'products.specs.varies_bracelet' | t
+              assign size_label = 'products.specs.inner_circumference' | t
+              assign note = 'products.specs.note_bracelet' | t
+            else
+              assign width_label = 'products.specs.pendant_width' | t
+              assign height_label = 'products.specs.pendant_height' | t
+              assign size_label = 'products.specs.chain_length' | t
+          endcase
+        -%}
+
+        {%- if product_kind == 'set' -%}
+          <p class="product-specs__heading">{{ piece.title | escape }}</p>
+        {%- endif -%}
+
+        {%- if varies and vary_text != blank -%}
+
+          <div class="product-specs__row">
+            <span class="product-specs__label">{{ both_label }}</span>
+            <span class="product-specs__value">{{ vary_text }}</span>
+          </div>
+
+        {%- else -%}
+
+          {%- if piece_width != blank -%}
+            <div class="product-specs__row">
+              <span class="product-specs__label">{{ width_label }}</span>
+              <span class="product-specs__value">{{ piece_width }} {{ unit }}</span>
+            </div>
+          {%- endif -%}
+
+          {%- if piece_height != blank -%}
+            <div class="product-specs__row">
+              <span class="product-specs__label">{{ height_label }}</span>
+              <span class="product-specs__value">{{ piece_height }} {{ unit }}</span>
+            </div>
+          {%- endif -%}
+
+        {%- endif -%}
+
+        <div class="product-specs__row">
+          <span class="product-specs__label">{{ size_label }}</span>
+          <span
+            class="product-specs__value"
+            data-spec-size="{{ piece_key }}"
+            data-unit="{{ unit | escape }}"
+          >{{ default_detail | escape }} {{ unit }}</span>
+        </div>
+
+        {%- if note != blank -%}
+          <p class="product-specs__note">{{ note }}</p>
+        {%- endif -%}
+
+      {%- endif -%}
+
+    {%- endfor -%}
+
+  </div>
+
+  {%- if plating_label != blank -%}
+    <script type="application/json" data-spec-plating-map>{ {{ plating_map | strip }} }</script>
+  {%- endif -%}
+
+{%- endif -%}
+
+{% stylesheet %}
+  /* Item details rows: label on one side, value on the other */
+  .product-specs {
+    display: grid;
+
+    margin: 0;
+
+    font-size: 0.88rem;
+  }
+
+  .product-specs__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding-block: 0.6rem;
+
+    border-block-start: 1px solid var(--hilya-line);
+  }
+
+  .product-specs__row:first-child {
+    padding-block-start: 0;
+
+    border-block-start: 0;
+  }
+
+  .product-specs__label {
+    color: var(--hilya-muted);
+  }
+
+  .product-specs__value {
+    color: var(--hilya-ink);
+
+    text-align: end;
+  }
+
+  /* the brand name is deep rose gold, like the old Brand line */
+  .product-specs__value--brand {
+    color: var(--hilya-rose-deep);
+    font-weight: 700;
+  }
+
+  /* the name of each piece of a set */
+  .product-specs__heading {
+    margin: 1rem 0 0;
+    padding-block-start: 0.9rem;
+
+    border-block-start: 1px solid var(--hilya-line);
+
+    color: var(--hilya-ink);
+
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Arabic letters must stay joined */
+  [dir='rtl'] .product-specs__heading {
+    font-size: 0.85rem;
+    letter-spacing: 0;
+  }
+
+  .product-specs__note {
+    margin: 0.6rem 0 0;
+
+    color: var(--hilya-muted);
+
+    font-size: 0.78rem;
+  }
+{% endstylesheet %}
