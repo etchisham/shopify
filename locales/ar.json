@@ -117,6 +117,27 @@
       "explore_full": "اكتشف المجموعة كاملة",
       "collection_note": "أضف كل القطع إلى سلتك واستمتع بالسعر الخاص."
     },
+    "specs": {
+      "unit_cm": "سم",
+      "size_ring": "مقاس الخاتم",
+      "size_bracelet": "مقاس الإسورة",
+      "chain_length": "طول السلسلة",
+      "material_default": "نحاس",
+      "plating": "الطلاء",
+      "top_width": "عرض الوجه",
+      "top_height": "ارتفاع الوجه",
+      "top_dimensions": "أبعاد الوجه",
+      "varies_ring": "تتغير حسب مقاس الخاتم",
+      "inner_circumference": "محيط القطعة من الداخل",
+      "note_ring": "القياس والخاتم مقفول، ويفتح بلطف عند اللبس",
+      "center_width": "عرض الشكل الأوسط",
+      "center_height": "ارتفاع الشكل الأوسط",
+      "center_dimensions": "أبعاد الشكل الأوسط",
+      "varies_bracelet": "تتغير حسب مقاس الإسورة",
+      "note_bracelet": "القياس والإسورة مقفولة، وتفتح بلطف عند اللبس",
+      "pendant_width": "عرض القلادة",
+      "pendant_height": "ارتفاع القلادة"
+    },
     "details": {
       "buy_now": "اشترِ الآن",
       "breadcrumbs": "مسار التصفح",
