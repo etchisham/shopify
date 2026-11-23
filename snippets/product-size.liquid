@@ -1,0 +1,137 @@
+{% doc %}
+  Size choice (ring size, bracelet size or chain length), shown as pills like the colour.
+  The size is not a variant and never changes the price: it travels with the order as a note
+  (properties[...] in the product form). The middle size is chosen first.
+  A set shows one choice for each piece listed in its "Set pieces" field.
+  The script that handles the clicks is in product.liquid.
+  @param {product} product - Current product.
+  @param {string} section_id - Owning section ID.
+  @param {object} section_settings - Settings of the product section (types and size lists).
+{% enddoc %}
+
+{%- capture product_info -%}
+  {%- render 'product-item-info', product: product, section_settings: section_settings -%}
+{%- endcapture -%}
+{%- assign product_kind = product_info | strip | split: '|' | first -%}
+
+{%- if product_kind == 'set' -%}
+  {%- assign pieces = product.metafields.custom.set_pieces.value -%}
+{%- elsif product_kind != blank -%}
+  {%- assign pieces = '1' | split: ',' -%}
+{%- endif -%}
+
+{%- for entry in pieces -%}
+
+  {%- if product_kind == 'set' -%}
+    {%- assign piece = entry -%}
+    {%- assign piece_key = entry.id -%}
+  {%- else -%}
+    {%- assign piece = product -%}
+    {%- assign piece_key = 'main' -%}
+  {%- endif -%}
+
+  {%- capture piece_info -%}
+    {%- render 'product-item-info', product: piece, section_settings: section_settings -%}
+  {%- endcapture -%}
+  {%- assign piece_parts = piece_info | strip | split: '|' -%}
+  {%- assign piece_kind = piece_parts[0] -%}
+  {%- assign labels = piece_parts[1] | split: ',' -%}
+  {%- assign details = piece_parts[2] | split: ',' -%}
+
+  {%- if labels.size > 0 -%}
+
+    {%- liquid
+      assign default_index = labels.size | divided_by: 2
+      assign default_label = labels[default_index]
+      assign unit = 'products.specs.unit_cm' | t
+
+      case piece_kind
+        when 'ring'
+          assign field_label = 'products.specs.size_ring' | t
+          assign default_note = default_label
+        when 'bracelet'
+          assign field_label = 'products.specs.size_bracelet' | t
+          assign default_note = default_label | append: ' ' | append: unit
+        else
+          assign field_label = 'products.specs.chain_length' | t
+          assign default_note = default_label | append: ' ' | append: unit
+      endcase
+    -%}
+
+    <div class="product-form__field product-option-field" data-size-field>
+
+      <div class="product-option-heading">
+
+        <span
+          class="product-option-label"
+          id="ProductSizeLabel-{{ section_id }}-{{ piece_key }}"
+        >
+          {{ field_label | escape }}
+        </span>
+
+        <span
+          class="product-option-selected"
+          data-size-selected
+          aria-hidden="true"
+        >{{ default_label | escape }}</span>
+
+      </div>
+
+      <div
+        class="product-option-pills"
+        role="radiogroup"
+        aria-labelledby="ProductSizeLabel-{{ section_id }}-{{ piece_key }}"
+        data-size-pills
+        data-size-piece="{{ piece_key }}"
+      >
+
+        {%- for label in labels -%}
+
+          {%- assign detail = details[forloop.index0] | default: label -%}
+
+          {%- if piece_kind == 'ring' -%}
+            {%- assign note = label -%}
+          {%- else -%}
+            {%- assign note = label | append: ' ' | append: unit -%}
+          {%- endif -%}
+
+          <button
+            type="button"
+            role="radio"
+            class="product-option-pill product-option-pill--size"
+            data-size-value="{{ label | escape }}"
+            data-size-detail="{{ detail | escape }}"
+            data-size-note="{{ note | escape }}"
+            aria-checked="{% if forloop.index0 == default_index %}true{% else %}false{% endif %}"
+            tabindex="{% if forloop.index0 == default_index %}0{% else %}-1{% endif %}"
+          >
+            {{- label | escape -}}
+          </button>
+
+        {%- endfor -%}
+
+      </div>
+
+      <input
+        type="hidden"
+        name="properties[{{ field_label | escape }}]"
+        value="{{ default_note | escape }}"
+        data-size-input
+      >
+
+    </div>
+
+  {%- endif -%}
+
+{%- endfor -%}
+
+{% stylesheet %}
+  /* the number pills are a little narrower than the colour pills (five of them must fit on a phone) */
+  .product-option-pills .product-option-pill--size {
+    justify-content: center;
+
+    min-width: 3rem;
+
+    padding-inline: 0.8rem;
+  }
+{% endstylesheet %}
