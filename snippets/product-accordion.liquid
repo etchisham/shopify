@@ -1,9 +1,12 @@
 {% doc %}
   Product information with editable labels and product-admin content sources.
   The look (and the open / close animation) lives in product.css.
+  With "Show structured details" on, rings, bracelets, necklaces and sets show the tidy rows from
+  product-specs instead of the highlights and the written text. Other product types keep the text.
   @param {product} product - Current product.
   @param {block} block - Accordion settings.
   @param {string} section_id - Owning section ID.
+  @param {object} section_settings - Settings of the product section (types and size lists).
 {% enddoc %}
 
 {%- liquid
@@ -34,6 +37,14 @@
   assign description_text = description_html | strip_html | strip
 -%}
 
+{%- comment -%} the tidy rows (empty when the product is not a ring, bracelet, necklace or set) {%- endcomment -%}
+{%- capture specs_html -%}
+  {%- if block.settings.show_specs -%}
+    {%- render 'product-specs', product: product, section_settings: section_settings -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- assign specs_html = specs_html | strip -%}
+
 {%- capture detail_content -%}
   {%- if block.settings.description_first and description_text != blank -%}
     {{ description_html }}
@@ -56,7 +67,7 @@
   {%- endunless -%}
 {%- endif -%}
 
-{%- if detail_content != blank or request.design_mode -%}
+{%- if detail_content != blank or specs_html != blank or request.design_mode -%}
 
   <details
     class="product-accordion"
@@ -72,58 +83,66 @@
 
     <div class="product-accordion__content">
 
-      {%- if block.settings.show_highlights -%}
-        <ul class="product-highlights" role="list">
+      {%- if specs_html != blank -%}
 
-          {%- if product.vendor != blank -%}
-            <li>
-              <span>{{ 'products.details.brand' | t }}: <strong class="product-highlights__brand">{{ product.vendor | escape }}</strong></span>
-            </li>
-          {%- endif -%}
+        {{ specs_html }}
 
-          {%- if product.metafields.custom.materials != blank -%}
-            <li>
-              <span>{{ 'products.details.materials' | t }}: {{ product.metafields.custom.materials | metafield_tag }}</span>
-            </li>
-          {%- endif -%}
+      {%- else -%}
 
-        </ul>
-      {%- endif -%}
+        {%- if block.settings.show_highlights -%}
+          <ul class="product-highlights" role="list">
 
-      <div
-        class="product-accordion__description"
-        data-product-description
-        {% if block.settings.truncate_content %}data-truncate{% endif %}
-      >
+            {%- if product.vendor != blank -%}
+              <li>
+                <span>{{ 'products.details.brand' | t }}: <strong class="product-highlights__brand">{{ product.vendor | escape }}</strong></span>
+              </li>
+            {%- endif -%}
 
-        <div
-          class="rte"
-          id="ProductDetail-{{ section_id }}-{{ block.id }}"
-          data-description-text
-        >
-          {%- if detail_content != blank -%}
-            {{ detail_content }}
-          {%- else -%}
-            <p>{{ 'products.details.editor_content_hint' | t }}</p>
-          {%- endif -%}
-        </div>
+            {%- if product.metafields.custom.materials != blank -%}
+              <li>
+                <span>{{ 'products.details.materials' | t }}: {{ product.metafields.custom.materials | metafield_tag }}</span>
+              </li>
+            {%- endif -%}
 
-        {%- if block.settings.truncate_content -%}
-          <button
-            type="button"
-            class="product-accordion__more"
-            data-description-more
-            aria-controls="ProductDetail-{{ section_id }}-{{ block.id }}"
-            aria-expanded="false"
-            data-more="{{ 'products.details.learn_more' | t | escape }}"
-            data-less="{{ 'products.details.show_less' | t | escape }}"
-            hidden
-          >
-            {{ 'products.details.learn_more' | t }}
-          </button>
+          </ul>
         {%- endif -%}
 
-      </div>
+        <div
+          class="product-accordion__description"
+          data-product-description
+          {% if block.settings.truncate_content %}data-truncate{% endif %}
+        >
+
+          <div
+            class="rte"
+            id="ProductDetail-{{ section_id }}-{{ block.id }}"
+            data-description-text
+          >
+            {%- if detail_content != blank -%}
+              {{ detail_content }}
+            {%- else -%}
+              <p>{{ 'products.details.editor_content_hint' | t }}</p>
+            {%- endif -%}
+          </div>
+
+          {%- if block.settings.truncate_content -%}
+            <button
+              type="button"
+              class="product-accordion__more"
+              data-description-more
+              aria-controls="ProductDetail-{{ section_id }}-{{ block.id }}"
+              aria-expanded="false"
+              data-more="{{ 'products.details.learn_more' | t | escape }}"
+              data-less="{{ 'products.details.show_less' | t | escape }}"
+              hidden
+            >
+              {{ 'products.details.learn_more' | t }}
+            </button>
+          {%- endif -%}
+
+        </div>
+
+      {%- endif -%}
 
     </div>
 
