@@ -17,41 +17,32 @@
     assign saved_image_url = product.featured_image | image_url: width: 360
   endif
 
-  assign has_name_tag = false
-  assign has_date_tag = false
-  assign has_letter_tag = false
-
-  if product.tags contains 'Name'
-    assign has_name_tag = true
-  endif
-
-  if product.tags contains 'Date'
-    assign has_date_tag = true
-  endif
-
-  if product.tags contains 'Letter'
-    assign has_letter_tag = true
-  endif
-
   comment
-    The small line under the name: "Custom name", "Custom date", "Custom letter",
+    Personalization (the Name, Date and Letter tags): which fields the piece asks for, and the small
+    line under the name: "Custom name", "Custom date", "Custom letter",
     or "Personalized" when the piece has more than one of them.
   endcomment
 
+  assign has_name_tag = false
+  assign has_date_tag = false
+  assign has_letter_tag = false
   assign custom_count = 0
   assign custom_label = ''
 
   if product.tags contains 'Name'
+    assign has_name_tag = true
     assign custom_count = custom_count | plus: 1
     assign custom_label = 'products.product.custom_name' | t
   endif
 
   if product.tags contains 'Date'
+    assign has_date_tag = true
     assign custom_count = custom_count | plus: 1
     assign custom_label = 'products.product.custom_date' | t
   endif
 
   if product.tags contains 'Letter'
+    assign has_letter_tag = true
     assign custom_count = custom_count | plus: 1
     assign custom_label = 'products.product.custom_letter' | t
   endif
@@ -271,6 +262,12 @@
 
           {% render 'product-options', product: product, section_id: section.id %}
 
+          {% render 'product-size',
+            product: product,
+            section_id: section.id,
+            section_settings: section.settings
+          %}
+
           {% if has_name_tag or has_date_tag or has_letter_tag %}
 
             <div class="product-personalization">
@@ -486,7 +483,8 @@
               {% render 'product-accordion',
                 product: product,
                 block: block,
-                section_id: section.id
+                section_id: section.id,
+                section_settings: section.settings
               %}
 
             {% when '@app' %}
@@ -571,7 +569,7 @@
 
 <script>
   (() => {
-    const page = document.currentScript.previousElementSibling;
+    const page = document.currentScript.parentElement.querySelector('[data-product-page]');
 
     if (
       !page ||
@@ -656,6 +654,102 @@
     targets.forEach((el) => io.observe(el));
     settle();
     window.addEventListener('load', () => setTimeout(settle, 150));
+  })();
+</script>
+
+<script>
+  /* Size choices (rings, bracelets, necklaces and sets) and the Item details rows that follow them.
+     The size is not a variant and never changes the price: picking one only changes the note that travels
+     with the order and the matching row in Item details. The plating row follows the chosen colour. */
+  (() => {
+    const page = document.currentScript.parentElement.querySelector('[data-product-page]');
+
+    if (!page) return;
+
+    const isRtl = () =>
+      (document.documentElement.getAttribute('dir') || '').toLowerCase() === 'rtl';
+
+    const choose = (pill) => {
+      const group = pill.closest('[data-size-pills]');
+      const field = pill.closest('[data-size-field]');
+
+      if (!group || !field) return;
+
+      group.querySelectorAll('[data-size-value]').forEach((item) => {
+        const on = item === pill;
+
+        item.setAttribute('aria-checked', String(on));
+        item.tabIndex = on ? 0 : -1;
+      });
+
+      const shown = field.querySelector('[data-size-selected]');
+      const input = field.querySelector('[data-size-input]');
+
+      if (shown) shown.textContent = pill.dataset.sizeValue;
+      if (input) input.value = pill.dataset.sizeNote;
+
+      page.querySelectorAll('[data-spec-size]').forEach((row) => {
+        if (row.dataset.specSize !== group.dataset.sizePiece) return;
+
+        row.textContent = (pill.dataset.sizeDetail + ' ' + (row.dataset.unit || '')).trim();
+      });
+    };
+
+    page.addEventListener('click', (event) => {
+      const pill = event.target.closest('[data-size-value]');
+
+      if (pill) choose(pill);
+    });
+
+    page.addEventListener('keydown', (event) => {
+      const pill = event.target.closest('[data-size-value]');
+
+      if (!pill) return;
+
+      if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
+
+      event.preventDefault();
+
+      const list = [...pill.closest('[data-size-pills]').querySelectorAll('[data-size-value]')];
+      const forward =
+        event.key === 'ArrowDown' ||
+        (event.key === 'ArrowRight' ? !isRtl() : event.key === 'ArrowLeft' && isRtl());
+
+      const target = list[(list.indexOf(pill) + (forward ? 1 : -1) + list.length) % list.length];
+
+      target.focus();
+      choose(target);
+    });
+
+    /* plating row: the words for each colour come with the page, the variant script tells us which one was chosen */
+    const plating = page.querySelector('[data-spec-plating]');
+    const platingMap = page.querySelector('[data-spec-plating-map]');
+
+    if (plating && platingMap) {
+      let words = {};
+
+      try {
+        words = JSON.parse(platingMap.textContent);
+      } catch (error) {
+        words = {};
+      }
+
+      const position = Number(plating.dataset.position) - 1;
+
+      const onVariant = (event) => {
+        if (!page.isConnected) {
+          document.removeEventListener('theme:product-variant', onVariant);
+          return;
+        }
+
+        const options = event.detail && event.detail.options;
+        const word = options && words[options[position]];
+
+        if (word) plating.textContent = word;
+      };
+
+      document.addEventListener('theme:product-variant', onVariant);
+    }
   })();
 </script>
 
@@ -837,6 +931,13 @@
           "id": "description_first",
           "label": "Show product description first (fallback to default text)",
           "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_specs",
+          "label": "Show structured details (rows)",
+          "info": "Brand, material, plating, dimensions and size for rings, bracelets, necklaces and sets. Use it on the Item details block. Other product types keep the written text.",
+          "default": false
         }
       ]
     }
@@ -926,6 +1027,64 @@
           "label": "t:product_details.cover"
         }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Item details: product kinds and sizes"
+    },
+    {
+      "type": "text",
+      "id": "ring_types",
+      "label": "Ring product types",
+      "info": "Separate several with commas. Compared with each product's Product type, ignoring capital letters and spaces.",
+      "default": "Rings"
+    },
+    {
+      "type": "text",
+      "id": "bracelet_types",
+      "label": "Bracelet product types",
+      "default": "Bracelets"
+    },
+    {
+      "type": "text",
+      "id": "necklace_types",
+      "label": "Necklace product types",
+      "default": "Necklaces"
+    },
+    {
+      "type": "text",
+      "id": "set_types",
+      "label": "Set product types",
+      "info": "A set lists its pieces in the Set pieces field of the product.",
+      "default": "Collections"
+    },
+    {
+      "type": "text",
+      "id": "ring_sizes",
+      "label": "Ring sizes (the numbers on the pills)",
+      "info": "From the smallest to the largest. The middle one is chosen first.",
+      "default": "14,16,18,20,22"
+    },
+    {
+      "type": "text",
+      "id": "ring_circumferences",
+      "label": "Ring inner circumference in cm",
+      "info": "Same order and same count as the ring sizes.",
+      "default": "5.4,5.6,5.8,6.0,6.2"
+    },
+    {
+      "type": "text",
+      "id": "bracelet_sizes",
+      "label": "Bracelet sizes in cm (inner circumference)",
+      "info": "From the smallest to the largest. The middle one is chosen first.",
+      "default": "15,16,16.5,17,18"
+    },
+    {
+      "type": "text",
+      "id": "necklace_lengths",
+      "label": "Chain lengths in cm",
+      "info": "From the shortest to the longest. The middle one is chosen first.",
+      "default": "45,55,60"
     }
   ]
 }
